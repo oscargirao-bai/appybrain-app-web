@@ -2,6 +2,7 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createRoot } from 'react-dom/client';
 import App from '../../App.web.jsx';
+import ErrorBoundary from './ErrorBoundary.jsx';
 
 // Global error instrumentation to capture any silent failures in production
 window.addEventListener('error', (e) => {
@@ -20,7 +21,11 @@ console.log('[boot] starting web app, BUILD_ID=', typeof __BUILD_ID__ !== 'undef
 AppRegistry.registerComponent('AppyBrain', () => App);
 
 const rootTag = document.getElementById('root');
-const Root = () => <App />;
+const Root = () => (
+	<ErrorBoundary>
+		<App />
+	</ErrorBoundary>
+);
 
 try {
 	// React 18 root API

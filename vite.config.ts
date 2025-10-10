@@ -17,15 +17,23 @@ export default defineConfig({
       name: 'rn-web-jsx-pre',
       enforce: 'pre',
       async transform(code, id) {
-        const isSrcJs = id.includes('/src/') && id.endsWith('.js');
-        const isExpoLinearGradient = id.includes('/node_modules/expo-linear-gradient/') && id.endsWith('.js');
+        // Normalize path and strip Vite query (e.g., ?v=hash)
+        const norm = id.replace(/\\/g, '/');
+        const cleanId = norm.split('?')[0];
+        const isSrcJs = cleanId.includes('/src/') && cleanId.endsWith('.js');
+        const isExpoLinearGradient = cleanId.includes('/node_modules/expo-linear-gradient/') && cleanId.endsWith('.js');
         if (!isSrcJs && !isExpoLinearGradient) return null;
         const { transform } = await import('esbuild');
         const result = await transform(code, { loader: 'jsx', jsx: 'automatic', sourcemap: false });
         return { code: result.code };
       },
     },
-    react(),
+    react({
+      jsxRuntime: 'automatic',
+      include: [
+        /\/src\/.*\.[jt]sx?$/,
+      ],
+    }),
   ],
   root: '.',
   publicDir: 'public',
@@ -36,6 +44,20 @@ export default defineConfig({
   esbuild: {
     jsx: 'automatic',
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+        '.ts': 'ts',
+        '.tsx': 'tsx',
+      },
+    },
+    include: [
+      'react-native-gesture-handler',
+      'react-native-screens',
+    ],
+  },
+  ssr: { noExternal: ['react-native-gesture-handler', 'react-native-screens'] },
   resolve: {
     alias: {
       'react-native': 'react-native-web',
