@@ -13,6 +13,7 @@ export default function AppWeb() {
   const backgroundTime = useRef(null);
 
   useEffect(() => {
+    console.log('[boot] App.web.jsx mounted');
     ApiManager.init({ baseUrl: 'https://appybrain.skillade.com/' });
 
     const handleAppStateChange = (nextAppState) => {
@@ -39,6 +40,8 @@ export default function AppWeb() {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription?.remove();
   }, []);
+
+  console.log('[boot] App.web.jsx rendering');
 
   return (
     <SafeAreaProvider>
