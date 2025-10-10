@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createRoot } from 'react-dom/client';
-import App from '../../App.web.jsx';
+import App from '../../App.web.minimal.jsx'; // Using minimal version
 import ErrorBoundary from './ErrorBoundary.jsx';
 
 // Visual debug logging
