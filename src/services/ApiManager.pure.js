@@ -208,6 +208,37 @@ class ApiManager {
         }
     }
 
+    async validateSession() {
+        try {
+            // Check if we have tokens
+            if (!this.accessToken || !this.refreshToken) {
+                return false;
+            }
+
+            // Call the logon_user endpoint to validate session
+            const response = await this.get('api/auth/logon_user');
+
+            // If we get here without an error, session is valid
+            if (response && response.success) {
+                return response;
+            }
+
+            return false;
+        } catch (error) {
+            console.log('[ApiManager] Session validation failed:', error.message);
+
+            // Check if it's an authentication error (401 or 400)
+            if (error.message.includes('Unauthorized') || error.message.includes('400')) {
+                // Clear invalid tokens
+                await this.clearSession();
+                return false;
+            }
+
+            // For other errors (network, etc.), assume session is invalid
+            return false;
+        }
+    }
+
     isAuthenticated() {
         return !!this.accessToken && (!this.expiresAt || Date.now() < this.expiresAt);
     }

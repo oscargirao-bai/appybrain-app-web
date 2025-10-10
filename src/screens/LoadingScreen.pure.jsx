@@ -22,40 +22,40 @@ export default function LoadingScreen({ onNavigate }) {
     }, 2000);
 
     // Load app data
-    const loadAppData = async () => {
+    useEffect(() => {
+    const loadData = async () => {
       try {
+        console.log('[LoadingScreen] Starting data load...');
+
         // Validate session
-        const isValid = await ApiManager.get('auth/validate');
-        
-        if (!isValid || !isValid.success) {
-          console.error('Session invalid');
+        const sessionResponse = await ApiManager.validateSession();
+
+        if (!sessionResponse || !sessionResponse.success) {
+          console.error('[LoadingScreen] Session invalid');
           onNavigate?.('Login');
           return;
         }
 
-        // Load medals
-        console.log('Loading medals...');
-        await ApiManager.get('medals');
+        console.log('[LoadingScreen] Session valid, user:', sessionResponse.user);
 
-        // Load content
-        setLoadingText('A carregar conteúdos...');
-        console.log('Loading content...');
-        await ApiManager.get('content');
+        // TODO: Load medals and content
+        // const medals = await ApiManager.get('medals');
+        // const content = await ApiManager.get('content');
 
-        // Wait minimum time for smooth transition
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('[LoadingScreen] Data loaded successfully');
 
-        // Navigate to main app
-        console.log('Loading complete, navigating to main app');
-        onNavigate?.('Main');
+        // Navigate to main app after short delay
+        setTimeout(() => {
+          onNavigate?.('Main');
+        }, 1500);
       } catch (error) {
-        console.error('Loading error:', error);
-        // If error, go back to login
+        console.error('[LoadingScreen] Load failed:', error);
         onNavigate?.('Login');
       }
     };
 
-    loadAppData();
+    loadData();
+  }, [onNavigate]);
 
     return () => clearTimeout(textTimer);
   }, [onNavigate]);
