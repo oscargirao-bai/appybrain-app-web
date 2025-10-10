@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppState } from 'react-native';
-import AppRouter from './src/AppRouter';
+import AppRouter from './src/AppRouter.web';
 import { ThemeProvider } from './src/services/Theme';
 import { TranslationProvider } from './src/services/Translate';
 import { SearchProvider } from './src/services/SearchContext';

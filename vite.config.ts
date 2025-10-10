@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 // Polyfills: React Native packages sometimes reference process.env
@@ -9,6 +10,8 @@ const defineEnv = {
 
 export default defineConfig({
   plugins: [
+    // Allow importing SVGs as React components (default export)
+    svgr({ exportAsDefault: true }),
     {
       name: 'rn-web-jsx-pre',
       enforce: 'pre',

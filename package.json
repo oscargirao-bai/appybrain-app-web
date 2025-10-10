@@ -19,7 +19,8 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-vector-icons/lucide": "12.3.0",
     "@react-navigation/native": "^6.1.17",
-    "@react-navigation/native-stack": "^6.9.26",
+  "@react-navigation/native-stack": "^6.9.26",
+  "@react-navigation/stack": "^6.4.1",
     "expo": "~54.0.10",
     "expo-constants": "~18.0.9",
     "expo-device": "~8.0.8",
@@ -46,7 +47,8 @@
     "metro-react-native-babel-transformer": "^0.77.0",
     "react-native-svg-transformer": "^1.5.0",
     "typescript": "~5.9.2",
-    "vite": "^5.4.8"
+    "vite": "^5.4.8",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "engines": {
     "node": ">=18.0.0",
