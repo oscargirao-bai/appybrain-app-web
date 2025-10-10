@@ -239,6 +239,92 @@ class ApiManager {
         }
     }
 
+    async loadAppData() {
+        try {
+            console.log('[ApiManager] Loading app data...');
+
+            // Make all requests sequentially (as per original implementation)
+            const userInfo = await this.get('api/app/gamification_user_badges').catch(err => {
+                console.warn('[ApiManager] Failed to load user badges:', err);
+                return null;
+            });
+
+            const disciplines = await this.get('api/app/learn_content_list').catch(err => {
+                console.warn('[ApiManager] Failed to load disciplines:', err);
+                return null;
+            });
+
+            const userStars = await this.get('api/app/gamification_user_stars').catch(err => {
+                console.warn('[ApiManager] Failed to load user stars:', err);
+                return null;
+            });
+
+            const tribes = await this.get('api/app/tribes_list').catch(err => {
+                console.warn('[ApiManager] Failed to load tribes:', err);
+                return null;
+            });
+
+            const userChests = await this.get('api/app/gamification_user_chests').catch(err => {
+                console.warn('[ApiManager] Failed to load user chests:', err);
+                return null;
+            });
+
+            const notifications = await this.get('api/app/user_notifications').catch(err => {
+                console.warn('[ApiManager] Failed to load notifications:', err);
+                return null;
+            });
+
+            const news = await this.get('api/app/information_news').catch(err => {
+                console.warn('[ApiManager] Failed to load news:', err);
+                return null;
+            });
+
+            const rankings = await this.get('api/app/ranking').catch(err => {
+                console.warn('[ApiManager] Failed to load rankings:', err);
+                return null;
+            });
+
+            const challenges = await this.get('api/app/challenges_list').catch(err => {
+                console.warn('[ApiManager] Failed to load challenges:', err);
+                return null;
+            });
+
+            console.log('[ApiManager] App data loaded successfully');
+
+            return {
+                userInfo,
+                disciplines,
+                userStars,
+                tribes,
+                userChests,
+                notifications,
+                news,
+                rankings,
+                challenges
+            };
+        } catch (error) {
+            console.error('[ApiManager] Failed to load app data:', error);
+            throw error;
+        }
+    }
+
+    async loadOrganizationData() {
+        try {
+            console.log('[ApiManager] Loading organization data...');
+            const response = await this.get('api/auth/logon_user');
+            
+            if (response && response.success && response.organization) {
+                console.log('[ApiManager] Organization data loaded');
+                return response.organization;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('[ApiManager] Failed to load organization data:', error);
+            return null;
+        }
+    }
+
     isAuthenticated() {
         return !!this.accessToken && (!this.expiresAt || Date.now() < this.expiresAt);
     }

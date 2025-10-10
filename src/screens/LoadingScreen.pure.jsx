@@ -1,33 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './LoadingScreen.css';
 import ApiManager from '../services/ApiManager.pure.js';
 
 export default function LoadingScreen({ onNavigate }) {
-  const [loadingText, setLoadingText] = useState('A carregar medalhas...');
-  const [logoOpacity, setLogoOpacity] = useState(0);
-  const skaterRef = useRef(null);
+  const [loadingText, setLoadingText] = useState('A validar sessão...');
+  const [organizationLogoUrl, setOrganizationLogoUrl] = useState(null);
 
   useEffect(() => {
-    // Fade in logo
-    setTimeout(() => setLogoOpacity(1), 100);
-
-    // Animate skater
-    if (skaterRef.current) {
-      skaterRef.current.style.animation = 'skate 3s linear infinite';
-    }
-
-    // Change loading text after 2s
-    const textTimer = setTimeout(() => {
-      setLoadingText('A carregar conteúdos...');
-    }, 2000);
-
-    // Load app data
-    useEffect(() => {
     const loadData = async () => {
       try {
         console.log('[LoadingScreen] Starting data load...');
 
-        // Validate session
+        // Step 1: Validate session
         const sessionResponse = await ApiManager.validateSession();
 
         if (!sessionResponse || !sessionResponse.success) {
@@ -38,16 +22,38 @@ export default function LoadingScreen({ onNavigate }) {
 
         console.log('[LoadingScreen] Session valid, user:', sessionResponse.user);
 
-        // TODO: Load medals and content
-        // const medals = await ApiManager.get('medals');
-        // const content = await ApiManager.get('content');
+        // Step 2: Load organization data (includes logo)
+        setLoadingText('A carregar dados da organização...');
+        const organizationData = await ApiManager.loadOrganizationData();
+        
+        if (organizationData && organizationData.logoUrl) {
+          setOrganizationLogoUrl(organizationData.logoUrl);
+          console.log('[LoadingScreen] Organization logo loaded:', organizationData.logoUrl);
+        }
 
-        console.log('[LoadingScreen] Data loaded successfully');
+        // Step 3: Load all app data (9 sequential API calls)
+        setLoadingText('A carregar conteúdo...');
+        const appData = await ApiManager.loadAppData();
+        
+        console.log('[LoadingScreen] App data loaded:', {
+          userInfo: !!appData.userInfo,
+          disciplines: !!appData.disciplines,
+          userStars: !!appData.userStars,
+          tribes: !!appData.tribes,
+          userChests: !!appData.userChests,
+          notifications: !!appData.notifications,
+          news: !!appData.news,
+          rankings: !!appData.rankings,
+          challenges: !!appData.challenges
+        });
 
-        // Navigate to main app after short delay
-        setTimeout(() => {
-          onNavigate?.('Main');
-        }, 1500);
+        // Ensure minimum loading time for better UX
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        console.log('[LoadingScreen] Data loaded successfully, navigating to Main');
+
+        // Navigate to main app
+        onNavigate?.('Main');
       } catch (error) {
         console.error('[LoadingScreen] Load failed:', error);
         onNavigate?.('Login');
@@ -57,29 +63,23 @@ export default function LoadingScreen({ onNavigate }) {
     loadData();
   }, [onNavigate]);
 
-    return () => clearTimeout(textTimer);
-  }, [onNavigate]);
-
   return (
     <div className="loading-screen">
-      <div className="loading-content">
-        <img 
-          src="/assets/logo.png" 
-          alt="AppyBrain Logo" 
-          className="loading-logo"
-          style={{ opacity: logoOpacity }}
-        />
-
-        <div className="loading-animation">
-          <div ref={skaterRef} className="skater">
-            🛹
-          </div>
+      {organizationLogoUrl && (
+        <div className="org-logo-container">
+          <img 
+            src={organizationLogoUrl} 
+            alt="Logo da escola" 
+            className="org-logo"
+          />
         </div>
-
-        <p className="loading-text">{loadingText}</p>
+      )}
+      <div className="skater-container">
+        <div className="skater">🛹</div>
       </div>
-
-      <div className="rainbow-bars"></div>
+      <div className="loading-text">
+        <div className="pulse">{loadingText}</div>
+      </div>
     </div>
   );
 }
