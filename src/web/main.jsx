@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createRoot } from 'react-dom/client';
-import App from '../../App.web';
+import App from '../../App.web.jsx';
 
 // Register the main component for React Native Web
 AppRegistry.registerComponent('AppyBrain', () => App);

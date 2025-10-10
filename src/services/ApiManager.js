@@ -1,13 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 
-// Import DataManager at the top to avoid dynamic imports
-// Note: This creates a circular dependency, but it's safe because we only use
-// DataManager.setUserConfig() which doesn't depend on ApiManager
+// Lazy import to avoid circular dependency issues under Vite/ESM
 let DataManager = null;
-const getDataManager = () => {
+const getDataManager = async () => {
     if (!DataManager) {
-        DataManager = require('./DataManager').default;
+        const mod = await import('./DataManager');
+        DataManager = mod.default;
     }
     return DataManager;
 };
@@ -407,7 +406,7 @@ class ApiManager {
             // Store user config if available
             if (response && response.success && response.user) {
                 // Get DataManager instance (lazy loaded to avoid circular dependency issues)
-                const dm = getDataManager();
+                const dm = await getDataManager();
                 dm.setUserConfig({
                     randomPosition: response.user.randomPosition,
                     fullAccess: response.user.fullAccess
@@ -984,7 +983,6 @@ class ApiManager {
     }
 }
 
-// Create singleton instance
+// Export singleton instance (ESM default)
 const apiManager = new ApiManager();
-
-module.exports = apiManager;
+export default apiManager;

@@ -8,12 +8,29 @@ const defineEnv = {
 };
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    {
+      name: 'rn-web-jsx-pre',
+      enforce: 'pre',
+      async transform(code, id) {
+        const isSrcJs = id.includes('/src/') && id.endsWith('.js');
+        const isExpoLinearGradient = id.includes('/node_modules/expo-linear-gradient/') && id.endsWith('.js');
+        if (!isSrcJs && !isExpoLinearGradient) return null;
+        const { transform } = await import('esbuild');
+        const result = await transform(code, { loader: 'jsx', jsx: 'automatic', sourcemap: false });
+        return { code: result.code };
+      },
+    },
+    react(),
+  ],
   root: '.',
   publicDir: 'public',
   build: {
     outDir: 'dist',
     sourcemap: true,
+  },
+  esbuild: {
+    jsx: 'automatic',
   },
   resolve: {
     alias: {
