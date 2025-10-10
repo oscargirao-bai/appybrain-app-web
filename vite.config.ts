@@ -3,10 +3,11 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
-// Polyfills: React Native packages sometimes reference process.env
+// Polyfills: React Native packages sometimes reference process.env and global
 const defineEnv = {
   'process.env': {},
   __BUILD_ID__: JSON.stringify(Date.now().toString()),
+  'global': 'globalThis',
 };
 
 export default defineConfig({
