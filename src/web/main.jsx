@@ -30,9 +30,11 @@ window.addEventListener('unhandledrejection', (e) => {
 	console.error('[boot] unhandledrejection:', e?.reason || e);
 });
 
-// Boot marker
-debugLog('BUILD_ID=' + (typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev'), '#0ff');
-console.log('[boot] starting web app, BUILD_ID=', typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev');
+// Boot marker - SHOW IMMEDIATELY
+const buildId = (typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev');
+debugLog('BUILD=' + buildId, '#0ff');
+console.log('[boot] 🚀 WEB APP STARTING - BUILD_ID:', buildId);
+console.log('[boot] 🔍 Expecting: v48cc73f-TIMESTAMP format');
 
 // Register the main component for React Native Web
 AppRegistry.registerComponent('AppyBrain', () => App);

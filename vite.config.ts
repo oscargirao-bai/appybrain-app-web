@@ -4,11 +4,13 @@ import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 // Polyfills: React Native packages sometimes reference process.env and global
+const BUILD_ID = 'v48cc73f-' + Date.now();
 const defineEnv = {
   'process.env': {},
-  __BUILD_ID__: JSON.stringify(Date.now().toString()),
+  __BUILD_ID__: JSON.stringify(BUILD_ID),
   'global': 'globalThis',
 };
+console.log('🔨 Building with ID:', BUILD_ID);
 
 export default defineConfig({
   plugins: [
