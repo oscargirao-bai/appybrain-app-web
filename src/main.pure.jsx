@@ -4,7 +4,7 @@ import App from './App.pure.jsx';
 import ApiManager from './services/ApiManager.pure.js';
 
 // Initialize API
-ApiManager.init({ baseUrl: 'https://appybrain.skillade.com/' });
+ApiManager.init({ baseUrl: 'https://appybrain.skillade.com/api/' });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
