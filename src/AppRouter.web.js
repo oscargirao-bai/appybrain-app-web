@@ -131,6 +131,12 @@ export default function AppRouter() {
   const { resolvedTheme, colors } = useTheme();
   const navTheme = resolvedTheme === 'light' ? DefaultTheme : DarkTheme;
 
+  // Trace router mount on web
+  React.useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('[boot] AppRouter mounted');
+  }, []);
+
   return (
     <NavigationContainer theme={navTheme} ref={navigationRef}>
       <Stack.Navigator

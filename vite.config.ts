@@ -6,12 +6,13 @@ import path from 'path';
 // Polyfills: React Native packages sometimes reference process.env
 const defineEnv = {
   'process.env': {},
+  __BUILD_ID__: JSON.stringify(Date.now().toString()),
 };
 
 export default defineConfig({
   plugins: [
-    // Allow importing SVGs as React components (default export)
-    svgr({ exportAsDefault: true }),
+  // Allow importing SVGs as React components; export default
+  svgr({ svgrOptions: { exportType: 'default' } }),
     {
       name: 'rn-web-jsx-pre',
       enforce: 'pre',

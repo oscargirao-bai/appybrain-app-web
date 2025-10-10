@@ -14,7 +14,7 @@ window.addEventListener('unhandledrejection', (e) => {
 });
 
 // Boot marker
-console.log('[boot] starting web app');
+console.log('[boot] starting web app, BUILD_ID=', typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev');
 
 // Register the main component for React Native Web
 AppRegistry.registerComponent('AppyBrain', () => App);

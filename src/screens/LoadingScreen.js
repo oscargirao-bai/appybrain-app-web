@@ -28,6 +28,8 @@ export default function LoadingScreen({ navigation }) {
 
 	// Basic fade-in animation for logo and looping progress bar
 	useEffect(() => {
+		// Trace entering LoadingScreen
+		try { console.log('[boot] LoadingScreen start'); } catch(_) {}
 		// Fade in the logo
 		Animated.timing(logoFade, { toValue: 1, duration: 650, useNativeDriver: true }).start();
 
