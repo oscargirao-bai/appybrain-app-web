@@ -13,6 +13,13 @@
       if (typeof process === 'undefined') {
         window.process = { env: {} };
       }
+      // Mock require for CommonJS compatibility
+      if (typeof require === 'undefined') {
+        window.require = function(module) {
+          console.warn('[polyfill] require() called for:', module);
+          return {};
+        };
+      }
     </script>
     <style>
       html, body, #root { height: 100%; }
