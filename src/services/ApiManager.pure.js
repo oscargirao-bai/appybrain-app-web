@@ -92,26 +92,40 @@ class ApiManager {
             headers['Authorization'] = `Bearer ${this.accessToken}`;
         }
 
-        const response = await fetch(url, {
-            ...options,
-            headers
-        });
+        try {
+            const response = await fetch(url, {
+                ...options,
+                headers,
+                credentials: 'include' // Important for CORS with cookies
+            });
 
-        if (response.status === 401 && this.refreshToken && !options.skipAuth) {
-            // Try to refresh token
-            const refreshed = await this.refreshAccessToken();
-            if (refreshed) {
-                // Retry original request
-                headers['Authorization'] = `Bearer ${this.accessToken}`;
-                const retryResponse = await fetch(url, {
-                    ...options,
-                    headers
-                });
-                return this.handleResponse(retryResponse);
+            if (response.status === 401 && this.refreshToken && !options.skipAuth) {
+                // Try to refresh token
+                const refreshed = await this.refreshAccessToken();
+                if (refreshed) {
+                    // Retry original request
+                    headers['Authorization'] = `Bearer ${this.accessToken}`;
+                    const retryResponse = await fetch(url, {
+                        ...options,
+                        headers,
+                        credentials: 'include'
+                    });
+                    return this.handleResponse(retryResponse);
+                }
             }
-        }
 
-        return this.handleResponse(response);
+            return this.handleResponse(response);
+        } catch (error) {
+            // Network or CORS error
+            console.error('[ApiManager] Request failed:', error);
+            console.error('[ApiManager] URL:', url);
+            console.error('[ApiManager] Headers:', headers);
+            
+            const corsError = new Error('Erro de rede ou CORS. Verifique a consola para detalhes.');
+            corsError.status = 0;
+            corsError.originalError = error;
+            throw corsError;
+        }
     }
 
     async handleResponse(response) {

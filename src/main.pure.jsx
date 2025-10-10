@@ -7,8 +7,4 @@ import ApiManager from './services/ApiManager.pure.js';
 ApiManager.init({ baseUrl: 'https://appybrain.skillade.com/' });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+root.render(<App />);

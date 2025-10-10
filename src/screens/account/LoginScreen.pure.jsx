@@ -32,17 +32,25 @@ export default function LoginScreen({ onNavigate }) {
       }
     } catch (error) {
       console.error('Login error:', error);
-      
+      console.error('Error details:', {
+        status: error?.status,
+        message: error?.message,
+        data: error?.data,
+        originalError: error?.originalError
+      });
+
       let errorMessage = 'Falha no login. Verifique as suas credenciais.';
-      
-      if (error?.status === 401) {
+
+      if (error?.status === 0) {
+        errorMessage = 'Erro de rede ou CORS. A API não está acessível.\n\nDetalhes na consola do browser (F12).';
+      } else if (error?.status === 401) {
         errorMessage = 'Email ou palavra-passe incorretos.';
       } else if (error?.status === 500) {
         errorMessage = 'Erro do servidor. Tente novamente mais tarde.';
       } else if (error?.status === 408) {
         errorMessage = 'Tempo limite excedido. Verifique a sua ligação à internet.';
       }
-      
+
       alert(errorMessage);
     } finally {
       setIsLoading(false);
