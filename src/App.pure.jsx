@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginScreen from './screens/account/LoginScreen.pure.jsx';
+import LoadingScreen from './screens/LoadingScreen.pure.jsx';
 import './App.css';
 
 function PlaceholderScreen({ title }) {
@@ -20,7 +21,9 @@ export default function App() {
       case 'Password':
         return <PlaceholderScreen title="Alterar palavra-passe (TODO)" />;
       case 'Loading':
-        return <PlaceholderScreen title="A carregar..." />;
+        return <LoadingScreen onNavigate={setCurrentScreen} />;
+      case 'Main':
+        return <PlaceholderScreen title="App Principal (TODO)" />;
       case 'Login':
       default:
         return <LoginScreen onNavigate={setCurrentScreen} />;
