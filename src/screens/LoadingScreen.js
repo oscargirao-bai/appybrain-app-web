@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Image, StyleSheet, Animated, useWindowDimensions, Platform, Text, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Skater from '../../assets/skater.svg';
 import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import { family } from '../constants/font';
@@ -9,6 +8,14 @@ import ApiManager from '../services/ApiManager';
 import DataManager from '../services/DataManager';
 import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef';
 import { executeNotificationNavigation } from '../services/Notifications';
+
+// Try to import SVG, fallback to null if not available (web compatibility)
+let Skater = null;
+try {
+	Skater = require('../../assets/skater.svg').default;
+} catch (e) {
+	console.warn('[LoadingScreen] Skater SVG not available:', e.message);
+}
 
 // Assets
 const logo = require('../../assets/logo.png');
@@ -199,7 +206,7 @@ export default function LoadingScreen({ navigation }) {
 					importantForAccessibility="no-hide-descendants"
 				/>
 				<Animated.View style={{ position: 'absolute', left: 0, bottom: 50, transform: [{ translateX }, { translateY }] }}>
-					<Skater width={skaterWidth} height={skaterHeight} />
+					{Skater && <Skater width={skaterWidth} height={skaterHeight} />}
 				</Animated.View>
 			</View>
 		</SafeAreaView>
