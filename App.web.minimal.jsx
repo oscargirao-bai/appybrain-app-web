@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MinimalAppRouter from './src/MinimalAppRouter';
 import ApiManager from './src/services/ApiManager';
+import { ThemeProvider } from './src/services/Theme';
+import { TranslationProvider } from './src/services/Translate';
 
 export default function AppWebMinimal() {
     useEffect(() => {
@@ -13,7 +15,11 @@ export default function AppWebMinimal() {
 
     return (
         <SafeAreaProvider>
-            <MinimalAppRouter />
+            <ThemeProvider defaultTheme="dark">
+                <TranslationProvider>
+                    <MinimalAppRouter />
+                </TranslationProvider>
+            </ThemeProvider>
         </SafeAreaProvider>
     );
 }
