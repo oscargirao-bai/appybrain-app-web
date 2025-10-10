@@ -16,14 +16,50 @@ export default class ErrorBoundary extends React.Component {
   }
 
   render() {
-    if (!this.state.hasError) return this.props.children;
-    const msg = String(this.state.error?.message || this.state.error || 'Unknown error');
-    return (
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', color: '#fff', zIndex: 999999, padding: 16, fontFamily: 'monospace', overflow: 'auto' }}>
-        <h3 style={{ marginTop: 0 }}>App crashed</h3>
-        <pre style={{ whiteSpace: 'pre-wrap' }}>{msg}</pre>
-        <p style={{ opacity: 0.7 }}>Check the console for the full stack trace.</p>
-      </div>
-    );
+    if (this.state.hasError) {
+      return (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: '#1a1a1a',
+            color: '#fff',
+            padding: '20px',
+            overflow: 'auto',
+            fontFamily: 'monospace',
+            fontSize: '14px',
+            zIndex: 999999,
+          }}
+        >
+          <h1 style={{ color: '#ff4444', marginBottom: '20px' }}>⚠️ Application Error</h1>
+          <div style={{ background: '#2a2a2a', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+            <strong>Error:</strong>
+            <pre style={{ whiteSpace: 'pre-wrap', margin: '10px 0', color: '#ff6666' }}>
+              {this.state.error ? this.state.error.toString() : 'Unknown error'}
+            </pre>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              background: '#4444ff',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '16px',
+            }}
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
   }
 }
