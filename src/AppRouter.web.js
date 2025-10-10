@@ -1,9 +1,7 @@
-import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { navigationRef } from './services/navigationRef';
 import { createStackNavigator } from '@react-navigation/stack';
-import { enableScreens } from 'react-native-screens';
 import { useTheme } from './services/Theme';
 import DataManager from './services/DataManager';
 // Screens
@@ -126,8 +124,6 @@ function MainTabs({ route }) {
 const Stack = createStackNavigator();
 
 export default function AppRouter() {
-  // Disable screens optimization on web to avoid rendering glitches
-  try { enableScreens(false); } catch (_) {}
   const { resolvedTheme, colors } = useTheme();
   const navTheme = resolvedTheme === 'light' ? DefaultTheme : DarkTheme;
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AppState } from 'react-native';
 import AppRouter from './src/AppRouter.web';
 import { ThemeProvider } from './src/services/Theme';
@@ -42,16 +41,14 @@ export default function AppWeb() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ThemeProvider defaultTheme="dark">
-          <TranslationProvider>
-            <SearchProvider>
-              <AppRouter />
-            </SearchProvider>
-          </TranslationProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <ThemeProvider defaultTheme="dark">
+        <TranslationProvider>
+          <SearchProvider>
+            <AppRouter />
+          </SearchProvider>
+        </TranslationProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

@@ -52,12 +52,9 @@ export default defineConfig({
         '.tsx': 'tsx',
       },
     },
-    include: [
-      'react-native-gesture-handler',
-      'react-native-screens',
-    ],
+    exclude: ['react-native-gesture-handler', 'react-native-screens'],
   },
-  ssr: { noExternal: ['react-native-gesture-handler', 'react-native-screens'] },
+  ssr: { noExternal: [] },
   resolve: {
     alias: {
       'react-native': 'react-native-web',
