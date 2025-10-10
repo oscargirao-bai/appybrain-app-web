@@ -1,7 +1,6 @@
 import React from 'react';
-import { AppRegistry } from 'react-native';
 import { createRoot } from 'react-dom/client';
-import App from '../../App.web.minimal.jsx'; // Using minimal version
+import App from '../../App.web.minimal.jsx';
 import ErrorBoundary from './ErrorBoundary.jsx';
 
 // Visual debug logging
@@ -18,26 +17,21 @@ function debugLog(msg, color = '#0f0') {
 
 debugLog('main.jsx loaded', '#00f');
 
-// Global error instrumentation to capture any silent failures in production
+// Global error handling
 window.addEventListener('error', (e) => {
-	// eslint-disable-next-line no-console
 	debugLog('ERROR: ' + (e?.error?.message || e?.message || 'unknown'), '#f00');
 	console.error('[boot] window.error:', e?.error || e?.message || e);
 });
+
 window.addEventListener('unhandledrejection', (e) => {
-	// eslint-disable-next-line no-console
 	debugLog('REJECT: ' + (e?.reason || 'unknown'), '#f00');
 	console.error('[boot] unhandledrejection:', e?.reason || e);
 });
 
-// Boot marker - SHOW IMMEDIATELY
+// Boot marker
 const buildId = (typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev');
 debugLog('BUILD=' + buildId, '#0ff');
 console.log('[boot] 🚀 WEB APP STARTING - BUILD_ID:', buildId);
-console.log('[boot] 🔍 Expecting: v48cc73f-TIMESTAMP format');
-
-// Register the main component for React Native Web
-AppRegistry.registerComponent('AppyBrain', () => App);
 
 const rootTag = document.getElementById('root');
 debugLog('root found: ' + !!rootTag, rootTag ? '#0f0' : '#f00');
@@ -49,7 +43,6 @@ const Root = () => (
 );
 
 try {
-	// React 18 root API
 	debugLog('creating root...', '#ff0');
 	const root = createRoot(rootTag);
 	debugLog('root created, rendering...', '#ff0');

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MinimalAppRouter from './src/MinimalAppRouter';
+import WebAppRouter from './src/WebAppRouter.jsx';
 import ApiManager from './src/services/ApiManager';
 import { ThemeProvider } from './src/services/Theme';
 import { TranslationProvider } from './src/services/Translate';
@@ -14,12 +13,10 @@ export default function AppWebMinimal() {
     console.log('[AppWebMinimal] Rendering');
 
     return (
-        <SafeAreaProvider>
-            <ThemeProvider defaultTheme="dark">
-                <TranslationProvider>
-                    <MinimalAppRouter />
-                </TranslationProvider>
-            </ThemeProvider>
-        </SafeAreaProvider>
+        <ThemeProvider defaultTheme="dark">
+            <TranslationProvider>
+                <WebAppRouter />
+            </TranslationProvider>
+        </ThemeProvider>
     );
 }

@@ -1,0 +1,160 @@
+/* Login Screen - Pure React/CSS */
+
+.login-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.login-content {
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-container {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 3rem;
+  overflow: hidden;
+  height: 180px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transform: translateY(-20%);
+}
+
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #4a9eff;
+}
+
+.form-group input::placeholder {
+  color: #666666;
+}
+
+.form-group input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #666666;
+  transition: color 0.2s;
+}
+
+.password-toggle:hover {
+  color: #999999;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1.5rem;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: #999999;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.forgot-link:hover {
+  color: #cccccc;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: #4a9eff;
+  color: #ffffff;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.submit-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo-container {
+    max-width: 250px;
+    height: 140px;
+  }
+  
+  .login-content {
+    width: 92%;
+  }
+}

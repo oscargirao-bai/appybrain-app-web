@@ -1,44 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AppyBrain</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-      // Polyfills for React Native Web
-      window.global = window.globalThis = window;
-      if (typeof process === 'undefined') {
-        window.process = { env: {} };
-      }
-      // Mock require for CommonJS compatibility
-      if (typeof require === 'undefined') {
-        window.require = function(module) {
-          console.warn('[polyfill] require() called for:', module);
-          return {};
-        };
-      }
-    </script>
-    <style>
-      html, body, #root { height: 100%; }
-      body { margin: 0; background: #000; }
-    </style>
-    <script>
-      // IMMEDIATE TEST - this runs before any module loading
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log('[IMMEDIATE] DOMContentLoaded fired');
-        var testDiv = document.createElement('div');
-        testDiv.style.cssText = 'position:fixed;top:0;left:0;background:#f00;color:#fff;padding:10px;z-index:9999999;font:14px monospace;';
-        testDiv.textContent = 'HTML LOADED - JS WORKING';
-        document.body.appendChild(testDiv);
-      });
-      console.log('[IMMEDIATE] inline script executed');
-    </script>
   </head>
-  <body style="margin:0;background:#000;">
+  <body>
     <div id="root"></div>
-    <script type="module" src="/src/web/main.jsx"></script>
+    <script type="module" src="/src/main.pure.jsx"></script>
   </body>
-  </html>
+</html>
