@@ -129,7 +129,14 @@ class ApiManager {
 
   async loadOrganizationData() {
     const res = await this.authJson('auth/logon_user');
-    return res?.organization || null;
+    // Match RN: info comes from res.user
+    const user = res?.user || null;
+    if (!user) return null;
+    return {
+      name: user.organizationName || '',
+      logoUrl: user.organizationUrl || '',
+      id: user.organizationId ?? null,
+    };
   }
 
   async loadAppData() {
