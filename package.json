@@ -6,7 +6,10 @@
     "start": "expo start --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "dev:vite": "npm --prefix web run dev",
+    "build:vite": "npm --prefix web install && npm --prefix web run build",
+    "preview:vite": "npm --prefix web run preview"
   },
   "dependencies": {
     "@expo-google-fonts/work-sans": "^0.4.2",
