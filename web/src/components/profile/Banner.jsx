@@ -1,28 +1,18 @@
 import React from 'react';
+import Icon from '../common/Icon.jsx';
 
-export default function Banner({ avatarUrl, backgroundUrl }) {
+export default function Banner({ avatarUrl, backgroundUrl, frameUrl, bottomFlat=true, topFlat=false, onClick }) {
+  const hasBg = !!backgroundUrl;
+  const bgStyle = hasBg ? { backgroundImage: `url(${backgroundUrl})`, backgroundSize:'cover', backgroundPosition:'center' } : { background:'linear-gradient(135deg,#FFE259,#FFD000)' };
+  const topR = topFlat ? 0 : 22;
+  const botR = bottomFlat ? 0 : 22;
+  const borderRadius = `${topR}px ${topR}px ${botR}px ${botR}px`;
   return (
-    <div className="wb-banner" aria-label="profile-banner">
-      {backgroundUrl ? (
-        <img className="wb-banner-bg" src={backgroundUrl} alt="banner" />
-      ) : (
-        <div className="wb-banner-grad" />
-      )}
-      <div className="wb-avatar-ring">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt="avatar" />
-        ) : (
-          <div className="wb-avatar-fallback" />
-        )}
+    <div onClick={onClick} style={{ position:'relative', width:'100%', height:180, ...bgStyle, borderRadius, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', cursor: onClick?'pointer':'default' }}>
+      {frameUrl && <img src={frameUrl} alt="frame" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'stretch', pointerEvents:'none' }} />}
+      <div style={{ position:'relative', width:108, height:108, border:'4px solid #fff', borderRadius:'50%', overflow:'hidden', background:'#E3F0FF', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : <Icon name="user" size={64} color="#1856A6" />}
       </div>
-      <style>{`
-        .wb-banner{position:relative;border-radius:0 0 18px 18px;overflow:hidden;height:180px;background:linear-gradient(135deg,#FFE259,#FFD000);display:flex;align-items:center;justify-content:center}
-        .wb-banner-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-        .wb-banner-grad{position:absolute;inset:0;background:linear-gradient(135deg,#FFE259,#FFD000)}
-        .wb-avatar-ring{position:relative;width:108px;height:108px;border:4px solid #fff;border-radius:999px;overflow:hidden;background:#E3F0FF}
-        .wb-avatar-ring img{width:100%;height:100%;object-fit:cover}
-        .wb-avatar-fallback{width:100%;height:100%;background:#E3F0FF}
-      `}</style>
     </div>
   );
 }

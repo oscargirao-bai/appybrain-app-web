@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ApiManager from '../services/ApiManager.js';
-import { setAppData, setOrganization } from '../services/DataStore.js';
+import DataManager from '../services/DataManager.js';
 import './Loading.css';
 
 export default function Loading({ onNavigate }) {
@@ -9,22 +9,33 @@ export default function Loading({ onNavigate }) {
 
   useEffect(() => {
     const run = async () => {
-      const valid = await ApiManager.validateSession();
-      if (!valid || !valid.success) return onNavigate('Login');
+      try {
+        const valid = await ApiManager.validateSession();
+        if (!valid || !valid.success) {
+          console.warn('Session validation failed, redirecting to login');
+          return onNavigate('Login');
+        }
 
-      setText('A carregar dados da organização...');
-      const org = await ApiManager.loadOrganizationData();
-      setOrganization(org);
-      if (org?.logoUrl) setOrgLogo(org.logoUrl);
+        setText('A carregar dados da organização...');
+        const org = await ApiManager.loadOrganizationData();
+        if (org?.logoUrl) setOrgLogo(org.logoUrl);
 
-      setText('A carregar conteúdo...');
-      const data = await ApiManager.loadAppData();
-      setAppData(data);
-      // Ensure at least 5 seconds visible after logo appears
-      if (org?.logoUrl) {
-        await new Promise(r => setTimeout(r, 5000));
+        setText('A carregar conteúdo...');
+        const data = await ApiManager.loadAppData();
+        
+        // Hydrate DataManager with loaded data
+        DataManager.setData(data);
+        
+        // Ensure at least 5 seconds visible after logo appears
+        if (org?.logoUrl) {
+          await new Promise(r => setTimeout(r, 5000));
+        }
+        
+        onNavigate('Learn');
+      } catch (error) {
+        console.error('Failed during app initialization:', error);
+        onNavigate('Login');
       }
-      onNavigate('Learn');
     };
     run();
   }, [onNavigate]);
@@ -51,3 +62,4 @@ export default function Loading({ onNavigate }) {
     </div>
   );
 }
+
