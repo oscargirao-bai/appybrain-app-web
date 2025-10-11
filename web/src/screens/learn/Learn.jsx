@@ -4,6 +4,9 @@ import { t } from '../../services/Translate.js';
 import { getAppData } from '../../services/DataStore.js';
 import ApiManager from '../../services/ApiManager.js';
 import './Learn.css';
+import NotificationsModal from '../../components/learn/NotificationsModal.jsx';
+import RankingsModal from '../../components/learn/RankingsModal.jsx';
+import ChestBrowserModal from '../../components/learn/ChestBrowserModal.jsx';
 
 // Small inline SVG star that can be partially filled (0..1)
 function Star({ fraction = 0, size = 28 }) {
@@ -36,16 +39,16 @@ function StarsRow({ earned = 0, max = 3 }) {
   );
 }
 
-function HeaderBar({ title, notifications = 0 }) {
+function HeaderBar({ title, notifications = 0, onOpenNotifications, onOpenSettings }) {
   return (
     <header className="learn-header">
       <div className="title">{title}</div>
       <div className="actions">
-        <button className="icon-btn" aria-label="Notificações">
+        <button className="icon-btn" aria-label="Notificações" onClick={onOpenNotifications}>
           <Bell size={22} />
           {notifications > 0 && <span className="badge">{notifications}</span>}
         </button>
-        <button className="icon-btn" aria-label="Definições">
+        <button className="icon-btn" aria-label="Definições" onClick={onOpenSettings}>
           <Settings size={22} />
         </button>
       </div>
@@ -88,12 +91,12 @@ function InfoRow({ username = '—', tribe = t('common.noTribe'), stars = 0, coi
   );
 }
 
-function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals }) {
+function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals, onOpenChest }) {
   return (
     <div className="chest-line">
-      <div className="chest-circle" aria-label="Baú">
+      <button className="chest-circle" aria-label="Baú" onClick={onOpenChest} style={{ cursor:'pointer' }}>
         <img src="/assets/chests/chest-bronze.png" alt="baú" className="chest-img" />
-      </div>
+      </button>
       <StarsRow earned={starsEarned} max={starsMax} />
       <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Medal size={22} /></button>
     </div>
@@ -118,6 +121,9 @@ function SubjectsRow({ subjects = [], onOpenFirst }) {
 
 export default function Learn() {
   const [state, setState] = useState({ loading: true, subjects: [], user: null, totals: { earned: 0, max: 3 }, notifications: 0 });
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [rankOpen, setRankOpen] = useState(false);
+  const [chestOpen, setChestOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -154,15 +160,18 @@ export default function Learn() {
   return (
     <div className="learn-wrap">
       <div className="page-50">
-        <HeaderBar title={t('titles.learn')} notifications={notifications} />
+        <HeaderBar title={t('titles.learn')} notifications={notifications} onOpenNotifications={() => setNotifOpen(true)} onOpenSettings={() => console.log('settings')} />
       </div>
       <div className="content page-50">
         <BannerCard avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
         <InfoRow username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
-        <ChestStarsRow starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => console.log('Open medals')} />
+        <ChestStarsRow starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => setRankOpen(true)} onOpenChest={() => setChestOpen(true)} />
         <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
       </div>
       <BottomTabs onNavigate={() => {}} />
+      <NotificationsModal visible={notifOpen} onClose={() => setNotifOpen(false)} items={(getAppData()?.notifications?.notifications)||[]} />
+      <RankingsModal visible={rankOpen} onClose={() => setRankOpen(false)} />
+      <ChestBrowserModal visible={chestOpen} onClose={() => setChestOpen(false)} onChestOpened={() => {}} />
     </div>
   );
 }
