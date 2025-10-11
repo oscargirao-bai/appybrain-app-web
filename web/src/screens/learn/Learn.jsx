@@ -7,7 +7,7 @@ import './Learn.css';
 import NotificationsModal from '../../components/learn/NotificationsModal.jsx';
 import RankingsModal from '../../components/learn/RankingsModal.jsx';
 import ChestBrowserModal from '../../components/learn/ChestBrowserModal.jsx';
-import Chest from '../../components/general/Chest.jsx';
+import Chest from '../../components/General/Chest.jsx';
 import { updateAppData } from '../../services/DataStore.js';
 
 // Small inline SVG star that can be partially filled (0..1)
