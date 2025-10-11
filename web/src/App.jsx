@@ -4,6 +4,10 @@ import LoginScreen from './screens/account/Login.jsx';
 import LoadingScreen from './screens/Loading.jsx';
 import LearnScreen from './screens/learn/Learn.jsx';
 import BattleScreen from './screens/tabs/Battle.jsx';
+import ChallengeScreen from './screens/tabs/Challenge.jsx';
+import NewsScreen from './screens/tabs/News.jsx';
+import ShopScreen from './screens/tabs/Shop.jsx';
+import TribeScreen from './screens/tabs/Tribe.jsx';
 import SettingsScreen from './screens/Settings.jsx';
 import ProfileScreen from './screens/Profile.jsx';
 import CategoryScreen from './screens/learn/Category.jsx';
@@ -73,10 +77,13 @@ export default function App() {
       case 'Battle':
         return <BattleScreen onNavigate={navigate} />;
       case 'Challenges':
+        return <ChallengeScreen onNavigate={navigate} />;
       case 'Tribes':
+        return <TribeScreen onNavigate={navigate} />;
       case 'News':
+        return <NewsScreen onNavigate={navigate} />;
       case 'Shop':
-        return <div className="page-50" style={{ padding: '40px 20px', textAlign: 'center' }}><h2>{screen}</h2><p>Em desenvolvimento...</p></div>;
+        return <ShopScreen onNavigate={navigate} />;
       case 'Login':
       default:
         return <LoginScreen onNavigate={navigate} />;
