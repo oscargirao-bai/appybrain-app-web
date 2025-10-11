@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ApiManager from '../services/ApiManager.js';
+import { setAppData, setOrganization } from '../services/DataStore.js';
 
 export default function Loading({ onNavigate }) {
   const [text, setText] = useState('A validar sessão...');
@@ -9,13 +10,15 @@ export default function Loading({ onNavigate }) {
       const valid = await ApiManager.validateSession();
       if (!valid || !valid.success) return onNavigate('Login');
 
-      setText('A carregar dados da organização...');
-      await ApiManager.loadOrganizationData();
+  setText('A carregar dados da organização...');
+  const org = await ApiManager.loadOrganizationData();
+  setOrganization(org);
 
       setText('A carregar conteúdo...');
-      await ApiManager.loadAppData();
+  const data = await ApiManager.loadAppData();
+  setAppData(data);
 
-      onNavigate('Main');
+  onNavigate('Learn');
     };
     run();
   }, [onNavigate]);

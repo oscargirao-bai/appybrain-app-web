@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LoginScreen from './screens/account/Login.jsx';
 import LoadingScreen from './screens/Loading.jsx';
 import MainScreen from './screens/Main.jsx';
+import LearnScreen from './screens/learn/Learn.jsx';
 import ApiManager from './services/ApiManager.js';
 
 export default function App() {
@@ -17,6 +18,8 @@ export default function App() {
         return <LoadingScreen onNavigate={setScreen} />;
       case 'Main':
         return <MainScreen onNavigate={setScreen} />;
+      case 'Learn':
+        return <LearnScreen onNavigate={setScreen} />;
       case 'Login':
       default:
         return <LoginScreen onNavigate={setScreen} />;
