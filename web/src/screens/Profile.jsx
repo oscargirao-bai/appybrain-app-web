@@ -70,7 +70,7 @@ export default function Profile({ onNavigate }) {
   };
 
   return (
-    <div className="page-50" style={{ minHeight: '100vh', paddingBottom: '80px' }}>
+    <div className="page-50" style={{ minHeight: '100vh', paddingBottom: '80px', backgroundColor: colors.background, color: colors.text }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px', justifyContent: 'space-between' }}>
         <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8, width: 40 }}>
           <Icon name="arrow-left" size={24} />

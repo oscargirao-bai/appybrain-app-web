@@ -18,7 +18,7 @@ import Button2 from '../../components/common/Button2.jsx';
 
 function HeaderBar({ title, notifications = 0, onOpenNotifications, onOpenSettings }) {
   return (
-    <header className="learn-header">
+    <header className="learn-header" style={{ color: 'inherit' }}>
       <div className="title">{title}</div>
       <div className="actions">
         <button className="icon-btn" aria-label="Notificações" onClick={onOpenNotifications}>
@@ -109,7 +109,7 @@ export default function Learn({ onNavigate, openNotifications }){
   };
 
   return (
-    <div className="learn-screen" style={{ backgroundColor: colors.background, minHeight: '100vh' }}>
+    <div className="learn-screen" style={{ backgroundColor: colors.background, minHeight: '100vh', color: colors.text }}>
       <div className="page-50">
         <HeaderBar title={t('titles.learn')} notifications={unreadCount} onOpenNotifications={() => setNotificationsOpen(true)} onOpenSettings={() => onNavigate && onNavigate('Settings')} />
       </div>

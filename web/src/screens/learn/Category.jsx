@@ -100,7 +100,7 @@ export default function Category({ onNavigate, disciplineId }) {
   }, [categories, discipline, searchText]);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background, color: colors.text }}>
       <div className="page-50" style={{ padding: '20px', paddingBottom: '100px' }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}>

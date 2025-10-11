@@ -16,7 +16,7 @@ import './Settings.css';
 
 const VIBRATION_KEY = 'appybrain.vibration';
 
-export default function Settings({ onNavigate }) {
+export default function Settings({ onNavigate, previousScreen = 'Learn' }) {
   const colors = useThemeColors();
   const [vibration, setVibration] = useState(() => {
     const stored = localStorage.getItem(VIBRATION_KEY);

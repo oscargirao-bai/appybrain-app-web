@@ -15,12 +15,17 @@ export default function App() {
   const [screen, setScreen] = useState('Login');
   const [screenParams, setScreenParams] = useState({});
   const [currentTab, setCurrentTab] = useState(0);
+  const [previousScreen, setPreviousScreen] = useState('Learn');
 
   useEffect(() => {
     ApiManager.init({ baseUrl: 'https://appybrain.skillade.com/api/' });
   }, []);
 
   const navigate = (screenName, params = {}) => {
+    // Guardar screen atual antes de navegar para Settings ou Profile
+    if ((screenName === 'Settings' || screenName === 'Profile') && screen !== 'Settings' && screen !== 'Profile') {
+      setPreviousScreen(screen);
+    }
     setScreen(screenName);
     setScreenParams(params);
   };
@@ -59,7 +64,7 @@ export default function App() {
       case 'Learn':
         return <LearnScreen onNavigate={navigate} />;
       case 'Settings':
-        return <SettingsScreen onNavigate={navigate} />;
+        return <SettingsScreen onNavigate={navigate} previousScreen={previousScreen} />;
       case 'Profile':
         return <ProfileScreen onNavigate={navigate} />;
       case 'Category':
