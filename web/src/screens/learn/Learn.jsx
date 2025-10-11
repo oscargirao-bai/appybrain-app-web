@@ -16,7 +16,7 @@ export default function Learn() {
         return;
       }
       try {
-        const resp = await ApiManager.get('app/learn_content_list');
+        const resp = await ApiManager.authJson('app/learn_content_list');
         setDisciplines(resp?.data || []);
       } finally {
         setLoading(false);
