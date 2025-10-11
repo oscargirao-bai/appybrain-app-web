@@ -12,30 +12,48 @@ export default function Loading({ onNavigate }) {
   useEffect(() => {
     const run = async () => {
       try {
-        const valid = await ApiManager.validateSession();
-        if (!valid || !valid.success) {
-          console.warn('Session validation failed, redirecting to login');
-          return onNavigate('Login');
+        // First, validate session in the background
+        const isSessionValid = await ApiManager.validateSession();
+        
+        if (!isSessionValid) {
+          // Session is invalid or doesn't exist, redirect to login
+          console.log('Session invalid, redirecting to login');
+          onNavigate('Login');
+          return;
         }
-
+        
+        // Session is valid, proceed with loading app data
+        console.log('Session valid, loading app data');
+        
+        // Initialize DataManager with ApiManager
+        DataManager.init(ApiManager);
+        
+        // Load organization data first (contains logo URL)
         setText('A carregar dados da organização...');
-        const org = await ApiManager.loadOrganizationData();
-        if (org?.logoUrl) setOrgLogo(org.logoUrl);
-
-        setText('A carregar conteúdo...');
-        const data = await ApiManager.loadAppData();
+        await DataManager.loadOrganizationData();
         
-        // Hydrate DataManager with loaded data
-        DataManager.setData(data);
-        
-        // Ensure at least 5 seconds visible after logo appears
-        if (org?.logoUrl) {
-          await new Promise(r => setTimeout(r, 5000));
+        // Get organization logo URL early
+        const orgLogoUrl = DataManager.getOrganizationLogoUrl?.();
+        if (orgLogoUrl) {
+          setOrgLogo(orgLogoUrl);
         }
         
+        // Wait a bit and then switch to second loading text
+        setTimeout(() => {
+          setText('A carregar conteúdo...');
+        }, 2500);
+        
+        // Load app data through DataManager (loads EVERYTHING: badges, content, stars, tribes, chests, notifications, news, ranking, challenges, cosmetics, quotes)
+        await DataManager.loadAppData();
+        
+        // Ensure minimum loading time to show both texts
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Navigate to main screen after data is loaded
         onNavigate('Learn');
       } catch (error) {
         console.error('Failed during app initialization:', error);
+        // On error, redirect to login as fallback
         onNavigate('Login');
       }
     };
