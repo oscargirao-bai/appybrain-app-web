@@ -30,7 +30,19 @@ class DataManagerClass {
   }
 
   setData(appData) {
-    this.data = { ...this.data, ...appData, lastUpdated: new Date().toISOString() };
+    // Extract nested arrays like RN DataManager does
+    const notificationsData = appData.notifications?.notifications || appData.notifications || [];
+    const newsData = appData.news?.news || appData.news || [];
+    const disciplinesData = appData.disciplines?.areas || appData.disciplines || [];
+    
+    this.data = { 
+      ...this.data, 
+      ...appData,
+      notifications: notificationsData,
+      news: newsData,
+      disciplines: disciplinesData,
+      lastUpdated: new Date().toISOString() 
+    };
     this._notifySubscribers();
   }
 
