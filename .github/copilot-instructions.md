@@ -25,6 +25,15 @@
 6) Código limpo e pequeno:
   - Ideal: ≤ 200 linhas por ficheiro. Dividir em subcomponentes.
 
+7) Port de lógica 1:1 do mobile:
+  - Copiar SEMPRE toda a lógica e dados necessários do projeto RN (mobile/) ao criar componentes no web/.
+  - O resultado visual e funcional TEM de ser exatamente igual ao mobile.
+  - Para facilitar a paridade, todas as páginas web (incluindo Loading/Login) devem ocupar 50% da largura do ecrã e ficar centradas.
+
+8) Commits e push SEMPRE:
+  - Após qualquer alteração com build PASS (ou alterações apenas de docs/config sem impacto no build), fazer commit e push para a branch atual.
+  - Mensagens de commit claras (pt) com prefixo semântico: feat, fix, chore, docs, style, refactor, perf, test.
+
 ## Fluxo de Arranque (igual ao RN)
 1. Login: `POST auth/login` → guardar tokens (aceitar `expiresAt` ou `expiresIn`).
 2. Validar sessão: `GET auth/logon_user` → obter user/organization.

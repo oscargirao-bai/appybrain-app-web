@@ -30,7 +30,7 @@ export default function Login({ onNavigate }) {
 
   return (
     <div className="login-page">
-      <div className="login-card">
+      <div className="login-card page-50">
         <div className="logo-crop">
           <img src="/assets/logo.png" alt="AppyBrain" className="logo-img" />
         </div>

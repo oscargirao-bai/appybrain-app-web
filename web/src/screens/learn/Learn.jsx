@@ -91,7 +91,9 @@ function InfoRow({ username = '—', tribe = t('common.noTribe'), stars = 0, coi
 function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals }) {
   return (
     <div className="chest-line">
-      <div className="chest-circle" aria-label="Baú"><div className="chest-icon" /></div>
+      <div className="chest-circle" aria-label="Baú">
+        <img src="/assets/chests/chest-bronze.png" alt="baú" className="chest-img" />
+      </div>
       <StarsRow earned={starsEarned} max={starsMax} />
       <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Medal size={22} /></button>
     </div>
@@ -137,7 +139,7 @@ export default function Learn() {
     load();
   }, []);
 
-  if (state.loading) return <div className="learn-wrap"><div className="loading-label">{t('common.loading')}</div></div>;
+  if (state.loading) return <div className="learn-wrap"><div className="loading-label page-50">{t('common.loading')}</div></div>;
 
   const { user, subjects, notifications } = state;
   const openFirst = async () => {
@@ -151,13 +153,39 @@ export default function Learn() {
 
   return (
     <div className="learn-wrap">
-      <HeaderBar title={t('titles.learn')} notifications={notifications} />
-      <div className="content">
+      <div className="page-50">
+        <HeaderBar title={t('titles.learn')} notifications={notifications} />
+      </div>
+      <div className="content page-50">
         <BannerCard avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
         <InfoRow username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
         <ChestStarsRow starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => console.log('Open medals')} />
         <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
       </div>
+      <BottomTabs onNavigate={() => {}} />
     </div>
+  );
+}
+
+// Basic bottom tabs to match RN icons layout; no navigation yet
+function BottomTabs({ current = 'Learn', onNavigate }) {
+  const items = [
+    { key: 'Learn', icon: 'book' },
+    { key: 'Battle', icon: 'swords' },
+    { key: 'Challenges', icon: 'crosshair' },
+    { key: 'Tribes', icon: 'tent' },
+    { key: 'News', icon: 'newspaper' },
+    { key: 'Shop', icon: 'shopping-bag' },
+  ];
+  return (
+    <nav className="tabs">
+      <div className="tabs-inner page-50">
+        {items.map(it => (
+          <button key={it.key} className={current === it.key ? 'tab active' : 'tab'} onClick={() => onNavigate?.(it.key)}>
+            <i data-icon={it.icon} />
+          </button>
+        ))}
+      </div>
+    </nav>
   );
 }

@@ -32,11 +32,11 @@ export default function Loading({ onNavigate }) {
   return (
     <div className="loading-page">
       <div className="logo-top">
-        <div className="logo-crop">
+        <div className="logo-crop page-50">
           <img src="/assets/logo.png" alt="AppyBrain" />
         </div>
       </div>
-      <div className="center">
+      <div className="center page-50">
         {orgLogo && (
           <div className="org-card">
             <img src={orgLogo} alt="logo da escola" />
@@ -44,7 +44,7 @@ export default function Loading({ onNavigate }) {
         )}
         <div className="spinner-text">{text}</div>
       </div>
-      <div className="bottom">
+      <div className="bottom page-50">
         <img src="/assets/rainbow.png" alt="rainbow" className="rainbow" />
         <img src="/assets/skater.svg" alt="skater" className="skater" />
       </div>
