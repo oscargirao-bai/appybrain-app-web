@@ -1,12 +1,12 @@
 import React from 'react';
-import { Home, User, Bell, ShoppingCart } from 'lucide-react';
+import Icon from '../common/Icon.jsx';
 
 export default function NavBar({ onNavigate, selected = 'Home' }) {
   const items = [
-    { key: 'Home', icon: <Home size={22} />, label: 'Início' },
-    { key: 'Profile', icon: <User size={22} />, label: 'Perfil' },
-    { key: 'Notifications', icon: <Bell size={22} />, label: 'Notificações' },
-    { key: 'Shop', icon: <ShoppingCart size={22} />, label: 'Loja' },
+    { key: 'Home', icon: <Icon name="home" size={22} />, label: 'Início' },
+    { key: 'Profile', icon: <Icon name="user" size={22} />, label: 'Perfil' },
+    { key: 'Notifications', icon: <Icon name="bell" size={22} />, label: 'Notificações' },
+    { key: 'Shop', icon: <Icon name="shopping-bag" size={22} />, label: 'Loja' },
   ];
   return (
     <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 56, background: '#111', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>

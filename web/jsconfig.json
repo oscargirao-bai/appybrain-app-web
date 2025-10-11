@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "components/general/*": ["components/General/*"],
+      "../components/general/*": ["../components/General/*"],
+      "./components/general/*": ["./components/General/*"]
+    }
+  }
+}

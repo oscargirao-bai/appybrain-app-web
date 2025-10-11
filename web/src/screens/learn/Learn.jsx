@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Bell, Settings, Medal, BookOpen } from 'lucide-react';
+import Icon from '../../components/common/Icon.jsx';
 import { t } from '../../services/Translate.js';
 import { getAppData } from '../../services/DataStore.js';
 import ApiManager from '../../services/ApiManager.js';
@@ -9,6 +9,8 @@ import RankingsModal from '../../components/learn/RankingsModal.jsx';
 import ChestBrowserModal from '../../components/learn/ChestBrowserModal.jsx';
 import Chest from '../../components/General/Chest.jsx';
 import { updateAppData } from '../../services/DataStore.js';
+import Banner from '../../components/profile/Banner.jsx';
+import Info from '../../components/learn/Info.jsx';
 
 // Small inline SVG star that can be partially filled (0..1)
 function Star({ fraction = 0, size = 28 }) {
@@ -47,49 +49,14 @@ function HeaderBar({ title, notifications = 0, onOpenNotifications, onOpenSettin
       <div className="title">{title}</div>
       <div className="actions">
         <button className="icon-btn" aria-label="Notificações" onClick={onOpenNotifications}>
-          <Bell size={22} />
+          <Icon name="bell" size={22} />
           {notifications > 0 && <span className="badge">{notifications}</span>}
         </button>
         <button className="icon-btn" aria-label="Definições" onClick={onOpenSettings}>
-          <Settings size={22} />
+          <Icon name="settings" size={22} />
         </button>
       </div>
     </header>
-  );
-}
-
-function BannerCard({ avatarUrl, backgroundUrl }) {
-  return (
-    <div className="banner">
-      {backgroundUrl ? (
-        <img className="banner-bg" src={backgroundUrl} alt="banner" />
-      ) : (
-        <div className="banner-grad" />
-      )}
-      <div className="avatar-ring">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt="avatar" />
-        ) : (
-          <div className="avatar-fallback" />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function InfoRow({ username = '—', tribe = t('common.noTribe'), stars = 0, coins = 0 }) {
-  const fmt = (n) => new Intl.NumberFormat('pt-PT').format(n || 0);
-  return (
-    <div className="info-row">
-      <div className="left">
-        <div className="username">{username}</div>
-        <div className="tribe">{tribe}</div>
-      </div>
-      <div className="metrics">
-        <div className="pill"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#FFD54F" stroke="#222" strokeWidth="1"/></svg><span>{fmt(stars)}</span></div>
-        <div className="pill"><span className="coin" />{fmt(coins)}</div>
-      </div>
-    </div>
   );
 }
 
@@ -100,7 +67,7 @@ function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals, onOpenChest, c
         <Chest size={78} data={chestData} />
       </button>
       <StarsRow earned={starsEarned} max={starsMax} />
-      <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Medal size={22} /></button>
+      <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Icon name="medal" size={22} /></button>
     </div>
   );
 }
@@ -111,7 +78,7 @@ function SubjectsRow({ subjects = [], onOpenFirst }) {
   return (
     <div className="subjects">
       <div className="subject-pill">
-        <div className="icon"><BookOpen size={28} /></div>
+        <div className="icon"><Icon name="book-open" size={28} /></div>
         <div className="label">{first.title || first.name || '—'}</div>
       </div>
       <div className="cta-wrap">
@@ -175,8 +142,8 @@ export default function Learn() {
         <HeaderBar title={t('titles.learn')} notifications={notifications} onOpenNotifications={() => setNotifOpen(true)} onOpenSettings={() => console.log('settings')} />
       </div>
       <div className="content page-50">
-        <BannerCard avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
-        <InfoRow username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
+        <Banner avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
+        <Info username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
         <ChestStarsRow chestData={getAppData()?.userChests} starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => setRankOpen(true)} onOpenChest={() => setChestOpen(true)} />
         <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
       </div>
@@ -203,7 +170,7 @@ function BottomTabs({ current = 'Learn', onNavigate }) {
       <div className="tabs-inner page-50">
         {items.map(it => (
           <button key={it.key} className={current === it.key ? 'tab active' : 'tab'} onClick={() => onNavigate?.(it.key)}>
-            <i data-icon={it.icon} />
+            <Icon name={it.icon} size={22} />
           </button>
         ))}
       </div>
