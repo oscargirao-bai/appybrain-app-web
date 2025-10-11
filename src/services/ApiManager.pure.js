@@ -233,8 +233,8 @@ class ApiManager {
                 return false;
             }
 
-            // Call the logon_user endpoint to validate session
-            const response = await this.get('api/auth/logon_user');
+            // Call the logon_user endpoint to validate session (baseUrl already has /api/)
+            const response = await this.get('auth/logon_user');
 
             // If we get here without an error, session is valid
             if (response && response.success) {
@@ -262,47 +262,47 @@ class ApiManager {
             console.log('[ApiManager] Loading app data...');
 
             // Make all requests sequentially (as per original implementation)
-            const userInfo = await this.get('api/app/gamification_user_badges').catch(err => {
+            const userInfo = await this.get('app/gamification_user_badges').catch(err => {
                 console.warn('[ApiManager] Failed to load user badges:', err);
                 return null;
             });
 
-            const disciplines = await this.get('api/app/learn_content_list').catch(err => {
+            const disciplines = await this.get('app/learn_content_list').catch(err => {
                 console.warn('[ApiManager] Failed to load disciplines:', err);
                 return null;
             });
 
-            const userStars = await this.get('api/app/gamification_user_stars').catch(err => {
+            const userStars = await this.get('app/gamification_user_stars').catch(err => {
                 console.warn('[ApiManager] Failed to load user stars:', err);
                 return null;
             });
 
-            const tribes = await this.get('api/app/tribes_list').catch(err => {
+            const tribes = await this.get('app/tribes_list').catch(err => {
                 console.warn('[ApiManager] Failed to load tribes:', err);
                 return null;
             });
 
-            const userChests = await this.get('api/app/gamification_user_chests').catch(err => {
+            const userChests = await this.get('app/gamification_user_chests').catch(err => {
                 console.warn('[ApiManager] Failed to load user chests:', err);
                 return null;
             });
 
-            const notifications = await this.get('api/app/user_notifications').catch(err => {
+            const notifications = await this.get('app/user_notifications').catch(err => {
                 console.warn('[ApiManager] Failed to load notifications:', err);
                 return null;
             });
 
-            const news = await this.get('api/app/information_news').catch(err => {
+            const news = await this.get('app/information_news').catch(err => {
                 console.warn('[ApiManager] Failed to load news:', err);
                 return null;
             });
 
-            const rankings = await this.get('api/app/ranking').catch(err => {
+            const rankings = await this.get('app/ranking').catch(err => {
                 console.warn('[ApiManager] Failed to load rankings:', err);
                 return null;
             });
 
-            const challenges = await this.get('api/app/challenges_list').catch(err => {
+            const challenges = await this.get('app/challenges_list').catch(err => {
                 console.warn('[ApiManager] Failed to load challenges:', err);
                 return null;
             });
@@ -329,7 +329,7 @@ class ApiManager {
     async loadOrganizationData() {
         try {
             console.log('[ApiManager] Loading organization data...');
-            const response = await this.get('api/auth/logon_user');
+            const response = await this.get('auth/logon_user');
             
             if (response && response.success && response.organization) {
                 console.log('[ApiManager] Organization data loaded');
