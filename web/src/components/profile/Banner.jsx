@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Animated, Image, TouchableOpacity } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from '@react-native-vector-icons/lucide';
@@ -85,36 +85,34 @@ export default function Banner({
     }, [navigation, onPress]);
 
 	return (
-	<TouchableOpacity
-            activeOpacity={0.8}
-            onPress={handlePress}
-            accessibilityRole="button"
-            accessibilityLabel="Ir para Perfil"
-			style={[styles.wrapper, wrapperRadiusStyle, { backgroundColor: hasBannerImg ? 'transparent' : colors.primary }, style]}
+	<button             activeOpacity={0.8}
+            onClick={handlePress}
+            
+            aria-label="Ir para Perfil"
+			style={{...styles.wrapper, ...wrapperRadiusStyle}}
         > 
-		<View style={styles.bannerShadowWrapper}>
-			<View style={[styles.bannerContainer, { backgroundColor: hasBannerImg ? 'transparent' : colors.primary, aspectRatio }, containerRadiusStyle]}>          
+		<div style={styles.bannerShadowWrapper}>
+			<div style={{...styles.bannerContainer, ...{ backgroundColor: hasBannerImg ? 'transparent' : colors.primary}}>          
 				{/* Banner background: image or default yellow gradient */}
 				{bannerImg ? (
-					<Image
-						source={bannerImg}
-						resizeMode="cover"
+					<img 						source={bannerImg}
+						style={{objectFit: "cover"}}
 						onLoad={onBannerLoad}
-						style={[StyleSheet.absoluteFill, { opacity: bannerOpacity }, containerRadiusStyle]}
+						style={{...StyleSheet.absoluteFill, ...{ opacity: bannerOpacity }}}
 					/>
 				) : (
 					<LinearGradient
 						colors={["#FFE259", "#FFD000"]}
 						start={{ x: 0, y: 0 }}
 						end={{ x: 1, y: 1 }}
-						style={[StyleSheet.absoluteFill, containerRadiusStyle]}
+						style={{...StyleSheet.absoluteFill, ...containerRadiusStyle}}
 					/>
 				)}
 				{/* Só mostra moldura se frameSource for passado */}
 				{frameSource && (
 					<Animated.Image
 						source={frameSource}
-						resizeMode="stretch"
+						style={{objectFit: "stretch"}}
 						onLoad={onFrameLoad}
 						style={[
 							styles.bannerFrameOverlay,
@@ -124,32 +122,31 @@ export default function Banner({
 					/>
 				)}
 				{/* Avatar (centered) */}
-				<View style={styles.avatarOuter}>            
-					<View style={[styles.avatarCircle, { borderColor: colors.background, backgroundColor: avatarImg ? 'transparent' : avatarBgLightBlue }]}>              
+				<div style={styles.avatarOuter}>            
+					<div style={{...styles.avatarCircle, ...{ borderColor: colors.background}}>              
 						{avatarImg ? (
-							<Image
-								source={avatarImg}
-								resizeMode="cover"
+							<img 								source={avatarImg}
+								style={{objectFit: "cover"}}
 								onLoad={onAvatarLoad}
-								style={[styles.avatarImg, { opacity: avatarOpacity }]} />
+								style={{...styles.avatarImg, ...{ opacity: avatarOpacity }}} />
 						) : (
-							<View style={[styles.avatarImg, { justifyContent: 'center', alignItems: 'center' }]}> 
+							<div style={{...styles.avatarImg, ...{ justifyContent: 'center'}}> 
 								<Icon name="user" size={64} color={avatarIconBlue} />
-							</View>
+							</div>
 						)}
 						{/* Não mostra placeholder se for avatar default */}
 						{!avatarLoaded && avatarImg && (
-							<View style={[styles.avatarPlaceholder, { backgroundColor: colors.background, position: 'absolute', inset: 0 }]} />
+							<div style={{...styles.avatarPlaceholder, ...{ backgroundColor: colors.background}} />
 						)}
-					</View>
-				</View>
-			</View>
-		</View>
-	</TouchableOpacity>
+					</div>
+				</div>
+			</div>
+		</div>
+	</button>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrapper: {
 		width: '100%',
 	},
@@ -186,5 +183,5 @@ const styles = StyleSheet.create({
 		height: '100%',
 	},
   // Removed info box styles
-});
+};
 

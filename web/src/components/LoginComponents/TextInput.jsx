@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, TextInput as RNTextInput, StyleSheet, useWindowDimensions, Text, TouchableOpacity } from 'react-native';
+import {TextInput as RNTextInput} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 import { small, normal } from '../../constants/font';
@@ -18,7 +18,7 @@ export default function TextInput({
 	containerStyle,
 	placeholderTextColor,
 }) {
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	const colorTokens = useThemeColors();
 	const isTablet = width >= 768;
 	const [hidden, setHidden] = useState(!!secureTextEntry);
@@ -28,15 +28,15 @@ export default function TextInput({
 	const placeholderColor = placeholderTextColor ?? colorTokens.secondary;
 
 	return (
-		<View style={[styles.container, containerStyle, isTablet && { maxWidth: 480 }]}>
+		<div style={{...styles.container, ...containerStyle}}>
 			{(label || LabelIconName) && (
-				<View style={styles.labelRow}>
+				<div style={styles.labelRow}>
 					{LabelIconName ? <Icon name={LabelIconName} size={16} color={colorTokens.secondary} /> : null}
-					{label ? <Text style={styles.labelText}>{label}</Text> : null}
-				</View>
+					{label ? <span style={styles.labelText}>{label}</span> : null}
+				</div>
 			)}
 			{secureTextEntry ? (
-				<View style={styles.inputBase}>
+				<div style={styles.inputBase}>
 					<RNTextInput
 						value={value}
 						onChangeText={onChangeText}
@@ -46,25 +46,19 @@ export default function TextInput({
 						keyboardType={keyboardType}
 						autoCapitalize={autoCapitalize}
 						autoCorrect={autoCorrect}
-						style={[
-							styles.inputField,
-							// reserve space for the trailing icon so text doesn't overlap
-							{ paddingRight: 48 },
-							isTablet && styles.inputFieldLg,
-							style,
-						]}
+						style={{...styles.inputField, ...// reserve space for the trailing icon so text doesn't overlap
+							{ paddingRight: 48 }}}
 					/>
-					<TouchableOpacity
-						onPress={() => setHidden(!hidden)}
-						accessibilityRole="button"
-						accessibilityLabel={hidden ? 'Show password' : 'Hide password'}
+					<button 						onClick={() => setHidden(!hidden)}
+						
+						aria-label={hidden ? 'Show password' : 'Hide password'}
 						style={styles.trailingIcon}
 					>
 						<Icon name={hidden ? 'eye-off' : 'eye'} size={20} color={colorTokens.secondary} />
-					</TouchableOpacity>
-				</View>
+					</button>
+				</div>
 			) : (
-				<View style={styles.inputBase}>
+				<div style={styles.inputBase}>
 					<RNTextInput
 						value={value}
 						onChangeText={onChangeText}
@@ -74,11 +68,11 @@ export default function TextInput({
 						keyboardType={keyboardType}
 						autoCapitalize={autoCapitalize}
 						autoCorrect={autoCorrect}
-						style={[styles.inputField, isTablet && styles.inputFieldLg, style]}
+						style={{...styles.inputField, ...isTablet && styles.inputFieldLg}}
 					/>
-				</View>
+				</div>
 			)}
-		</View>
+		</div>
 	);
 }
 
@@ -129,4 +123,4 @@ const createStyles = (colorTokens) =>
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
-	});
+	};

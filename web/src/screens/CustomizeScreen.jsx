@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import { View, StyleSheet, useWindowDimensions, Text, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import Header from '../components/General/Header';
 import Options from '../components/Shop/Options';
 import Banner from '../components/Profile/Banner';
@@ -17,7 +17,7 @@ import Icon from '@react-native-vector-icons/lucide';
 export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const { width } = useWindowDimensions();
+  const width = window.innerWidth; const height = window.innerHeight;
 
   // Which category we are customizing
   const [category, setCategory] = useState('avatar'); // 'avatar' | 'background' | 'frames'
@@ -91,7 +91,7 @@ export default function CustomizeScreen({ navigation }) {
         }
 
         // Apply changes locally in DataManager
-        DataManager.equipCosmetics({ avatarId: selAvatarId, backgroundId: selBackgroundId, frameId: selFrameId });
+        DataManager.equipCosmetics({ avatarId: selAvatarId, backgroundId: selBackgroundId, frameId: selFrameId };
         
         navigation?.goBack?.();
       } catch (error) {
@@ -116,12 +116,12 @@ export default function CustomizeScreen({ navigation }) {
   }, [category]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}> 
+    <div style={{...styles.container, ...{ backgroundColor: colors.background }}}> 
       <Header title={translate('customize.title') || 'Customize'} showBack onBack={() => navigation?.goBack?.()} />
 
-      <View style={styles.content}> 
+      <div style={styles.content}> 
         {/* Banner header */}
-        <View style={{ marginHorizontal: 0, marginTop: 0 }}>
+        <div style={{ marginHorizontal: 0, marginTop: 0 }}>
             <Banner
               avatarSource={previewAvatar ? { uri: previewAvatar } : null}
               bannerImageSource={previewBackground ? { uri: previewBackground } : null}
@@ -129,32 +129,31 @@ export default function CustomizeScreen({ navigation }) {
               bottomFlat
               topFlat
             />
-          </View>
+          </div>
 
         {/* Segmented control */}
         <Options value={category} onChange={onSelect} style={{ marginTop: 16 }} />
 
         {/* Conditional rendering: Empty state or list */}
         {listData.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <View style={[styles.emptyIconContainer, { backgroundColor: colors.card }]}>
+          <div style={styles.emptyContainer}>
+            <div style={{...styles.emptyIconContainer, ...{ backgroundColor: colors.card }}}>
               <Icon name="shopping-bag" size={48} color={colors.muted} />
-            </View>
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+            </div>
+            <span style={{...styles.emptyTitle, ...{ color: colors.text }}}>
               {translate('customize.empty.title')}
-            </Text>
-            <Text style={[styles.emptySubtitle, { color: colors.muted }]}>
+            </span>
+            <span style={{...styles.emptySubtitle, ...{ color: colors.muted }}}>
               {translate('customize.empty.subtitle')}
-            </Text>
-            <Pressable
-              style={[styles.shopButton, { backgroundColor: colors.primary }]}
-              onPress={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
+            </span>
+            <button               style={{...styles.shopButton, ...{ backgroundColor: colors.primary }}}
+              onClick={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
             >
-              <Text style={[styles.shopButtonText, { color: colors.background }]}>
+              <span style={{...styles.shopButtonText, ...{ color: colors.background }}}>
                 {translate('customize.empty.shopButton')}
-              </Text>
-            </Pressable>
-          </View>
+              </span>
+            </button>
+          </div>
         ) : (
           <CustomizeList
             data={listData}
@@ -165,17 +164,17 @@ export default function CustomizeScreen({ navigation }) {
             bottomPadding={20}
           />
         )}
-      </View>
+      </div>
 
       {/* Footer confirm button */}
-      <View style={[styles.footer, { backgroundColor: colors.background }]}> 
-        <Button1 label={translate('common.confirm') || 'Confirmar'} onPress={handleConfirm} />
-      </View>
-    </SafeAreaView>
+      <div style={{...styles.footer, ...{ backgroundColor: colors.background }}}> 
+        <Button1 label={translate('common.confirm') || 'Confirmar'} onClick={handleConfirm} />
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: { flex: 1 },
   content: { flex: 1 },
   divider: { height: 2, marginTop: 14, opacity: 0.6, marginHorizontal: 0 },
@@ -238,5 +237,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
-});
+};
 

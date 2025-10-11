@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 import SvgIcon from '../General/SvgIcon';
@@ -26,36 +26,35 @@ export default function TribeInfo({
 	const joinLabel = useMemo(() => (joined ? 'Sair' : 'Entrar'), [joined]);
 
 	return (
-		<View style={[styles.card, { backgroundColor: colors.surface || colors.background, borderColor: colors.text + '22' }]}> 
-			<View style={styles.topRowHorizontal}>
-				<View style={styles.rightBlock}>
-					<View style={styles.titleRowWithButton}>
-						<Text style={[styles.titleLeft, { color: colors.text, flex: 1 }]} numberOfLines={1}>{name}</Text>
-						<Pressable
-							onPress={joined ? onLeave : onJoin}
+		<div style={{...styles.card, ...{ backgroundColor: colors.surface || colors.background}}> 
+			<div style={styles.topRowHorizontal}>
+				<div style={styles.rightBlock}>
+					<div style={styles.titleRowWithButton}>
+						<span style={{...styles.titleLeft, ...{ color: colors.text}} numberOfLines={1}>{name}</span>
+						<button 							onClick={joined ? onLeave : onJoin}
 							disabled={!joined && disabledJoin}
 							style={({ pressed }) => [
 								styles.joinBtnSmall,
 								joined ? { backgroundColor: colors.error } : { backgroundColor: disabledJoin ? colors.text + '33' : colors.correct },
 								pressed && !(disabledJoin && !joined) && { opacity: 0.85 }
 							]}
-							accessibilityRole="button"
-							accessibilityLabel={`${joined ? 'Sair da' : 'Entrar na'} tribo ${name}`}
+							
+							aria-label={`${joined ? 'Sair da' : 'Entrar na'} tribo ${name}`}
 							accessibilityState={{ disabled: !joined && disabledJoin }}
 						>
 							<Icon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
-							<Text style={styles.joinTextSmall}>{joinLabel}</Text>
-						</Pressable>
-					</View>
-					<View style={styles.statsBelowNameRow}>
-						<View style={[styles.statInlineCompact, { backgroundColor: colors.text + '08', borderColor: colors.text + '22' }]}> 
+							<span style={styles.joinTextSmall}>{joinLabel}</span>
+						</button>
+					</div>
+					<div style={styles.statsBelowNameRow}>
+						<div style={{...styles.statInlineCompact, ...{ backgroundColor: colors.text + '08'}}> 
 							<Icon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
-							<Text style={[styles.statValueInline, { color: colors.text }]}>{members}</Text>
-						</View>
-					</View>
-					<Text style={[styles.descriptionInline, { color: colors.text + 'CC' }]} numberOfLines={3}>{description}</Text>
-				</View>
-				<View style={[styles.avatarCircleSmall, { borderColor: accent, backgroundColor: accent, marginRight: 0, marginLeft: 14 }]}> 
+							<span style={{...styles.statValueInline, ...{ color: colors.text }}}>{members}</span>
+						</div>
+					</div>
+					<span style={{...styles.descriptionInline, ...{ color: colors.text + 'CC' }}} numberOfLines={3}>{description}</span>
+				</div>
+				<div style={{...styles.avatarCircleSmall, ...{ borderColor: accent}}> 
 					{icon && icon.includes('<svg') ? (
 						<SvgIcon 
 							svgString={icon} 
@@ -71,14 +70,14 @@ export default function TribeInfo({
 							importantForAccessibility="no-hide-descendants"
 						/>
 					)}
-				</View>
-			</View>
+				</div>
+			</div>
 			{/* botão movido para a linha do título */}
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	card: {
 		borderWidth: 1,
 		borderRadius: 22,
@@ -233,4 +232,4 @@ const styles = StyleSheet.create({
 		marginTop: 16,
 		lineHeight: 18,
 	},
-});
+};

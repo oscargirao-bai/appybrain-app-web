@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -124,7 +124,7 @@ export default function ResultScreen2() {
 			total: totalQuestions || 0,
 			correct: typeof correct === 'number' ? correct : (battle.myScore ?? 0),
 			timeout: inferTimeouts(activeBattleData, 'me')
-		});
+		};
 	}, [activeBattleData, totalQuestions, correct, battle.myScore]);
 
 	const oppSeq = useMemo(() => {
@@ -136,7 +136,7 @@ export default function ResultScreen2() {
 			total: totalQuestions || 0,
 			correct: battle.opponentScore ?? 0,
 			timeout: inferTimeouts(activeBattleData, 'opponent')
-		});
+		};
 	}, [isFinal, activeBattleData, totalQuestions, battle.opponentScore]);
 
 	// Total time (seconds) per user
@@ -152,19 +152,19 @@ export default function ResultScreen2() {
 	// Show loading screen while fetching battle result
 	if (isLoading && battleSessionId) {
 		return (
-			<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-				<View style={[styles.content, { justifyContent: 'center', alignItems: 'center' }]}>
-					<View style={styles.loadingContainer}>
+			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
+				<div style={{...styles.content, ...{ justifyContent: 'center'}}>
+					<div style={styles.loadingContainer}>
 						<Icon name="loader" size={32} color={colors.primary} style={{ marginBottom: 16 }} />
-						<Text style={[styles.loadingText, { color: colors.text }]}>A carregar resultado...</Text>
-					</View>
-				</View>
-			</SafeAreaView>
+						<span style={{...styles.loadingText, ...{ color: colors.text }}}>A carregar resultado...</span>
+					</div>
+				</div>
+			</div>
 		);
 	}
 
 	return (
-		<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}> 
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}> 
 			{/* Bottom glow like ResultScreen1: only for win/lose */}
 			{(() => {
 				if (!showGlow) return null;
@@ -178,30 +178,30 @@ export default function ResultScreen2() {
 					/>
 				);
 			})()}
-			<View style={styles.content}>
-				<View style={styles.header}> 
-					<Text style={[styles.quizTitle, { color: outcomeColor }]} numberOfLines={2}>
+			<div style={styles.content}>
+				<div style={styles.header}> 
+					<span style={{...styles.quizTitle, ...{ color: outcomeColor }}} numberOfLines={2}>
 						{outcomeHeader}
-					</Text>
-				</View>
+					</span>
+				</div>
 
 				{/* Middle column: opponent (top), VS section, user (bottom) */}
-				<View style={styles.middle}>
+				<div style={styles.middle}>
 					{/* Opponent banner + info (top) */}
-					<View style={[styles.bannerWrap]}> 
+					<div style={styles.bannerWrap}> 
 					{/* Opponent banner + info (top) */}
 						{/* Row with left-side trophies delta centered in leftover space and right-aligned banner */}
-						<View style={styles.opponentRow}>
-							<View style={styles.sideSpace}>
+						<div style={styles.opponentRow}>
+							<div style={styles.sideSpace}>
 								{(() => {
 									// If battle is not finalized (pending), show ellipsis
 									const isFinal = battle.outcome === 'win' || battle.outcome === 'lose' || battle.outcome === 'draw';
 									if (!isFinal) {
 										return (
-											<View style={styles.trophyRow} accessibilityLabel={'Variação de troféus: pendente'}>
+											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
 											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<Text style={[styles.trophyValue, { color: colors.text }]}>...</Text>
-										</View>
+											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
+										</div>
 									);
 									}
 									// Opponent should display their actual delta from the API
@@ -214,74 +214,74 @@ export default function ResultScreen2() {
 									const sign = typeof v === 'number' && v !== 0 ? (v > 0 ? '+' : '-') : '';
 									const value = typeof v === 'number' ? Math.abs(v) : 0;
 									return (
-										<View style={styles.trophyRow} accessibilityLabel={`Variação de troféus: ${sign}${value}`}>
-											{sign ? (<Text style={[styles.trophySign, { color: tone }]}>{sign}</Text>) : null}
+										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
+											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
 											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<Text style={[styles.trophyValue, { color: tone }]}>{value}</Text>
-										</View>
+											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
+										</div>
 									);
 								})()}
-							</View>
+							</div>
 							<Banner
 								avatarSource={opponentAvatarSource}
 								bannerImageSource={opponentBackgroundSource}
 								frameSource={opponentFrameSource}
 								topFlat={false}
-								onPress={() => { /* disable navigation on opponent banner */ }}
+								onClick={() => { /* disable navigation on opponent banner */ }}
 								style={{ width: '75%' }}
 							/>
-						</View>
-						<View style={[styles.infoWrap, { width: '75%', alignSelf: 'flex-end', paddingHorizontal: 0 }]}>
+						</div>
+						<div style={{...styles.infoWrap, ...{ width: '75%'}}>
 							<Info
 								username={opponentUsername}
 								tribe={opponentTribe}
 							/>
-						</View>
-					</View>
+						</div>
+					</div>
 
 					{/* Versus block (middle) */}
-					<View style={[styles.vsSection, { paddingHorizontal: isShort ? 16 : 24, paddingVertical: isShort ? 4 : 8, gap: isShort ? 6 : 8 }]}> 
-						<View style={styles.vsScoreAbove}>
+					<div style={{...styles.vsSection, ...{ paddingHorizontal: isShort ? 16 : 24}}> 
+						<div style={styles.vsScoreAbove}>
 							<ResultsDots sequence={oppSeq} colors={colors} dotSize={isShort ? 24 : 30} />
-							<View style={styles.timeHelpRow}>
-								<View style={styles.timeSection}>
+							<div style={styles.timeHelpRow}>
+								<div style={styles.timeSection}>
 									<Icon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<Text style={[styles.timeLabel, { color: colors.text + '99' }]}>Tempo Total</Text>
-									<Text style={[styles.timeValue, { color: colors.text }]}>{isFinal ? formatSeconds(oppTotalSec) : '...'}</Text>
-								</View>
-								<View style={styles.helpSection}>
+									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
+									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{isFinal ? formatSeconds(oppTotalSec) : '...'}</span>
+								</div>
+								<div style={styles.helpSection}>
 									<Icon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<Text style={[styles.helpLabel, { color: colors.text + '99' }]}>Ajuda</Text>
+									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
 									<HelpIcons helpsData={oppHelps} colors={colors} />
-								</View>
-							</View>
-						</View>
-						<View style={styles.vsDividerRow}>
-							<View style={[styles.vsBar, { backgroundColor: (colors.text + '22') }]} />
-							<Text style={[styles.vsText, { color: colors.text + '99' }]}>VS</Text>
-							<View style={[styles.vsBar, { backgroundColor: (colors.text + '22') }]} />
-						</View>
-						<View style={styles.vsScoreBelow}>
+								</div>
+							</div>
+						</div>
+						<div style={styles.vsDividerRow}>
+							<div style={{...styles.vsBar, ...{ backgroundColor: (colors.text + '22') }}} />
+							<span style={{...styles.vsText, ...{ color: colors.text + '99' }}}>VS</span>
+							<div style={{...styles.vsBar, ...{ backgroundColor: (colors.text + '22') }}} />
+						</div>
+						<div style={styles.vsScoreBelow}>
 							<ResultsDots sequence={mySeq} colors={colors} dotSize={isShort ? 24 : 30} />
-							<View style={styles.timeHelpRow}>
-								<View style={styles.timeSection}>
+							<div style={styles.timeHelpRow}>
+								<div style={styles.timeSection}>
 									<Icon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<Text style={[styles.timeLabel, { color: colors.text + '99' }]}>Tempo Total</Text>
-									<Text style={[styles.timeValue, { color: colors.text }]}>{formatSeconds(myTotalSec)}</Text>
-								</View>
-								<View style={styles.helpSection}>
+									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
+									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{formatSeconds(myTotalSec)}</span>
+								</div>
+								<div style={styles.helpSection}>
 									<Icon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<Text style={[styles.helpLabel, { color: colors.text + '99' }]}>Ajuda</Text>
+									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
 									<HelpIcons helpsData={myHelps} colors={colors} />
-								</View>
-							</View>
-						</View>
-					</View>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					{/* Player banner + info (bottom) */}
-					<View style={styles.bannerWrap}>
+					<div style={styles.bannerWrap}>
 						{/* Row with left-aligned user banner and right-side trophies delta centered in leftover space */}
-						<View style={styles.opponentRow}>
+						<div style={styles.opponentRow}>
 							<Banner
 								avatarSource={getAvatarSource()}
 								bannerImageSource={getBackgroundSource()}
@@ -289,15 +289,15 @@ export default function ResultScreen2() {
 								topFlat={false}
 								style={{ width: '75%' }}
 							/>
-							<View style={styles.sideSpace}>
+							<div style={styles.sideSpace}>
 								{(() => {
 									const isFinal = battle.outcome === 'win' || battle.outcome === 'lose' || battle.outcome === 'draw';
 									if (!isFinal) {
 										return (
-											<View style={styles.trophyRow} accessibilityLabel={'Variação de troféus: pendente'}>
+											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
 											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<Text style={[styles.trophyValue, { color: colors.text }]}>...</Text>
-										</View>
+											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
+										</div>
 									);
 									}
 									const v = battle.trophiesDelta;
@@ -309,34 +309,34 @@ export default function ResultScreen2() {
 									const sign = typeof v === 'number' && v !== 0 ? (v > 0 ? '+' : '-') : '';
 									const value = typeof v === 'number' ? Math.abs(v) : 0;
 									return (
-										<View style={styles.trophyRow} accessibilityLabel={`Variação de troféus: ${sign}${value}`}>
-											{sign ? (<Text style={[styles.trophySign, { color: tone }]}>{sign}</Text>) : null}
+										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
+											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
 											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<Text style={[styles.trophyValue, { color: tone }]}>{value}</Text>
-										</View>
+											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
+										</div>
 									);
 								})()}
-							</View>
-						</View>
-						<View style={[styles.infoWrap, { width: '75%', alignSelf: 'flex-start', paddingHorizontal: 0 }]}>
+							</div>
+						</div>
+						<div style={{...styles.infoWrap, ...{ width: '75%'}}>
 							<Info
 								username={getUsername()}
 								tribe={getTribeName()}
 							/>
-						</View>
-					</View>
-				</View>
-			</View>
-			<View style={styles.actions}>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style={styles.actions}>
 				<Button1 
 					label="Fechar" 
 					color={colors.secondary} 
-					onPress={() => {
+					onClick={() => {
 						// If this screen was opened from the HistoryModal, navigate back to Battle tab and reopen the modal
 						const openedFromHistory = route?.params?.openedFromHistory;
 						const openedFromHistoryBattleId = route?.params?.openedFromHistoryBattleId;
 						if (openedFromHistory) {
-							navigation.navigate('MainTabs', { screen: 'Battle', params: { reopenHistory: true, highlightBattleId: openedFromHistoryBattleId } });
+							navigation.navigate('MainTabs', { screen: 'Battle', params: { reopenHistory: true, highlightBattleId: openedFromHistoryBattleId } };
 						} else {
 							// Default behavior: go back to Battle tab
 							navigation.navigate('MainTabs', { initialTab: 1 }); // Tab 1 is Tribos where battles are usually accessed
@@ -344,8 +344,8 @@ export default function ResultScreen2() {
 					}} 
 					style={{ minWidth: 220, marginBottom: insets.bottom + 10 }} 
 				/>
-			</View>
-		</SafeAreaView>
+			</div>
+		</div>
 	);
 }
 
@@ -353,10 +353,10 @@ function DeltaPill({ label, value, positiveColor, negativeColor, colors }) {
 	const sign = typeof value === 'number' && value > 0 ? '+' : '';
 	const tone = typeof value === 'number' && value !== 0 ? (value > 0 ? positiveColor : negativeColor) : colors.text;
 	return (
-		<View style={[styles.deltaPill, { borderColor: colors.text + '22', backgroundColor: colors.text + '08' }]}> 
-			<Text style={[styles.deltaText, { color: colors.text }]}>{label}</Text>
-			<Text style={[styles.deltaValue, { color: tone }]}>{typeof value === 'number' ? `${sign}${value}` : '-'}</Text>
-		</View>
+		<div style={{...styles.deltaPill, ...{ borderColor: colors.text + '22'}}> 
+			<span style={{...styles.deltaText, ...{ color: colors.text }}}>{label}</span>
+			<span style={{...styles.deltaValue, ...{ color: tone }}}>{typeof value === 'number' ? `${sign}${value}` : '-'}</span>
+		</div>
 	);
 }
 
@@ -660,13 +660,13 @@ const HERO_ICONS = {
 // Component to display help icons used by a player
 function HelpIcons({ helpsData, colors }) {
 	if (!helpsData || helpsData.count === 0) {
-		return <Text style={[styles.helpValue, { color: colors.text }]}>-</Text>;
+		return <span style={{...styles.helpValue, ...{ color: colors.text }}}>-</span>;
 	}
 	
 	// Show only icons if we have hero data
 	if (helpsData.heroes && helpsData.heroes.length > 0) {
 		return (
-			<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+			<div style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
 				{helpsData.heroes.slice(0, 4).map((heroId, index) => {
 					const iconName = getHeroIcon(heroId);
 					return iconName ? (
@@ -680,14 +680,14 @@ function HelpIcons({ helpsData, colors }) {
 					) : null;
 				})}
 				{helpsData.heroes.length > 4 && (
-					<Text style={[styles.helpValue, { color: colors.text, fontSize: 10 }]}>+{helpsData.heroes.length - 4}</Text>
+					<span style={{...styles.helpValue, ...{ color: colors.text}}>+{helpsData.heroes.length - 4}</span>
 				)}
-			</View>
+			</div>
 		);
 	}
 	
 	// Fallback: show count if no hero data available
-	return <Text style={[styles.helpValue, { color: colors.text }]}>{helpsData.count}</Text>;
+	return <span style={{...styles.helpValue, ...{ color: colors.text }}}>{helpsData.count}</span>;
 }
 
 function extractHelpsUsed(sessionResult, who = 'me', fallback = 0) {
@@ -727,7 +727,7 @@ function mySafeNumber(v, d = 0) {
 function ResultsDots({ sequence = [], colors, dotSize = 30 }) {
 	if (!Array.isArray(sequence) || sequence.length === 0) return null;
 	return (
-		<View style={styles.dotsRow}>
+		<div style={styles.dotsRow}>
 			{sequence.map((s, idx) => {
 				let bg = colors.text + '22';
 				let border = colors.text + '44';
@@ -740,16 +740,16 @@ function ResultsDots({ sequence = [], colors, dotSize = 30 }) {
 				const size = dotSize;
 				const radius = Math.round(size / 2);
 				return (
-					<View key={idx} style={[styles.dot, { width: size, height: size, borderRadius: radius, backgroundColor: bg, borderColor: border }]}> 
+					<div key={idx} style={{...styles.dot, ...{ width: size}}> 
 						<Icon name={iconName} size={12} color={iconColor} />
-					</View>
+					</div>
 				);
 			})}
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	content: { flex: 1 },
 	middle: { flex: 1, justifyContent: 'space-between' },
@@ -803,5 +803,5 @@ const styles = StyleSheet.create({
 	bottomGlow: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 260 },
 	loadingContainer: { alignItems: 'center', justifyContent: 'center', padding: 32 },
 	loadingText: { fontSize: 16, fontWeight: '600', fontFamily: family.semibold, textAlign: 'center' },
-});
+};
 

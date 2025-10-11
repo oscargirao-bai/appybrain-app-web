@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, ScrollView, ActivityIndicator } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 import { family } from '../../constants/font';
@@ -32,7 +32,7 @@ export default function SolutionModal({
     if (!correctOption) return null;
     if (correctOption.html) {
       return (
-        <View style={[styles.correctPill, { backgroundColor: colors.secondary + '1A', borderColor: colors.secondary + '55' }]}> 
+        <div style={{...styles.correctPill, ...{ backgroundColor: colors.secondary + '1A'}}> 
           <MathJaxRenderer 
             content={correctOption.html} 
             enabled={true} 
@@ -41,13 +41,13 @@ export default function SolutionModal({
             textAlign="center"
             style={{ minHeight: 50, width: '100%', flexShrink: 0 }}
           />
-        </View>
+        </div>
       );
     }
     return (
-      <View style={[styles.correctPill, { backgroundColor: colors.secondary + '1A', borderColor: colors.secondary + '55' }]}> 
-        <Text style={[styles.correctText, { color: colors.secondary }]}>{correctOption.text}</Text>
-      </View>
+      <div style={{...styles.correctPill, ...{ backgroundColor: colors.secondary + '1A'}}> 
+        <span style={{...styles.correctText, ...{ color: colors.secondary }}}>{correctOption.text}</span>
+      </div>
     );
   };
 
@@ -56,19 +56,19 @@ export default function SolutionModal({
     const isHtml = /<[^>]+>|\\\\|\$/.test(String(explanation));
     if (isHtml) {
       return (
-        <ScrollView style={styles.explainerHtml} showsVerticalScrollIndicator={true}>
+        <div style={styles.explainerHtml} showsVerticalScrollIndicator={true}>
           <MathJaxRenderer 
             content={`<div style="text-align:left">${explanation}</div>`} 
             enabled={true} 
             style={{ minHeight: 80 }}
           />
-        </ScrollView>
+        </div>
       );
     }
     return (
-      <ScrollView style={styles.explainerText} contentContainerStyle={{ paddingBottom: 4 }}>
-        <Text style={[styles.expText, { color: colors.text }]}>{String(explanation)}</Text>
-      </ScrollView>
+      <div style={styles.explainerText} contentContainerStyle={{ paddingBottom: 4 }}>
+        <span style={{...styles.expText, ...{ color: colors.text }}}>{String(explanation)}</span>
+      </div>
     );
   };
 
@@ -98,22 +98,21 @@ export default function SolutionModal({
   return (
     <>
       <Modal visible={visible && !showSuccessModal} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}> 
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar explicação" />
+      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
+        <button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar explicação" />
 
-        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}> 
-          <Text style={[styles.title, { color: colors.text }]}>Resposta correta</Text>
+        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}> 
+          <span style={{...styles.title, ...{ color: colors.text }}}>Resposta correta</span>
 
           {renderOption()}
 
           {explanation ? (
-            <Text style={[styles.subtitle, { color: colors.text + 'CC' }]}>Explicação</Text>
+            <span style={{...styles.subtitle, ...{ color: colors.text + 'CC' }}}>Explicação</span>
           ) : null}
           {renderExplanation()}
 
-          <View style={styles.row}> 
-            <Pressable
-              onPress={handleReport}
+          <div style={styles.row}> 
+            <button               onClick={handleReport}
               disabled={reporting}
               style={({ pressed }) => [
                 styles.btn,
@@ -121,30 +120,29 @@ export default function SolutionModal({
                 pressed && { opacity: 0.9 },
                 reporting && { opacity: 0.5 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel="Reportar questão"
+              
+              aria-label="Reportar questão"
             >
               {reporting ? (
-                <ActivityIndicator size="small" color={colors.text} />
+                <div size="small" color={colors.text} />
               ) : (
-                <Text style={[styles.btnText, { color: colors.text }]}>Reportar</Text>
+                <span style={{...styles.btnText, ...{ color: colors.text }}}>Reportar</span>
               )}
-            </Pressable>
-            <Pressable
-              onPress={onClose}
+            </button>
+            <button               onClick={onClose}
               style={({ pressed }) => [
                 styles.btn,
                 { backgroundColor: colors.secondary, borderColor: colors.secondary + '55' },
                 pressed && { opacity: 0.9 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel="Continuar"
+              
+              aria-label="Continuar"
             >
-              <Text style={[styles.btnText, { color: colors.onSecondary }]}>Continuar</Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
+              <span style={{...styles.btnText, ...{ color: colors.onSecondary }}}>Continuar</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </Modal>
 
     <MessageModal
@@ -157,7 +155,7 @@ export default function SolutionModal({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
   panel: {
     width: '100%',
@@ -201,4 +199,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnText: { fontSize: 15, fontFamily: family.bold },
-});
+};

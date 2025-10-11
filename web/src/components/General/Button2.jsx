@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View, StyleSheet } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 
@@ -16,10 +16,9 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
   const radius = 14;
   const iconSize = Math.round(size * 0.46);
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={iconName || 'button'}
+    <button       onClick={onPress}
+      
+      aria-label={iconName || 'button'}
       style={({ pressed }) => [
         styles.base,
         {
@@ -34,14 +33,14 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
       ]}
       hitSlop={8}
     >
-      <View style={styles.inner}>
+      <div style={styles.inner}>
         {iconName ? <Icon name={iconName} size={iconSize} color={colors.text} /> : null}
-      </View>
-    </Pressable>
+      </div>
+    </button>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   base: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -51,5 +50,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+};
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 import SvgIcon from '../General/SvgIcon';
@@ -50,7 +50,7 @@ export default function MedalsList({
 	onMedalPress,
 }) {
 	const colors = useThemeColors();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 
 	// Use provided medals or fallback static list
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
@@ -75,7 +75,7 @@ export default function MedalsList({
 			const m = internalMedals[i];
 			// Support both `newMedal` and the requested `new` flag as aliases
 			const isNew = !!(m.newMedal || m.new);
-			cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew });
+			cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew };
 		}
 		return cols;
 	}, [internalMedals]);
@@ -93,14 +93,13 @@ export default function MedalsList({
 	}
 
 	function goToPage(i) {
-		flatRef.current?.scrollToOffset({ offset: i * width, animated: true });
+		flatRef.current?.scrollToOffset({ offset: i * width, animated: true };
 	}
 
 	return (
-    <View style={[styles.wrapper, style]}>
-      <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-      <FlatList
-        ref={flatRef}
+    <div style={{...styles.wrapper, ...style}}>
+      <span style={{...styles.title, ...{ color: colors.text }}}>{title}</span>
+      <div         ref={flatRef}
         data={columnData}
         horizontal
         keyExtractor={(_, i) => 'col-' + i}
@@ -109,34 +108,34 @@ export default function MedalsList({
         scrollEventThrottle={16}
         decelerationRate="fast"
         renderItem={({ item: col, index }) => (
-          <View style={[styles.column, { width: cellWidth }]}> 
+          <div style={{...styles.column, ...{ width: cellWidth }}}> 
 						{col.map((it, idx) => (
 							<MedalButton
 								key={it.id + '-' + index + '-' + idx}
 								item={it}
 								colors={colors}
-								onPress={() => {
+								onClick={() => {
 									if (onMedalPress) onMedalPress(it);
 									// clear new flags locally (both aliases)
 									setInternalMedals(prev => prev.map(m => m.id === it.id ? { ...m, newMedal: false, new: false } : m));
 								}}
 							/>
 						))}
-          </View>
+          </div>
         )}
       />
-      <View style={styles.dotsRow}>
+      <div style={styles.dotsRow}>
         {Array.from({ length: pages }).map((_, i) => (
-          <TouchableOpacity key={i} onPress={() => goToPage(i)} style={[styles.dot, i === page && { backgroundColor: colors.primary }]} />
+          <button key={i} onClick={() => goToPage(i)} style={{...styles.dot, ...i === page && { backgroundColor: colors.primary }}} />
         ))}
-      </View>
-    </View>
+      </div>
+    </div>
 	);
 }
 
 const CIRCLE_SIZE = 66; // outer active circle approx
 
-const styles = StyleSheet.create({
+const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
 	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14 },
   grid: { },
@@ -195,7 +194,7 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		backgroundColor: '#ffffff33',
 	},
-});
+};
 
 // MedalButton component extracted for animation logic
 function MedalButton({ item, colors, onPress }) {
@@ -255,8 +254,8 @@ function MedalButton({ item, colors, onPress }) {
 	const bgColor = isNew
 		? flash.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '55'] })
 		: '#00000022';
-	const pulseBorder = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] });
-	const pulseBg = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '44'] });
+	const pulseBorder = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] };
+	const pulseBg = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '44'] };
 
 	const finalBorder = isNew ? pulseBorder : borderColor;
 	const finalBg = isNew ? pulseBg : bgColor;
@@ -265,13 +264,12 @@ function MedalButton({ item, colors, onPress }) {
 
 	return (
 		<Animated.View style={[styles.cell, { transform: [{ scale: combinedScale }] }]}>      
-			<TouchableOpacity
-				activeOpacity={0.85}
-				onPress={onPress}
+			<button 				activeOpacity={0.85}
+				onClick={onPress}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
-				accessibilityRole="button"
-				accessibilityLabel={`Medalha ${item.id}${item.unlocked ? ' desbloqueada' : ' bloqueada'}`}
+				
+				aria-label={`Medalha ${item.id}${item.unlocked ? ' desbloqueada' : ' bloqueada'}`}
 			>
 				<Animated.View style={item.unlocked ? [styles.medalOuterActive, { borderColor: finalBorder }] : styles.medalOuterInactive}>
 					<Animated.View style={item.unlocked ? [styles.medalInnerActive, { backgroundColor: badgeColor }] : styles.medalInnerInactive}>
@@ -289,11 +287,11 @@ function MedalButton({ item, colors, onPress }) {
 							/>
 						)}
 						{isNew && (
-							<View style={styles.newDot} />
+							<div style={styles.newDot} />
 						)}
 					</Animated.View>
 				</Animated.View>
-			</TouchableOpacity>
+			</button>
 		</Animated.View>
 	);
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import { family } from '../../constants/font';
@@ -26,40 +26,39 @@ export default function Header({
 	style,
 }) {
 	const colors = useThemeColors();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	const horizontalPadding = width >= 768 ? 28 : 16;
 	const rightPadding = width >= 768 ? 20 : 8;
 		const { translate } = useTranslate();
 
 	return (
-		<View style={[styles.container, { paddingLeft: horizontalPadding, paddingRight: rightPadding, borderBottomColor: colors.text }, style]}>
-			<View style={styles.side}>
+		<div style={{...styles.container, ...{ paddingLeft: horizontalPadding}}>
+			<div style={styles.side}>
 				{showBack && (
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel={translate('common.back')}
-						onPress={onBack}
+					<button 						
+						aria-label={translate('common.back')}
+						onClick={onBack}
 						style={styles.iconBtn}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
 						<Icon name="arrow-left" size={24} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 				{left}
-			</View>
-			<View style={styles.sideRight}>
+			</div>
+			<div style={styles.sideRight}>
 				{right}
-				{extraRight && <View style={styles.extraRight}>{extraRight}</View>}
-			</View>
+				{extraRight && <div style={styles.extraRight}>{extraRight}</div>}
+			</div>
 			{/* Absolutely centered title to ensure true visual centering */}
-			<View pointerEvents="none" style={styles.centerWrap}>
-				<Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-			</View>
-		</View>
+			<div pointerEvents="none" style={styles.centerWrap}>
+				<span style={{...styles.title, ...{ color: colors.text }}}>{title}</span>
+			</div>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -81,5 +80,5 @@ const styles = StyleSheet.create({
 	extraRight: { marginLeft: 4 },
 	iconBtn: { alignItems: 'center', justifyContent: 'center' },
 	centerWrap: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
-});
+};
 

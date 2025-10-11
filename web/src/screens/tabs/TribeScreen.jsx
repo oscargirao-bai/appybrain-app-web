@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { View, StyleSheet, Animated, Text, Pressable, FlatList, TouchableOpacity } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
@@ -101,7 +101,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				const nameA = (a.name || a.firstName || '').toLowerCase();
 				const nameB = (b.name || b.firstName || '').toLowerCase();
 				return nameA.localeCompare(nameB);
-			});
+			};
 			
 			//console.log('TribeScreen: Fetched members for tribe', tribeId, ':', sortedMembers);
 			
@@ -131,7 +131,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 							})
 						]).start();
 					}, index * 100); // 100ms delay between each member
-				});
+				};
 			}, 50); // Small delay before starting animations
 			
 		} catch (error) {
@@ -221,7 +221,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				lastStars = s;
 				lastRank = rank;
 				return { ...u, rank };
-			});
+			};
 		}, [members]);
 
 		const renderMember = useCallback(({ item, index }) => {
@@ -245,44 +245,43 @@ export default function TribeScreen({ sourceId, timestamp }) {
 						}
 					]}
 				>
-					<View style={memberListStyles.rankCol}>
+					<div style={memberListStyles.rankCol}>
 						{topMedal ? (
 							<Icon name={medalIcon} size={22} color={medalColor} />
 						) : (
-							<Text style={[memberListStyles.rankText, { color: colors.text + 'AA' }]}>{item.rank}</Text>
+							<span style={{...memberListStyles.rankText, ...{ color: colors.text + 'AA' }}}>{item.rank}</span>
 						)}
-					</View>
-					<View style={[memberListStyles.avatar, { borderColor: colors.primary + '66' }]}> 
+					</div>
+					<div style={{...memberListStyles.avatar, ...{ borderColor: colors.primary + '66' }}}> 
 						{item.avatarIcon ? (
 							<Icon name={item.avatarIcon} size={20} color={colors.primary} />
 						) : (
-							<Text style={[memberListStyles.avatarLetter, { color: colors.primary }]}>
+							<span style={{...memberListStyles.avatarLetter, ...{ color: colors.primary }}}>
 								{(item.name || '?').charAt(0).toUpperCase()}
-							</Text>
+							</span>
 						)}
-					</View>
-					<View style={memberListStyles.mainCol}>
-						<Text style={[memberListStyles.name, { color: colors.text }]} numberOfLines={1}>
+					</div>
+					<div style={memberListStyles.mainCol}>
+						<span style={{...memberListStyles.name, ...{ color: colors.text }}} numberOfLines={1}>
 							{item.name}
-						</Text>
-					</View>
+						</span>
+					</div>
 				</Animated.View>
 			);
 		}, [colors, currentUserId, animations]);
 
 		if (ranked.length === 0) {
 			return (
-				<View style={[memberListStyles.emptyWrapper, { borderColor: colors.text + '22', backgroundColor: colors.text + '05' }]}> 
-					<Text style={{ color: colors.text + '99', fontSize: 14 }}>
+				<div style={{...memberListStyles.emptyWrapper, ...{ borderColor: colors.text + '22'}}> 
+					<span style={{ color: colors.text + '99', fontSize: 14 }}>
 						{loadingMembers ? "" : "Sem membros nesta tribo"}
-					</Text>
-				</View>
+					</span>
+				</div>
 			);
 		}
 
 		return (
-			<FlatList
-				data={ranked}
+			<div 				data={ranked}
 				keyExtractor={(item, idx) => `user-${item.id || idx}-${item.email || ''}-${idx}`}
 				renderItem={renderMember}
 				style={memberListStyles.list}
@@ -293,33 +292,31 @@ export default function TribeScreen({ sourceId, timestamp }) {
 	};
 
 	return (
-		<View style={[styles.container, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
 			<Header
 				title={translate('titles.tribes')}
 				right={(
-					<View style={{ position: 'relative' }}>
-						<TouchableOpacity
-							accessibilityRole="button"
-							accessibilityLabel={translate('options.notification')}
-							onPress={() => setNotificationsOpen(true)}
+					<div style={{ position: 'relative' }}>
+						<button 							
+							aria-label={translate('options.notification')}
+							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
 							<Icon name="bell" size={22} color={colors.text} />
-						</TouchableOpacity>
+						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
-					</View>
+					</div>
 				)}
 				extraRight={(
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel={translate('settings.settings')}
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label={translate('settings.settings')}
+						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
 						<Icon name="settings" size={22} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 			/>
 			<TribesHeader 
@@ -347,13 +344,13 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				currentUserId={DataManager.getUser()?.id}
 			/>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: { flex: 1 },
-});
+};
 
 const memberListStyles = StyleSheet.create({
 	list: {
@@ -410,5 +407,5 @@ const memberListStyles = StyleSheet.create({
 		padding: 24,
 		alignItems: 'center',
 	},
-});
+};
 

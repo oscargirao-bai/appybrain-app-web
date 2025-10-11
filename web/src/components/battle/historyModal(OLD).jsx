@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, Animated, ScrollView, Dimensions } from 'react-native';
+import {Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../constants/color';
 import IconCircleButton from './IconCircleButton';
@@ -51,7 +51,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
               if (r && (r.correct === true || r.correct === 1)) correct += 1;
               if (r && typeof r.timeMs === 'number') timeMs += r.timeMs;
               if (r && typeof r.timeSec === 'number') timeMs += r.timeSec * 1000;
-            });
+            };
             return { correct, total, timeSec: (timeMs / 1000) };
           };
 
@@ -90,7 +90,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 
             if (isPending) lefts.push(item);
             else rights.push(item);
-          });
+          };
 
           setPendingList(lefts);
           setCompletedList(rights);
@@ -112,7 +112,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
     return () => { mounted = false; };
   }, [visible, meName, user]);
 
-  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] });
+  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] };
   const opacity = anim;
 
   // If parent passed arrays, use them as initial values; otherwise our fetch will populate
@@ -129,49 +129,49 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 
   return (
     <Modal visible={!!visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.backdrop}>
+      <div style={styles.backdrop}>
         {/* Click outside to close */}
-        <Pressable style={styles.backdropHit} onPress={onClose} />
-        <View style={{ width: '100%', alignItems: 'center' }}>
+        <button style={styles.backdropHit} onClick={onClose} />
+        <div style={{ width: '100%', alignItems: 'center' }}>
           <Animated.View style={[styles.card, { opacity, transform: [{ scale }] }]}> 
             {/* Close */}
-            <View style={styles.closeWrap}>
-              <IconCircleButton size={36} rounded={12} onPress={onClose}>
+            <div style={styles.closeWrap}>
+              <IconCircleButton size={36} rounded={12} onClick={onClose}>
                 <Lucide name="x" size={20} color={colors.text.primary} />
               </IconCircleButton>
-            </View>
+            </div>
 
-            <Text style={styles.title}>{translate('battle.history.title') || 'Battle History'}</Text>
+            <span style={styles.title}>{translate('battle.history.title') || 'Battle History'}</span>
 
-            <View style={styles.scrollBox}>
+            <div style={styles.scrollBox}>
               {/* If there are no battles, show a centered translated message */}
               {!hasAny ? (
-                <View style={styles.emptyWrap}>
-                  <Text style={styles.emptyText}>{translate('battle.history.empty') || translate('battle.noRecent') || 'No battles available'}</Text>
-                </View>
+                <div style={styles.emptyWrap}>
+                  <span style={styles.emptyText}>{translate('battle.history.empty') || translate('battle.noRecent') || 'No battles available'}</span>
+                </div>
               ) : (
-                <ScrollView contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
+                <div contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
                   {/* Pending */}
-                  <Text style={styles.sectionTitle}>{translate('battle.history.pending') || 'Pending'}</Text>
-                  <View style={styles.sectionBox}>
+                  <span style={styles.sectionTitle}>{translate('battle.history.pending') || 'Pending'}</span>
+                  <div style={styles.sectionBox}>
                     {pendingToRender.map((it, idx) => (
                       <HistoryItem key={`p-${idx}`} {...it} onClose={onClose} navigation={navigation} />
                     ))}
-                  </View>
+                  </div>
 
                   {/* Completed */}
-                  <Text style={[styles.sectionTitle, { marginTop: 18 }]}>{translate('battle.history.completed') || 'Completed'}</Text>
-                  <View style={styles.sectionBox}>
+                  <span style={{...styles.sectionTitle, ...{ marginTop: 18 }}}>{translate('battle.history.completed') || 'Completed'}</span>
+                  <div style={styles.sectionBox}>
                     {completedToRender.map((it, idx) => (
                       <HistoryItem key={`c-${idx}`} {...it} onClose={onClose} navigation={navigation} />
                     ))}
-                  </View>
-                </ScrollView>
+                  </div>
+                </div>
               )}
-            </View>
+            </div>
           </Animated.View>
-        </View>
-      </View>
+        </div>
+      </div>
     </Modal>
   );
 }
@@ -188,48 +188,47 @@ function HistoryItem({ left, right, leftStats, rightStats, status = 'pending', b
   if (isLose) { bg = 'rgba(239,68,68,0.15)'; border = colors.error; }
 
   return (
-    <Pressable
-      onPress={() => {
+    <button       onClick={() => {
         if (battleSessionId) {
           // Close modal first so navigation isn't blocked by modal overlay
           try { onClose && onClose(); } catch (e) {}
-          navigation?.navigate('battleResult', { battleSessionId });
+          navigation?.navigate('battleResult', { battleSessionId };
         }
       }}
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
-      <View style={[styles.item, { backgroundColor: bg, borderColor: border }]}> 
-        <View pointerEvents="none" style={styles.vsOverlay}>
-          <Text style={[styles.vs, styles.vsCenter]}>{translate('battle.vs') || 'VS'}</Text>
-        </View>
-        <View style={styles.itemRow}>
-          <Text style={[styles.itemName, { textAlign: 'left' }]} numberOfLines={1}>{left}</Text>
-          <Text style={[styles.itemName, { textAlign: 'right' }]} numberOfLines={1}>{right}</Text>
-        </View>
-        <View style={styles.statsRow}>
-          <View style={styles.statsCol}>
+      <div style={{...styles.item, ...{ backgroundColor: bg}}> 
+        <div pointerEvents="none" style={styles.vsOverlay}>
+          <span style={{...styles.vs, ...styles.vsCenter}}>{translate('battle.vs') || 'VS'}</span>
+        </div>
+        <div style={styles.itemRow}>
+          <span style={{...styles.itemName, ...{ textAlign: 'left' }}} numberOfLines={1}>{left}</span>
+          <span style={{...styles.itemName, ...{ textAlign: 'right' }}} numberOfLines={1}>{right}</span>
+        </div>
+        <div style={styles.statsRow}>
+          <div style={styles.statsCol}>
             {leftStats ? (
               <>
-                <Text style={styles.statsText}>{leftStats.correct}/{leftStats.total} {translate('battle.history.correct') || 'Correct'}</Text>
-                <Text style={styles.statsText}>{Number(leftStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime') || 'Total time'}</Text>
+                <span style={styles.statsText}>{leftStats.correct}/{leftStats.total} {translate('battle.history.correct') || 'Correct'}</span>
+                <span style={styles.statsText}>{Number(leftStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime') || 'Total time'}</span>
               </>
             ) : (
-              <Text style={styles.statsText}>?/? {translate('battle.history.correct') || 'Correct'}</Text>
+              <span style={styles.statsText}>?/? {translate('battle.history.correct') || 'Correct'}</span>
             )}
-          </View>
-          <View style={styles.statsCol}>
+          </div>
+          <div style={styles.statsCol}>
             {rightStats ? (
               <>
-                <Text style={[styles.statsText, { textAlign: 'right' }]}>{rightStats.correct}/{rightStats.total} {translate('battle.history.correct') || 'Correct'}</Text>
-                <Text style={[styles.statsText, { textAlign: 'right' }]}>{Number(rightStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime') || 'Total time'}</Text>
+                <span style={{...styles.statsText, ...{ textAlign: 'right' }}}>{rightStats.correct}/{rightStats.total} {translate('battle.history.correct') || 'Correct'}</span>
+                <span style={{...styles.statsText, ...{ textAlign: 'right' }}}>{Number(rightStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime') || 'Total time'}</span>
               </>
             ) : (
-              <Text style={[styles.statsText, { textAlign: 'right' }]}>?/? {translate('battle.history.correct') || 'Correct'}</Text>
+              <span style={{...styles.statsText, ...{ textAlign: 'right' }}}>?/? {translate('battle.history.correct') || 'Correct'}</span>
             )}
-          </View>
-        </View>
-      </View>
-    </Pressable>
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }
 
@@ -241,7 +240,7 @@ const CARD_BASE_H = Math.min(760, Math.round(H * 0.86));
 const CARD_H = Math.max(120, Math.round(CARD_BASE_H * 0.625));
 const SCROLL_H = Math.max(60, CARD_H - 70); // leave room for title/close/paddings
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: {
     flex: 1,
     backgroundColor: colors.overlay.black50,
@@ -309,4 +308,4 @@ const styles = StyleSheet.create({
   statsText: { color: colors.text.secondary, fontSize: 12, fontWeight: '600' },
   emptyWrap: { flex: 1, height: SCROLL_H, alignItems: 'center', justifyContent: 'center' },
   emptyText: { color: colors.text.secondary, fontSize: 14, fontWeight: '700', textAlign: 'center' },
-});
+};

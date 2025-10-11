@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import { WebView } from 'react-native-webview';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../services/Theme';
@@ -105,80 +105,80 @@ export default function HtmlScreen() {
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
-      });
+      };
     } catch (error) {
       return dateString;
     }
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <div style={{...styles.container, ...{ backgroundColor: colors.background }}}>
       <Header title={headerTitle} showBack onBack={() => navigation.goBack?.()} />
       
       {/* Show news metadata if this is a news item */}
       {newsData && (
-        <View style={styles.metadataContainer}>
+        <div style={styles.metadataContainer}>
           {/* News Image */}
           {newsData.imageUrl && (
-            <Image 
+            <img 
               source={{ uri: newsData.imageUrl }} 
               style={styles.newsImage}
-              resizeMode="cover"
+              style={{objectFit: "cover"}}
             />
           )}
           
           {/* News Info */}
-          <View style={styles.newsInfo}>
-            <Text style={[styles.newsTitle, { color: colors.text }]}> 
+          <div style={styles.newsInfo}>
+            <span style={{...styles.newsTitle, ...{ color: colors.text }}}> 
               {newsData.title}
-            </Text>
+            </span>
             
             {newsData.description && (
-              <Text style={[styles.newsDescription, { color: colors.text + 'CC' }]}> 
+              <span style={{...styles.newsDescription, ...{ color: colors.text + 'CC' }}}> 
                 {newsData.description}
-              </Text>
+              </span>
             )}
             
             {newsData.publishDate && (
-              <Text style={[styles.newsDate, { color: colors.text + '99' }]}> 
+              <span style={{...styles.newsDate, ...{ color: colors.text + '99' }}}> 
                 {formatDate(newsData.publishDate)}
-              </Text>
+              </span>
             )}
-          </View>
-        </View>
+          </div>
+        </div>
       )}
 
       {/* Loading indicator for news */}
       {newsId && loading && (
-        <View style={styles.loadingContainer}>
-          <Text style={[styles.loadingText, { color: colors.text + '99' }]}>
+        <div style={styles.loadingContainer}>
+          <span style={{...styles.loadingText, ...{ color: colors.text + '99' }}}>
             Carregando notícia...
-          </Text>
-        </View>
+          </span>
+        </div>
       )}
       
       {/* Content rendering */}
       {uri ? (
         // For external URLs, keep using WebView
-        <WebView source={{ uri }} style={[styles.webview, { backgroundColor: colors.background }]} originWhitelist={["*"]} />
+        <WebView source={{ uri }} style={{...styles.webview, ...{ backgroundColor: colors.background }}} originWhitelist={["*"]} />
       ) : (
         // For HTML content (especially study content), use MathJaxRenderer for math support
         <MathJaxRenderer
           content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
           enabled={true}
           scrollEnabled={true}
-          style={[styles.webview, { backgroundColor: isStudyContent ? '#ffffff' : colors.background }]}
+          style={{...styles.webview, ...{ backgroundColor: isStudyContent ? '#ffffff' : colors.background }}}
           baseFontSize={16}
           backgroundColor={isStudyContent ? '#ffffff' : undefined}
           textColor={isStudyContent ? '#000000' : undefined}
           padding={10}
         />
       )}
-    </SafeAreaView>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: { flex: 1 },
   webview: { flex: 1 },
   metadataContainer: {
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 14,
   },
-});
+};

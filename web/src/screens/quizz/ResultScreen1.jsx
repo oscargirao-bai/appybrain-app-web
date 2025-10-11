@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import Banner from '../../components/Profile/Banner';
@@ -56,7 +56,7 @@ export default function ResultScreen1() {
   //console.log('ResultScreen1 received sessionResult:', sessionResult);
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}> 
+    <div style={{...styles.safe, ...{ backgroundColor: colors.background }}}> 
       {(() => {
         if (!hasStats) return null;
         const glowColors = success
@@ -72,23 +72,23 @@ export default function ResultScreen1() {
           />
         );
       })()}
-      <View style={styles.content}>
-        <View style={styles.header}>
+      <div style={styles.content}>
+        <div style={styles.header}>
           {!!quizTitle && (
-            <Text style={[styles.quizTitle, { color: colors.text }]} numberOfLines={3}>
+            <span style={{...styles.quizTitle, ...{ color: colors.text }}} numberOfLines={3}>
               {quizTitle}
-            </Text>
+            </span>
           )}
-        </View>
+        </div>
         {/* Profile banner + info */}
-        <View style={styles.bannerWrap}>
+        <div style={styles.bannerWrap}>
           <Banner
             avatarSource={getAvatarSource()}
             bannerImageSource={getBackgroundSource()}
             frameSource={getFrameSource()}
           />
-        </View>
-        <View style={styles.infoWrap}>
+        </div>
+        <div style={styles.infoWrap}>
           <Info
             username={getUsername()}
             tribe={getTribeName()}
@@ -96,14 +96,14 @@ export default function ResultScreen1() {
             stars={getStats().stars}
             trophies={getStats().points}
           />
-        </View>
+        </div>
         <Stats correct={correct} total={total} totalSec={typeof totalSec === 'number' ? totalSec : null} />
         {/* Reward pill */}
-        <View style={styles.rewardWrap}>
+        <div style={styles.rewardWrap}>
           {(() => {
             const rewardType = getRewardType(quizType);
-            const rewardAmount = getRewardAmount(sessionResult, { correct, total });
-            //console.log('Rendering Reward with:', { rewardType, rewardAmount, quizType, sessionResult });
+            const rewardAmount = getRewardAmount(sessionResult, { correct, total };
+            //console.log('Rendering Reward with:', { rewardType, rewardAmount, quizType, sessionResult };
             return (
               <Reward 
                 type={rewardType} 
@@ -111,26 +111,26 @@ export default function ResultScreen1() {
               />
             );
           })()}
-        </View>
+        </div>
         {/* Spacer to push quote to middle of remaining space */}
-        <View style={styles.spacer}>
+        <div style={styles.spacer}>
           <Quote percentage={hasStats ? Math.round((correct / total) * 100) : 50} />
-        </View>
-      </View>
+        </div>
+      </div>
       {/* Bottom action button */}
-      <View style={styles.actions}>
+      <div style={styles.actions}>
         <Button1
           label="Sair"
-          onPress={() => navigation.goBack()}
+          onClick={() => navigation.goBack()}
           color={ctaColor}
           style={{ minWidth: 220 }}
         />
-      </View>
-    </SafeAreaView>
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   safe: { flex: 1 },
   header: {
     paddingHorizontal: 12,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: 'center',
   },
-});
+};
 
 // Helpers to read user data and build image sources
 function getUserProfile() {
@@ -240,7 +240,7 @@ function getFrameSource() {
 
 // Updated reward amount function to use session result
 function getRewardAmount(sessionResult, fallbackData) {
-  //console.log('getRewardAmount called with:', { sessionResult, fallbackData });
+  //console.log('getRewardAmount called with:', { sessionResult, fallbackData };
   
   // If we have session result with specific reward data, use it
   if (sessionResult) {

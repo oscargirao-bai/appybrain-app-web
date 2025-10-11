@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable, LayoutAnimation, Platform, UIManager } from 'react-native';
+import {LayoutAnimation, UIManager} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
@@ -22,7 +22,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 // Custom Star component using SVG for precise border and fill control
 function Star({ size = 18, lit = false, color = '#FFD700', borderColor = '#ccc' }) {
 	return (
-		<View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+		<div style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
 			<Svg width={size} height={size} viewBox="0 0 24 24">
 				<Path
 					d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
@@ -32,7 +32,7 @@ function Star({ size = 18, lit = false, color = '#FFD700', borderColor = '#ccc' 
 					strokeLinejoin="round"
 				/>
 			</Svg>
-		</View>
+		</div>
 	);
 }
 
@@ -82,26 +82,25 @@ function DifficultySelector({ value, onChange, stars, starsByDifficulty, onConfi
 	};
 	
 	return (
-		<View style={styles.diffRow}>
+		<div style={styles.diffRow}>
 			{DIFFICULTIES.map((d) => {
 				const active = value === d.key;
 				const unlocked = isDifficultyUnlocked(d.key);
 				const difficultyStars = starsByDifficulty?.[d.key] || 0;
 				
 				return (
-					<View key={d.key} style={styles.diffCol}> 
-						<View style={styles.smallStarsRow}> 
+					<div key={d.key} style={styles.diffCol}> 
+						<div style={styles.smallStarsRow}> 
 							{[0,1,2].map(i => {
 								const lit = difficultyStars > i;
 								return (
-									<View key={i} style={{ marginHorizontal: 2, opacity: lit ? 1 : 0.4 }}>
+									<div key={i} style={{ marginHorizontal: 2, opacity: lit ? 1 : 0.4 }}>
 										<Star size={18} lit={lit} color="#FFD700" borderColor={iconColor || colors.border} />
-									</View>
+									</div>
 								);
 							})}
-						</View>
-						<Pressable
-							onPress={() => {
+						</div>
+						<button 							onClick={() => {
 								if (unlocked) {
 									// Muda imediatamente a dificuldade e abre confirmação já com a seleção atual
 									onChange(d.key);
@@ -127,21 +126,21 @@ function DifficultySelector({ value, onChange, stars, starsByDifficulty, onConfi
 									pressed && unlocked && { opacity: 0.85 },
 								];
 							}}
-							accessibilityRole="button"
-							accessibilityLabel={unlocked ? `Selecionar dificuldade ${d.label}` : `Dificuldade ${d.label} bloqueada`}
+							
+							aria-label={unlocked ? `Selecionar dificuldade ${d.label}` : `Dificuldade ${d.label} bloqueada`}
 							disabled={!unlocked}
 						>
-							<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-								<Text style={[styles.diffText, { color: '#fff' }]}>{d.label}</Text>
+							<div style={{ flexDirection: 'row', alignItems: 'center' }}>
+								<span style={{...styles.diffText, ...{ color: '#fff' }}}>{d.label}</span>
 								{!unlocked && (
 									<Icon name="lock" size={14} color="#fff" style={{ marginLeft: 4 }} />
 								)}
-							</View>
-						</Pressable>
-					</View>
+							</div>
+						</button>
+					</div>
 				);
 			})}
-		</View>
+		</div>
 	);
 }
 
@@ -149,25 +148,24 @@ function StarBadge({ stars, max, color }) {
 	const colors = useThemeColors();
 
 	return (
-		<View style={[styles.starBadge, { borderColor: color }]}> 
+		<div style={{...styles.starBadge, ...{ borderColor: color }}}> 
 			<Icon name="star" size={14} color={color || colors.primary} style={{ marginRight: 4 }} />
-			<Text style={[styles.starBadgeText, { color: colors.iconColor }]}>{stars}/{max}</Text>
-		</View>
+			<span style={{...styles.starBadgeText, ...{ color: colors.iconColor }}}>{stars}/{max}</span>
+		</div>
 	);
 }
 
 function StudyButton({ onPress }) {
 	const colors = useThemeColors();
 	return (
-		<Pressable
-			onPress={onPress}
+		<button 			onClick={onPress}
 			style={({ pressed }) => [styles.studyBtn, { backgroundColor: colors.accent, borderColor: colors.border }, pressed && { opacity: 0.9 }]}
-			accessibilityRole="button"
-			accessibilityLabel="Estudar conteúdo"
+			
+			aria-label="Estudar conteúdo"
 		>
 			<Icon name="book-open" size={18} color={colors.onAccent} style={{ marginRight: 8 }} />
-			<Text style={[styles.studyText, { color: colors.onAccent }]}>Estudar Conteúdo</Text>
-		</Pressable>
+			<span style={{...styles.studyText, ...{ color: colors.onAccent }}}>Estudar Conteúdo</span>
+		</button>
 	);
 }
 
@@ -191,26 +189,25 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 	}, [expanded]);
 	
 	return (
-		<View style={[styles.itemContainer, { backgroundColor: baseColor, borderColor: containerBg }]}> 
-			<Pressable
-				onPress={onToggle}
+		<div style={{...styles.itemContainer, ...{ backgroundColor: baseColor}}> 
+			<button 				onClick={onToggle}
 				style={({ pressed }) => [styles.topRow, pressed && { opacity: 0.85 }]}
-				accessibilityRole="button"
-				accessibilityLabel={`Abrir conteúdo ${item.title}. ${item.stars} de ${item.maxStars} estrelas.`}
+				
+				aria-label={`Abrir conteúdo ${item.title}. ${item.stars} de ${item.maxStars} estrelas.`}
 			>
-				<View style={{ flexDirection: 'row', alignItems: 'flex-start', flex: 1 }}>
-					<Text 
-						style={[styles.titleText, { color: item.iconColor }]} 
+				<div style={{ flexDirection: 'row', alignItems: 'flex-start', flex: 1 }}>
+					<span 
+						style={{...styles.titleText, ...{ color: item.iconColor }}} 
 						numberOfLines={showFullTitle ? undefined : 3}
 					>
 						{item.title}
-					</Text>
+					</span>
 					<StarBadge stars={item.stars} max={item.maxStars} color={item.iconColor} />
-				</View>
+				</div>
 				<Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={item.iconColor} />
-			</Pressable>
+			</button>
 			{expanded && (
-				<View style={styles.expandedBody}>
+				<div style={styles.expandedBody}>
 					{wantsMath ? (
 						<MathJaxRenderer
 							content={item.description || 'Sem descrição'}
@@ -221,7 +218,7 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 							padding={0}
 						/>
 					) : (
-						<Text style={[styles.descText, { color: item.iconColor }]}>{item.description || 'Sem descrição'}</Text>
+						<span style={{...styles.descText, ...{ color: item.iconColor }}}>{item.description || 'Sem descrição'}</span>
 					)}
 					{/* Confirm modal agora APENAS ao clicar nas dificuldades */}
 					<DifficultySelector
@@ -233,10 +230,10 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 						iconColor={item.iconColor}
 					/>
 					{/* Botão Estudar dispara ação direta (sem confirmação) */}
-					<StudyButton onPress={() => onPressStudy && onPressStudy()} />
-				</View>
+					<StudyButton onClick={() => onPressStudy && onPressStudy()} />
+				</div>
 			)}
-		</View>
+		</div>
 	);
 }
 
@@ -253,7 +250,7 @@ export default function ContentList({ data, onPressStudy, starsByDifficulty }) {
 			//console.log('ContentList: Navigating to quiz with payload:', payload);
 			setPendingQuiz(null);
 			// Go directly to Quizz screen with selected content + difficulty
-			navigation.navigate('Quizz', { quiz: payload });
+			navigation.navigate('Quizz', { quiz: payload };
 			// Note: Do NOT call onPressStudy here as that would trigger study navigation
 		}
 	}, [pendingQuiz, navigation]);
@@ -288,11 +285,10 @@ export default function ContentList({ data, onPressStudy, starsByDifficulty }) {
 
 	return (
 		<>
-			<FlatList
-				data={data}
+			<div 				data={data}
 				keyExtractor={(it) => it.id}
 				renderItem={renderItem}
-				ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+				ItemSeparatorComponent={() => <div style={{ height: 12 }} />}
 				contentContainerStyle={{ paddingBottom: 200 }}
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={<EmptyState />}
@@ -321,13 +317,13 @@ function labelForDifficulty(key) {
 function EmptyState() {
 	const colors = useThemeColors();
 	return (
-		<View style={{ paddingVertical: 48 }}>
-			<Text style={{ textAlign: 'center', color: colors.muted }}>Sem conteúdos</Text>
-		</View>
+		<div style={{ paddingVertical: 48 }}>
+			<span style={{ textAlign: 'center', color: colors.muted }}>Sem conteúdos</span>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	itemContainer: { borderWidth: 2, borderRadius: 16, paddingHorizontal: 16, paddingVertical: 14 },
 	topRow: { flexDirection: 'row', alignItems: 'center' },
 	orderText: { fontSize: 16, fontFamily: family.bold, marginRight: 6, width: 54 },
@@ -345,5 +341,5 @@ const styles = StyleSheet.create({
 	diffText: { fontSize: 16, fontFamily: family.bold, letterSpacing: 0.3 },
 	studyBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 14, borderRadius: 14, borderWidth: 2 },
 	studyText: { fontSize: 16, fontFamily: family.bold },
-});
+};
 

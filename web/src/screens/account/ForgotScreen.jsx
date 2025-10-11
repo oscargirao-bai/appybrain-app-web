@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions, Platform, Keyboard, Alert, Animated } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAvoidingView, ScrollView } from 'react-native';
+
+
+
 import TextInputField from '../../components/LoginComponents/TextInput';
 import PrimaryButton from '../../components/LoginComponents/PrimaryButton';
 import Button2 from '../../components/General/Button2';
@@ -16,7 +16,7 @@ const logoSource = require('../../../assets/logo.png');
 export default function ForgotScreen({ navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	const [email, setEmail] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
@@ -67,10 +67,10 @@ export default function ForgotScreen({ navigation }) {
 							friction: 8
 						})
 					]).start();
-				});
+				};
 				listeners.push(listener);
 			}
-		});
+		};
 		
 		// Hide events
 		['keyboardWillHide', 'keyboardDidHide'].forEach(eventName => {
@@ -93,10 +93,10 @@ export default function ForgotScreen({ navigation }) {
 							friction: 8
 						})
 					]).start();
-				});
+				};
 				listeners.push(listener);
 			}
-		});
+		};
 		
 		return () => {
 			listeners.forEach(listener => listener.remove());
@@ -105,9 +105,7 @@ export default function ForgotScreen({ navigation }) {
 
 	async function handleSubmit() {
 		if (!email) {
-			Alert.alert(
-				translate('forgot.error') || 'Erro',
-				translate('forgot.fillEmail') || 'Por favor, introduza o seu email.'
+			window.alert(translate('forgot.fillEmail') || 'Por favor, introduza o seu email.'
 			);
 			return;
 		}
@@ -143,23 +141,21 @@ export default function ForgotScreen({ navigation }) {
 	}
 
 	return (
-		<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
-			<View style={styles.topBar}>
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
+			<div style={styles.topBar}>
 				<Button2
 					iconName="arrow-left"
 					size={44}
-					onPress={() => {
+					onClick={() => {
 						navigation?.replace?.('Login');
 					}}
 				/>
-			</View>
-			<KeyboardAvoidingView
-				style={styles.flex}
+			</div>
+			<div 				style={styles.flex}
 				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 				keyboardVerticalOffset={Platform.select({ ios: 0, android: 0 })}
 			>
-				<ScrollView
-					style={styles.flex}
+				<div 					style={styles.flex}
 					contentContainerStyle={[
 						styles.scrollContent,
 						keyboardVisible && styles.scrollContentKeyboard // Apply special styles when keyboard is visible
@@ -169,14 +165,9 @@ export default function ForgotScreen({ navigation }) {
 					showsVerticalScrollIndicator={false}
 				>
 					{/* Logo */}
-					<View 
-						style={[
-							styles.logoArea, 
-							{ 
-								height: keyboardVisible ? `${Math.round(logoVisibleHeight * 0.5)}px` : logoVisibleHeight, // Use 50% of original height when keyboard visible (increased from 40%)
-								marginBottom: keyboardVisible ? '1%' : '8%' // Use percentage margins for better scaling
-							}
-						]} 
+					<div 
+						style={{...styles.logoArea, ...{ 
+								height: keyboardVisible ? `${Math.round(logoVisibleHeight * 0.5)}px` : logoVisibleHeight}} 
 						pointerEvents="none"
 					>
 						<Animated.View
@@ -186,22 +177,21 @@ export default function ForgotScreen({ navigation }) {
 								alignItems: 'center' 
 							}}
 						>
-							<View style={[styles.logoCrop, { width: logoWidth, height: logoVisibleHeight }]}>  
-								<Image
-									source={logoSource}
+							<div style={{...styles.logoCrop, ...{ width: logoWidth}}>  
+								<img 									source={logoSource}
 									style={{ width: logoWidth, height: logoWidth, resizeMode: 'contain', transform: [{ translateY: logoVerticalShift }] }}
-									accessibilityRole="image"
-									accessibilityLabel="App logo"
+									
+									aria-label="App logo"
 								/>
-							</View>
+							</div>
 						</Animated.View>
-					</View>
+					</div>
 					{/* Form */}
-					<View style={[styles.formBlock, keyboardVisible && styles.formBlockKeyboard]}>
-						<Text style={[styles.title, { color: colors.text }]}>
+					<div style={{...styles.formBlock, ...keyboardVisible && styles.formBlockKeyboard}}>
+						<span style={{...styles.title, ...{ color: colors.text }}}>
 							{translate('forgot.title') || 'Recuperar palavra‑passe'}
-						</Text>
-						<View style={[styles.inputsContainer, keyboardVisible && styles.inputsContainerKeyboard]}>
+						</span>
+						<div style={{...styles.inputsContainer, ...keyboardVisible && styles.inputsContainerKeyboard}}>
 							<TextInputField
 								value={email}
 								onChangeText={setEmail}
@@ -209,16 +199,16 @@ export default function ForgotScreen({ navigation }) {
 								keyboardType="email-address"
 								icon="email"
 							/>
-						</View>
+						</div>
 						<PrimaryButton
 							title={translate('forgot.send') || 'Enviar email de recuperação'}
-							onPress={handleSubmit}
+							onClick={handleSubmit}
 							disabled={!email || isLoading}
 							loading={isLoading}
 						/>
-					</View>
-				</ScrollView>
-			</KeyboardAvoidingView>
+					</div>
+				</div>
+			</div>
 			
 			<MessageModal
 				visible={modalVisible}
@@ -226,11 +216,11 @@ export default function ForgotScreen({ navigation }) {
 				message={modalMessage}
 				onClose={handleModalClose}
 			/>
-		</SafeAreaView>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	topBar: { paddingHorizontal: '3%', paddingTop: '2%', zIndex: 10, elevation: 10 },
 	flex: { flex: 1 },
@@ -277,4 +267,4 @@ const styles = StyleSheet.create({
 	inputsContainerKeyboard: {
 		marginBottom: '0.5%', // Very minimal spacing when keyboard is open using percentage
 	},
-});
+};

@@ -43,7 +43,7 @@ export default function LoginScreen({ navigation }) {
 						DataManager.setUserConfig({
 							randomPosition: loginResult.user.randomPosition,
 							fullAccess: loginResult.user.fullAccess
-						});
+						};
 					} catch (error) {
 						console.warn('Failed to set user config:', error);
 					}
@@ -51,7 +51,7 @@ export default function LoginScreen({ navigation }) {
 
 				// Check if user needs to reset password
 				if (loginResult.resetPassword === 1) {
-					navigation?.replace?.('Password', { currentPassword: password });
+					navigation?.replace?.('Password', { currentPassword: password };
 				} else {
 					// Login successful - navigate to loading screen
 					navigation?.replace?.('Loading');
@@ -143,7 +143,7 @@ export default function LoginScreen({ navigation }) {
 					</button>
 					<PrimaryButton
 						title={translate('login.enter') || 'Entrar'}
-						onPress={onSubmit}
+						onClick={onSubmit}
 						disabled={!email || !password || isLoading}
 						loading={isLoading}
 					/>

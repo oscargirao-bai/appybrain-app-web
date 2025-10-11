@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 
@@ -13,55 +13,48 @@ export default function Help({ onAddTime, onRemoveWrong, onSwapQuestion, disable
   const colors = useThemeColors();
 
   return (
-    <View style={styles.wrap} pointerEvents="box-none">
+    <div style={styles.wrap} pointerEvents="box-none">
       <IconButton
         icon="clock"
         label="Aumentar o tempo"
-        onPress={onAddTime}
+        onClick={onAddTime}
         disabled={disabled}
         colors={colors}
       />
       <IconButton
         icon="circle-minus"
         label="Retirar 1 resposta errada"
-        onPress={onRemoveWrong}
+        onClick={onRemoveWrong}
         disabled={disabled}
         colors={colors}
       />
       <IconButton
         icon="refresh-ccw"
         label="Trocar pergunta"
-        onPress={onSwapQuestion}
+        onClick={onSwapQuestion}
         disabled={disabled}
         colors={colors}
       />
-    </View>
+    </div>
   );
 }
 
 function IconButton({ icon, label, onPress, disabled, colors }) {
   return (
-    <TouchableOpacity
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={disabled ? undefined : onPress}
+    <button       
+      aria-label={label}
+      onClick={disabled ? undefined : onPress}
       disabled={disabled}
-      style={[
-        styles.btn,
-        {
-          borderColor: colors.text + '22',
-          backgroundColor: disabled ? colors.text + '04' : colors.text + '06',
-          opacity: disabled ? 0.5 : 1,
-        },
-      ]}
+      style={{...styles.btn, ...{
+          borderColor: colors.text + '22'}}
       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
     >
       <Icon name={icon} size={20} color={colors.text} />
-    </TouchableOpacity>
+    </button>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   wrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,4 +71,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+};

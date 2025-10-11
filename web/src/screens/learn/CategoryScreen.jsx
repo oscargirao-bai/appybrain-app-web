@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import { useThemeColors } from '../../services/Theme';
 import { useSearch } from '../../services/SearchContext';
 import DataManager from '../../services/DataManager';
@@ -41,7 +41,7 @@ export default function CategoryScreen() {
 						stars: categoryStars.earnedStars,
 						maxStars: categoryStars.maxStars
 					};
-				});
+				};
 				//console.log('CategoryScreen: Setting transformedCategories =', transformedCategories); // Debug log
 				setCategories(transformedCategories);
 			} else {
@@ -75,7 +75,7 @@ export default function CategoryScreen() {
 				content.title?.toLowerCase().includes(searchLower) ||
 				content.description?.toLowerCase().includes(searchLower)
 			);
-		});
+		};
 	}, [categories, discipline, searchText]);
 
 	const handlePressItem = useCallback((item) => {
@@ -84,21 +84,21 @@ export default function CategoryScreen() {
 			categoryId: item.id,
 			categoryColor: item.color,
 			categoryIconColor: item.iconColor
-		});
+		};
 	}, [navigation]);
 
 	return (
-		<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
 			<Header title={discipline?.title || 'Carregando...'} showBack onBack={() => navigation.navigate('MainTabs', { initialTab: 0 })} />
-			<View style={styles.body}>
+			<div style={styles.body}>
 				<SearchBox value={searchText} onChange={setSearchText} />
 				<ContentList data={filteredCategories} onPressItem={handlePressItem} />
-			</View>
-		</SafeAreaView>
+			</div>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	body: { flex: 1, paddingHorizontal: 16 },
-});
+};

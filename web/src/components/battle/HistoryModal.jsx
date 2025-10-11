@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, Animated, ScrollView, Dimensions } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import Icon from '@react-native-vector-icons/lucide';
@@ -36,61 +36,61 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
     Animated.timing(anim, { toValue: visible ? 1 : 0, duration: visible ? 180 : 150, useNativeDriver: true }).start();
   }, [visible, anim]);
 
-  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] });
+  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] };
   const opacity = anim;
 
   const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
 
   return (
     <Modal visible={!!visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.backdrop}>
-        <Pressable style={styles.backdropHit} onPress={onClose} />
-        <View style={{ width: '100%', alignItems: 'center' }}>
+      <div style={styles.backdrop}>
+        <button style={styles.backdropHit} onClick={onClose} />
+        <div style={{ width: '100%', alignItems: 'center' }}>
           <Animated.View style={[styles.card, { opacity, transform: [{ scale }] }]}> 
             {/* Close button */}
-            <Pressable onPress={onClose} style={styles.closeWrap} accessibilityRole="button" accessibilityLabel={translate('common.close')}>
+            <button onClick={onClose} style={styles.closeWrap}  aria-label={translate('common.close')}>
               <Icon name="x" size={22} color={colors.text} />
-            </Pressable>
+            </button>
 
-            <Text style={[styles.title, { color: colors.text }]}>
+            <span style={{...styles.title, ...{ color: colors.text }}}>
               {title || translate('battle.history.title')}
-            </Text>
+            </span>
 
-            <View style={styles.scrollBox}>
+            <div style={styles.scrollBox}>
               {!hasAny ? (
-                <View style={styles.emptyWrap}>
-                  <Text style={[styles.emptyText, { color: colors.muted }]}>{translate('battle.history.empty')}</Text>
-                </View>
+                <div style={styles.emptyWrap}>
+                  <span style={{...styles.emptyText, ...{ color: colors.muted }}}>{translate('battle.history.empty')}</span>
+                </div>
               ) : (
-                <ScrollView contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
+                <div contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
                   {/* Pending */}
                   {pending?.length > 0 && (
                     <>
-                      <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('battle.history.pending')}</Text>
-                      <View style={styles.sectionBox}>
+                      <span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('battle.history.pending')}</span>
+                      <div style={styles.sectionBox}>
                         {pending.map((it, idx) => (
                           <HistoryRow key={`p-${idx}`} item={it} colors={colors} translate={translate} onOpenBattle={onOpenBattle} onClose={onClose} />
                         ))}
-                      </View>
+                      </div>
                     </>
                   )}
                   {/* Completed */}
                   {completed?.length > 0 && (
                     <>
-                      <Text style={[styles.sectionTitle, { color: colors.text, marginTop: 18 }]}>{translate('battle.history.completed')}</Text>
-                      <View style={styles.sectionBox}>
+                      <span style={{...styles.sectionTitle, ...{ color: colors.text}}>{translate('battle.history.completed')}</span>
+                      <div style={styles.sectionBox}>
                         {completed.map((it, idx) => (
                           <HistoryRow key={`c-${idx}`} item={it} colors={colors} translate={translate} onOpenBattle={onOpenBattle} onClose={onClose} />
                         ))}
-                      </View>
+                      </div>
                     </>
                   )}
-                </ScrollView>
+                </div>
               )}
-            </View>
+            </div>
           </Animated.View>
-        </View>
-      </View>
+        </div>
+      </div>
     </Modal>
   );
 }
@@ -107,8 +107,7 @@ function HistoryRow({ item, colors, translate, onOpenBattle, onClose }) {
   if (isLose) { bg = 'rgba(239,68,68,0.15)'; border = colors.error || '#EF4444'; }
 
   return (
-    <Pressable
-      onPress={() => {
+    <button       onClick={() => {
         if (battleSessionId && onOpenBattle) {
           // First navigate, then close modal to avoid navigation state issues
           onOpenBattle(battleSessionId);
@@ -120,38 +119,38 @@ function HistoryRow({ item, colors, translate, onOpenBattle, onClose }) {
       }}
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
-      <View style={[rowStyles.item, { backgroundColor: bg, borderColor: border }]}> 
-        <View pointerEvents="none" style={rowStyles.vsOverlay}>
-          <Text style={[rowStyles.vs, rowStyles.vsCenter, { color: colors.text }]}>{translate('battle.vs')}</Text>
-        </View>
-        <View style={rowStyles.itemRow}>
-          <Text style={[rowStyles.itemName, { textAlign: 'left', color: colors.text }]} numberOfLines={1}>{left}</Text>
-          <Text style={[rowStyles.itemName, { textAlign: 'right', color: colors.text }]} numberOfLines={1}>{right}</Text>
-        </View>
-        <View style={rowStyles.statsRow}>
-          <View style={rowStyles.statsCol}>
+      <div style={{...rowStyles.item, ...{ backgroundColor: bg}}> 
+        <div pointerEvents="none" style={rowStyles.vsOverlay}>
+          <span style={{...rowStyles.vs, ...rowStyles.vsCenter}}>{translate('battle.vs')}</span>
+        </div>
+        <div style={rowStyles.itemRow}>
+          <span style={{...rowStyles.itemName, ...{ textAlign: 'left'}} numberOfLines={1}>{left}</span>
+          <span style={{...rowStyles.itemName, ...{ textAlign: 'right'}} numberOfLines={1}>{right}</span>
+        </div>
+        <div style={rowStyles.statsRow}>
+          <div style={rowStyles.statsCol}>
             {leftStats ? (
               <>
-                <Text style={[rowStyles.statsText, { color: colors.muted }]}>{leftStats.correct}/{leftStats.total} {translate('battle.history.correct')}</Text>
-                <Text style={[rowStyles.statsText, { color: colors.muted }]}>{Number(leftStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</Text>
+                <span style={{...rowStyles.statsText, ...{ color: colors.muted }}}>{leftStats.correct}/{leftStats.total} {translate('battle.history.correct')}</span>
+                <span style={{...rowStyles.statsText, ...{ color: colors.muted }}}>{Number(leftStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</span>
               </>
             ) : (
-              <Text style={[rowStyles.statsText, { color: colors.muted }]}>?/? {translate('battle.history.correct')}</Text>
+              <span style={{...rowStyles.statsText, ...{ color: colors.muted }}}>?/? {translate('battle.history.correct')}</span>
             )}
-          </View>
-          <View style={rowStyles.statsCol}>
+          </div>
+          <div style={rowStyles.statsCol}>
             {rightStats ? (
               <>
-                <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>{rightStats.correct}/{rightStats.total} {translate('battle.history.correct')}</Text>
-                <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>{Number(rightStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</Text>
+                <span style={{...rowStyles.statsText, ...{ textAlign: 'right'}}>{rightStats.correct}/{rightStats.total} {translate('battle.history.correct')}</span>
+                <span style={{...rowStyles.statsText, ...{ textAlign: 'right'}}>{Number(rightStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</span>
               </>
             ) : (
-              <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>?/? {translate('battle.history.correct')}</Text>
+              <span style={{...rowStyles.statsText, ...{ textAlign: 'right'}}>?/? {translate('battle.history.correct')}</span>
             )}
-          </View>
-        </View>
-      </View>
-    </Pressable>
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }
 
@@ -204,7 +203,7 @@ function createStyles(colors) {
     sectionBox: { gap: 10, width: '92%', alignSelf: 'center' },
     emptyWrap: { flex: 1, height: SCROLL_H, alignItems: 'center', justifyContent: 'center' },
     emptyText: { fontSize: 14, fontFamily: family.bold, textAlign: 'center' },
-  });
+  };
 }
 
 const rowStyles = StyleSheet.create({
@@ -232,4 +231,4 @@ const rowStyles = StyleSheet.create({
   statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   statsCol: { flex: 1 },
   statsText: { fontSize: 12, fontFamily: family.semibold },
-});
+};

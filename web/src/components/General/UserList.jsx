@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -60,7 +60,7 @@ export default function UserList({
 			lastStars = s;
 			lastRank = rank;
 			return { ...u, rank };
-		});
+		};
 	}, [sorted, denseRanking, metric]);
 
 	const maxValue = useMemo(() => {
@@ -80,64 +80,62 @@ export default function UserList({
 		const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
 
 		return (
-			<Pressable
-				onPress={onUserPress ? () => onUserPress(item) : undefined}
+			<button 				onClick={onUserPress ? () => onUserPress(item) : undefined}
 				style={({ pressed }) => [
 					styles.row,
 					{ backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08', borderColor: colors.text + '15' },
 					pressed && { opacity: 0.8 },
 				]}
 				accessibilityRole={onUserPress ? 'button' : 'text'}
-				accessibilityLabel={`Rank ${item.rank}. ${item.name}. ${currentValue} ${metric === 'trophies' ? 'troféus' : metric === 'xp' ? 'XP' : 'estrelas'}.`}
+				aria-label={`Rank ${item.rank}. ${item.name}. ${currentValue} ${metric === 'trophies' ? 'troféus' : metric === 'xp' ? 'XP' : 'estrelas'}.`}
 			>
-				<View style={styles.rankCol}>
+				<div style={styles.rankCol}>
 					{topMedal ? (
 						<Icon name={medalIcon} size={22} color={medalColor} />
 					) : (
-						<Text style={[styles.rankText, { color: colors.text + 'AA' }]}>{item.rank}</Text>
+						<span style={{...styles.rankText, ...{ color: colors.text + 'AA' }}}>{item.rank}</span>
 					)}
-				</View>
-				<View style={[styles.avatar, { borderColor: colors.primary + '66' }]}> 
+				</div>
+				<div style={{...styles.avatar, ...{ borderColor: colors.primary + '66' }}}> 
 					{item.avatarIcon ? (
 						<Icon name={item.avatarIcon} size={20} color={colors.primary} />
 					) : (
-						<Text style={[styles.avatarLetter, { color: colors.primary }]}>{(item.name || '?').charAt(0).toUpperCase()}</Text>
+						<span style={{...styles.avatarLetter, ...{ color: colors.primary }}}>{(item.name || '?').charAt(0).toUpperCase()}</span>
 					)}
-				</View>
-				<View style={styles.mainCol}>
-					<Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>{item.name}</Text>
+				</div>
+				<div style={styles.mainCol}>
+					<span style={{...styles.name, ...{ color: colors.text }}} numberOfLines={1}>{item.name}</span>
 					{showRelativeBar && maxValue > 0 && (
-						<View style={styles.barWrapper}>
-							<View style={[styles.barBg, { backgroundColor: colors.text + '22' }]} />
-							<View style={[styles.barFill, { backgroundColor: colors.primary, width: `${pct * 100}%` }]} />
-						</View>
+						<div style={styles.barWrapper}>
+							<div style={{...styles.barBg, ...{ backgroundColor: colors.text + '22' }}} />
+							<div style={{...styles.barFill, ...{ backgroundColor: colors.primary}} />
+						</div>
 					)}
-				</View>
-				<View style={styles.starsCol}>
+				</div>
+				<div style={styles.starsCol}>
 					{metric === 'points' ? (
 						<Icon name="trophy" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
 					) : metric === 'xp' ? (
-						<Text style={[styles.valuePrefix, { color: colors.primary, marginLeft: 8, marginRight: 4 }]}>XP</Text>
+						<span style={{...styles.valuePrefix, ...{ color: colors.primary}}>XP</span>
 					) : (
 						<Icon name="star" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
 					)}
-					<Text style={[styles.starsText, { color: colors.text }]}>{currentValue}</Text>
-				</View>
-			</Pressable>
+					<span style={{...styles.starsText, ...{ color: colors.text }}}>{currentValue}</span>
+				</div>
+			</button>
 		);
 		}, [colors, currentUserId, maxValue, metric, onUserPress, showMedals, showRelativeBar]);
 
 	if (finalList.length === 0) {
 		return (
-			<View style={[styles.emptyWrapper, { borderColor: colors.text + '22', backgroundColor: colors.text + '05' }]}> 
-				<Text style={{ color: colors.text + '99', fontSize: 14, fontFamily: family.regular }}>{emptyLabel}</Text>
-			</View>
+			<div style={{...styles.emptyWrapper, ...{ borderColor: colors.text + '22'}}> 
+				<span style={{ color: colors.text + '99', fontSize: 14, fontFamily: family.regular }}>{emptyLabel}</span>
+			</div>
 		);
 	}
 
 	return (
-		<FlatList
-			data={finalList}
+		<div 			data={finalList}
 			keyExtractor={(item, idx) => `user-${item.id || idx}-${item.email || ''}-${idx}`}
 			renderItem={renderItem}
 			style={styles.list}
@@ -147,7 +145,7 @@ export default function UserList({
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	list: {
 		flexGrow: 0,
 	},
@@ -237,5 +235,5 @@ const styles = StyleSheet.create({
 		padding: 24,
 		alignItems: 'center',
 	},
-});
+};
 

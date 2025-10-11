@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useTheme } from '../../services/Theme';
 import { useThemeColors } from '../../services/Theme';
@@ -25,12 +25,12 @@ export default function ButtonLightDark({ style, onChange }) {
 	const darkActive = active === 'dark';
 
 	return (
-		<View style={[styles.wrapper, { borderColor: colors.text + '22', backgroundColor: colors.text + '06' }, style]}> 
+		<div style={{...styles.wrapper, ...{ borderColor: colors.text + '22'}}> 
 			<Segment
 				label="Modo Claro"
 				icon="sun"
 				active={lightActive}
-				onPress={() => handleSelect('light')}
+				onClick={() => handleSelect('light')}
 				colors={colors}
 				position="left"
 			/>
@@ -38,18 +38,17 @@ export default function ButtonLightDark({ style, onChange }) {
 				label="Modo Escuro"
 				icon="moon"
 				active={darkActive}
-				onPress={() => handleSelect('dark')}
+				onClick={() => handleSelect('dark')}
 				colors={colors}
 				position="right"
 			/>
-		</View>
+		</div>
 	);
 }
 
 function Segment({ label, icon, active, onPress, colors, position }) {
 	return (
-		<Pressable
-			onPress={onPress}
+		<button 			onClick={onPress}
 			style={({ pressed }) => [
 				styles.segment,
 				position === 'left' && styles.segmentLeft,
@@ -57,17 +56,17 @@ function Segment({ label, icon, active, onPress, colors, position }) {
 				active && { backgroundColor: colors.secondary, shadowColor: colors.secondary },
 				pressed && { opacity: 0.85 },
 			]}
-			accessibilityRole="button"
+			
 			accessibilityState={{ selected: active }}
-			accessibilityLabel={label}
+			aria-label={label}
 		>
 			<Icon name={icon} size={18} color={active ? '#fff' : colors.text} style={{ marginRight: 8 }} />
-			<Text style={[styles.label, { color: active ? '#fff' : colors.text }]} numberOfLines={1}>{label}</Text>
-		</Pressable>
+			<span style={{...styles.label, ...{ color: active ? '#fff' : colors.text }}} numberOfLines={1}>{label}</span>
+		</button>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrapper: {
 		flexDirection: 'row',
 		borderWidth: 1,
@@ -98,5 +97,5 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic',
 		letterSpacing: 0.4,
 	},
-});
+};
 

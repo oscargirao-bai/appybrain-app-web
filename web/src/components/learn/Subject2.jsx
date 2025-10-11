@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Pressable, View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import Icon from '@react-native-vector-icons/lucide';
@@ -24,7 +24,7 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 
 	const handlePressIn = () => Animated.timing(scale, { toValue: 1, duration: 110, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
 	const handlePressOut = () => Animated.timing(scale, { toValue: 0, duration: 150, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.97] });
+	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.97] };
 
 	// Use API color for background, or fallback to theme background
 	const backgroundColor = color; 
@@ -33,10 +33,9 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 
 	return (
 		<Animated.View style={[styles.outer, { transform: [{ scale: pressScale }] }, style]}>
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={title}
-				onPress={onPress}
+			<button 				
+				aria-label={title}
+				onClick={onPress}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
 				style={({ pressed }) => [
@@ -50,20 +49,20 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 				]}
 			>
 				{/* Left icon */}
-				<View style={styles.side} pointerEvents="none">
+				<div style={styles.side} pointerEvents="none">
 					{svgIcon ? (
 						<SvgIcon svgString={svgIcon} size={28} color={style.textColor} />
 					) : (
 						<Icon name={iconName} size={28} color={iconColor} />
 					)}
-				</View>
+				</div>
 				{/* Center title (flex) */}
-				<View style={styles.titleWrapper} pointerEvents="none">
-					<Text style={[styles.title, { color: style.textColor }]}>{title}</Text>
-				</View>
+				<div style={styles.titleWrapper} pointerEvents="none">
+					<span style={{...styles.title, ...{ color: style.textColor }}}>{title}</span>
+				</div>
 				{/* Right spacer to balance layout */}
-				<View style={styles.side} pointerEvents="none" />
-			</Pressable>
+				<div style={styles.side} pointerEvents="none" />
+			</button>
 		</Animated.View>
 	);
 }
@@ -75,7 +74,7 @@ function addAlpha(hexOrRgba, alpha) {
 			const parts = inner.split(',').map(p => p.trim());
 			const [r,g,b] = parts;
 			return `rgba(${r},${g},${b},${alpha})`;
-		});
+		};
 	}
 	let h = hexOrRgba.replace('#','');
 	if (h.length === 3) h = h.split('').map(c => c+c).join('');
@@ -84,7 +83,7 @@ function addAlpha(hexOrRgba, alpha) {
 	return `rgba(${r},${g},${b},${alpha})`;
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	outer: {
 		width: '80%',
 	},
@@ -120,4 +119,4 @@ const styles = StyleSheet.create({
 		lineHeight: 14,
 		fontWeight: '500',
 	},
-});
+};

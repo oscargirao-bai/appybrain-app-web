@@ -133,7 +133,7 @@ export default function LoadingScreen({ navigation }) {
 						return -100;
 					}
 					return next;
-				});
+				};
 			}, 30);
 		};
 		loopAnim();

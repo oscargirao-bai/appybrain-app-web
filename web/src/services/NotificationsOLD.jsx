@@ -35,7 +35,7 @@ Notifications.setNotificationHandler({
   }),
 
 
-});
+};
 
 
 
@@ -86,7 +86,7 @@ async function ensureAndroidChannel() {
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
 
 
-    });
+    };
 
 
   }
@@ -128,7 +128,7 @@ async function getExpoPushToken() {
   const projectId = getProjectId();
 
 
-  const { data } = await Notifications.getExpoPushTokenAsync({ projectId });
+  const { data } = await Notifications.getExpoPushTokenAsync({ projectId };
 
 
   if (!data) throw new Error('Failed to obtain Expo Push Token.');
@@ -236,7 +236,7 @@ async function registerTokenOnBackend(expoPushToken, nativeType, nativeToken) {
     }),
 
 
-  });
+  };
 
 
 
@@ -395,7 +395,7 @@ function PushNotificationsRegistrar() {
         setTimeout(() => {
 
 
-          attemptRegister().catch(() => {});
+          attemptRegister().catch(() => {};
 
 
         }, 2000 * retryCountRef.current);
@@ -470,7 +470,7 @@ function PushNotificationsRegistrar() {
       }
 
 
-    });
+    };
 
 
     return () => sub.remove();

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import SvgIcon from '../General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
@@ -16,13 +16,12 @@ function StarCount({ stars, max, iconColor }) {
 	const pct = (stars / max) || 0;
 	const full = pct >= 1;
 	return (
-		<View
-			style={[styles.countBadge, { borderColor: iconColor || colors.text }]}
-			accessibilityLabel={`${stars} estrelas`}
+		<div 			style={{...styles.countBadge, ...{ borderColor: iconColor || colors.text }}}
+			aria-label={`${stars} estrelas`}
 		>
 			<Icon name="star" size={14} color={iconColor || colors.text} style={{ marginRight: 4 }} />
-			<Text style={[styles.countText, { color: iconColor || colors.text }]}>{stars}</Text>
-		</View>
+			<span style={{...styles.countText, ...{ color: iconColor || colors.text }}}>{stars}</span>
+		</div>
 	);
 }
 
@@ -40,8 +39,7 @@ export default function ContentList({ data, onPressItem }) {
 	const { translate } = useTranslate();
 
 	return (
-		<FlatList
-			data={data}
+		<div 			data={data}
 			keyExtractor={(item) => item.id}
 			showsVerticalScrollIndicator={false}
 			contentContainerStyle={styles.listContent}
@@ -53,41 +51,40 @@ export default function ContentList({ data, onPressItem }) {
 				const fillColor = addAlpha(baseColor, 0.8);
 				const containerBg = addAlpha(baseColor, 0.5);
 				return (
-					<Pressable
-						style={({ pressed }) => [styles.rowOuter, pressed && { opacity: 0.9 }]}
-						onPress={() => onPressItem && onPressItem(item)}
-						accessibilityRole="button"
-						accessibilityLabel={`${translate('learn.openContent')}: ${item.title}. ${item.stars} / ${item.maxStars} ${translate('quizResult.stars')}.`}
+					<button 						style={({ pressed }) => [styles.rowOuter, pressed && { opacity: 0.9 }]}
+						onClick={() => onPressItem && onPressItem(item)}
+						
+						aria-label={`${translate('learn.openContent')}: ${item.title}. ${item.stars} / ${item.maxStars} ${translate('quizResult.stars')}.`}
 					>
-						<View style={[styles.progressContainer, { backgroundColor: baseColor, borderColor: containerBg }]}> 
-							<View style={[styles.progressFillFull, { backgroundColor: fillColor, flex: pct }]} />
-							<View style={{ flex: 1 - pct }} />
-							<View style={styles.rowContent} pointerEvents="none"> 
+						<div style={{...styles.progressContainer, ...{ backgroundColor: baseColor}}> 
+							<div style={{...styles.progressFillFull, ...{ backgroundColor: fillColor}} />
+							<div style={{ flex: 1 - pct }} />
+							<div style={styles.rowContent} pointerEvents="none"> 
 								{item.icon ? (
-									<View style={[styles.leftIcon, { width: 45, height: 45 }]}>
+									<div style={{...styles.leftIcon, ...{ width: 45}}>
 										<SvgIcon 
 											svgString={item.icon} 
 											size={45} 
 											color={iconColor} 
 										/>
-									</View>
+									</div>
 								) : (
 									<Icon name="book-open" size={40} color={baseColor} style={styles.leftIcon} />
 								)}
-								<Text style={[styles.itemTitle, { color: iconColor }]} numberOfLines={2}>{item.title}</Text>
+								<span style={{...styles.itemTitle, ...{ color: iconColor }}} numberOfLines={2}>{item.title}</span>
 								<StarCount stars={item.stars} max={item.maxStars} iconColor={iconColor} />
-							</View>
-						</View>
-					</Pressable>
+							</div>
+						</div>
+					</button>
 				);
 			}}
-			ItemSeparatorComponent={() => <View style={styles.separator} />}
-			ListEmptyComponent={<Text style={{ textAlign: 'center', color: colors.muted, paddingVertical: 24 }}>{translate('learn.noContents')}</Text>}
+			ItemSeparatorComponent={() => <div style={styles.separator} />}
+			ListEmptyComponent={<span style={{ textAlign: 'center', color: colors.muted, paddingVertical: 24 }}>{translate('learn.noContents')}</span>}
 		/>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	listContent: { paddingHorizontal: 0, paddingBottom: 400, marginTop: 8 },
 	rowOuter: { marginVertical: 8 },
 	progressContainer: { flexDirection: 'row', borderWidth: 2, borderRadius: 16, minHeight: 86, overflow: 'hidden' },
@@ -98,5 +95,5 @@ const styles = StyleSheet.create({
 	countBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 30, borderWidth: 2 },
 	countText: { fontSize: 12, fontFamily: family.bold },
 	separator: { height: 0 },
-});
+};
 

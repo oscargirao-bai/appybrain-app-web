@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Pressable, View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import Icon from '@react-native-vector-icons/lucide';
@@ -25,14 +25,13 @@ export default function Subject({ title, iconName = 'book-open', onPress, size =
 		Animated.timing(scale, { toValue: 0, duration: 160, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
 	};
 
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] });
+	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] };
 
 	return (
-		<View style={[styles.wrap, style]}>      
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={title}
-				onPress={onPress}
+		<div style={{...styles.wrap, ...style}}>      
+			<button 				
+				aria-label={title}
+				onClick={onPress}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
 				style={({ pressed }) => [
@@ -49,9 +48,9 @@ export default function Subject({ title, iconName = 'book-open', onPress, size =
 				>
 					<Icon name={iconName} size={size * 0.36} color={addAlpha(colors.text, 0.9)} />
 				</Animated.View>
-			</Pressable>
-			<Text style={[styles.label, { color: colors.accent }]}>{(title || '').toUpperCase()}</Text>
-		</View>
+			</button>
+			<span style={{...styles.label, ...{ color: colors.accent }}}>{(title || '').toUpperCase()}</span>
+		</div>
 	);
 }
 
@@ -63,7 +62,7 @@ function addAlpha(hexOrRgba, alpha) {
 			const parts = inner.split(',').map(p => p.trim());
 			const [r,g,b] = parts;
 			return `rgba(${r},${g},${b},${alpha})`;
-		});
+		};
 	}
 	let h = hexOrRgba.replace('#', '');
 	if (h.length === 3) h = h.split('').map(c => c + c).join('');
@@ -72,7 +71,7 @@ function addAlpha(hexOrRgba, alpha) {
 	return `rgba(${r},${g},${b},${alpha})`;
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrap: { alignItems: 'center', justifyContent: 'flex-start' },
 	touchArea: { alignItems: 'center', justifyContent: 'center' },
 	circle: {
@@ -89,4 +88,4 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		maxWidth: 160,
 	},
-});
+};

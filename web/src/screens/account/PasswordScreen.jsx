@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions, KeyboardAvoidingView, Platform, Keyboard, Alert } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
 import TextInputField from '../../components/LoginComponents/TextInput';
 import PrimaryButton from '../../components/LoginComponents/PrimaryButton';
 import MessageModal from '../../components/General/MessageModal';
@@ -15,7 +15,7 @@ const logoSource = require('../../../assets/logo.png');
 export default function PasswordScreen({ navigation, route }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const { width } = useWindowDimensions();
+  const width = window.innerWidth; const height = window.innerHeight;
   const insets = useSafeAreaInsets();
 
   // Get current password from route params (passed from login screen)
@@ -41,7 +41,7 @@ export default function PasswordScreen({ navigation, route }) {
       const kbHeight = e?.endCoordinates?.height || 0;
       const desired = Math.max(0, kbHeight - insets.bottom - 40);
       setKeyboardShift(desired > 260 ? 260 : desired);
-    });
+    };
     const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardShift(0));
     return () => { showSub.remove(); hideSub.remove(); };
   }, [insets.bottom]);
@@ -49,23 +49,17 @@ export default function PasswordScreen({ navigation, route }) {
   async function onSubmit() {
     // Basic validations
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert(
-        translate('password.error') || 'Erro',
-        translate('password.fillFields') || 'Por favor, preencha todos os campos.'
+      window.alert(translate('password.fillFields') || 'Por favor, preencha todos os campos.'
       );
       return;
     }
     if (newPassword.length < 6) {
-      Alert.alert(
-        translate('password.weak') || 'Palavra-passe fraca',
-        translate('password.minLength') || 'A palavra-passe deve ter pelo menos 6 caracteres.'
+      window.alert(translate('password.minLength') || 'A palavra-passe deve ter pelo menos 6 caracteres.'
       );
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert(
-        translate('password.mismatch') || 'As palavras-passe não coincidem',
-        translate('password.mismatchDesc') || 'Certifique-se de que ambas são iguais.'
+      window.alert(translate('password.mismatchDesc') || 'Certifique-se de que ambas são iguais.'
       );
       return;
     }
@@ -102,35 +96,33 @@ export default function PasswordScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
-      <View style={styles.topBar}>
+    <div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
+      <div style={styles.topBar}>
         <Button2
           iconName="arrow-left"
           size={44}
-          onPress={() => {
+          onClick={() => {
             if (navigation?.canGoBack?.()) navigation.goBack();
             else navigation?.replace?.('Login');
           }}
         />
-      </View>
-      <KeyboardAvoidingView
-        style={styles.flex}
+      </div>
+      <div         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={insets.top + 12}
         pointerEvents="box-none"
       >
-        <View style={[styles.staticContainer]}> 
-          <View style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
+        <div style={styles.staticContainer}> 
+          <div style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
             {/* Brand Logo */}
-            <Image
-              source={logoSource}
+            <img               source={logoSource}
               style={{ width: logoWidth, aspectRatio: 1, marginTop: 24 }}
-              resizeMode="contain"
-              accessibilityRole="image"
-              accessibilityLabel="App logo"
+              style={{objectFit: "contain"}}
+              
+              aria-label="App logo"
             />
-            <Text style={[styles.welcome, { color: colors.text }]}>{translate('password.changeTitle') || 'Alterar Palavra‑passe'}</Text>
-            <View style={styles.form}>
+            <span style={{...styles.welcome, ...{ color: colors.text }}}>{translate('password.changeTitle') || 'Alterar Palavra‑passe'}</span>
+            <div style={styles.form}>
               <TextInputField
                 value={newPassword}
                 onChangeText={setNewPassword}
@@ -147,14 +139,14 @@ export default function PasswordScreen({ navigation, route }) {
               />
               <PrimaryButton
                 title={translate('password.change') || 'Alterar palavra‑passe'}
-                onPress={onSubmit}
+                onClick={onSubmit}
                 disabled={!currentPassword || !newPassword || !confirmPassword || isLoading}
                 loading={isLoading}
               />
-            </View>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* Message Modal */}
       <MessageModal
@@ -163,11 +155,11 @@ export default function PasswordScreen({ navigation, route }) {
         onClose={handleModalClose}
         buttonLabel={translate('common.ok') || 'OK'}
       />
-    </SafeAreaView>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   safe: { flex: 1 },
   flex: { flex: 1 },
   topBar: { paddingHorizontal: 12, paddingTop: 8, zIndex: 10, elevation: 10 },
@@ -175,4 +167,4 @@ const styles = StyleSheet.create({
   inner: { width: '100%', alignItems: 'center', flexGrow: 1 },
   welcome: { fontSize: 42, fontWeight: '700', letterSpacing: -1, textAlign: 'center' },
   form: { width: '100%', alignItems: 'center', marginTop: 8 },
-});
+};

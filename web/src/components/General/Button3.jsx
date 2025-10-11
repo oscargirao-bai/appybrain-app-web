@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, Switch } from 'react-native';
+import {Switch} from 'react-native';
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -30,8 +30,7 @@ export default function Button3({
 	}, [onValueChange, value, disabled]);
 
 	return (
-		<Pressable
-			onPress={handleToggle}
+		<button 			onClick={handleToggle}
 			disabled={disabled}
 			style={({ pressed }) => [
 				styles.card,
@@ -42,14 +41,14 @@ export default function Button3({
 				},
 				pressed && !disabled && { opacity: 0.85 },
 			]}
-			accessibilityRole="switch"
+			
 			accessibilityState={{ checked: value, disabled }}
-			accessibilityLabel={accessibilityLabel || label}
+			aria-label={accessibilityLabel || label}
 		>
-			<View style={styles.leftRow}>
+			<div style={styles.leftRow}>
 				<Icon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
-				<Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-			</View>
+				<span style={{...styles.label, ...{ color: colors.text }}}>{label}</span>
+			</div>
 			<Switch
 				value={value}
 				onValueChange={handleToggle}
@@ -57,11 +56,11 @@ export default function Button3({
 				thumbColor={value ? colors.secondary : colors.text}
 				ios_backgroundColor={colors.text + '33'}
 			/>
-		</Pressable>
+		</button>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	card: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -84,5 +83,5 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic',
 		letterSpacing: 0.5,
 	},
-});
+};
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -18,17 +18,17 @@ export default function Reward({ type = 'stars', amount = 0, style }) {
 	const config = getConfig(type, colors);
 
 	return (
-		<View style={[styles.container, style]}>
-			<Text style={[styles.title, { color: colors.text }]}>Recompensas</Text>
-			<View style={[styles.pill, { borderColor: colors.text + 'AA', backgroundColor: colors.background + '40' }]}
-				accessibilityLabel={`Recompensa: ${config.label} +${amount}`}>
-				<Text style={[styles.plus, { color: colors.text }]}>+</Text>
-				<View style={styles.space} />
+		<div style={{...styles.container, ...style}}>
+			<span style={{...styles.title, ...{ color: colors.text }}}>Recompensas</span>
+			<div style={{...styles.pill, ...{ borderColor: colors.text + 'AA'}}
+				aria-label={`Recompensa: ${config.label} +${amount}`}>
+				<span style={{...styles.plus, ...{ color: colors.text }}}>+</span>
+				<div style={styles.space} />
 				<Icon name={config.icon} size={22} color={config.tint} />
-				<View style={styles.space} />
-				<Text style={[styles.value, { color: colors.text }]}>{amount}</Text>
-			</View>
-		</View>
+				<div style={styles.space} />
+				<span style={{...styles.value, ...{ color: colors.text }}}>{amount}</span>
+			</div>
+		</div>
 	);
 }
 
@@ -90,5 +90,5 @@ const createStyles = (colors) => StyleSheet.create({
 			fontFamily: family.bold,
 		},
 		space: { width: 8 },
-});
+};
 

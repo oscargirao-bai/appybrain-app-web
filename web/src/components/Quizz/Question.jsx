@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 
@@ -13,15 +13,9 @@ export default function Question({ html, height, style }) {
 	const [contentHeight, setContentHeight] = useState(height || 0);
 
 	return (
-		<View
-			style={[
-				styles.wrapper,
-				{ borderColor: colors.text + 'CC' },
-				height ? { height } : { flex: 1 },
-				style,
-			]}
+		<div 			style={{...styles.wrapper, ...{ borderColor: colors.text + 'CC' }}}
 		>
-			<View style={[styles.inner, { backgroundColor: 'transparent', flex: 1 }]}> 
+			<div style={{...styles.inner, ...{ backgroundColor: 'transparent'}}> 
 				<MathJaxRenderer
 					content={html}
 					enabled={true}
@@ -30,12 +24,12 @@ export default function Question({ html, height, style }) {
 					scrollEnabled
 					style={{ flex: 1 }}
 				/>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrapper: {
 		borderWidth: 3,
 		borderRadius: 20,
@@ -44,5 +38,5 @@ const styles = StyleSheet.create({
 	inner: {
 		borderRadius: 16,
 	},
-});
+};
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
 import { useThemeColors } from '../../services/Theme';
 import ChallengeCard from './ChallengeCard';
 
@@ -12,15 +12,14 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.wrapper}>
+    <div style={styles.wrapper}>
       {showHeader ? (
-        <View style={styles.headerWrap}>
-          <Text style={[styles.header, { color: '#F05454' }]}>{title}</Text>
-          <View style={[styles.headerUnderline, { backgroundColor: '#F05454' }]} />
-        </View>
+        <div style={styles.headerWrap}>
+          <span style={{...styles.header, ...{ color: '#F05454' }}}>{title}</span>
+          <div style={{...styles.headerUnderline, ...{ backgroundColor: '#F05454' }}} />
+        </div>
       ) : null}
-      <FlatList
-        data={data}
+      <div         data={data}
         keyExtractor={(item, idx) => `challenge-${item.id || idx}`}
         renderItem={({ item }) => (
           <ChallengeCard
@@ -32,7 +31,7 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
             availableFrom={item.availableFrom}
             imageUrl={item.imageUrl}
             userHasPlayed={item.userHasPlayed}
-            onPress={onPressItem ? () => onPressItem(item) : undefined}
+            onClick={onPressItem ? () => onPressItem(item) : undefined}
           />
         )}
         showsVerticalScrollIndicator={false}
@@ -40,13 +39,13 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
         // Use a larger buffer to account for the NavBar visible height and curved top
         contentContainerStyle={{ paddingBottom: Math.max(120, (insets.bottom || 0) + 140) }}
         // Also add an explicit footer spacer to guarantee the final item is reachable
-        ListFooterComponent={() => <View style={{ height: Math.max(120, (insets.bottom || 0) + 140) }} />}
+        ListFooterComponent={() => <div style={{ height: Math.max(120, (insets.bottom || 0) + 140) }} />}
       />
-    </View>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   wrapper: {
     marginTop: 8,
   },
@@ -66,4 +65,4 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginTop: 2,
   },
-});
+};

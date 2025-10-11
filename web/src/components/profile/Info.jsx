@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import Icon from '@react-native-vector-icons/lucide';
@@ -27,22 +27,22 @@ export default function Info({
   const styles = React.useMemo(() => createStyles(colors), [colors]);
 
   return (
-    <View style={[styles.wrapper, style]}>
-      <View style={styles.textBlock}>
-        <View style={styles.nameRow}>
-          <Text style={styles.username}>{username}</Text>
-          <TouchableOpacity onPress={onEdit} hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.tribe}>{tribe}</Text>
-      </View>
+    <div style={{...styles.wrapper, ...style}}>
+      <div style={styles.textBlock}>
+        <div style={styles.nameRow}>
+          <span style={styles.username}>{username}</span>
+          <button onClick={onEdit} hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}>
+          </button>
+        </div>
+        <span style={styles.tribe}>{tribe}</span>
+      </div>
       {typeof stars === 'number' && (
-        <View style={styles.starsPill} accessibilityLabel={`Estrelas: ${stars}`}>
+        <div style={styles.starsPill} aria-label={`Estrelas: ${stars}`}>
           <Icon name="star" size={22} color={colors.primary} style={{ marginRight: 8 }} />
-          <Text style={styles.starsText}>{stars}</Text>
-        </View>
+          <span style={styles.starsText}>{stars}</span>
+        </div>
       )}
-    </View>
+    </div>
   );
 }
 
@@ -85,6 +85,6 @@ function createStyles(colors) {
       justifyContent: 'center',
     },
     starsText: { fontSize: 18, fontWeight: '800', fontFamily: family.bold, color: colors.text },
-  });
+  };
 }
 

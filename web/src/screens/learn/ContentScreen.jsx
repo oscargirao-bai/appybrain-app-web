@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import Header from '../../components/General/Header';
 import { useThemeColors } from '../../services/Theme';
 import { useSearch } from '../../services/SearchContext';
@@ -54,7 +54,7 @@ export default function ContentScreen() {
 						iconColor: categoryIconColor || foundCategory?.iconColor, // Pass category iconColor to content items
 						color: categoryColor || foundCategory?.color, // Pass category color to content items
 					};
-				});
+				};
 				
 				//console.log('ContentScreen: Setting transformedContents =', transformedContents); // Debug log
 				setContents(transformedContents);
@@ -91,7 +91,7 @@ export default function ContentScreen() {
 			const contentStars = DataManager.getContentStars(content.id);
 			//console.log(`ContentScreen: starsByDifficulty for ${content.title}:`, contentStars.stars); // Debug log
 			result[content.id] = contentStars.stars; // stars object with easy/hard/genius keys
-		});
+		};
 		//console.log('ContentScreen: Final starsByDifficulty:', result); // Debug log
 		return result;
 	}, [filteredContents]); // Use filteredContents instead of contents
@@ -105,7 +105,7 @@ export default function ContentScreen() {
 			navigation.navigate('Html', {
 				title: item.title,
 				html: response?.content?.longDescription || '<p>Conteúdo não disponível</p>'
-			});
+			};
 		} catch (error) {
 			console.error('Failed to load content for study:', error);
 			
@@ -113,26 +113,26 @@ export default function ContentScreen() {
 			navigation.navigate('Html', {
 				title: item.title,
 				html: '<p>Erro ao carregar o conteúdo. Tente novamente mais tarde.</p>'
-			});
+			};
 		}
 	};
 
 	return (
-		<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
 			<Header title={categoryTitle || 'Conteúdo'} showBack onBack={() => navigation.goBack()} />
-			<View style={styles.listWrapper}> 
+			<div style={styles.listWrapper}> 
 				<SearchBox value={searchText} onChange={setSearchText} />
 				<ContentList 
 					data={filteredContents} 
 					onPressStudy={handleStudyPress} 
 					starsByDifficulty={starsByDifficulty}
 				/>
-			</View>
-		</SafeAreaView>
+			</div>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	listWrapper: { flex: 1, paddingHorizontal: 16},
-});
+};

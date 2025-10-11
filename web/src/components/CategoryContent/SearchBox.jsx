@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -22,29 +22,28 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 	const clear = () => handleChange('');
 
 	return (
-		<View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>      
+		<div style={{...styles.container, ...{ backgroundColor: colors.surface}}>      
 			<Icon name="search" size={18} color={colors.muted} style={{ marginRight: 8 }} />
-			<TextInput
-				style={[styles.input, { color: colors.text }]}
+			<input 				style={{...styles.input, ...{ color: colors.text }}}
 				placeholder={placeholder}
 				placeholderTextColor={colors.muted}
 				value={text}
 				onChangeText={handleChange}
 				returnKeyType="search"
-				accessibilityLabel="Pesquisar conteúdos"
+				aria-label="Pesquisar conteúdos"
 				cursorColor={colors.primary}
 				autoCapitalize="none"
 			/>
 			{text.length > 0 && (
-				<Pressable onPress={clear} hitSlop={10} accessibilityLabel="Limpar pesquisa">
+				<button onClick={clear} hitSlop={10} aria-label="Limpar pesquisa">
 					<Icon name="x" size={18} color={colors.muted} />
-				</Pressable>
+				</button>
 			)}
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -60,5 +59,5 @@ const styles = StyleSheet.create({
 		fontFamily: family.medium,
 		paddingVertical: 0, // evita saltos no Android
 	},
-});
+};
 

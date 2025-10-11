@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, View, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 
@@ -27,7 +27,7 @@ export default function Options({
   // Animation state (positions for sliding highlight)
   const animX = useRef(new Animated.Value(0)).current;
   const animW = useRef(new Animated.Value(minWidth)).current;
-  const layoutsRef = useRef({});
+  const layoutsRef = useRef({};
 
   // Trigger slide when current changes and layout known
   useEffect(() => {
@@ -47,8 +47,8 @@ export default function Options({
   }
 
   return (
-    <View style={[styles.container, { borderColor: colors.primary + '22', backgroundColor: colors.background + '11' }, style]}>
-      <View style={styles.row}>
+    <div style={{...styles.container, ...{ borderColor: colors.primary + '22'}}>
+      <div style={styles.row}>
         {/* Sliding highlight */}
         <Animated.View
           pointerEvents="none"
@@ -63,10 +63,9 @@ export default function Options({
         {options.map(opt => {
           const active = opt.key === current;
           return (
-            <TouchableOpacity
-              key={opt.key}
-              accessibilityRole="button"
-              accessibilityLabel={`Selecionar ${opt.label}`}
+            <button               key={opt.key}
+              
+              aria-label={`Selecionar ${opt.label}`}
               onLayout={e => {
                 const { x, width: w } = e.nativeEvent.layout;
                 layoutsRef.current[opt.key] = { x, w };
@@ -76,26 +75,23 @@ export default function Options({
                   animW.setValue(w);
                 }
               }}
-              onPress={() => select(opt.key)}
-              style={[styles.iconBtn, {
-                minWidth,
-                height,
-                borderRadius: radius,
-              }]}
+              onClick={() => select(opt.key)}
+              style={{...styles.iconBtn, ...{
+                minWidth}}
             >
               <Icon name={opt.icon} size={iconSize} color={active ? colors.background : colors.primary} />
-            </TouchableOpacity>
+            </button>
           );
         })}
-      </View>
-    </View>
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: { marginTop: 12, alignSelf: 'center', borderWidth: 2, borderRadius: 28, paddingVertical: 8, paddingHorizontal: 14 },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   iconBtn: { marginRight: 12, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' },
   highlight: { position: 'absolute', left: 0, top: 0 },
-});
+};
 

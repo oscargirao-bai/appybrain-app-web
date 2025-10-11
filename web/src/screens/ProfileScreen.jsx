@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../services/Theme';
 import DataManager from '../services/DataManager';
@@ -135,7 +135,7 @@ export default function ProfileScreen() {
 				}
 
 				// Clear the navigation parameters to prevent reopening on subsequent visits
-				navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined });
+				navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined };
 			}, 800); // 800ms delay to wait for screen transition to complete
 		}
 	}, [openBadgeModal, badges, handleMedalPress, timestamp, lastProcessedTimestamp, navigation]);
@@ -152,36 +152,35 @@ export default function ProfileScreen() {
 			target: medal.target,
 			unlocked: medal.unlocked,
 			hideLevel: medal.hideLevel,
-		});
+		};
 		setModalVisible(true);
 	}, []);
 
 	return (
-		<SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
 			<Header
 				title={isExternalProfile ? userInfo?.nickname || 'Perfil' : 'Perfil'}
 				showBack
 				onBack={() => navigation.goBack()}
 				extraRight={!isExternalProfile ? (
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel="Abrir definições"
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label="Abrir definições"
+						onClick={() => navigation.navigate('Settings')}
 						style={styles.iconBtn}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
 						<Icon name="settings" size={24} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				) : null}
 			/>
-			<ScrollView contentContainerStyle={[styles.scrollContent, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
+			<div contentContainerStyle={[styles.scrollContent, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
 				<Banner 
 					topFlat={true}
 					avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
 					bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
 					frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 				/>
-				<View style={styles.infoWrapper}>
+				<div style={styles.infoWrapper}>
 					<Info 
 						username={userInfo?.nickname}
 						tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
@@ -190,18 +189,18 @@ export default function ProfileScreen() {
 						medals={badges}
 						onMedalPress={handleMedalPress} 
 					/>
-				</View>
-			</ScrollView>
+				</div>
+			</div>
 			<MedalModal
 				visible={modalVisible}
 				onClose={() => setModalVisible(false)}
 				medal={selectedMedal}
 			/>
-		</SafeAreaView>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: { flex: 1 },
 	scrollContent: { paddingBottom: 40 },
 	infoWrapper: { paddingHorizontal: 16, paddingTop: 18 },
@@ -213,5 +212,5 @@ const styles = StyleSheet.create({
 	statLabel: { fontSize: 12, fontWeight: '500', letterSpacing: 0.5 },
 	body: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 	text: { fontSize: 32, fontWeight: '700' },
-});
+};
 

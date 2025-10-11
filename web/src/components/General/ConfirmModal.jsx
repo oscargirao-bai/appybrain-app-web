@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -32,25 +32,23 @@ export default function ConfirmModal({
       animationType="fade"
       onRequestClose={onCancel}
     >
-      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}> 
-        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} accessibilityRole="button" accessibilityLabel="Fechar confirmação" />
-        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}> 
-          <Text style={[styles.message, { color: colors.text }]}>{message}</Text>
-          <View style={styles.row}> 
-            <Pressable
-              onPress={onCancel}
+      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
+        <button style={StyleSheet.absoluteFill} onClick={onCancel}  aria-label="Fechar confirmação" />
+        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}> 
+          <span style={{...styles.message, ...{ color: colors.text }}}>{message}</span>
+          <div style={styles.row}> 
+            <button               onClick={onCancel}
               style={({ pressed }) => [
                 styles.btn,
                 { backgroundColor: colors.surface, borderColor: colors.text + '25' },
                 pressed && { opacity: 0.85 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel={cancelLabel}
+              
+              aria-label={cancelLabel}
             >
-              <Text style={[styles.btnText, { color: colors.text }]}>{cancelLabel}</Text>
-            </Pressable>
-            <Pressable
-              onPress={onConfirm}
+              <span style={{...styles.btnText, ...{ color: colors.text }}}>{cancelLabel}</span>
+            </button>
+            <button               onClick={onConfirm}
               style={({ pressed }) => [
                 styles.btn,
                 destructive
@@ -58,19 +56,19 @@ export default function ConfirmModal({
                   : { backgroundColor: colors.secondary, borderColor: colors.secondary + '55' },
                 pressed && { opacity: 0.9 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel={confirmLabel}
+              
+              aria-label={confirmLabel}
             >
-              <Text style={[styles.btnText, { color: destructive ? colors.onError : colors.onSecondary }]}>{confirmLabel}</Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
+              <span style={{...styles.btnText, ...{ color: destructive ? colors.onError : colors.onSecondary }}}>{confirmLabel}</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
   panel: {
     width: '100%',
@@ -92,4 +90,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnText: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
-});
+};

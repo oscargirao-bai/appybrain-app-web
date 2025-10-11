@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 
@@ -49,8 +49,7 @@ export default function ChallengeCard({
   }, [expiresAt, availableUntil]);
 
   return (
-    <Pressable
-      onPress={isAvailable ? onPress : undefined}
+    <button       onClick={isAvailable ? onPress : undefined}
       disabled={!isAvailable}
       style={({ pressed }) => [
         styles.card,
@@ -63,84 +62,66 @@ export default function ChallengeCard({
       ]}
       accessibilityRole={isAvailable && onPress ? 'button' : undefined}
     >
-      <View style={[
-        styles.leftIcon, 
-        { 
-          backgroundColor: colors.surface, 
-          borderColor: colors.text + (isAvailable ? '22' : '10') 
-        }
-      ]}>
+      <div style={{...styles.leftIcon, ...{ 
+          backgroundColor: colors.surface}}>
         {imageUrl ? (
-          <Image
-            source={{ uri: imageUrl }}
-            style={[styles.challengeImage, { opacity: isAvailable ? 1 : 0.5 }]}
-            resizeMode="contain"
+          <img             source={{ uri: imageUrl }}
+            style={{...styles.challengeImage, ...{ opacity: isAvailable ? 1 : 0.5 }}}
+            style={{objectFit: "contain"}}
           />
         ) : (
           <Icon name="file-text" size={26} color={isAvailable ? colors.secondary : colors.muted} />
         )}
         {isCompleted && (
-          <View style={[styles.statusBadge, { backgroundColor: colors.success }]}>
+          <div style={{...styles.statusBadge, ...{ backgroundColor: colors.success }}}>
             <Icon name="check" size={12} color="white" />
-          </View>
+          </div>
         )}
         {isExpired && !isCompleted && (
-          <View style={[styles.statusBadge, { backgroundColor: colors.danger || '#FF6B6B' }]}>
+          <div style={{...styles.statusBadge, ...{ backgroundColor: colors.danger || '#FF6B6B' }}}>
             <Icon name="x" size={12} color="white" />
-          </View>
+          </div>
         )}
-      </View>
-      <View style={styles.main}>
-        <Text style={[
-          styles.title, 
-          { color: isAvailable ? colors.secondary : colors.muted }
-        ]} numberOfLines={1}>
+      </div>
+      <div style={styles.main}>
+        <span style={{...styles.title, ...{ color: isAvailable ? colors.secondary : colors.muted }}} numberOfLines={1}>
           {title}
-        </Text>
+        </span>
         {description ? (
-          <Text style={[
-            styles.desc, 
-            { color: (isAvailable ? colors.text : colors.muted) + 'CC' }
-          ]} numberOfLines={2}>
+          <span style={{...styles.desc, ...{ color: (isAvailable ? colors.text : colors.muted) + 'CC' }}} numberOfLines={2}>
             {description}
-          </Text>
+          </span>
         ) : null}
-        <View style={styles.metaRow}>
-          <View style={styles.metaGroup}>
+        <div style={styles.metaRow}>
+          <div style={styles.metaGroup}>
             <Icon name="coins" size={18} color={isAvailable ? colors.primary : colors.muted} />
-            <Text style={[
-              styles.metaText, 
-              { 
-                color: isAvailable ? colors.primary : colors.muted, 
-                marginLeft: 6, 
-                fontWeight: '800' 
-              }
-            ]}>
+            <span style={{...styles.metaText, ...{ 
+                color: isAvailable ? colors.primary : colors.muted}}>
               {coins}
-            </Text>
-          </View>
+            </span>
+          </div>
           {timeLeftLabel ? (
-            <View style={[styles.metaGroup, { marginLeft: 14 }]}>
+            <div style={{...styles.metaGroup, ...{ marginLeft: 14 }}}>
               <Icon name="clock" size={18} color={colors.muted} />
-              <Text style={[styles.metaText, { color: colors.muted, marginLeft: 6 }]}>
+              <span style={{...styles.metaText, ...{ color: colors.muted}}>
                 {timeLeftLabel}
-              </Text>
-            </View>
+              </span>
+            </div>
           ) : null}
           {isCompleted && (
-            <View style={[styles.metaGroup, { marginLeft: 14 }]}>
-              <Text style={[styles.statusText, { color: colors.muted }]}>
+            <div style={{...styles.metaGroup, ...{ marginLeft: 14 }}}>
+              <span style={{...styles.statusText, ...{ color: colors.muted }}}>
                 Completado
-              </Text>
-            </View>
+              </span>
+            </div>
           )}
-        </View>
-      </View>
-    </Pressable>
+        </div>
+      </div>
+    </button>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   card: {
     flexDirection: 'row',
     borderWidth: 1,
@@ -200,4 +181,4 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
   },
-});
+};

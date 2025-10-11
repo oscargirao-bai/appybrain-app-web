@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -27,14 +27,14 @@ export default function Coins({ style }) {
 	}, []);
 
 	return (
-		<View style={[styles.wrap, { borderColor: colors.primary + 'AA' }, style]}>
+		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }}}>
 			<Icon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
-			<Text style={[styles.value, { color: colors.primary }]}>{coins}</Text>
-		</View>
+			<span style={{...styles.value, ...{ color: colors.primary }}}>{coins}</span>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrap: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -51,5 +51,5 @@ const styles = StyleSheet.create({
 		fontFamily: family.bold,
 		letterSpacing: 0.5,
 	},
-});
+};
 

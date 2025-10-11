@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, FlatList, Pressable, Animated, ActivityIndicator } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 import DataManager from '../../services/DataManager';
@@ -75,7 +75,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 							opacity: new Animated.Value(shouldAnimateItem ? 0 : 1)
 						};
 					}
-				});
+				};
 				
 				setNotificationAnimations(animations);
 				
@@ -103,7 +103,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 								}, animationDelay);
 								animationDelay += 100; // 100ms delay between each item
 							}
-						});
+						};
 					}, 50); // Small delay before starting animations
 				}
 			}
@@ -152,7 +152,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 		}
 
 		const { sourceType, sourceId } = notification;
-		//console.log('Navigating for notification:', { sourceType, sourceId, notification });
+		//console.log('Navigating for notification:', { sourceType, sourceId, notification };
 
 		// Add timestamp to ensure unique navigation calls
 		const timestamp = Date.now();
@@ -165,7 +165,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('Profile', { 
 					openBadgeModal: sourceId, 
 					timestamp 
-				});
+				};
 				break;
 			
 			case 'battle':
@@ -175,7 +175,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('MainTabs', { 
 					screen: 'Battle',
 					params: { openBattleResult: sourceId, timestamp }
-				});
+				};
 				break;
 			
 			case 'tribe':
@@ -184,7 +184,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('MainTabs', { 
 					screen: 'Tribes',
 					params: { sourceId, timestamp }
-				});
+				};
 				break;
 			
 			case 'chest':
@@ -194,7 +194,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('Profile', { 
 					highlightChests: true, 
 					timestamp 
-				});
+				};
 				break;
 			
 			case 'learn':
@@ -203,14 +203,14 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('MainTabs', { 
 					screen: 'Learn',
 					params: { sourceId, timestamp }
-				});
+				};
 				break;
 			
 			default:
 				//console.log('Unknown notification sourceType:', sourceType, 'navigating to Profile');
 				navigationRef.current.navigate('Profile', { 
 					timestamp 
-				});
+				};
 				break;
 		}
 	};
@@ -230,66 +230,63 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 					}
 				]}
 			>
-				<Pressable
-					onPress={() => markRead(item)}
+				<button 					onClick={() => markRead(item)}
 					style={({ pressed }) => [
 						styles.item,
 						{ borderColor: colors.text + '15', backgroundColor: colors.card + '55' },
 						unread && { borderColor: colors.secondary + '66', backgroundColor: colors.secondary + '18' },
 						pressed && { opacity: 0.85 },
 					]}
-					accessibilityRole="button"
-					accessibilityLabel={`Notificação: ${item.title}`}
+					
+					aria-label={`Notificação: ${item.title}`}
 				>
-					<View style={[styles.itemIconWrap, unread && { backgroundColor: colors.secondary + '33' }]}>
+					<div style={{...styles.itemIconWrap, ...unread && { backgroundColor: colors.secondary + '33' }}}>
 						<Icon name={iconForType(item.type)} size={22} color={unread ? colors.secondary : colors.text} />
-					</View>
-					<View style={styles.textContainer}>
-						<Text style={[styles.itemTitle, { color: colors.text, fontWeight: unread ? '800' : '700' }]} numberOfLines={1}>{item.title}</Text>
+					</div>
+					<div style={styles.textContainer}>
+						<span style={{...styles.itemTitle, ...{ color: colors.text}} numberOfLines={1}>{item.title}</span>
 						{item.message && (
-							<Text style={[styles.itemMessage, { color: colors.text + 'DD' }]} numberOfLines={2}>{item.message}</Text>
+							<span style={{...styles.itemMessage, ...{ color: colors.text + 'DD' }}} numberOfLines={2}>{item.message}</span>
 						)}
-						<Text style={[styles.itemDesc, { color: colors.text + 'AA' }]} numberOfLines={2}>{item.description || item.desc}</Text>
-					</View>
-					{unread && <View style={[styles.unreadDot, { backgroundColor: colors.secondary }]} />}
-				</Pressable>
+						<span style={{...styles.itemDesc, ...{ color: colors.text + 'AA' }}} numberOfLines={2}>{item.description || item.desc}</span>
+					</div>
+					{unread && <div style={{...styles.unreadDot, ...{ backgroundColor: colors.secondary }}} />}
+				</button>
 			</Animated.View>
 		);
 	};
 
 	return (
 		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-			<View style={[styles.backdrop, { backgroundColor: '#00000088' }]}> 
-				<Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar notificações" />
-				<View style={[styles.panel, { backgroundColor: colors.background, borderColor: colors.text + '22' }]}> 
-					<View style={styles.header}> 
-						<Text style={[styles.title, { color: colors.text }]}>Notificações</Text>
-						<View style={styles.headerRight}> 
-							<Pressable
-								style={({ pressed }) => [styles.markAllBtn, { opacity: pressed || markAllLoading ? 0.6 : 1, borderColor: colors.text + '33', backgroundColor: colors.card + '55' }]}
-								onPress={markAllRead}
-								accessibilityRole="button"
-								accessibilityLabel="Limpar (marcar todas as notificações como lidas)"
+			<div style={{...styles.backdrop, ...{ backgroundColor: '#00000088' }}}> 
+				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar notificações" />
+				<div style={{...styles.panel, ...{ backgroundColor: colors.background}}> 
+					<div style={styles.header}> 
+						<span style={{...styles.title, ...{ color: colors.text }}}>Notificações</span>
+						<div style={styles.headerRight}> 
+							<button 								style={({ pressed }) => [styles.markAllBtn, { opacity: pressed || markAllLoading ? 0.6 : 1, borderColor: colors.text + '33', backgroundColor: colors.card + '55' }]}
+								onClick={markAllRead}
+								
+								aria-label="Limpar (marcar todas as notificações como lidas)"
 							>
 								{markAllLoading ? (
-									<ActivityIndicator size="small" color={colors.text} />
+									<div size="small" color={colors.text} />
 								) : (
-										<Text style={[styles.markAllText, { color: colors.text }]}>Limpar</Text>
+										<span style={{...styles.markAllText, ...{ color: colors.text }}}>Limpar</span>
 								)}
-							</Pressable>
-						</View>
-					</View>
-				<FlatList
-					data={notifications}
+							</button>
+						</div>
+					</div>
+				<div 					data={notifications}
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={renderItem}
-					ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+					ItemSeparatorComponent={() => <div style={{ height: 10 }} />}
 					contentContainerStyle={{ paddingBottom: 0 }}
 						style={{ flexGrow: 0, maxHeight: 520 }}
-					ListEmptyComponent={<Text style={{ color: colors.text + '88', textAlign: 'center', paddingVertical: 16 }}>Sem notificações</Text>}
+					ListEmptyComponent={<span style={{ color: colors.text + '88', textAlign: 'center', paddingVertical: 16 }}>Sem notificações</span>}
 				/>
-				</View>
-			</View>
+				</div>
+			</div>
 		</Modal>
 	);
 }
@@ -303,7 +300,7 @@ function iconForType(type) {
 	}
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12 },
 	panel: {
 		borderRadius: 24,
@@ -343,4 +340,4 @@ const styles = StyleSheet.create({
 	itemMessage: { fontSize: 13, fontFamily: family.semibold, lineHeight: 18, marginBottom: 2 },
 	itemDesc: { fontSize: 12, fontFamily: family.medium, lineHeight: 16 },
 	unreadDot: { width: 10, height: 10, borderRadius: 5, marginLeft: 6 },
-});
+};

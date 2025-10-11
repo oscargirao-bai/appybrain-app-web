@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
@@ -61,61 +61,59 @@ export default function ChallengeScreen(props) {
 	// Multi-part removido – mostrar apenas o overview (Chest + Subject)
 	// Let Chest component handle its own data from API
 	return (
-		<View style={[styles.safe, { backgroundColor: colors.background }]}>
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
 			<Header
 				title="Desafios"
 				right={(
-					<View style={{ position: 'relative' }}>
-						<TouchableOpacity
-							accessibilityRole="button"
-							accessibilityLabel="Notificações"
-							onPress={() => setNotificationsOpen(true)}
+					<div style={{ position: 'relative' }}>
+						<button 							
+							aria-label="Notificações"
+							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
 							<Icon name="bell" size={22} color={colors.text} />
-						</TouchableOpacity>
+						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
-					</View>
+					</div>
 				)}
 				extraRight={(
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel="Abrir definições"
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label="Abrir definições"
+						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
 						<Icon name="settings" size={22} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 			/>
-			<View style={styles.content}>
-				<View style={styles.headerSection}>
-					<View style={styles.fullBleed}>
+			<div style={styles.content}>
+				<div style={styles.headerSection}>
+					<div style={styles.fullBleed}>
 					<Banner 
 						topFlat={true} 
 						avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
 						bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
 						frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 					/>
-					</View>
-					<View style={styles.fullBleed}>
+					</div>
+					<div style={styles.fullBleed}>
 					<Info
 						username={userInfo?.nickname}
 						tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
 						coins={userInfo?.coins ?? 0}
 					/>
-					</View>
-					<View style={styles.buttonsRow}>
+					</div>
+					<div style={styles.buttonsRow}>
 						<Button2
 							size={54}
 							iconName="medal"
-							onPress={() => setRankingsOpen(true)}
+							onClick={() => setRankingsOpen(true)}
 							style={styles.buttonSpacing}
 						/>
-					</View>
-				</View>
+					</div>
+				</div>
 				{/* Challenges section */}
 				<ChallengeList
 					items={challenges}
@@ -125,7 +123,7 @@ export default function ChallengeScreen(props) {
 						setConfirmOpen(true);
 					}}
 				/>
-			</View>
+			</div>
 			{/* Confirm start challenge */}
 			<ConfirmModal
 				visible={confirmOpen}
@@ -138,7 +136,7 @@ export default function ChallengeScreen(props) {
 					setConfirmOpen(false);
 					if (selectedChallenge) {
 						// Navigate directly to quiz with challengeId - no API call needed
-						navigation.navigate('Quizz', { challengeId: selectedChallenge.id });
+						navigation.navigate('Quizz', { challengeId: selectedChallenge.id };
 					}
 					setSelectedChallenge(null);
 				}}
@@ -148,11 +146,11 @@ export default function ChallengeScreen(props) {
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 			<RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
 			{/* ChestRewardModal removed */}
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	content: { flex: 1, paddingHorizontal: 10 },
 	headerSection: {
@@ -197,5 +195,5 @@ const styles = StyleSheet.create({
 		// removed
 	},
 	subjectItem: {},
-});
+};
 

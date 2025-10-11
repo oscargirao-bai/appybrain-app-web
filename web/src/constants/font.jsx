@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+
 
 // Work Sans font family keys
 // Make sure App.js loads these fonts via @expo-google-fonts/work-sans

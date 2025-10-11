@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import Svg, { Circle } from 'react-native-svg';
@@ -32,9 +32,9 @@ export default function QuizzHeader({ title = 'Title', totalSec = 90, remainingS
 	const dashOffset = circumference * (1 - progress);
 
 	return (
-		<View style={[styles.container]}> 
-			<View style={styles.left}> 
-				<View style={{ width: size, height: size }}>
+		<div style={styles.container}> 
+			<div style={styles.left}> 
+				<div style={{ width: size, height: size }}>
 					<Svg width={size} height={size}>
 						{/* background ring */}
 						<Circle cx={cx} cy={cy} r={r} stroke={colors.border} strokeWidth={strokeWidth} fill="none" />
@@ -52,18 +52,18 @@ export default function QuizzHeader({ title = 'Title', totalSec = 90, remainingS
 							transform={`rotate(-90 ${cx} ${cy})`}
 						/>
 					</Svg>
-					<View style={styles.timerOverlay} pointerEvents="none"> 
-						<Text style={[styles.timerText, { color: colors.text }]}>{formatTime(clampedRemain)}</Text>
-					</View>
-				</View>
-			</View>
-					<Text style={[styles.title, { color: colors.text }]} numberOfLines={3}>
+					<div style={styles.timerOverlay} pointerEvents="none"> 
+						<span style={{...styles.timerText, ...{ color: colors.text }}}>{formatTime(clampedRemain)}</span>
+					</div>
+				</div>
+			</div>
+					<span style={{...styles.title, ...{ color: colors.text }}} numberOfLines={3}>
 						{title}
-					</Text>
-			<View style={styles.right}>
-						<Button2 iconName="x" size={45} onPress={onClose} />
-			</View>
-		</View>
+					</span>
+			<div style={styles.right}>
+						<Button2 iconName="x" size={45} onClick={onClose} />
+			</div>
+		</div>
 	);
 }
 
@@ -74,7 +74,7 @@ function formatTime(total) {
 	return `${m}:${ss}`;
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -88,5 +88,5 @@ const styles = StyleSheet.create({
 	iconBtn: { alignItems: 'center', justifyContent: 'center' },
 	timerOverlay: { position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center' },
 	timerText: { fontSize: 13, fontWeight: '700', fontFamily: family.bold },
-});
+};
 

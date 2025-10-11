@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, TextInput } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -44,20 +44,13 @@ export default function ChangeNameModal({
       animationType="fade"
       onRequestClose={onCancel}
     >
-      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} accessibilityRole="button" accessibilityLabel="Fechar modal" />
-        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}>
-          <Text style={[styles.title, { color: colors.text }]}>Mudar Nome</Text>
+      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}>
+        <button style={StyleSheet.absoluteFill} onClick={onCancel}  aria-label="Fechar modal" />
+        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}>
+          <span style={{...styles.title, ...{ color: colors.text }}}>Mudar Nome</span>
 
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.surface,
-                borderColor: colors.text + '25',
-                color: colors.text
-              }
-            ]}
+          <input             style={{...styles.input, ...{
+                backgroundColor: colors.surface}}
             value={newName}
             onChangeText={setNewName}
             placeholder="Novo nome"
@@ -67,22 +60,20 @@ export default function ChangeNameModal({
             selectTextOnFocus
           />
 
-          <View style={styles.row}>
-            <Pressable
-              onPress={onCancel}
+          <div style={styles.row}>
+            <button               onClick={onCancel}
               style={({ pressed }) => [
                 styles.btn,
                 { backgroundColor: colors.surface, borderColor: colors.text + '25' },
                 pressed && { opacity: 0.85 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel="Cancelar"
+              
+              aria-label="Cancelar"
             >
-              <Text style={[styles.btnText, { color: colors.text }]}>Cancelar</Text>
-            </Pressable>
+              <span style={{...styles.btnText, ...{ color: colors.text }}}>Cancelar</span>
+            </button>
 
-            <Pressable
-              onPress={handleConfirm}
+            <button               onClick={handleConfirm}
               disabled={!isValidName}
               style={({ pressed }) => [
                 styles.btn,
@@ -93,21 +84,21 @@ export default function ChangeNameModal({
                 },
                 pressed && isValidName && { opacity: 0.9 },
               ]}
-              accessibilityRole="button"
-              accessibilityLabel="Confirmar mudança de nome"
+              
+              aria-label="Confirmar mudança de nome"
             >
-              <Text style={[styles.btnText, { color: isValidName ? colors.onSecondary : colors.text }]}>
+              <span style={{...styles.btnText, ...{ color: isValidName ? colors.onSecondary : colors.text }}}>
                 Confirmar
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
   panel: {
     width: '100%',
@@ -146,4 +137,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnText: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
-});
+};

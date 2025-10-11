@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, TouchableOpacity, useWindowDimensions } from 'react-native';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -71,7 +71,7 @@ export default function BattleScreen(props) {
   const [reopenBrowserAfterReward, setReopenBrowserAfterReward] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [disciplines, setDisciplines] = useState([]);
-  const [battleHistory, setBattleHistory] = useState({ pending: [], completed: [] });
+  const [battleHistory, setBattleHistory] = useState({ pending: [], completed: [] };
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
@@ -80,7 +80,7 @@ export default function BattleScreen(props) {
   const propsParams = props || {};
   const { openBattleResult, timestamp, reopenHistory, highlightBattleId } = { ...routeParams, ...propsParams };
   
-  //console.log('BattleScreen: Received params', { routeParams, propsParams, openBattleResult, timestamp });
+  //console.log('BattleScreen: Received params', { routeParams, propsParams, openBattleResult, timestamp };
 
   useEffect(() => {
     const updateData = () => {
@@ -112,7 +112,7 @@ export default function BattleScreen(props) {
     const unsubscribe = navigation.addListener('focus', () => {
       // Refresh battle data when screen is focused
       DataManager.refreshSection('battles');
-    });
+    };
 
     return unsubscribe;
   }, [navigation]);
@@ -126,7 +126,7 @@ export default function BattleScreen(props) {
       lastProcessedTimestamp, 
       pendingCount: battleHistory.pending.length,
       completedCount: battleHistory.completed.length
-    });
+    };
     */
     // Only process if we have a new timestamp (avoid processing the same navigation twice)
     if (openBattleResult && timestamp && timestamp !== lastProcessedTimestamp && (battleHistory.pending.length > 0 || battleHistory.completed.length > 0)) {
@@ -162,7 +162,7 @@ export default function BattleScreen(props) {
       }
 
       // Clear the navigation parameters to prevent reopening on subsequent visits
-      navigation.setParams({ openBattleResult: undefined, timestamp: undefined });
+      navigation.setParams({ openBattleResult: undefined, timestamp: undefined };
     }
   }, [openBattleResult, battleHistory, timestamp, lastProcessedTimestamp, navigation]);
 
@@ -175,7 +175,7 @@ export default function BattleScreen(props) {
       }, 120);
       // Optionally clear params to avoid repeated triggers (route params or props vary by navigation path)
       try {
-        navigation.setParams && navigation.setParams({ reopenHistory: undefined, highlightBattleId: undefined });
+        navigation.setParams && navigation.setParams({ reopenHistory: undefined, highlightBattleId: undefined };
       } catch (e) {}
     }
   }, [reopenHistory, highlightBattleId]);
@@ -218,97 +218,94 @@ export default function BattleScreen(props) {
   const shieldSize = Math.max(120, maxShieldSize); // minimum 120, max based on screen size
 
   return (
-    <View style={[styles.safe, { backgroundColor: colors.background }]}>
+    <div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
       <Header
         title={translate('titles.battle')}
         right={(
-                  <View style={{ position: 'relative' }}>
-                    <TouchableOpacity
-                      accessibilityRole="button"
-                      accessibilityLabel={translate('options.notification')}
-                      onPress={() => setNotificationsOpen(true)}
+                  <div style={{ position: 'relative' }}>
+                    <button                       
+                      aria-label={translate('options.notification')}
+                      onClick={() => setNotificationsOpen(true)}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       style={{ paddingHorizontal: 4 }}
                     >
                       <Icon name="bell" size={22} color={colors.text} />
-                    </TouchableOpacity>
+                    </button>
                     <NotificationBadge count={unreadNotificationsCount} />
-                  </View>
+                  </div>
                 )}
         extraRight={(
-          <TouchableOpacity
-            accessibilityRole="button"
-            accessibilityLabel={translate('settings.settings')}
-            onPress={() => navigation.navigate('Settings')}
+          <button             
+            aria-label={translate('settings.settings')}
+            onClick={() => navigation.navigate('Settings')}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             style={{ paddingHorizontal: 4 }}
           >
             <Icon name="settings" size={22} color={colors.text} />
-          </TouchableOpacity>
+          </button>
         )}
       />
-      <View style={styles.content}>
-        <View style={styles.headerSection}>
-          <View style={styles.bannerSection}>
+      <div style={styles.content}>
+        <div style={styles.headerSection}>
+          <div style={styles.bannerSection}>
             <Banner 
               topFlat={true} 
               avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
               bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
               frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
             />
-          </View>
-          <View style={styles.infoSection}>
+          </div>
+          <div style={styles.infoSection}>
             <Info
               username={userInfo?.nickname}
               tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
               trophies={userInfo?.points ?? 0}
               coins={userInfo?.coins ?? 0}
             />
-          </View>
-          <View style={styles.chestLine}>
-            <Pressable
-              style={styles.chestPressable}
-              onPress={handleChestOpen}
-              accessibilityRole="button"
-              accessibilityLabel="Baú de recompensas de batalha"
+          </div>
+          <div style={styles.chestLine}>
+            <button               style={styles.chestPressable}
+              onClick={handleChestOpen}
+              
+              aria-label="Baú de recompensas de batalha"
             >
               <Chest dataSource="points" size={chestSize} />
-            </Pressable>
-            <View style={styles.buttonsRow}>
+            </button>
+            <div style={styles.buttonsRow}>
               <Button2
                 size={54}
                 iconName="history"
-                onPress={() => setHistoryOpen(true)}
+                onClick={() => setHistoryOpen(true)}
                 style={styles.buttonSpacing}
-                accessibilityRole="button"
-                accessibilityLabel={translate('battle.history.title')}
+                
+                aria-label={translate('battle.history.title')}
               />
-              <Button2 size={54} iconName="medal" onPress={() => setRankingsOpen(true)} style={styles.buttonSpacing} />
-            </View>
-          </View>
-        </View>
-        <View style={styles.bottomSection}>
-          <View style={styles.trophySection} />
-          <View style={styles.rankSection}>
-            <View style={styles.rankRow}>
+              <Button2 size={54} iconName="medal" onClick={() => setRankingsOpen(true)} style={styles.buttonSpacing} />
+            </div>
+          </div>
+        </div>
+        <div style={styles.bottomSection}>
+          <div style={styles.trophySection} />
+          <div style={styles.rankSection}>
+            <div style={styles.rankRow}>
               <RankDisplay trophies={userInfo?.trophies ?? 0} size={shieldSize} />
-            </View>
-          </View>
-          <View style={styles.buttonSection}>
-            <View style={styles.battleButtonWrap}>
+            </div>
+          </div>
+          <div style={styles.buttonSection}>
+            <div style={styles.battleButtonWrap}>
               <Button1
                 label={translate('titles.battle')}
                 color={colors.secondary}
-                onPress={() => {
+                onClick={() => {
                   // Navigate to battle quiz
                   //console.log('Battle button pressed - starting battle quiz');
-                  navigation.navigate('Quizz', { battleMode: true });
+                  navigation.navigate('Quizz', { battleMode: true };
                 }}
               />
-            </View>
-          </View>
-        </View>
-      </View>
+            </div>
+          </div>
+        </div>
+      </div>
       <NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
       <RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
       <HistoryModal
@@ -324,7 +321,7 @@ export default function BattleScreen(props) {
             
             if (resultParams) {
               // Mark that this navigation originated from the HistoryModal so ResultScreen2 can return and reopen it
-              navigation.navigate('Result2', { ...resultParams, openedFromHistory: true, openedFromHistoryBattleId: battleSessionId });
+              navigation.navigate('Result2', { ...resultParams, openedFromHistory: true, openedFromHistoryBattleId: battleSessionId };
             } else {
               console.warn('Battle not found with id:', battleSessionId);
             }
@@ -346,11 +343,11 @@ export default function BattleScreen(props) {
         chestType={chestType}
       />
       <ChestBrowserModal visible={chestBrowserOpen} onClose={() => setChestBrowserOpen(false)} onChestOpened={handleChestOpenedFromBrowser} dataSource="points" />
-    </View>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   safe: { flex: 1 },
   content: { flex: 1, justifyContent: 'flex-start' },
   headerSection: {
@@ -447,4 +444,4 @@ const styles = StyleSheet.create({
     flex: 0.3,
     paddingTop: 2,
   },
-});
+};

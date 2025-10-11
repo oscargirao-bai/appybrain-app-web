@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
+import {Modal} from 'react-native';
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -53,56 +53,53 @@ export default function ButtonLanguage({
 
 	return (
 		<>
-			<Pressable
-				onPress={() => setOpen(true)}
+			<button 				onClick={() => setOpen(true)}
 				style={({ pressed }) => [
 					styles.card,
 					{ borderColor: colors.text + '22', backgroundColor: colors.text + '06' },
 					pressed && { opacity: 0.85 },
 					style,
 				]}
-				accessibilityRole="button"
-				accessibilityLabel={`${translate('settings.language')}: ${current.label}.`}
+				
+				aria-label={`${translate('settings.language')}: ${current.label}.`}
 			>
-				<View style={styles.leftRow}>
+				<div style={styles.leftRow}>
 					<Icon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
-					<Text style={[styles.label, { color: colors.text }]}>{translate('settings.language')}</Text>
-				</View>
-				<View style={[styles.pill, { borderColor: colors.text + '33', backgroundColor: colors.text + '05' }]}> 
-					<Text style={[styles.pillText, { color: colors.text }]} numberOfLines={1}>{current.label}</Text>
+					<span style={{...styles.label, ...{ color: colors.text }}}>{translate('settings.language')}</span>
+				</div>
+				<div style={{...styles.pill, ...{ borderColor: colors.text + '33'}}> 
+					<span style={{...styles.pillText, ...{ color: colors.text }}} numberOfLines={1}>{current.label}</span>
 					<Icon name="chevron-down" size={16} color={colors.text + 'AA'} />
-				</View>
-			</Pressable>
+				</div>
+			</button>
 
 			<Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
-				<Pressable style={styles.backdrop} onPress={() => setOpen(false)} />
-				<View style={[styles.modalCard, { backgroundColor: colors.background, borderColor: colors.text + '22' }]}> 
-					<Text style={[styles.modalTitle, { color: colors.text }]}>{modalTitle || translate('settings.language')}</Text>
-					<FlatList
-						data={options}
+				<button style={styles.backdrop} onClick={() => setOpen(false)} />
+				<div style={{...styles.modalCard, ...{ backgroundColor: colors.background}}> 
+					<span style={{...styles.modalTitle, ...{ color: colors.text }}}>{modalTitle || translate('settings.language')}</span>
+					<div 						data={options}
 						keyExtractor={(item) => item.code}
 						renderItem={({ item }) => {
 							const active = item.code === currentCode;
 							return (
-								<Pressable
-									onPress={() => handleSelect(item.code)}
+								<button 									onClick={() => handleSelect(item.code)}
 									style={({ pressed }) => [
 										styles.optionRow,
 										{ borderColor: colors.text + '15' },
 										active && { backgroundColor: colors.secondary + '22' },
 										pressed && { opacity: 0.8 },
 									]}
-									accessibilityRole="button"
+									
 									accessibilityState={{ selected: active }}
 								>
-									<Text style={[styles.optionText, { color: colors.text, fontWeight: active ? '700' : '500' }]}>{item.label}</Text>
+									<span style={{...styles.optionText, ...{ color: colors.text}}>{item.label}</span>
 									{active && <Icon name="check" size={18} color={colors.secondary} />}
-								</Pressable>
+								</button>
 							);
 						}}
 						style={{ maxHeight: 260 }}
 					/>
-				</View>
+				</div>
 			</Modal>
 		</>
 	);
@@ -113,7 +110,7 @@ const DEFAULT_OPTIONS = [
 	{ code: 'en', label: 'English' },
 ];
 
-const styles = StyleSheet.create({
+const styles = {
 	card: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -188,5 +185,5 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.3,
 	},
 	sep: { height: 4 },
-});
+};
 

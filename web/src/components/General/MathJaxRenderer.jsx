@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+
 import { WebView } from 'react-native-webview';
 import { useThemeColors } from '../../services/Theme';
 
@@ -124,7 +124,7 @@ const MathJaxRenderer = ({
         return raw.replace(/\\$\\$([\\s\\S]*?)\\$\\$/g, (_, inner) => {
           const fixed = inner.replace(/\\\\(?=[a-zA-Z])/g, '\\\\'); // collapse double backslashes before letters
           return \`$$\${fixed}$$\`;
-        });
+        };
       }
 
       function showContentAndPostHeight() {
@@ -164,21 +164,21 @@ const MathJaxRenderer = ({
                     node.style.display = 'inline-block';
                     node.style.textAlign = 'left';
                     ${isCompact ? `node.style.margin = '0 .35em';` : ''}
-                  });
+                  };
                   // unwrap single-math paragraphs
                   target.querySelectorAll('p').forEach(p => {
                     const kids = Array.from(p.childNodes).filter(n => n.tagName === 'MJX-CONTAINER');
                     if (kids.length === 1 && p.textContent === kids[0].textContent) {
                       p.replaceWith(kids[0]);
                     }
-                  });
+                  };
                   ` : ''}
                   ${isCompact ? `
                   target.querySelectorAll('mjx-container').forEach((n) => {
                     const h = n;
                     h.style.marginTop = '0';
                     h.style.marginBottom = '0';
-                  });
+                  };
                   ` : ''}
 
                   // Fallback: if no math got processed (still contains $$), retry a few more times
@@ -195,7 +195,7 @@ const MathJaxRenderer = ({
                   console.error('MathJax queue typeset error (attempt ' + attempt + '):', err);
                   if (attempt < 3) setTimeout(() => queueTypeset(target, attempt + 1), 80 * attempt);
                   else showContentAndPostHeight();
-                });
+                };
             } catch (e) {
               console.error('MathJax queue exception:', e);
               if (attempt < 3) setTimeout(() => queueTypeset(target, attempt + 1), 80 * attempt);
@@ -304,11 +304,11 @@ const MathJaxRenderer = ({
               // MathJax not ready yet, will be handled by startup.ready
             }
             ` : 'processContent();'}
-          });
+          };
           
           window.addEventListener('load', function(){ 
             setTimeout(postHeight, 100); 
-          });
+          };
         </script>
       </body>
     </html>`;
@@ -323,7 +323,7 @@ const MathJaxRenderer = ({
     enabled,
     textAlign,
     padding
-  });
+  };
 
   const handleMessage = (event) => {
     try {
@@ -344,7 +344,7 @@ const MathJaxRenderer = ({
   };
 
   return (
-    <View style={style}>
+    <div style={style}>
       <WebView
         ref={webRef}
         originWhitelist={["*"]}
@@ -375,7 +375,7 @@ const MathJaxRenderer = ({
           console.error('MathJaxRenderer WebView HTTP error:', nativeEvent);
         }}
       />
-    </View>
+    </div>
   );
 };
 

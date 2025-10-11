@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+
 import Svg, { Path, Defs, ClipPath, Rect } from 'react-native-svg';
 import DataManager from '../../services/DataManager';
 
@@ -130,7 +130,7 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
     // Subscribe to updates so stars refresh when DataManager notifies
     const unsubscribe = DataManager.subscribe(() => {
       loadFromDataManager();
-    });
+    };
     return unsubscribe;
   }, [areaId, categoryId, contentId]);
 
@@ -169,7 +169,7 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
   const centerStarOffset = Math.round(responsiveSize * 0.2); // 20% of star size for center star elevation
 
   return (
-    <View style={[styles.row, style]}>
+    <div style={{...styles.row, ...style}}>
       {[1, 2, 3].map((i) => {
         const frac = editable ? (i <= rating ? 1 : 0) : computeStarFraction(i);
         
@@ -178,27 +178,26 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
         const marginRight = i < 3 ? starMargin : 0;
         
         return (
-          <TouchableOpacity
-            key={i}
-            onPress={() => handlePress(i)}
+          <button             key={i}
+            onClick={() => handlePress(i)}
             activeOpacity={editable ? 0.7 : 1}
             accessibilityRole={editable ? 'button' : 'image'}
-            accessibilityLabel={editable ? `Set ${i} star${i > 1 ? 's' : ''}` : `Stars: ${earned}/${max}`}
+            aria-label={editable ? `Set ${i} star${i > 1 ? 's' : ''}` : `Stars: ${earned}/${max}`}
             disabled={!editable}
           >
-            <View style={{ marginRight, marginTop }}>
+            <div style={{ marginRight, marginTop }}>
               <Star size={responsiveSize} fillFraction={frac} />
-            </View>
-          </TouchableOpacity>
+            </div>
+          </button>
         );
       })}
-    </View>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-});
+};

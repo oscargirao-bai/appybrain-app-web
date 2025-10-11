@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
+
 import { useThemeColors } from './Theme';
 import { WebView } from 'react-native-webview';
 
@@ -45,7 +45,7 @@ export default function HtmlRender({ html, baseFontSize = 18, textColor, linkCol
 	}
 
 		return (
-			<View style={style}>
+			<div style={style}>
 				<WebView
 					ref={webRef}
 					originWhitelist={["*"]}
@@ -70,7 +70,7 @@ export default function HtmlRender({ html, baseFontSize = 18, textColor, linkCol
 					scrollEnabled={scrollEnabled}
 					style={scrollEnabled ? { width: '100%', height: '100%', backgroundColor: 'transparent' } : { width: '100%', height, backgroundColor: 'transparent' }}
 				/>
-			</View>
+			</div>
 		);
 }
 
@@ -131,11 +131,11 @@ function buildHtmlTemplate(bodyHtml, theme) {
 				document.addEventListener('DOMContentLoaded', function(){ 
 					window.ReactNativeWebView && window.ReactNativeWebView.postMessage('{"simpleMath":"complete"}');
 					setTimeout(postHeight, 30); 
-				});
+				};
 				
 				window.addEventListener('load', function(){ 
 					setTimeout(postHeight, 30); 
-				});
+				};
 			</script>
 		</body>
 	</html>`;

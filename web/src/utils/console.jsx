@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, Alert } from 'react-native';
+import {Modal} from 'react-native';
 import { header, small, normal } from '../constants/font';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useTheme, useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import { navigate } from '../services/navigationRef';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import * as SecureStore from 'expo-secure-store';
 
 // Simple developer console overlay with a floating action button (FAB).
@@ -27,9 +27,7 @@ export default function DevConsoleOverlay() {
 
 	// Clear all storage function
 	const clearAllStorage = async () => {
-		Alert.alert(
-			'Clear All Storage',
-			'This will delete all data from AsyncStorage and SecureStore. Are you sure?',
+		window.alert('This will delete all data from AsyncStorage and SecureStore. Are you sure?',
 			[
 				{ text: 'Cancel', style: 'cancel' },
 				{
@@ -56,9 +54,9 @@ export default function DevConsoleOverlay() {
 								}
 							}
 							
-							Alert.alert('Success', 'All storage cleared successfully!');
+							window.alert('All storage cleared successfully!');
 						} catch (error) {
-							Alert.alert('Error', `Failed to clear storage: ${error.message}`);
+							window.alert(`Failed to clear storage: ${error.message}`);
 						}
 					}
 				}
@@ -124,99 +122,96 @@ export default function DevConsoleOverlay() {
 		<>
 			{/* Floating toggle button (tap opens console, hold cycles corners) */}
 			{!open && (
-				<Pressable
-					accessibilityRole="button"
-					accessibilityLabel="Open dev console"
+				<button 					
+					aria-label="Open dev console"
 					onPressIn={handlePressIn}
 					onPressOut={handlePressOut}
-					style={[styles.fab, cornerStyle, pressing && { opacity: 0.85 }]}
+					style={{...styles.fab, ...cornerStyle}}
 				>
 					<Icon name="wrench" color={colors.background} size={22} />
-				</Pressable>
+				</button>
 			)}
 
 			{/* Console modal */}
 			<Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
-				<Pressable style={styles.backdrop} onPress={() => setOpen(false)} />
-				<View style={styles.sheet}>
-					<View style={styles.sheetHeader}>
-						<Text style={styles.sheetTitle}>Dev Console</Text>
-						<TouchableOpacity onPress={() => setOpen(false)} accessibilityLabel="Close dev console">
+				<button style={styles.backdrop} onClick={() => setOpen(false)} />
+				<div style={styles.sheet}>
+					<div style={styles.sheetHeader}>
+						<span style={styles.sheetTitle}>Dev Console</span>
+						<button onClick={() => setOpen(false)} aria-label="Close dev console">
 							<Icon name="x" size={22} color={colors.secondary} />
-						</TouchableOpacity>
-					</View>
+						</button>
+					</div>
 
 					{/* Options */}
-					<View style={styles.optionRow}>
-						<View style={styles.optionLabelWrap}>
+					<div style={styles.optionRow}>
+						<div style={styles.optionLabelWrap}>
 							<Icon name={isLight ? 'sun' : 'moon'} size={18} color={colors.secondary} />
-							<Text style={styles.optionLabel}>
+							<span style={styles.optionLabel}>
 								{isLight ? 'Theme: Light' : 'Theme: Dark'}
-							</Text>
-						</View>
-						<TouchableOpacity style={styles.optionBtn} onPress={toggleTheme}>
-							<Text style={styles.optionBtnText}>{isLight ? 'Switch to Dark' : 'Switch to Light'}</Text>
-						</TouchableOpacity>
-					</View>
+							</span>
+						</div>
+						<button style={styles.optionBtn} onClick={toggleTheme}>
+							<span style={styles.optionBtnText}>{isLight ? 'Switch to Dark' : 'Switch to Light'}</span>
+						</button>
+					</div>
 
 
 					{/* Language switch */}
-					<View style={styles.optionRow}>
-						<View style={styles.optionLabelWrap}>
+					<div style={styles.optionRow}>
+						<div style={styles.optionLabelWrap}>
 							<Icon name="globe" size={18} color={colors.secondary} />
-							<Text style={styles.optionLabel}>
+							<span style={styles.optionLabel}>
 								{translate('settings.language')}: {currentLanguage === 'pt' ? translate('settings.portuguese') : translate('settings.english')}
-							</Text>
-						</View>
-						<View style={styles.genderBtnGroup}>
-							<TouchableOpacity
-								style={[styles.genderBtn, currentLanguage === 'en' && styles.genderBtnActive]}
-								onPress={() => changeLanguage('en')}
+							</span>
+						</div>
+						<div style={styles.genderBtnGroup}>
+							<button 								style={{...styles.genderBtn, ...currentLanguage === 'en' && styles.genderBtnActive}}
+								onClick={() => changeLanguage('en')}
 							>
-								<Text style={[styles.genderBtnText, currentLanguage === 'en' && styles.genderBtnTextActive]}>{translate('settings.english')}</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={[styles.genderBtn, currentLanguage === 'pt' && styles.genderBtnActive]}
-								onPress={() => changeLanguage('pt')}
+								<span style={{...styles.genderBtnText, ...currentLanguage === 'en' && styles.genderBtnTextActive}}>{translate('settings.english')}</span>
+							</button>
+							<button 								style={{...styles.genderBtn, ...currentLanguage === 'pt' && styles.genderBtnActive}}
+								onClick={() => changeLanguage('pt')}
 							>
-								<Text style={[styles.genderBtnText, currentLanguage === 'pt' && styles.genderBtnTextActive]}>{translate('settings.portuguese')}</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
+								<span style={{...styles.genderBtnText, ...currentLanguage === 'pt' && styles.genderBtnTextActive}}>{translate('settings.portuguese')}</span>
+							</button>
+						</div>
+					</div>
 
 					{/* Navigate to Start screen */}
-					<View style={styles.optionRow}>
-						<View style={styles.optionLabelWrap}>
+					<div style={styles.optionRow}>
+						<div style={styles.optionLabelWrap}>
 							<Icon name="undo" size={18} color={colors.secondary} />
-							<Text style={styles.optionLabel}>Go to Start</Text>
-						</View>
-						<TouchableOpacity style={styles.optionBtn} onPress={() => navigate('Login')}>
-							<Text style={styles.optionBtnText}>Start</Text>
-						</TouchableOpacity>
-					</View>
+							<span style={styles.optionLabel}>Go to Start</span>
+						</div>
+						<button style={styles.optionBtn} onClick={() => navigate('Login')}>
+							<span style={styles.optionBtnText}>Start</span>
+						</button>
+					</div>
 
 					{/* Navigate to Home screen */}
-					<View style={styles.optionRow}>
-						<View style={styles.optionLabelWrap}>
+					<div style={styles.optionRow}>
+						<div style={styles.optionLabelWrap}>
 							<Icon name="home" size={18} color={colors.secondary} />
-							<Text style={styles.optionLabel}>Go to Tabs</Text>
-						</View>
-						<TouchableOpacity style={styles.optionBtn} onPress={() => { setOpen(false); navigate('MainTabs', { initialTab: 0 }); }}>
-							<Text style={styles.optionBtnText}>Tabs</Text>
-						</TouchableOpacity>
-					</View>
+							<span style={styles.optionLabel}>Go to Tabs</span>
+						</div>
+						<button style={styles.optionBtn} onClick={() => { setOpen(false); navigate('MainTabs', { initialTab: 0 }); }}>
+							<span style={styles.optionBtnText}>Tabs</span>
+						</button>
+					</div>
 
 					{/* Clear All Storage */}
-					<View style={styles.optionRow}>
-						<View style={styles.optionLabelWrap}>
+					<div style={styles.optionRow}>
+						<div style={styles.optionLabelWrap}>
 							<Icon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
-							<Text style={styles.optionLabel}>Clear All Storage</Text>
-						</View>
-						<TouchableOpacity style={[styles.optionBtn, { backgroundColor: colors.destructive || '#ff4444' }]} onPress={clearAllStorage}>
-							<Text style={[styles.optionBtnText, { color: '#ffffff' }]}>Clear</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
+							<span style={styles.optionLabel}>Clear All Storage</span>
+						</div>
+						<button style={{...styles.optionBtn, ...{ backgroundColor: colors.destructive || '#ff4444' }}} onClick={clearAllStorage}>
+							<span style={{...styles.optionBtnText, ...{ color: '#ffffff' }}}>Clear</span>
+						</button>
+					</div>
+				</div>
 			</Modal>
 		</>
 	);
@@ -304,5 +299,5 @@ const makeStyles = (c, insets) =>
 		genderBtnActive: { backgroundColor: c.primary, borderColor: c.primary },
 		genderBtnText: { ...small, color: c.secondary },
 		genderBtnTextActive: { color: c.background },
-	});
+	};
 

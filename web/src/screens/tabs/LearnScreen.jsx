@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, TouchableOpacity, useWindowDimensions, Text } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -105,78 +105,75 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 	// Multi-part removido – mostrar apenas o overview (Chest + Subject)
 	// Let Chest component handle its own data from API
 	return (
-		<View style={[styles.safe, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
 			<Header
 				title={translate('titles.learn')}
 				right={(
-					<View style={{ position: 'relative' }}>
-						<TouchableOpacity
-							accessibilityRole="button"
-							accessibilityLabel={translate('options.notification')}
-							onPress={() => setNotificationsOpen(true)}
+					<div style={{ position: 'relative' }}>
+						<button 							
+							aria-label={translate('options.notification')}
+							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
 							<Icon name="bell" size={22} color={colors.text} />
-						</TouchableOpacity>
+						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
-					</View>
+					</div>
 				)}
 				extraRight={(
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel={translate('settings.settings')}
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label={translate('settings.settings')}
+						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
 						<Icon name="settings" size={22} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 			/>
-			<View style={styles.content}>
-				<View style={styles.headerSection}>
-					<View style={styles.bannerSection}>
+			<div style={styles.content}>
+				<div style={styles.headerSection}>
+					<div style={styles.bannerSection}>
 						<Banner
 							topFlat={true}
 							avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
 							bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
 							frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 						/>
-					</View>
-					<View style={styles.infoSection}>
+					</div>
+					<div style={styles.infoSection}>
 						<Info
 							username={userInfo?.nickname}
 							tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
 							stars={userInfo?.stars ?? 0}
 							coins={userInfo?.coins ?? 0}
 						/>
-					</View>
-					<View style={styles.chestLine}>
-						<Pressable
-							style={styles.chestPressable}
-							onPress={handleChestOpen}
-							accessibilityRole="button"
-							accessibilityLabel="Baú de recompensas"
+					</div>
+					<div style={styles.chestLine}>
+						<button 							style={styles.chestPressable}
+							onClick={handleChestOpen}
+							
+							aria-label="Baú de recompensas"
 						>
 							<Chest size={chestSize} dataSource='stars' />
-						</Pressable>
-						<View style={styles.starsWrap}>
+						</button>
+						<div style={styles.starsWrap}>
 							<Stars value={userInfo?.stars ?? 0} size={48} responsive={true} />
-						</View>
-						<View style={styles.buttonsRow}>
+						</div>
+						<div style={styles.buttonsRow}>
 							<Button2
 								iconName="medal"
-								onPress={() => setRankingsOpen(true)}
+								onClick={() => setRankingsOpen(true)}
 								style={styles.buttonSpacing}
 							/>
-						</View>
-					</View>
-				</View>
-				<View style={styles.bottomSection}>
-					<View style={styles.trophySection} />
-					<View style={styles.subjectsSection}>
-						<View style={styles.subjectsRow}>
+						</div>
+					</div>
+				</div>
+				<div style={styles.bottomSection}>
+					<div style={styles.trophySection} />
+					<div style={styles.subjectsSection}>
+						<div style={styles.subjectsRow}>
 						{disciplines.map((discipline) => (
 							<Area
 								key={discipline.id}
@@ -186,24 +183,24 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 								iconColor={discipline.iconColor}
 								disciplineId={discipline.id}
 								iconName="book-open"
-								onPress={() => navigation.navigate('Category', { disciplineId: discipline.id })}
+								onClick={() => navigation.navigate('Category', { disciplineId: discipline.id })}
 							/>
 						))}
-						</View>
-					</View>
-					<View style={styles.buttonSection}>
-						<View style={styles.learnButtonWrap}>
+						</div>
+					</div>
+					<div style={styles.buttonSection}>
+						<div style={styles.learnButtonWrap}>
 							<Button1
 								label={translate('titles.learn')}
 								color="#FFD700"
-								onPress={() => {
-								if (disciplines.length > 0) navigation.navigate('Category', { disciplineId: disciplines[0].id });
+								onClick={() => {
+								if (disciplines.length > 0) navigation.navigate('Category', { disciplineId: disciplines[0].id };
 								}}
 							/>
-						</View>
-					</View>
-				</View>
-			</View>
+						</div>
+					</div>
+				</div>
+			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 			<RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
 			<ChestRewardModal 
@@ -219,11 +216,11 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 				chestType={chestType}
 			/>
 			<ChestBrowserModal visible={chestBrowserOpen} onClose={() => setChestBrowserOpen(false)} onChestOpened={handleChestOpenedFromBrowser} dataSource="stars" />
-		</View>
+		</div>
 		);
 	}
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	content: { flex: 1, justifyContent: 'flex-start' },
 	headerSection: {
@@ -321,5 +318,5 @@ const styles = StyleSheet.create({
 		flex: 0.3,
 		paddingTop: 2,
 	},
-});
+};
 

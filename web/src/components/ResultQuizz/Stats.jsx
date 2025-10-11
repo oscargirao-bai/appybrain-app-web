@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 
 /**
@@ -19,16 +19,16 @@ export default function Stats({ correct = null, total = null, totalSec = null })
     typeof totalSec === 'number' ? `${totalSec.toFixed(1)}s` : '--';
 
   return (
-    <View style={styles.container}>
-      <View style={styles.item}>
-        <Text style={styles.value}>{correctText}</Text>
-        <Text style={styles.label}>Acertos</Text>
-      </View>
-      <View style={styles.item}>
-        <Text style={styles.value}>{timeText}</Text>
-        <Text style={styles.label}>Tempo Total</Text>
-      </View>
-    </View>
+    <div style={styles.container}>
+      <div style={styles.item}>
+        <span style={styles.value}>{correctText}</span>
+        <span style={styles.label}>Acertos</span>
+      </div>
+      <div style={styles.item}>
+        <span style={styles.value}>{timeText}</span>
+        <span style={styles.label}>Tempo Total</span>
+      </div>
+    </div>
   );
 }
 
@@ -57,4 +57,4 @@ const createStyles = (colors) => StyleSheet.create({
     fontWeight: '600',
     color: colors.text + 'AA',
   },
-});
+};

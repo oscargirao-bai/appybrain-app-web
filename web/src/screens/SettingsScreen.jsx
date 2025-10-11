@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Pressable, Image, Linking } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {Linking} from 'react-native';
+
 import Header from '../components/General/Header';
 import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
@@ -22,7 +22,7 @@ export default function SettingsScreen({ navigation }) {
 	const [privacyOpen, setPrivacyOpen] = useState(false);
 	const [changeNameOpen, setChangeNameOpen] = useState(false);
 	const [currentUserName, setCurrentUserName] = useState('');
-	const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
+	const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' };
 
 	// Load current user name
 	useEffect(() => {
@@ -59,21 +59,19 @@ export default function SettingsScreen({ navigation }) {
                     title: translate('error'),
                     message: translate('settings.nick_in_use'),
                     visible: true,
-                });
+                };
             } else {
                 setMessageModal({
                     title: translate('error'),
                     message: translate('settings.nick_error'),
                     visible: true,
-                });
+                };
             }
         }
     };
 
     const handleLogout = useCallback(() => {
-		Alert.alert(
-			'Confirmar Logout',
-			'Tem a certeza de que deseja terminar a sessão?',
+		window.alert('Tem a certeza de que deseja terminar a sessão?',
 			[
 				{
 					text: 'Cancelar',
@@ -106,71 +104,70 @@ export default function SettingsScreen({ navigation }) {
 			if (supported) {
 				await Linking.openURL(INSTAGRAM_URL);
 			} else {
-				Alert.alert('Erro', 'Não foi possível abrir o link.');
+				window.alert('Não foi possível abrir o link.');
 			}
 		} catch (err) {
 			console.error('Error opening Instagram:', err);
-			Alert.alert('Erro', 'Não foi possível abrir o link.');
+			window.alert('Não foi possível abrir o link.');
 		}
 	}, []);
 
 	return (
-		<SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>
 			<Header
 				title={translate('settings.settings')}
 				showBack
 				onBack={() => navigation.goBack()}
 			/>
-			<ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-				<Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('profile.overviewTitle')}</Text>
+			<div contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+				<span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('profile.overviewTitle')}</span>
 				<Button4
 					label={translate('profile.customize')}
-					onPress={() => navigation.navigate('Customize')}
-					accessibilityLabel={translate('profile.customize')}
+					onClick={() => navigation.navigate('Customize')}
+					aria-label={translate('profile.customize')}
 				/>
 				<Button4
 					label={translate('settings.customizeProfile')}
-					onPress={() => setChangeNameOpen(true)}
-					accessibilityLabel={translate('settings.customizeProfile')}
+					onClick={() => setChangeNameOpen(true)}
+					aria-label={translate('settings.customizeProfile')}
 				/>
 
-				<Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('settings.general')}</Text>
+				<span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('settings.general')}</span>
 				<Button3
 					icon={vibration ? 'vibrate' : 'vibrate'}
 					label={translate('settings.vibrations')}
 					value={vibration}
 					onValueChange={handleVibrationChange}
-					accessibilityLabel={translate('settings.vibrations')}
+					aria-label={translate('settings.vibrations')}
 				/>
 				<ButtonLightDark />
 				{/* <ButtonLanguage /> */}
 
-				<Text style={[styles.sectionTitle, { color: colors.text, marginTop: 24 }]}>{translate('settings.account')}</Text>
+				<span style={{...styles.sectionTitle, ...{ color: colors.text}}>{translate('settings.account')}</span>
 				<Button4
 					label={translate('settings.privacyPolicy')}
-					onPress={() => setPrivacyOpen(true)}
-					accessibilityLabel={translate('settings.privacyPolicy')}
+					onClick={() => setPrivacyOpen(true)}
+					aria-label={translate('settings.privacyPolicy')}
 				/>
 				<Button4
 					label={translate('settings.logout')}
-					onPress={handleLogout}
+					onClick={handleLogout}
 					danger
-					accessibilityLabel={translate('settings.logout')}
+					aria-label={translate('settings.logout')}
 				/>
-			</ScrollView>
+			</div>
 
 			{/* Instagram link button - bottom */}
-			<View style={styles.instagramRow}>
-				<Pressable
-					style={({ pressed }) => [styles.instagramBtn, pressed && { opacity: 0.8 }]}
-					onPress={handleOpenInstagram}
-					accessibilityRole="link"
-					accessibilityLabel="Abrir Instagram do Appy Brain"
+			<div style={styles.instagramRow}>
+				<button 					style={({ pressed }) => [styles.instagramBtn, pressed && { opacity: 0.8 }]}
+					onClick={handleOpenInstagram}
+					
+					aria-label="Abrir Instagram do Appy Brain"
 				>
-					<Image source={require('../../assets/Instagram_Glyph_Gradient.png')} style={styles.instagramImg} />
-					<Text style={[styles.instagramText, { color: colors.text }]}>appy_brain</Text>
-				</Pressable>
-			</View>
+					<img src="/assets/Instagram_Glyph_Gradient.png" style={styles.instagramImg} />
+					<span style={{...styles.instagramText, ...{ color: colors.text }}}>appy_brain</span>
+				</button>
+			</div>
 			<ChangeNameModal
 				visible={changeNameOpen}
 				currentName={currentUserName}
@@ -184,11 +181,11 @@ export default function SettingsScreen({ navigation }) {
 				message={messageModal.message}
 				onClose={() => setMessageModal({ visible: false, title: '', message: '' })}
 			/>
-		</SafeAreaView>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: { flex: 1 },
 	content: { padding: 16, paddingBottom: 40 },
 	sectionTitle: { fontSize: 18, fontWeight: '700', fontFamily: family.bold, marginBottom: 12 },
@@ -199,5 +196,5 @@ const styles = StyleSheet.create({
 	instagramBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
 	instagramImg: { width: 28, height: 28, resizeMode: 'contain', marginRight: 10 },
 	instagramText: { fontSize: 16, fontWeight: '700', fontFamily: family.bold, textAlign: 'center' },
-});
+};
 

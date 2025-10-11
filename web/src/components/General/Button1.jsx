@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, Text, View, StyleSheet, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -39,7 +39,7 @@ export default function Button1({ label, color, onPress, style }) {
 		return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
 	};
 	const rgbToHex = ({ r, g, b }) => '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
-	const mix = (a, b, t) => ({ r: Math.round(a.r + (b.r - a.r) * t), g: Math.round(a.g + (b.g - a.g) * t), b: Math.round(a.b + (b.b - a.b) * t) });
+	const mix = (a, b, t) => ({ r: Math.round(a.r + (b.r - a.r) * t), g: Math.round(a.g + (b.g - a.g) * t), b: Math.round(a.b + (b.b - a.b) * t) };
 	const addAlpha = (hex, alpha) => {
 		const { r, g, b } = hexToRgb(hex);
 		return `rgba(${r},${g},${b},${alpha})`;
@@ -94,29 +94,29 @@ export default function Button1({ label, color, onPress, style }) {
 				Animated.delay(900),
 				Animated.timing(shine, { toValue: 1, duration: 1300, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
 				Animated.delay(1600),
-			]).start(({ finished }) => { if (finished && !cancelled) runSweep(); });
+			]).start(({ finished }) => { if (finished && !cancelled) runSweep(); };
 		};
 		runSweep();
 		return () => { cancelled = true; };
 	}, [bob, glow, shine]);
 
 	// Interpolations
-	const bobTranslate = bob.interpolate({ inputRange: [0, 1], outputRange: [0, -4] });
+	const bobTranslate = bob.interpolate({ inputRange: [0, 1], outputRange: [0, -4] };
 	// Reduced breathing amplitude (smaller effect)
-	const glowScale = glow.interpolate({ inputRange: [0, 1], outputRange: [0.97, 1.0] });
-	const glowOpacity = glow.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.18] });
+	const glowScale = glow.interpolate({ inputRange: [0, 1], outputRange: [0.97, 1.0] };
+	const glowOpacity = glow.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.18] };
 	// Shine travels fully across using numeric pixel values (percent strings break native driver)
 	const startX = faceW ? -1.2 * faceW : -400; // further off-screen so it's not visible initially
 	const endX = faceW ? 1.2 * faceW : 400;
-	const shineX = shine.interpolate({ inputRange: [0, 1], outputRange: [startX, endX] });
+	const shineX = shine.interpolate({ inputRange: [0, 1], outputRange: [startX, endX] };
 	// Opacity stays 0 at rest, fades in quickly, stays, then fades out near end
 	const shineOpacity = shine.interpolate({
 		inputRange: [0, 0.08, 0.85, 1],
 		outputRange: [0, 0.55, 0.55, 0],
 		// clamp is default
-	});
-	const pressScale = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0.96] });
-	const pressTranslate = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 5] });
+	};
+	const pressScale = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0.96] };
+	const pressTranslate = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 5] };
 
 	const handlePressIn = () => {
 		Animated.timing(pressAnim, { toValue: 1, duration: 120, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
@@ -130,10 +130,9 @@ export default function Button1({ label, color, onPress, style }) {
 			{/* Outer subtle aura */}
 			<Animated.View style={[styles.aura, { opacity: glowOpacity, transform: [{ scale: glowScale }], backgroundColor: auraColor }]} />
 
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={resolvedLabel}
-				onPress={onPress}
+			<button 				
+				aria-label={resolvedLabel}
+				onClick={onPress}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
 				style={styles.pressArea}
@@ -145,7 +144,7 @@ export default function Button1({ label, color, onPress, style }) {
 						colors={gradientColors}
 						start={{ x: 0.25, y: 0 }}
 						end={{ x: 0.9, y: 1 }}
-						style={[styles.face, { borderColor: borderColor }]}
+						style={{...styles.face, ...{ borderColor: borderColor }}}
 						onLayout={(e) => setFaceW(e.nativeEvent.layout.width)}>
 						{/* Inner top highlight */}
 						<LinearGradient
@@ -166,20 +165,20 @@ export default function Button1({ label, color, onPress, style }) {
 							/>
 						</Animated.View>
 						{/* Text layers */}
-						<View style={styles.textWrap} pointerEvents="none">
-							<Text style={[styles.text, styles.textStroke, { color: textStrokeColor, textShadowColor: textStrokeShadow }]}>{resolvedLabel}</Text>
-							<Text style={[styles.text, { color: themeColors.text }]}>{resolvedLabel}</Text>
-						</View>
+						<div style={styles.textWrap} pointerEvents="none">
+							<span style={{...styles.text, ...styles.textStroke}}>{resolvedLabel}</span>
+							<span style={{...styles.text, ...{ color: themeColors.text }}}>{resolvedLabel}</span>
+						</div>
 					</LinearGradient>
 					{/* Specular dot */}
-						<View style={[styles.spark, { backgroundColor: sparkColor }]} />
+						<div style={{...styles.spark, ...{ backgroundColor: sparkColor }}} />
 				</Animated.View>
-			</Pressable>
+			</button>
 		</Animated.View>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	wrapper: {
 		alignSelf: 'center',
 		minWidth: 160,
@@ -246,4 +245,4 @@ const styles = StyleSheet.create({
 		height: 12,
 		borderRadius: 12,
 	},
-});
+};

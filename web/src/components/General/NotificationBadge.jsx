@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 
 /**
@@ -24,37 +24,21 @@ export default function NotificationBadge({ count = 0, size = 16, style }) {
   const fontSize = size * 0.6; // Font size relative to badge size
 
   return (
-    <View
-      style={[
-        styles.badge,
-        {
-          backgroundColor: colors.error,
-          width: badgeSize,
-          height: badgeSize,
-          borderRadius: badgeSize / 2,
-          minWidth: badgeSize, // Ensure it doesn't get smaller than the set size
-        },
-        style,
-      ]}
+    <div       style={{...styles.badge, ...{
+          backgroundColor: colors.error}}
     >
-      <Text
-        style={[
-          styles.badgeText,
-          {
-            fontSize: fontSize,
-            color: colors.onError || '#FFFFFF',
-          },
-        ]}
+      <span         style={{...styles.badgeText, ...{
+            fontSize: fontSize}}
         numberOfLines={1}
         adjustsFontSizeToFit
       >
         {displayCount}
-      </Text>
-    </View>
+      </span>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   badge: {
     position: 'absolute',
     top: -6,
@@ -68,4 +52,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
-});
+};

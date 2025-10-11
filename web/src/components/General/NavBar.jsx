@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Pressable, StyleSheet, Animated, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
 import { Lucide } from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 
@@ -40,32 +40,15 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 	const innerPadding = 18; // base inner padding used previously
 
 	return (
-		<View style={{ backgroundColor: barBg, width: '100%' }}>
-			<View style={[
-				styles.container,
-				{
-					backgroundColor: barBg,
-					borderColor: barBorder,
-					width: '100%',
-					// add safe-area bottom so the nav isn't cut off
-					paddingBottom: innerPadding + bottomPadding - 2,
-					minHeight: (styles.container.minHeight || 80) + bottomPadding,
-				}
-			]}>        
+		<div style={{ backgroundColor: barBg, width: '100%' }}>
+			<div style={{...styles.container, ...{
+					backgroundColor: barBg}}>        
 				{/* Animated dot/underline indicator */}
 				{icons.length > 0 && (
 					<Animated.View
 						pointerEvents="none"
-						style={[
-							styles.indicator,
-							{
-								backgroundColor: activeColor(currentPage),
-								left: Animated.subtract(indicatorX, Animated.divide(indicatorW, 2)),
-								width: indicatorW,
-								// position the indicator lower to increase gap from the icons
-								bottom: bottomPadding + 8,
-							},
-						]}
+						style={{...styles.indicator, ...{
+								backgroundColor: activeColor(currentPage)}}
 					/>
 				)}
 				{icons.map((icon, i) => {
@@ -79,8 +62,7 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 						}
 					}, [isActive, scale]);
 					return (
-						<Pressable
-							key={icon + i}
+						<button 							key={icon + i}
 							onLayout={(e) => {
 								const { x, width: w } = e.nativeEvent.layout;
 								containersRef.current[i] = { x, w };
@@ -89,10 +71,10 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 									indicatorW.setValue(w * 0.28);
 								}
 							}}
-							accessibilityRole="tab"
+							
 							accessibilityState={{ selected: isActive }}
 							style={styles.tabBtn}
-							onPress={() => handleTabPress?.(i)}
+							onClick={() => handleTabPress?.(i)}
 						>
 							<Animated.View style={{ transform: [{ scale }] }}>
 										<Lucide
@@ -102,15 +84,15 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 											style={{ opacity: isActive ? 1 : 0.65 }}
 										/>
 									</Animated.View>
-						</Pressable>
+						</button>
 					);
 				})}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -134,5 +116,5 @@ const styles = StyleSheet.create({
 		height: 6,
 		borderRadius: 4,
 	},
-});
+};
 

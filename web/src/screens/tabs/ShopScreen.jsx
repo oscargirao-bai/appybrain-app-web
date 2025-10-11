@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, useWindowDimensions, TouchableOpacity } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslate } from '../../services/Translate';
@@ -16,7 +16,7 @@ export default function ShopScreen(props) {
 	const colors = useThemeColors();
 	const navigation = useNavigation();
 	const { translate } = useTranslate();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	const scrollRef = useRef(null);
 	const [tab, setTab] = useState('avatar'); // avatar | background | frames
 	const [avatars, setAvatars] = useState([]);
@@ -59,7 +59,7 @@ export default function ShopScreen(props) {
 	function onSelect(key) {
 		setTab(key);
 		const index = key === 'avatar' ? 0 : key === 'background' ? 1 : 2;
-		scrollRef.current?.scrollTo({ x: index * width, animated: true });
+		scrollRef.current?.scrollTo({ x: index * width, animated: true };
 	}
 
 	function handleMomentumEnd(e) {
@@ -81,65 +81,62 @@ export default function ShopScreen(props) {
 	};
 
 	return (
-		<View style={[styles.container, { backgroundColor: colors.background }]}>      
+		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
 			<Header 
 				title={translate('options.shop')}
 				right={(
-					<View style={{ position: 'relative' }}>
-						<TouchableOpacity
-							accessibilityRole="button"
-							accessibilityLabel={translate('options.notification')}
-							onPress={() => setNotificationsOpen(true)}
+					<div style={{ position: 'relative' }}>
+						<button 							
+							aria-label={translate('options.notification')}
+							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
 							<Icon name="bell" size={22} color={colors.text} />
-						</TouchableOpacity>
+						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
-					</View>
+					</div>
 				)}
 				extraRight={(
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel={translate('settings.settings')}
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label={translate('settings.settings')}
+						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
 						<Icon name="settings" size={22} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 			/>
-			<View style={styles.topBar}>
+			<div style={styles.topBar}>
 				<Coins />
-			</View>
+			</div>
 			<Options value={tab} onChange={onSelect} />
-			<ScrollView
-				horizontal
+			<div 				horizontal
 				pagingEnabled
 				ref={scrollRef}
 				showsHorizontalScrollIndicator={false}
 				onMomentumScrollEnd={handleMomentumEnd}
 				contentContainerStyle={{}}
 			>
-				<View style={{ width }}>
+				<div style={{ width }}>
 					<List data={avatars} scrollEnabled={true} userCoins={userCoins} onPurchase={handlePurchase} />
-				</View>
-				<View style={{ width }}>
+				</div>
+				<div style={{ width }}>
 					<List data={backgrounds} scrollEnabled={true} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				</View>
-				<View style={{ width }}>
+				</div>
+				<div style={{ width }}>
 					<List data={frames} scrollEnabled={true} userCoins={userCoins} onPurchase={handlePurchase} />
-				</View>
-			</ScrollView>
+				</div>
+			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: { flex: 1 },
 	topBar: { paddingHorizontal: 16, paddingTop: 16 },
 	scrollContent: { },
-});
+};
 

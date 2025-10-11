@@ -1,11 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
+
 import { SvgXml } from 'react-native-svg';
 import { normalizeSvg } from '../../utils/svgUtils';
 
 // SvgIcon supports three common input shapes for svg assets:
 // 1) Raw SVG XML string (xml containing <svg ...>...)
-// 2) A React component (import Teatro from '../assets/teatro.svg') compiled by the svg transformer
+// 2) A React component () compiled by the svg transformer
 // 3) A module with a default export that is a React component
 // It renders with the given `size` and will replace `currentColor` in the XML with the provided color.
 export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
@@ -19,9 +19,9 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
   if (Component) {
     // Some SVG components accept width/height/fill props. Pass them through.
     return (
-      <View style={{ width: size, height: size }}>
+      <div style={{ width: size, height: size }}>
         {React.createElement(Component, { width: size, height: size, fill: color })}
-      </View>
+      </div>
     );
   }
 
@@ -78,7 +78,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
               const prev = classMap.get(clsName) || '';
               classMap.set(clsName, (prev ? prev + ';' : '') + declText);
             }
-          });
+          };
         }
 
         if (classMap.size > 0) {
@@ -144,15 +144,15 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
                   val = val.replace(/"/g, '&quot;');
                   attrsParts.push(`clip-path="${val}"`);
                 }
-              });
-            });
+              };
+            };
 
             // reconstruct tag without class but with new attributes
             const newAttrs = attrsParts.length ? ' ' + attrsParts.join(' ') : '';
             const allAttrs = (beforeAttrs + afterAttrs + newAttrs).trim();
             const closing = selfClose ? '/>' : '>';
             return `<${tag}${allAttrs ? ' ' + allAttrs : ''}${closing}`;
-          });
+          };
         }
 
         // Remove the original <style> block entirely (we inlined rules)
@@ -169,24 +169,24 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
         const newId = `${id}${suffix}`;
         idMap.set(id, newId);
         return `id="${newId}"`;
-      });
+      };
 
       if (idMap.size > 0) {
         // Replace url(#id) references
         out = out.replace(/url\(#([^\)]+)\)/g, (m, id) => {
           const nid = idMap.get(id) || id;
           return `url(#${nid})`;
-        });
+        };
         // Replace href="#id" and xlink:href="#id"
         out = out.replace(/(href|xlink:href)="#([^"]+)"/g, (m, attr, id) => {
           const nid = idMap.get(id) || id;
           return `${attr}="#${nid}"`;
-        });
+        };
         // Replace references like "#id" inside other attributes (e.g., begin, end) conservatively
         out = out.replace(/"#([^"]+)"/g, (m, id) => {
           const nid = idMap.get(id) || id;
           return `"#${nid}"`;
-        });
+        };
       }
 
       return out;
@@ -221,7 +221,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
     
     // Use normalizeSvg to handle viewBox and dimensions
     // For monochrome SVGs, use currentColor mode; for multi-color, preserve colors
-    xml = normalizeSvg(xml, { colorMode: isMonochrome ? 'currentColor' : 'preserve' });
+    xml = normalizeSvg(xml, { colorMode: isMonochrome ? 'currentColor' : 'preserve' };
     
     // Replace currentColor with the actual color prop
     if (xml.includes('currentColor')) {
@@ -249,7 +249,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
         return `<${tag}${attrs}${addedAttrs}${selfClose}>`;
       }
       return match;
-    });
+    };
     
     // Cleanup accidental double slashes before closing brackets introduced by string ops
     xml = xml.replace(/\/\/>/g, '/>').replace(/\s+>/g, '>').replace(/>\s+</g, '><');
@@ -257,9 +257,9 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
     // SvgXml will render the XML directly. Allow the svg to control viewBox; set width/height via props.
     try {
       return (
-        <View style={{ width: size, height: size }}>
+        <div style={{ width: size, height: size }}>
           <SvgXml xml={xml} width="100%" height="100%" preserveAspectRatio="xMidYMid meet" />
-        </View>
+        </div>
       );
     } catch (e) {
       console.warn('SvgIcon: failed to render SVG XML', e);

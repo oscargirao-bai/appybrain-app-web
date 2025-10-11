@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import DataManager from '../../services/DataManager';
@@ -19,13 +19,13 @@ export default function Quote({ percentage = 50 }) {
 	}, [percentage]);
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.messageBox}>
-				<Text style={[styles.messageText, { color: colors.text }]}>
+		<div style={styles.container}>
+			<div style={styles.messageBox}>
+				<span style={{...styles.messageText, ...{ color: colors.text }}}>
 					{message}
-				</Text>
-			</View>
-		</View>
+				</span>
+			</div>
+		</div>
 	);
 }
 
@@ -48,4 +48,4 @@ const createStyles = (colors) => StyleSheet.create({
 		textAlign: 'center',
 		letterSpacing: 0.2,
 	},
-});
+};

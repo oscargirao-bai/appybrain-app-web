@@ -10,7 +10,7 @@
  * const svgString = '<svg><path d="M10 10 L20 20"/></svg>';
  * const dataUrl = createSvgDataUrl(svgString, '#FF0000');
  * // Use with Image component:
- * <Image source={{ uri: dataUrl }} style={{ width: 24, height: 24 }} />
+ * <img source={{ uri: dataUrl }} style={{ width: 24, height: 24 }} />
  * ```
  *
  * @param {string|null|undefined} svgString - The raw SVG string.
@@ -99,7 +99,7 @@ export const normalizeSvg = (svgString, options = {}) => {
     existing.split(';').forEach(pair => {
       const [k, v] = pair.split(':').map(s => s?.trim());
       if (k && v) styleObj[k] = v;
-    });
+    };
     styleObj.display = 'block';
     // Rebuild style string
     return Object.entries(styleObj).map(([k, v]) => `${k}:${v}`).join(';');
@@ -124,7 +124,7 @@ export const normalizeSvg = (svgString, options = {}) => {
       }
       // No fill attribute found, add fill="none" to make it stroke-only
       return `<${tag}${attrs} fill="none">`;
-    });
+    };
   }
 
   return svg;

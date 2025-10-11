@@ -52,7 +52,7 @@ class DataManagerClass {
 
             // Create fresh cache directory for this session
             const cacheDir = `${FileSystem.documentDirectory}session_cache/`;
-            await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true });
+            await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true };
 
             // Reset cache tracking
             this.imageCache.clear();
@@ -239,7 +239,7 @@ class DataManagerClass {
             } catch (err) {
                 console.error('Error in data subscriber:', err);
             }
-        });
+        };
     }
 
     // Get current data
@@ -311,29 +311,29 @@ class DataManagerClass {
             const cosmeticsData = await this.apiManager.getCosmetics().catch(error => {
                 console.warn('DataManager: Failed to load cosmetics:', error);
                 return [];
-            });
+            };
 
             // Load challenges separately
             //console.log('DataManager: Loading challenges...');
             const challengesApiData = await this.apiManager.getChallenges().catch(error => {
                 console.warn('DataManager: Failed to load challenges:', error);
                 return [];
-            });
+            };
 
             // Load quotes separately
             //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('/api/gamification/quotes').catch(error => {
                 console.warn('DataManager: Failed to load quotes:', error);
                 return { items: [] };
-            });
+            };
 
             // Process and cache cosmetic images
             //console.log('DataManager: Processing and caching cosmetic images...');
-            const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData });
+            const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData };
 
             // Process and cache challenge images
             //console.log('DataManager: Processing and caching challenge images...');
-            const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData });
+            const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData };
 
             // Store initial IDs for future diff detection
             this.previousNewsIds = new Set(newsData.map(item => item.id));
@@ -349,7 +349,7 @@ class DataManagerClass {
                 if (notification.readAt && notification.id) {
                     localReadStatuses.set(notification.id, notification.readAt);
                 }
-            });
+            };
             
             // Merge fresh API data with preserved local read statuses
             const mergedNotifications = notificationsData.map(notification => {
@@ -359,7 +359,7 @@ class DataManagerClass {
                     return { ...notification, readAt: localReadAt };
                 }
                 return notification;
-            });
+            };
 
             this.data = {
                 userInfo: processedData.userInfo,
@@ -426,7 +426,7 @@ class DataManagerClass {
             }
 
             // Process and cache images for this section
-            const processedData = await this._processAndCacheImages({ [section]: data });
+            const processedData = await this._processAndCacheImages({ [section]: data };
 
             // Handle special cases for data mapping
             if (section === 'disciplines') {
@@ -945,7 +945,7 @@ class DataManagerClass {
                         name: joinedTribe.name,
                         color: joinedTribe.color,
                         icon: joinedTribe.icon
-                    });
+                    };
                 }
             } else {
                 // User left the tribe - clear tribes array
@@ -1004,7 +1004,7 @@ class DataManagerClass {
                             categoryColor: category.color
                         })));
                     }
-                });
+                };
             }
             return allContents;
         }, []);
@@ -1042,7 +1042,7 @@ class DataManagerClass {
             const aRead = a.readAt !== null;
             const bRead = b.readAt !== null;
             return Number(aRead) - Number(bRead);
-        });
+        };
     }
 
     getUnreadNotificationsCount() {
@@ -1094,8 +1094,7 @@ class DataManagerClass {
             if (isMarkAll) {
                 // Optimistically mark all unread as read
                 this.data.notifications = this.data.notifications.map(n =>
-                    n.readAt ? n : { ...n, readAt: currentTime }
-                );
+                    n.readAt ? n : { ...n, readAt: currentTime };
             } else {
                 // Optimistically mark a single notification
                 this.data.notifications = this.data.notifications.map(n =>
@@ -1209,7 +1208,7 @@ class DataManagerClass {
             
             // Within same priority, sort by ID (newest first)
             return b.id - a.id;
-        });
+        };
     }
 
     getCosmeticsByType(cosmeticTypeId) {
@@ -1301,7 +1300,7 @@ class DataManagerClass {
 
                 // Optionally show error to user here or let component handle it
                 throw error;
-            });
+            };
 
             return {
                 success: true,
@@ -1402,7 +1401,7 @@ class DataManagerClass {
             } else {
                 completed.push(historyItem);
             }
-        });
+        };
 
         // Sort by date (most recent first)
         const sortByDate = (a, b) => {
@@ -1556,13 +1555,13 @@ class DataManagerClass {
             coins: user.coins,
             stars: user.stars,
             points: user.points
-        });
+        };
     }
 
     // Equip cosmetics (apply selections for avatar/background/frame) locally and notify
     equipCosmetics({ avatarId = null, backgroundId = null, frameId = null } = {}) {
         try {
-            //console.log('DataManager.equipCosmetics called with:', { avatarId, backgroundId, frameId });
+            //console.log('DataManager.equipCosmetics called with:', { avatarId, backgroundId, frameId };
             const user = this.data.userInfo?.user;
             if (!user) {
                 //console.log('DataManager.equipCosmetics: No user found');

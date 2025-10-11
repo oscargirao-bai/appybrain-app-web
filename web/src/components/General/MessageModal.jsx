@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -29,32 +29,31 @@ export default function MessageModal({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}> 
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar mensagem" />
-        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}> 
+      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
+        <button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar mensagem" />
+        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}> 
           {title ? (
-            <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+            <span style={{...styles.title, ...{ color: colors.text }}}>{title}</span>
           ) : null}
-          <Text style={[styles.message, { color: colors.text }]}>{message}</Text>
-          <Pressable
-            onPress={onClose}
+          <span style={{...styles.message, ...{ color: colors.text }}}>{message}</span>
+          <button             onClick={onClose}
             style={({ pressed }) => [
               styles.btn,
               { backgroundColor: colors.primary, borderColor: colors.primary + '55' },
               pressed && { opacity: 0.9 },
             ]}
-            accessibilityRole="button"
-            accessibilityLabel={buttonLabel}
+            
+            aria-label={buttonLabel}
           >
-            <Text style={[styles.btnText, { color: colors.onPrimary }]}>{buttonLabel}</Text>
-          </Pressable>
-        </View>
-      </View>
+            <span style={{...styles.btnText, ...{ color: colors.onPrimary }}}>{buttonLabel}</span>
+          </button>
+        </div>
+      </div>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
   panel: {
     width: '100%',
@@ -89,4 +88,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnText: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
-});
+};

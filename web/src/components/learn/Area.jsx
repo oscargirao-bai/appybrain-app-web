@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Pressable, View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import Icon from '@react-native-vector-icons/lucide';
@@ -37,7 +37,7 @@ export default function DisciplineCircle({
 
   const handlePressIn = () => Animated.timing(scale, { toValue: 1, duration: 110, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
   const handlePressOut = () => Animated.timing(scale, { toValue: 0, duration: 150, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-  const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] });
+  const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] };
 
   // Use API colors
   const circleBackgroundColor = color ? addAlpha(color, 0.2) : colors.card;
@@ -45,18 +45,13 @@ export default function DisciplineCircle({
   const finalIconColor = iconColor || colors.text;
 
   return (
-    <Animated.View style={[styles.container, style]}>
+    <Animated.View style={{...styles.container, ...style}}>
 
         {/* Icon and title in the same row */}
-        <View style={styles.contentRow}>
+        <div style={styles.contentRow}>
           {/* Circular icon container */}
-          <View style={[
-            styles.circle, 
-            { 
-              backgroundColor: circleColor,
-              borderColor: circleBackgroundColor,
-            }
-          ]}>
+          <div style={{...styles.circle, ...{ 
+              backgroundColor: circleColor}}>
             {svgIcon ? (
               <SvgIcon 
                 svgString={svgIcon} 
@@ -70,13 +65,13 @@ export default function DisciplineCircle({
                 color={finalIconColor} 
               />
             )}
-          </View>
+          </div>
 
           {/* Title next to icon */}
-          <Text style={[styles.title, { color: colors.text }]}>
+          <span style={{...styles.title, ...{ color: colors.text }}}>
             {title}
-          </Text>
-        </View>
+          </span>
+        </div>
     </Animated.View>
   );
 }
@@ -88,7 +83,7 @@ function addAlpha(hexOrRgba, alpha) {
       const parts = inner.split(',').map(p => p.trim());
       const [r,g,b] = parts;
       return `rgba(${r},${g},${b},${alpha})`;
-    });
+    };
   }
   let h = hexOrRgba.replace('#','');
   if (h.length === 3) h = h.split('').map(c => c+c).join('');
@@ -97,7 +92,7 @@ function addAlpha(hexOrRgba, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -127,4 +122,4 @@ const styles = StyleSheet.create({
     lineHeight: 22, // Adjusted line height
     flex: 1,
   },
-});
+};

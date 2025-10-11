@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -20,58 +20,58 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	const showTrophies = trophies !== undefined;
 
 	const metrics = [];
-	if (showStars) metrics.push({ key: 'stars' });
-	if (showTrophies) metrics.push({ key: 'trophies' });
+	if (showStars) metrics.push({ key: 'stars' };
+	if (showTrophies) metrics.push({ key: 'trophies' };
 	if (showCoins) metrics.push({ key: 'coins' }); // Coins always last (rightmost)
 	return (
-		<View style={styles.container}>
-			<View style={styles.row}>
-				<View style={styles.leftBlock}>
-					<Text style={styles.username}>{username}</Text>
-					<Text style={styles.tribe}>{tribe}</Text>
-				</View>
+		<div style={styles.container}>
+			<div style={styles.row}>
+				<div style={styles.leftBlock}>
+					<span style={styles.username}>{username}</span>
+					<span style={styles.tribe}>{tribe}</span>
+				</div>
 				{metrics.length > 0 && (
-					<View style={styles.metricsColumn}>
-						<View style={styles.metricsRow}>
+					<div style={styles.metricsColumn}>
+						<div style={styles.metricsRow}>
 							{metrics.map((m, idx) => {
 								const isLast = idx === metrics.length - 1;
 								if (m.key === 'stars') {
 									return (
-										<View key="stars" style={[styles.pillWrap, !isLast && styles.pillGap]} accessibilityLabel={`Estrelas: ${stars}`}>
-											<View style={styles.pill}>
+										<div key="stars" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Estrelas: ${stars}`}>
+											<div style={styles.pill}>
 												<Icon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
-												<Text style={styles.pillText}>{stars}</Text>
-											</View>
-										</View>
+												<span style={styles.pillText}>{stars}</span>
+											</div>
+										</div>
 									);
 								}
 								if (m.key === 'coins') {
 									return (
-										<View key="coins" style={[styles.pillWrap, !isLast && styles.pillGap]} accessibilityLabel={`Moedas: ${coins}`}>
-											<View style={styles.pill}>
+										<div key="coins" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Moedas: ${coins}`}>
+											<div style={styles.pill}>
 												<Icon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
-												<Text style={styles.pillText}>{coins}</Text>
-											</View>
-										</View>
+												<span style={styles.pillText}>{coins}</span>
+											</div>
+										</div>
 									);
 								}
 								if (m.key === 'trophies') {
 									return (
-										<View key="trophies" style={[styles.pillWrap, !isLast && styles.pillGap]} accessibilityLabel={`Troféus: ${trophies}`}>
-											<View style={styles.pill}>
+										<div key="trophies" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Troféus: ${trophies}`}>
+											<div style={styles.pill}>
 												<Icon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
-												<Text style={styles.pillText}>{trophies}</Text>
-											</View>
-										</View>
+												<span style={styles.pillText}>{trophies}</span>
+											</div>
+										</div>
 									);
 								}
 								return null;
 							})}
-						</View>
-					</View>
+						</div>
+					</div>
 				)}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
@@ -141,5 +141,5 @@ const createStyles = (colors) => StyleSheet.create({
 		fontFamily: family.regular,
 		color: colors.text + 'AA',
 	},
-});
+};
 

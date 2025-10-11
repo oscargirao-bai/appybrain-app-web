@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -8,8 +8,7 @@ export default function PrimaryButton({ title, onPress, disabled, loading = fals
   const isDisabled = disabled || loading;
   
   return (
-    <Pressable
-      onPress={onPress}
+    <button       onClick={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
         styles.base,
@@ -18,25 +17,25 @@ export default function PrimaryButton({ title, onPress, disabled, loading = fals
           opacity: pressed && !isDisabled ? 0.85 : 1,
         },
       ]}
-      accessibilityRole="button"
+      
     >
-      <View style={styles.content}>
+      <div style={styles.content}>
         {loading && (
-          <ActivityIndicator 
+          <div 
             size="small" 
             color="#101010" 
             style={styles.loader}
           />
         )}
-        <Text style={[styles.label, { color: '#101010', opacity: loading ? 0.7 : 1 }]}>
+        <span style={{...styles.label, ...{ color: '#101010'}}>
           {loading ? (title + '...') : title}
-        </Text>
-      </View>
-    </Pressable>
+        </span>
+      </div>
+    </button>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   base: {
     width: '100%',
     borderRadius: 28,
@@ -58,4 +57,4 @@ const styles = StyleSheet.create({
     fontFamily: family.semibold,
     letterSpacing: 0.5,
   },
-});
+};

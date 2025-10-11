@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import Header from '../../components/General/Header';
@@ -31,47 +31,45 @@ export default function NewScreen() {
 		return unsubscribe;
 	}, []);
 	return (
-		<View style={[styles.container, { backgroundColor: colors.background }]}> 
+		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}> 
 			<Header 
 				title="Noticias" 
 				right={(
-					<View style={{ position: 'relative' }}>
-						<TouchableOpacity
-							accessibilityRole="button"
-							accessibilityLabel="Notificações"
-							onPress={() => setNotificationsOpen(true)}
+					<div style={{ position: 'relative' }}>
+						<button 							
+							aria-label="Notificações"
+							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
 							<Icon name="bell" size={22} color={colors.text} />
-						</TouchableOpacity>
+						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
-					</View>
+					</div>
 				)}
 				extraRight={(
-					<TouchableOpacity
-						accessibilityRole="button"
-						accessibilityLabel="Abrir definições"
-						onPress={() => navigation.navigate('Settings')}
+					<button 						
+						aria-label="Abrir definições"
+						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
 						<Icon name="settings" size={22} color={colors.text} />
-					</TouchableOpacity>
+					</button>
 				)}
 			/>
-			<View style={[styles.body, { backgroundColor: colors.background }]}> 
+			<div style={{...styles.body, ...{ backgroundColor: colors.background }}}> 
 				<NewsList />
-			</View>
+			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: { flex: 1 },
 	body: { flex: 1, paddingHorizontal: 0, paddingTop: 20 },
 	title: { fontSize: 22, fontWeight: '800', marginBottom: 8 },
 	subtitle: { fontSize: 16, fontWeight: '500' },
-});
+};
 

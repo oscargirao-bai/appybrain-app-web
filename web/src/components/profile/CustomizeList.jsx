@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, useWindowDimensions, Animated, Pressable, Image } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -31,7 +31,7 @@ function addAlpha(hex, alpha) {
 
 export default function CustomizeList({ data = [], numColumns = 3, style, scrollEnabled = true, userCoins = 0, onPurchase, onSelect, selectedIds = {}, bottomPadding = 200 }) {
 	const colors = useThemeColors();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	
 	// Create dynamic styles based on theme colors
 	const styles = useMemo(() => createStyles(colors), [colors]);
@@ -78,39 +78,37 @@ export default function CustomizeList({ data = [], numColumns = 3, style, scroll
 		const glowBase = rarityColor;
 		
 		return (
-			<View style={[styles.cardWrap, { width: itemSize, height: itemSize + 36 }]}> 
-				<Pressable
-					style={[styles.card, { width: itemSize, height: itemSize, borderColor: rarityColor, ...(chosen ? { shadowColor: rarityColor, shadowOpacity: 0.25, shadowRadius: 8 } : null) }]}
-					onPress={() => {
+			<div style={{...styles.cardWrap, ...{ width: itemSize}}> 
+				<button 					style={{...styles.card, ...{ width: itemSize}}
+					onClick={() => {
 						if (onSelect && owned) onSelect(item);
-						else if (!owned && onPurchase) onPurchase({ ...item, price });
+						else if (!owned && onPurchase) onPurchase({ ...item, price };
 					}}
 					android_ripple={{ color: rarityColor + '33' }}
 				>
 					{item.imageUrl ? (
-						<Image 
+						<img 
 							source={{ uri: item.imageUrl }} 
 							style={styles.itemImage}
-							resizeMode="contain"
+							style={{objectFit: "contain"}}
 						/>
 					) : (
-						<Text style={styles.placeholder}>{item.name?.[0] || '?'}</Text>
+						<span style={styles.placeholder}>{item.name?.[0] || '?'}</span>
 					)}
 					{chosen && (
-						<View style={styles.pricePillWrap}>
-							<View style={[styles.pricePill, { backgroundColor: rarityColor }]}>
-								<Text style={[styles.priceText, { color: colors.background, fontWeight: '800' }]}>Escolhido</Text>
-							</View>
-						</View>
+						<div style={styles.pricePillWrap}>
+							<div style={{...styles.pricePill, ...{ backgroundColor: rarityColor }}}>
+								<span style={{...styles.priceText, ...{ color: colors.background}}>Escolhido</span>
+							</div>
+						</div>
 					)}
-				</Pressable>
-			</View>
+				</button>
+			</div>
 		);
 	};
 
 	return (
-		<FlatList
-			key={`cols-${numColumns}`}
+		<div 			key={`cols-${numColumns}`}
 			data={data}
 			keyExtractor={item => item.id}
 			numColumns={numColumns}
@@ -176,6 +174,6 @@ function createStyles(colors) {
 			shadowOffset: { width: 0, height: 0 },
 		},
 		priceText: { fontSize: 14, fontFamily: family.bold },
-	});
+	};
 }
 

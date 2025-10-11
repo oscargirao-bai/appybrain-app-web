@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, Animated, Easing } from 'react-native';
+import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
@@ -135,13 +135,13 @@ export default function Chest({ stars = 0, target = 10, size = 64, progress, sty
 	}, [isFull, glowDriver]);
 
 	// Derived animated values
-	const chestScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.08] });
-	const glowScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] });
-	const glowOpacity = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0.9] });
+	const chestScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.08] };
+	const glowScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] };
+	const glowOpacity = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0.9] };
 
 	return (
-		<View style={[styles.container, style]}>
-			<View style={styles.svgWrapper}>
+		<div style={{...styles.container, ...style}}>
+			<div style={styles.svgWrapper}>
 				<Svg width={size} height={size} style={styles.svg}>
 					<Defs>
 						<LinearGradient id="chestProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -193,10 +193,10 @@ export default function Chest({ stars = 0, target = 10, size = 64, progress, sty
 				<AnimatedImage
 					source={chestImage}
 					style={[styles.chestImage, { width: size * 0.58, height: size * 0.58, transform: [{ scale: chestScale }] }]}
-					resizeMode="contain"
+					style={{objectFit: "contain"}}
 				/>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
@@ -223,5 +223,5 @@ function createStyles({ size, colors, ringThickness }) {
 			borderRadius: (size * 0.9) / 2,
 			zIndex: 0,
 		},
-	});
+	};
 }

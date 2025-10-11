@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable, ImageBackground, Animated } from 'react-native';
+import {ImageBackground} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import { useNavigation } from '@react-navigation/native';
@@ -81,7 +81,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 							opacity: new Animated.Value(shouldAnimateItem ? 0 : 1)
 						};
 					}
-				});
+				};
 				
 				setNewsAnimations(animations);
 				
@@ -109,7 +109,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 								}, animationDelay);
 								animationDelay += 100; // 100ms delay between each item
 							}
-						});
+						};
 					}, 50); // Small delay before starting animations
 				}
 			}
@@ -134,7 +134,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 
 	const openNews = (item) => {
 		if (typeof onPressItem === 'function') return onPressItem(item);
-		navigation.navigate('Html', { title: item.title || 'News', newsId: item.id });
+		navigation.navigate('Html', { title: item.title || 'News', newsId: item.id };
 	};
 
 	const renderItem = ({ item, index }) => {
@@ -154,46 +154,44 @@ export default function NewsList({ style, limit, onPressItem }) {
 					}
 				]}
 			> 
-				<Pressable
-					accessibilityRole="button"
-					accessibilityLabel={`Abrir notícia ${item.title}`}
-					onPress={() => openNews(item)}
+				<button 					
+					aria-label={`Abrir notícia ${item.title}`}
+					onClick={() => openNews(item)}
 					style={{ flex: 1 }}
 				>
 					<ImageBackground
 						source={{ uri: item.imageUrl }}
 						style={styles.image}
 						imageStyle={styles.imageRadius}
-						resizeMode="cover"
+						style={{objectFit: "cover"}}
 					>
-						<View style={[styles.overlay, { backgroundColor: '#00000055' }]} />
-						<View style={styles.cardContent}> 
-							<Text style={[styles.cardTitle, { color: '#fff' }]} numberOfLines={2}>{item.title}</Text>
-							<Text style={[styles.cardBody, { color: '#fff' }]} numberOfLines={2}>{item.description}</Text>
-							<Text style={[styles.cardDate, { color: '#ffffffdd' }]}>{item.publishedDate}</Text>
-						</View>
+						<div style={{...styles.overlay, ...{ backgroundColor: '#00000055' }}} />
+						<div style={styles.cardContent}> 
+							<span style={{...styles.cardTitle, ...{ color: '#fff' }}} numberOfLines={2}>{item.title}</span>
+							<span style={{...styles.cardBody, ...{ color: '#fff' }}} numberOfLines={2}>{item.description}</span>
+							<span style={{...styles.cardDate, ...{ color: '#ffffffdd' }}}>{item.publishedDate}</span>
+						</div>
 					</ImageBackground>
-				</Pressable>
+				</button>
 			</Animated.View>
 		);
 	};
 
 	const data = Array.isArray(news) ? (limit ? news.slice(0, limit) : news) : [];
 	return (
-		<View style={[styles.listContainer, style]}>
-			<FlatList
-				data={data}
+		<div style={{...styles.listContainer, ...style}}>
+			<div 				data={data}
 				keyExtractor={item => item.id.toString()}
 				renderItem={renderItem}
-				ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
+				ItemSeparatorComponent={() => <div style={{ height: 14 }} />}
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 0 }}
 			/>
-		</View>
+		</div>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	listContainer: { width: '100%' },
 	headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
 	title: { fontSize: 18, fontFamily: family.bold },
@@ -205,4 +203,4 @@ const styles = StyleSheet.create({
 	cardTitle: { fontSize: 15, fontFamily: family.bold, marginBottom: 4 },
 	cardBody: { fontSize: 13, fontFamily: family.medium, lineHeight: 18, marginBottom: 6 },
 	cardDate: { fontSize: 11, fontFamily: family.semibold, marginTop: 8, marginBottom: 4 },
-});
+};

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, ScrollView, Pressable, Animated } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../General/SvgIcon';
 import { family } from '../../constants/font';
@@ -12,7 +12,7 @@ export default function TribesHeader({
   onSelect 
 }) {
   const colors = useThemeColors();
-  const { width } = useWindowDimensions();
+  const width = window.innerWidth; const height = window.innerHeight;
   const horizontalPadding = width >= 768 ? 28 : 16;
 
   // Sort tribes: user's tribe first, then others
@@ -40,9 +40,9 @@ export default function TribesHeader({
   }, [sortedTribes, active, isInTribe, userTribe]);
 
   // Removed indicator logic; keeping simple scale highlight only
-  const layouts = useRef({});
+  const layouts = useRef({};
 
-  const scaleMap = useRef({});
+  const scaleMap = useRef({};
 
   // Initialize scales for all tribes
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function TribesHeader({
       if (!scaleMap.current[t.id]) {
         scaleMap.current[t.id] = new Animated.Value(t.id === active ? 1 : 0.94);
       }
-    });
+    };
   }, [sortedTribes, active]);
 
   // Update animations when active tribe changes
@@ -67,7 +67,7 @@ export default function TribesHeader({
           mass: 0.6 
         }).start();
       }
-    });
+    };
   }, [active, sortedTribes]);
 
   const handlePress = useCallback((tribe) => {
@@ -76,9 +76,8 @@ export default function TribesHeader({
   }, [onSelect]);
 
   return (
-    <View style={[styles.container, { paddingHorizontal: horizontalPadding }]}>      
-      <ScrollView
-        horizontal
+    <div style={{...styles.container, ...{ paddingHorizontal: horizontalPadding }}}>      
+      <div         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
@@ -92,19 +91,10 @@ export default function TribesHeader({
           const tribeIconColor = t.iconColor || colors.text;
           
           return (
-            <View key={t.id} style={[
-              styles.tribeWrapper,
-              // Add container glow for even more visibility
+            <div key={t.id} style={{...styles.tribeWrapper, ...// Add container glow for even more visibility
               isActive ? {
-                shadowColor: tribeColor,
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.3,
-                shadowRadius: 12,
-                elevation: 5,
-              } : {}
-            ]}>
-              <Pressable
-                onPress={() => handlePress(t)}
+                shadowColor: tribeColor}}>
+              <button                 onClick={() => handlePress(t)}
                 onLayout={(e) => {
                   const { x, width: w, height: h } = e.nativeEvent.layout;
                   layouts.current[t.id] = { x, w, h };
@@ -125,9 +115,9 @@ export default function TribesHeader({
                   },
                   pressed && { opacity: 0.6 }
                 ]}
-                accessibilityRole="button"
+                
                 accessibilityState={{ selected: isActive }}
-                accessibilityLabel={`Abrir tribo ${t.name}`}
+                aria-label={`Abrir tribo ${t.name}`}
               >
                 <Animated.View style={[styles.symbolContainer, { transform: [{ scale }] }]}>
                   {t.icon && t.icon.includes('<svg') ? (
@@ -137,24 +127,24 @@ export default function TribesHeader({
                       color={tribeIconColor} 
                     />
                   ) : (
-                    <Animated.Text style={[styles.symbol, { color: tribeIconColor }]}>
+                    <Animated.Text style={{...styles.symbol, ...{ color: tribeIconColor }}}>
                       {t.icon || '◇'}
                     </Animated.Text>
                   )}
                 </Animated.View>
-              </Pressable>
-              <Text style={[styles.tribeLabel, { color: colors.text, fontWeight: isActive ? '800' : '700' }]} numberOfLines={1}>
+              </button>
+              <span style={{...styles.tribeLabel, ...{ color: colors.text}} numberOfLines={1}>
                 {t.name}
-              </Text>
-            </View>
+              </span>
+            </div>
           );
         })}
-      </ScrollView>
-    </View>
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     paddingTop: 4,
     paddingBottom: 10,
@@ -194,5 +184,5 @@ const styles = StyleSheet.create({
   },
   tribeLabel: { marginTop: 6, fontSize: 12, fontStyle: 'italic', fontFamily: family.bold }
   // indicator removed
-});
+};
 

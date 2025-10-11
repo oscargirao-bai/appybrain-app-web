@@ -211,7 +211,7 @@ class ApiManager {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password })
-            });
+            };
 
             const data = await response.json();
 
@@ -266,7 +266,7 @@ class ApiManager {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email })
-            });
+            };
 
             const data = await response.json();
 
@@ -293,7 +293,7 @@ class ApiManager {
                     newPassword,
                     confirmPassword
                 })
-            });
+            };
 
             // Return the response data
             return {
@@ -315,7 +315,7 @@ class ApiManager {
                 try {
                     await this.makeAuthenticatedRequest('api/auth/logout', {
                         method: 'POST'
-                    });
+                    };
                 } catch (error) {
                     // Ignore logout API errors, still clear local session
                     console.warn('Logout API call failed:', error);
@@ -351,7 +351,7 @@ class ApiManager {
                         'Content-Type': 'application/json',
                         ...(options.headers || {})
                     }
-                });
+                };
 
                 // Update tokens if rotation headers are present
                 await this.updateRotatedTokens(response.headers);
@@ -378,7 +378,7 @@ class ApiManager {
                 }
                 throw error;
             }
-        });
+        };
     }
 
     // Convenience method for JSON responses
@@ -414,7 +414,7 @@ class ApiManager {
                 dm.setUserConfig({
                     randomPosition: response.user.randomPosition,
                     fullAccess: response.user.fullAccess
-                });
+                };
             }
 
             return true;
@@ -458,55 +458,55 @@ class ApiManager {
             const userInfo = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges').catch(err => {
                 console.warn('Failed to load user info:', err);
                 return null;
-            });
+            };
 
             // Make request to disciplines endpoint
             const disciplines = await this.makeAuthenticatedJSONRequest('api/app/learn_content_list').catch(err => {
                 console.warn('Failed to load disciplines:', err);
                 return null;
-            });
+            };
 
             // Make request to user stars endpoint
             const userStars = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_stars').catch(err => {
                 console.warn('Failed to load user stars:', err);
                 return null;
-            });
+            };
 
             // Make request to tribes list endpoint
             const tribes = await this.makeAuthenticatedJSONRequest('api/app/tribes_list').catch(err => {
                 console.warn('Failed to load tribes:', err);
                 return null;
-            });
+            };
 
             // Make request to user chests endpoint
             const userChests = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_chests').catch(err => {
                 console.warn('Failed to load user chests:', err);
                 return null;
-            });
+            };
 
             // Make request to notifications endpoint
             const notifications = await this.makeAuthenticatedJSONRequest('api/app/user_notifications').catch(err => {
                 console.warn('Failed to load notifications:', err);
                 return null;
-            });
+            };
 
             // Make request to news endpoint
             const news = await this.makeAuthenticatedJSONRequest('api/app/information_news').catch(err => {
                 console.warn('Failed to load news:', err);
                 return null;
-            });
+            };
 
             // Make request to rankings endpoint
             const rankings = await this.makeAuthenticatedJSONRequest('api/app/ranking').catch(err => {
                 console.warn('Failed to load rankings:', err);
                 return null;
-            });
+            };
 
             // Make request to challenges endpoint
             const challenges = await this.makeAuthenticatedJSONRequest('api/app/challenges_list').catch(err => {
                 console.warn('Failed to load challenges:', err);
                 return null;
-            });
+            };
 
             // Return consolidated data object
             return {
@@ -541,7 +541,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/organization/tribe_members', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -557,7 +557,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_join', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -571,7 +571,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_leave', {
                 method: 'POST'
-            });
+            };
 
             return response;
         } catch (error) {
@@ -613,7 +613,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/user_notification_read', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -628,7 +628,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/ranking', {
                 method: 'POST',
                 body: JSON.stringify({ type })
-            });
+            };
 
             // Return the full response including ranking array and metadata
             return response || { success: false, ranking: [] };
@@ -645,7 +645,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -695,7 +695,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_questions', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -718,7 +718,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/answer_result', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -733,7 +733,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_buy', {
                 method: 'POST',
                 body: JSON.stringify({ cosmeticId })
-            });
+            };
 
             return response;
         } catch (error) {
@@ -752,7 +752,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/nickname_update', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -767,7 +767,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/learn_content_full', {
                 method: 'POST',
                 body: JSON.stringify({ id: contentId })
-            });
+            };
 
             // Return the content data
             return response;
@@ -796,7 +796,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenges_start', {
                 method: 'POST',
                 body: JSON.stringify({ challengeId })
-            });
+            };
 
             return response;
         } catch (error) {
@@ -810,7 +810,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/information_news', {
                 method: 'POST',
                 body: JSON.stringify({ id: newsId })
-            });
+            };
 
             // Return the news array from the response
             return response?.news || [];
@@ -840,7 +840,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_start', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -860,7 +860,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_answer', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -876,7 +876,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_complete', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -891,7 +891,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_use', {
                 method: 'POST',
                 body: JSON.stringify({ cosmeticId })
-            });
+            };
 
             return response;
         } catch (error) {
@@ -906,7 +906,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/open_chest', {
                 method: 'POST',
                 body: JSON.stringify({ chestId })
-            });
+            };
 
             return response;
         } catch (error) {
@@ -926,7 +926,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_quit', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            });
+            };
 
             return response;
         } catch (error) {
@@ -940,7 +940,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/battle_list', {
                 method: 'POST'
-            });
+            };
 
             return response;
         } catch (error) {
@@ -955,7 +955,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/battle_result', {
                 method: 'POST',
                 body: JSON.stringify({ battleSessionId })
-            });
+            };
 
             return response;
         } catch (error) {
@@ -970,7 +970,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedRequest('api/app/error_report', {
                 method: 'POST',
                 body: JSON.stringify({ quizId })
-            });
+            };
             
             // Return success object without trying to parse
             return response;

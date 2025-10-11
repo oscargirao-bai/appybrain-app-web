@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -32,29 +32,28 @@ export default function PrivacyModal({ visible, onClose }) {
 			onRequestClose={onClose}
 			transparent
 		>
-			<View style={[styles.backdrop]}> 
-				<View style={[styles.sheet, { backgroundColor: colors.card || colors.background, borderColor: colors.text + '20' }]}> 
-					<View style={styles.header}> 
-						<Text style={[styles.title, { color: colors.text }]}>Política de Privacidade</Text>
-					</View>
-					<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-						<Text style={[styles.body, { color: colors.text }]}>{PRIVACY_TEXT}</Text>
-						<Pressable
-							style={({ pressed }) => [styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, pressed && { opacity: 0.85 }]}
-							onPress={onClose}
-							accessibilityRole="button"
-							accessibilityLabel="Fechar política de privacidade"
+			<div style={styles.backdrop}> 
+				<div style={{...styles.sheet, ...{ backgroundColor: colors.card || colors.background}}> 
+					<div style={styles.header}> 
+						<span style={{...styles.title, ...{ color: colors.text }}}>Política de Privacidade</span>
+					</div>
+					<div showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+						<span style={{...styles.body, ...{ color: colors.text }}}>{PRIVACY_TEXT}</span>
+						<button 							style={({ pressed }) => [styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, pressed && { opacity: 0.85 }]}
+							onClick={onClose}
+							
+							aria-label="Fechar política de privacidade"
 						>
-							<Text style={[styles.closeLabel, { color: colors.text }]}>Fechar</Text>
-						</Pressable>
-					</ScrollView>
-				</View>
-			</View>
+							<span style={{...styles.closeLabel, ...{ color: colors.text }}}>Fechar</span>
+						</button>
+					</div>
+				</div>
+			</div>
 		</Modal>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	backdrop: { flex: 1, justifyContent: 'flex-end' },
 	sheet: {
 		maxHeight: '100%',
@@ -71,4 +70,4 @@ const styles = StyleSheet.create({
 	body: { fontSize: 14, lineHeight: 20, fontWeight: '500', fontFamily: family.medium, whiteSpace: 'pre-wrap' },
 	closeBtn: { marginTop: 28, borderWidth: 1, borderRadius: 18, paddingVertical: 12, alignItems: 'center' },
 	closeLabel: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
-});
+};

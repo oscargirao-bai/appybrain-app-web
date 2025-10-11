@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, FlatList, Animated } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import MathJaxRenderer from '../General/MathJaxRenderer';
@@ -28,17 +28,16 @@ export default function Answer({ options = [], selectedId, onSelect, optionHeigh
 			item={item}
 			optionHeight={optionHeight}
 			colors={colors}
-						onPress={() => onSelect && onSelect(item.id)}
+						onClick={() => onSelect && onSelect(item.id)}
 						evalOutcome={evalOutcome}
 		/>
 	);
 
 	return (
-	    <FlatList
-		    data={options}
+	    <div 		    data={options}
 		    keyExtractor={(it) => (resetKey ? `${resetKey}:${it.id}` : it.id)}
 			renderItem={renderItem}
-			ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+			ItemSeparatorComponent={() => <div style={{ height: 10 }} />}
 			contentContainerStyle={{ paddingTop: 14 }}
 			scrollEnabled={false}
 		    extraData={resetKey}
@@ -46,7 +45,7 @@ export default function Answer({ options = [], selectedId, onSelect, optionHeigh
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	row: {
 		flexDirection: 'row',
 		borderWidth: 2,
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	badgeText: { fontSize: 16, fontWeight: '800', fontFamily: family.bold },
-});
+};
 
 function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 	const fade = useRef(new Animated.Value(0)).current;
@@ -102,8 +101,7 @@ function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 	const borderColor = statusRef.current === 'correct' ? SUCCESS : statusRef.current === 'wrong' ? DANGER : colors.border;
 
 	return (
-		<Pressable
-			onPress={trigger}
+		<button 			onClick={trigger}
 			style={({ pressed }) => [
 				styles.row,
 				{ borderColor, backgroundColor: bgColor, height: optionHeight },
@@ -112,9 +110,9 @@ function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 		>
 			<Animated.View
 				pointerEvents="none"
-				style={[StyleSheet.absoluteFill, { backgroundColor: colors.primary + '33', opacity: fade, borderRadius: 14 }]}
+				style={{...StyleSheet.absoluteFill, ...{ backgroundColor: colors.primary + '33'}}
 			/>
-			<View style={{ flex: 1, height: '100%', justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 12 }}>
+			<div style={{ flex: 1, height: '100%', justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 12 }}>
 				{item.html ? (
 					<MathJaxRenderer 
 						content={item.html} 
@@ -127,10 +125,10 @@ function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 						style={{ flex: 1, minHeight: 28, width: '100%' }} 
 					/>
 				) : (
-					<Text style={{ color: colors.text, fontSize: 12, fontFamily: family.regular, textAlign: 'left' }} numberOfLines={2} ellipsizeMode="tail" selectable={false}>{item.text}</Text>
+					<span style={{ color: colors.text, fontSize: 12, fontFamily: family.regular, textAlign: 'left' }} numberOfLines={2} ellipsizeMode="tail" selectable={false}>{item.text}</span>
 				)}
-			</View>
-		</Pressable>
+			</div>
+		</button>
 	);
 }
 

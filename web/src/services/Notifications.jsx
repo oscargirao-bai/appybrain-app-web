@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
-import { AppState, Platform } from 'react-native';
+
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import ApiManager from './ApiManager';
@@ -24,7 +24,7 @@ Notifications.setNotificationHandler({
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
-});
+};
 
 function getProjectId() {
   const pid = Constants?.easConfig?.projectId || Constants?.expoConfig?.extra?.eas?.projectId;
@@ -40,7 +40,7 @@ async function ensureAndroidChannel() {
       sound: 'default',
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
-    });
+    };
   }
 }
 
@@ -54,7 +54,7 @@ async function askPermissions() {
 
 async function getExpoPushToken() {
   const projectId = getProjectId();
-  const { data } = await Notifications.getExpoPushTokenAsync({ projectId });
+  const { data } = await Notifications.getExpoPushTokenAsync({ projectId };
   if (!data) throw new Error('Failed to obtain Expo Push Token.');
   return data; // ExponentPushToken[...]
 }
@@ -91,7 +91,7 @@ async function registerTokenOnBackend(expoPushToken, nativeType, nativeToken) {
       deviceInfo,
       isActive: 1,
     }),
-  });
+  };
 
   if (resp && resp.success === false) {
     const msg = resp?.message || resp?.error || 'register_token failed';
@@ -136,7 +136,7 @@ export function PushNotificationsRegistrar() {
       console.warn(`[Push] Registration error (attempt ${retryCountRef.current}):`, e?.message || String(e));
       if (retryCountRef.current < 3) {
         setTimeout(() => {
-          attemptRegister().catch(() => {});
+          attemptRegister().catch(() => {};
         }, 2000 * retryCountRef.current);
       } else {
         console.warn('[Push] Max retries reached; will retry on next foreground if authenticated');
@@ -159,7 +159,7 @@ export function PushNotificationsRegistrar() {
           attemptRegister();
         }
       }
-    });
+    };
     return () => sub.remove();
   }, [attemptRegister]);
 
@@ -183,25 +183,25 @@ export function executeNotificationNavigation({ sourceType, sourceId, data }) {
   switch (sourceType) {
     case 'broadcast':
       // Open Learn tab and show notifications modal
-      navigate('MainTabs', { screen: 'Learn', params: { openNotifications: true, timestamp: Date.now() } });
+      navigate('MainTabs', { screen: 'Learn', params: { openNotifications: true, timestamp: Date.now() } };
       break;
     case 'battles':
     case 'battle':
       // Open battle result screen
-      navigate('Result2', { battleSessionId: sourceId });
+      navigate('Result2', { battleSessionId: sourceId };
       break;
     case 'challenges':
       // Open Challenges tab
-      navigate('MainTabs', { screen: 'Challenges', params: { timestamp: Date.now() } });
+      navigate('MainTabs', { screen: 'Challenges', params: { timestamp: Date.now() } };
       break;
     case 'news':
       // Open Html screen with newsId
-      navigate('Html', { newsId: Number(sourceId) || sourceId });
+      navigate('Html', { newsId: Number(sourceId) || sourceId };
       break;
     case 'badges':
     case 'badge':
       // Open Profile and show badge modal for the given ID
-      navigate('Profile', { openBadgeModal: sourceId, timestamp: Date.now() });
+      navigate('Profile', { openBadgeModal: sourceId, timestamp: Date.now() };
       break;
     default:
       console.log('[Push][Router] Unknown sourceType, no navigation performed');
@@ -247,7 +247,7 @@ export function PushNotificationsLogger() {
           const dm = getDataManager();
           dm.markNotificationAsRead(notificationId).catch(error => {
             console.warn('[Push][Router] Failed to mark notification as read:', error);
-          });
+          };
         } catch (error) {
           console.warn('[Push][Router] Failed to get DataManager:', error);
         }
@@ -279,7 +279,7 @@ export function PushNotificationsLogger() {
       navigationRef.current?.reset({
         index: 0,
         routes: [{ name: 'Loading' }],
-      });
+      };
     }
 
     function executeNavigation(navigationInfo) {

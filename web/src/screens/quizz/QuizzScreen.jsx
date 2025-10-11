@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import apiManagerInstance from '../../services/ApiManager';
@@ -73,7 +73,7 @@ export default function QuizzScreen() {
 					difficulty: apiQ.difficulty, // Preserve difficulty for help system
 					explanation, // Pass explanation for SolutionModal (supports HTML/LaTeX)
 				};
-			});
+			};
 		};
 
 		const [questions, setQuestions] = useState([]);
@@ -152,7 +152,7 @@ export default function QuizzScreen() {
 
 		const submitAnswerResult = async (answerType) => {
 			if (!sessionId || !current?.quizId || questionStartTimeRef.current === null) {
-				console.warn('Missing data for answer submission:', { sessionId, quizId: current?.quizId, startTime: questionStartTimeRef.current });
+				console.warn('Missing data for answer submission:', { sessionId, quizId: current?.quizId, startTime: questionStartTimeRef.current };
 				return null;
 			}
 
@@ -179,7 +179,7 @@ export default function QuizzScreen() {
 						correctValue = -1; // Default to incorrect
 				}
 				
-				//console.log('Submitting answer result:', { answerType, correctValue, timeMs });
+				//console.log('Submitting answer result:', { answerType, correctValue, timeMs };
 				
 				// Only submit helpId if it was used for this specific question
 				const helpIdToSubmit = usedHelpId && usedHelpId !== 3 ? usedHelpId : null;
@@ -349,42 +349,42 @@ export default function QuizzScreen() {
 		// Show loading state
 		if (loading) {
 			return (
-				<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-					<View style={styles.loadingContainer}>
-						<ActivityIndicator size="large" color={colors.primary} />
-						<Text style={[styles.loadingText, { color: colors.text }]}>
+				<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
+					<div style={styles.loadingContainer}>
+						<div size="large" color={colors.primary} />
+						<span style={{...styles.loadingText, ...{ color: colors.text }}}>
 							A carregar perguntas...
-						</Text>
-					</View>
-				</SafeAreaView>
+						</span>
+					</div>
+				</div>
 			);
 		}
 
 		// Show error state
 		if (error && questions.length === 0) {
 			return (
-				<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-					<View style={styles.loadingContainer}>
-						<Text style={[styles.errorText, { color: colors.textSecondary }]}>
+				<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
+					<div style={styles.loadingContainer}>
+						<span style={{...styles.errorText, ...{ color: colors.textSecondary }}}>
 							Erro ao carregar perguntas
-						</Text>
-						<Text style={[styles.errorSubtext, { color: colors.textSecondary }]}>
+						</span>
+						<span style={{...styles.errorSubtext, ...{ color: colors.textSecondary }}}>
 							Verifica a tua ligação à internet
-						</Text>
-					</View>
-				</SafeAreaView>
+						</span>
+					</div>
+				</div>
 			);
 		}
 
 		return (
-			<SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
+			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
 				<QuizzHeader
 					title={title}
 					totalSec={currentMaxTime}
 					remainingSec={remaining}
 					onClose={() => setShowExitConfirm(true)}
 				/>
-							    <View style={styles.body}>
+							    <div style={styles.body}>
 							    <Question html={current?.html} />
 								{/* Battle helps appear only in battle mode, between question and answers */}
 								{isBattle && (
@@ -400,7 +400,7 @@ export default function QuizzScreen() {
 													setCurrentMaxTime(newTime);
 												}
 												return newTime;
-											});
+											};
 											setHelpUsed(true);
 											setUsedHelpId(2);
 											//console.log('Help 2 used: Added 30 seconds');
@@ -445,7 +445,7 @@ export default function QuizzScreen() {
 														const newQuestions = [...prevQuestions];
 														newQuestions[qIndex] = randomReplacement;
 														return newQuestions;
-													});
+													};
 													
 													// Remove the used replacement from available ones
 													setReplaceQuestions(prev => prev.filter(q => q.quizId !== randomReplacement.quizId));
@@ -480,7 +480,7 @@ export default function QuizzScreen() {
 										}}
 									/>
 								)}
-							<View style={styles.answersWrap}>
+							<div style={styles.answersWrap}>
 																<Answer
 																	options={(current?.options || []).filter(opt => !removedAnswerIds.includes(opt.id))}
 																	correctId={current?.correctId}
@@ -528,14 +528,13 @@ export default function QuizzScreen() {
 																	}}
 																/>
 								{(inputLockedRef.current || selectedAnswerId !== null || showSolution) && (
-									<View
-										style={styles.touchBlocker}
+									<div 										style={styles.touchBlocker}
 										pointerEvents="auto"
 										onStartShouldSetResponder={() => true}
 									/>
 								)}
-							</View>
-						</View>
+							</div>
+						</div>
 									<SolutionModal
 										visible={showSolution}
 										correctOption={modalCorrectOption}
@@ -623,11 +622,11 @@ export default function QuizzScreen() {
 								navigation.goBack();
 							}}
 						/>
-			</SafeAreaView>
+			</div>
 		);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	safe: { flex: 1 },
 	body: { flex: 1, paddingHorizontal: 16 },
 		answersWrap: { paddingBottom: 8, position: 'relative' },
@@ -659,5 +658,5 @@ const styles = StyleSheet.create({
 			fontSize: 14,
 			textAlign: 'center',
 		},
-});
+};
 

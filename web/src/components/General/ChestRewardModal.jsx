@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, Animated, Easing, Image } from 'react-native';
+import {Modal, Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
 import DataManager from '../../services/DataManager';
@@ -64,19 +64,19 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 		}
 	}, [visible, scale, opacity, glow, chestFloat]);
 
-	const glowOpacity = glow.interpolate({ inputRange: [0,1], outputRange: [0.35, 0.8] });
-	const glowScale = glow.interpolate({ inputRange: [0,1], outputRange: [1, 1.25] });
-	const chestTranslate = chestFloat.interpolate({ inputRange: [0,1], outputRange: [0, -12] });
+	const glowOpacity = glow.interpolate({ inputRange: [0,1], outputRange: [0.35, 0.8] };
+	const glowScale = glow.interpolate({ inputRange: [0,1], outputRange: [1, 1.25] };
+	const chestTranslate = chestFloat.interpolate({ inputRange: [0,1], outputRange: [0, -12] };
 
 	const RewardItem = ({ item, index }) => {
 		// Handle different reward types
 		if (item.type === 'coins') {
 			return (
-				<View style={[styles.rewardCard, { borderColor: colors.text + '22', backgroundColor: colors.card + '55' }]}> 
+				<div style={{...styles.rewardCard, ...{ borderColor: colors.text + '22'}}> 
 					<Icon name="coins" size={28} color={colors.secondary} />
-					<Text style={[styles.rewardAmount, { color: colors.text }]}>{item.amount}</Text>
-					<Text style={[styles.rewardLabel, { color: colors.text + 'AA' }]}>Coins</Text>
-				</View>
+					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>{item.amount}</span>
+					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Coins</span>
+				</div>
 			);
 		} else if (item.type === 'cosmetic') {
 			// Get cosmetic data for the icon
@@ -84,63 +84,62 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 			const imageUrl = cosmetic?.imageUrl || cosmetic?.previewUrl;
 			
 			return (
-				<View style={[styles.rewardCard, { borderColor: colors.text + '22', backgroundColor: colors.card + '55' }]}> 
+				<div style={{...styles.rewardCard, ...{ borderColor: colors.text + '22'}}> 
 					{imageUrl ? (
-						<Image 
+						<img 
 							source={{ uri: imageUrl }} 
 							style={styles.cosmeticIcon}
-							resizeMode="contain"
+							style={{objectFit: "contain"}}
 						/>
 					) : (
 						<Icon name="image" size={28} color={colors.secondary} />
 					)}
-					<Text style={[styles.rewardAmount, { color: colors.text }]}>+1</Text>
-					<Text style={[styles.rewardLabel, { color: colors.text + 'AA' }]}>Cosmético</Text>
-				</View>
+					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>+1</span>
+					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Cosmético</span>
+				</div>
 			);
 		} else {
 			// Default case (tips, etc.)
 			return (
-				<View style={[styles.rewardCard, { borderColor: colors.text + '22', backgroundColor: colors.card + '55' }]}> 
+				<div style={{...styles.rewardCard, ...{ borderColor: colors.text + '22'}}> 
 					<Icon name="lightbulb" size={28} color={colors.secondary} />
-					<Text style={[styles.rewardAmount, { color: colors.text }]}>{item.amount}</Text>
-					<Text style={[styles.rewardLabel, { color: colors.text + 'AA' }]}>Dicas</Text>
-				</View>
+					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>{item.amount}</span>
+					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Dicas</span>
+				</div>
 			);
 		}
 	};
 
 	return (
 		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-			<View style={[styles.backdrop, { backgroundColor: '#000000AA' }]}> 
-				<Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar recompensa" />
+			<div style={{...styles.backdrop, ...{ backgroundColor: '#000000AA' }}}> 
+				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar recompensa" />
 				<Animated.View style={[styles.panel, { backgroundColor: colors.background, borderColor: colors.text + '22', transform: [{ scale }], opacity }]}> 
-					<View style={{ alignItems: 'center', marginBottom: 14 }}>
-						<Text style={[styles.title, { color: colors.text }]}>Baú Aberto!</Text>
-						<Text style={[styles.subtitle, { color: colors.text + 'AA' }]}>Recebeste:</Text>
-					</View>
+					<div style={{ alignItems: 'center', marginBottom: 14 }}>
+						<span style={{...styles.title, ...{ color: colors.text }}}>Baú Aberto!</span>
+						<span style={{...styles.subtitle, ...{ color: colors.text + 'AA' }}}>Recebeste:</span>
+					</div>
 					<Animated.View style={{ marginBottom: 10, transform: [{ translateY: chestTranslate }] }}>
-						<Image source={chestOpenedImg} style={{ width: 150, height: 120 }} resizeMode="contain" />
+						<img source={chestOpenedImg} style={{ width: 150, height: 120 }} style={{objectFit: "contain"}} />
 					</Animated.View>
-					<View style={styles.rewardsRow}>
+					<div style={styles.rewardsRow}>
 						{rewards.map((r, i) => <RewardItem key={r.id} item={r} index={i} />)}
-					</View>
-					<Pressable
-						onPress={onClose}
+					</div>
+					<button 						onClick={onClose}
 						style={({ pressed }) => [styles.closeBtn, { backgroundColor: colors.primary + 'DD' }, pressed && { opacity: 0.85 }]}
-						accessibilityRole="button"
-						accessibilityLabel="Fechar"
+						
+						aria-label="Fechar"
 					>
-						<Text style={[styles.closeText, { color: colors.onPrimary || '#FFF' }]}>OK</Text>
-					</Pressable>
+						<span style={{...styles.closeText, ...{ color: colors.onPrimary || '#FFF' }}}>OK</span>
+					</button>
 					<Animated.View pointerEvents="none" style={[styles.glow, { backgroundColor: colors.secondary + '55', opacity: glowOpacity, transform: [{ scale: glowScale }] }]} />
 				</Animated.View>
-			</View>
+			</div>
 		</Modal>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 18 },
 	panel: { borderRadius: 28, padding: 24, borderWidth: 1, width: '100%', maxWidth: 460, alignItems: 'center', overflow: 'hidden' },
 	title: { fontSize: 22, fontFamily: family.bold, letterSpacing: 0.5 },
@@ -153,5 +152,5 @@ const styles = StyleSheet.create({
 	closeText: { fontSize: 15, fontFamily: family.bold, letterSpacing: 0.5 },
 	cosmeticIcon: { width: 32, height: 32 },
 	glow: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 28 },
-});
+};
 

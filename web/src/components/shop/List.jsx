@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, useWindowDimensions, Animated, Pressable, Image } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import Icon from '@react-native-vector-icons/lucide';
@@ -34,7 +34,7 @@ function addAlpha(hex, alpha) {
 export default function List({ data = [], numColumns = 3, style, scrollEnabled = true, userCoins = 0, onPurchase }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const { width } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 
 
 	// purchase handler
@@ -61,7 +61,7 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 			const price = i.coins || 0;
 			if (price === 0) return true;
 			return typeof price === 'number' && price > 0 && price <= userCoins;
-		});
+		};
 		let loop;
 		if (hasHighlight) {
 			loop = Animated.loop(
@@ -109,23 +109,22 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 		const glowBase = rarityColor;
 		
 		return (
-			<View style={[styles.cardWrap, { width: itemSize, height: itemSize + 36 }]}> 
-				<Pressable
-					style={[styles.card, { width: itemSize, height: itemSize, borderColor: rarityColor }]}
-					onPress={() => price !== undefined && handlePurchase({ ...item, price })}
+			<div style={{...styles.cardWrap, ...{ width: itemSize}}> 
+				<button 					style={{...styles.card, ...{ width: itemSize}}
+					onClick={() => price !== undefined && handlePurchase({ ...item, price })}
 					android_ripple={{ color: rarityColor + '33' }}
 				>
 					{item.imageUrl ? (
-						<Image 
+						<img 
 							source={{ uri: item.imageUrl }} 
 							style={styles.itemImage}
-							resizeMode="contain"
+							style={{objectFit: "contain"}}
 						/>
 					) : (
-						<Text style={styles.placeholder}>{item.name?.[0] || '?'}</Text>
+						<span style={styles.placeholder}>{item.name?.[0] || '?'}</span>
 					)}
 					{price !== undefined && (
-						<View style={styles.pricePillWrap}>
+						<div style={styles.pricePillWrap}>
 							{highlight && (
 								<Animated.View
 									pointerEvents="none"
@@ -138,58 +137,53 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 									]}
 								/>
 							)}
-							<Pressable
-								onPress={() => handlePurchase({ ...item, price })}
+							<button 								onClick={() => handlePurchase({ ...item, price })}
 								style={({ pressed }) => [
 									styles.pricePill,
 									{ backgroundColor: rarityColor, opacity: pressed ? 0.8 : 1, maxWidth: itemSize - 12 }
 								]}
 							>
 								{owned ? (
-									<Text
-										style={[styles.priceText, { color: colors.background, fontWeight: '800' }]}
+									<span 										style={{...styles.priceText, ...{ color: colors.background}}
 										numberOfLines={1}
 										ellipsizeMode="tail"
 										adjustsFontSizeToFit
 										minimumFontScale={0.8}
 									>
 										{translate('shop.owned')}
-									</Text>
+									</span>
 								) : price === 0 ? (
-									<Text
-										style={[styles.priceText, { color: '#fff', fontWeight: '800', letterSpacing: 0.5 }]}
+									<span 										style={{...styles.priceText, ...{ color: '#fff'}}
 										numberOfLines={1}
 										ellipsizeMode="tail"
 										adjustsFontSizeToFit
 										minimumFontScale={0.8}
 									>
 										{translate('shop.free')}
-									</Text>
+									</span>
 								) : (
-									<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+									<div style={{ flexDirection: 'row', alignItems: 'center' }}>
 										<Icon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
-										<Text
-											style={[styles.priceText, { color: colors.background }]}
+										<span 											style={{...styles.priceText, ...{ color: colors.background }}}
 											numberOfLines={1}
 											ellipsizeMode="tail"
 											adjustsFontSizeToFit
 											minimumFontScale={0.85}
 										>
 											{price}
-										</Text>
-									</View>
+										</span>
+									</div>
 								)}
-							</Pressable>
-						</View>
+							</button>
+						</div>
 					)}
-				</Pressable>
-			</View>
+				</button>
+			</div>
 		);
 	};
 
 	return (
-		<FlatList
-			data={data}
+		<div 			data={data}
 			keyExtractor={item => item.id}
 			numColumns={numColumns}
 			scrollEnabled={scrollEnabled}
@@ -252,6 +246,6 @@ function createStyles(colors, priceFontSize) {
 			shadowOffset: { width: 0, height: 0 },
 		},
 		priceText: { fontSize: priceFontSize, fontFamily: family.bold },
-	});
+	};
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Modal, Pressable, Animated, Easing, ScrollView } from 'react-native';
+import {Modal, Easing} from 'react-native';
 import Icon from '@react-native-vector-icons/lucide';
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../General/SvgIcon';
@@ -50,60 +50,58 @@ export default function MedalModal({ visible, onClose, medal }) {
 
 	return (
 		<Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
-			<Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar modal medalha" />
-			<View style={styles.centerWrap} pointerEvents="box-none">
+			<button style={styles.backdrop} onClick={onClose}  aria-label="Fechar modal medalha" />
+			<div style={styles.centerWrap} pointerEvents="box-none">
 				<Animated.View style={[styles.panel, { backgroundColor: colors.card || '#0E1620', transform: [{ scale }], opacity, maxHeight: '95%', overflow: 'visible' }]}>      
-					<ScrollView contentContainerStyle={{ padding: 0, paddingTop: 8 }} showsVerticalScrollIndicator={false}>
-						<View style={styles.rowTop}>
-						<View style={[styles.iconCircle, { 
-							backgroundColor: medal.unlocked ? (medal.color || colors.primary) : colors.cardBackground, 
-							borderColor: medal.unlocked ? (medal.color ? medal.color + '66' : colors.primary + '66') : colors.placeholder 
-						}]}> 
+					<div contentContainerStyle={{ padding: 0, paddingTop: 8 }} showsVerticalScrollIndicator={false}>
+						<div style={styles.rowTop}>
+						<div style={{...styles.iconCircle, ...{ 
+							backgroundColor: medal.unlocked ? (medal.color || colors.primary) : colors.cardBackground}}> 
 							{medal.icon ? (
-									<View style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
+									<div style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
 										<SvgIcon
 											svgString={medal.icon}
 											size={34}
 										/>
-									</View>
+									</div>
 								) : (
-									<View style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
+									<div style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
 										<Icon 
 											name="medal" 
 											size={38} 
 											color={medal.unlocked ? (medal.iconColor || colors.text) : colors.placeholder} 
 										/>
-									</View>
+									</div>
 								)}
 							{!medal.hideLevel && medal.unlocked && medal.level > 0 && (
-								<View style={[styles.levelBadge, { backgroundColor: medal.color || colors.primary }]}> 
-									<Text style={styles.levelText}>{medal.level ?? 1}</Text>
-								</View>
+								<div style={{...styles.levelBadge, ...{ backgroundColor: medal.color || colors.primary }}}> 
+									<span style={styles.levelText}>{medal.level ?? 1}</span>
+								</div>
 							)}
-						</View>
-						<View style={{ flex: 1, paddingLeft: 14 }}>
-							<Text style={[styles.title, { color: colors.text }]}>{medal.title || medal.id}</Text>
-							<Text style={[styles.desc, { color: colors.text + 'AA' }]}>{medal.description || 'Sem descrição.'}</Text>
-						</View>
-						</View>
+						</div>
+						<div style={{ flex: 1, paddingLeft: 14 }}>
+							<span style={{...styles.title, ...{ color: colors.text }}}>{medal.title || medal.id}</span>
+							<span style={{...styles.desc, ...{ color: colors.text + 'AA' }}}>{medal.description || 'Sem descrição.'}</span>
+						</div>
+						</div>
 						{medal.target !== null && medal.target !== undefined && (
-						<View style={styles.progressWrap}>
-							<View style={[styles.progressBar, { backgroundColor: colors.border || '#14202C' }]}> 
-								<View style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: colors.primary }]} />
-								<View style={styles.progressLabelWrap} pointerEvents="none">
-									<Text style={[styles.progressLabel, { color: colors.text }]}>{medal.current}/{medal.target}</Text>
-								</View>
-							</View>
-						</View>
+						<div style={styles.progressWrap}>
+							<div style={{...styles.progressBar, ...{ backgroundColor: colors.border || '#14202C' }}}> 
+								<div style={{...styles.progressFill, ...{ width: `${progress * 100}%`}} />
+								<div style={styles.progressLabelWrap} pointerEvents="none">
+									<span style={{...styles.progressLabel, ...{ color: colors.text }}}>{medal.current}/{medal.target}</span>
+								</div>
+							</div>
+						</div>
 						)}
-					</ScrollView>
+					</div>
 				</Animated.View>
-			</View>
+			</div>
 		</Modal>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	backdrop: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.55)' },
 	centerWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, overflow: 'visible' },
 	// allow the medal badge to overflow the rounded panel edge
@@ -124,4 +122,4 @@ const styles = StyleSheet.create({
 	progressPct: { fontSize: 12, fontFamily: family.semibold, textAlign: 'right', marginTop: 6 },
 	closeBtn: { marginTop: 20, alignSelf: 'flex-end', paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, borderWidth: 1 },
 	closeText: { fontSize: 15, fontFamily: family.bold },
-});
+};

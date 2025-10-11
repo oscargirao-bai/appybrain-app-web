@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, ActivityIndicator, useWindowDimensions } from 'react-native';
+import {Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import Icon from '@react-native-vector-icons/lucide';
@@ -11,7 +11,7 @@ import { family } from '../../constants/font';
 export default function RankingsModal({ visible, onClose }) {
 	const colors = useThemeColors();
 	const navigation = useNavigation();
-	const { width, height } = useWindowDimensions();
+	const width = window.innerWidth; const height = window.innerHeight;
 	const [tab, setTab] = useState('global'); // 'global' | 'school' | 'class'
 	const [metric, setMetric] = useState('points'); // 'points' | 'stars' | 'xp'
 	const [loading, setLoading] = useState(false);
@@ -91,7 +91,7 @@ export default function RankingsModal({ visible, onClose }) {
 				navigation.navigate('Profile', {
 					externalUser: userBadgesResponse.user,
 					externalBadges: userBadgesResponse.items || []
-				});
+				};
 			} else {
 				console.warn('Failed to load user data:', userBadgesResponse);
 			}
@@ -130,8 +130,8 @@ export default function RankingsModal({ visible, onClose }) {
 					avatarUrl: user.avatarUrl,
 					backgroundUrl: user.backgroundUrl,
 					frameUrl: user.frameUrl
-				});
-			});
+				};
+			};
 		};
 
 		switch (tab) {
@@ -159,72 +159,63 @@ export default function RankingsModal({ visible, onClose }) {
 	const MetricBtn = ({ label, value, icon }) => {
 		const active = metric === value;
 		return (
-			<Pressable
-				onPress={() => setMetric(value)}
-				style={[styles.tabBtn, { borderColor: colors.text + '33', backgroundColor: active ? colors.card + 'AA' : 'transparent' }, active && { borderColor: colors.primary + 'AA' }]}
-				accessibilityRole="button"
-				accessibilityLabel={`Métrica ${label}`}
+			<button 				onClick={() => setMetric(value)}
+				style={{...styles.tabBtn, ...{ borderColor: colors.text + '33'}}
+				
+				aria-label={`Métrica ${label}`}
 			>
 				{icon ? (
 					<Icon name={icon} size={16} color={active ? colors.primary : colors.text} />
 				) : (
-					<Text style={[styles.tabLabel, { color: active ? colors.primary : colors.text }]}>XP</Text>
+					<span style={{...styles.tabLabel, ...{ color: active ? colors.primary : colors.text }}}>XP</span>
 				)}
-			</Pressable>
+			</button>
 		);
 	};
 
 	const TabBtn = ({ label, value, icon }) => {
 		const active = tab === value;
 		return (
-			<Pressable
-				onPress={() => setTab(value)}
-				style={[styles.tabBtn, { borderColor: colors.text + '33', backgroundColor: active ? colors.card + 'AA' : 'transparent' }, active && { borderColor: colors.primary + 'AA' }]}
-				accessibilityRole="button"
-				accessibilityLabel={`Ranking ${label}`}
+			<button 				onClick={() => setTab(value)}
+				style={{...styles.tabBtn, ...{ borderColor: colors.text + '33'}}
+				
+				aria-label={`Ranking ${label}`}
 			>
 				<Icon name={icon} size={16} color={active ? colors.primary : colors.text} />
-				<Text style={[styles.tabLabel, { color: active ? colors.primary : colors.text }]}>{label}</Text>
-			</Pressable>
+				<span style={{...styles.tabLabel, ...{ color: active ? colors.primary : colors.text }}}>{label}</span>
+			</button>
 		);
 	};
 
 	return (
 		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-			<View style={[styles.backdrop, { backgroundColor: '#00000088' }]}> 
-				<Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar rankings" />
-				<View style={[
-					styles.panel, 
-					{ 
-						backgroundColor: colors.background, 
-						borderColor: colors.text + '22',
-						maxHeight: height * 0.8, // 80% of screen height
-						height: Math.min(height * 0.8, 600) // Max 600px or 80% of screen height
-					}
-				]}> 
-					<View style={styles.titleRow}>
-						<Text style={[styles.modalTitle, { color: colors.text }]}>Rankings</Text>
+			<div style={{...styles.backdrop, ...{ backgroundColor: '#00000088' }}}> 
+				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar rankings" />
+				<div style={{...styles.panel, ...{ 
+						backgroundColor: colors.background}}> 
+					<div style={styles.titleRow}>
+						<span style={{...styles.modalTitle, ...{ color: colors.text }}}>Rankings</span>
 						{loading && (
-							<ActivityIndicator 
+							<div 
 								size="small" 
 								color={colors.primary} 
 								style={styles.loadingIndicator}
 							/>
 						)}
-					</View>
+					</div>
 					{/* Metric selection */}
-					<View style={styles.tabsRowCentered}>
+					<div style={styles.tabsRowCentered}>
 						<MetricBtn label="Pontos" value="points" icon="trophy" />
 						<MetricBtn label="Estrelas" value="stars" icon="star" />
 						<MetricBtn label="XP" value="xp" icon={null} />
-					</View>
+					</div>
 					{/* Scope tabs */}
-					<View style={styles.tabsRowCentered}>
+					<div style={styles.tabsRowCentered}>
 						<TabBtn label="Global" value="global" icon="globe" />
 						<TabBtn label="Escola" value="school" icon="school" />
 						<TabBtn label="Turma" value="class" icon="users" />
-					</View>
-					<View style={[styles.listContainer, { maxHeight: height * 0.5 }]}>
+					</div>
+					<div style={{...styles.listContainer, ...{ maxHeight: height * 0.5 }}}>
 						<UserList
 							users={data}
 							currentUserId={currentUserId}
@@ -234,14 +225,14 @@ export default function RankingsModal({ visible, onClose }) {
 							showMedals={true}
 							onUserPress={handleUserPress}
 						/>
-					</View>
-				</View>
-			</View>
+					</div>
+				</div>
+			</div>
 		</Modal>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 40 },
 	panel: { borderRadius: 24, padding: 18, borderWidth: 1, width: '100%', maxWidth: 480 },
 	titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
@@ -251,5 +242,5 @@ const styles = StyleSheet.create({
 	tabBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8, paddingHorizontal: 14, borderWidth: 1, borderRadius: 10 },
 	tabLabel: { fontSize: 13, fontFamily: family.bold },
 	listContainer: { flex: 1, minHeight: 200 },
-});
+};
 

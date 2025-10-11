@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useCallback } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
+
 import { WebView } from 'react-native-webview';
 import { useThemeColors } from '../../services/Theme';
 
@@ -41,7 +41,7 @@ export default function MathText({ text, fontSize = 14, color, lineHeight = 20 }
           } else {
             setTimeout(notify, 300);
           }
-        });
+        };
       </script>
       </head><body>${safe}</body></html>`;
   }, [wantsMath, text, finalColor, fontSize, lineHeight]);
@@ -57,12 +57,12 @@ export default function MathText({ text, fontSize = 14, color, lineHeight = 20 }
   }, []);
 
   if (!wantsMath) {
-    return <Text style={{ color: finalColor, fontSize, lineHeight }}>{text || 'Sem descrição'}</Text>;
+    return <span style={{ color: finalColor, fontSize, lineHeight }}>{text || 'Sem descrição'}</span>;
   }
 
   return (
-    <View style={{ width:'100%', minHeight: height || 40 }}>
-      {loading && <ActivityIndicator size="small" color={colors.muted} style={{ position:'absolute', top:4, right:4 }} />}
+    <div style={{ width:'100%', minHeight: height || 40 }}>
+      {loading && <div size="small" color={colors.muted} style={{ position:'absolute', top:4, right:4 }} />}
       <WebView
         originWhitelist={["*"]}
         source={{ html }}
@@ -75,6 +75,6 @@ export default function MathText({ text, fontSize = 14, color, lineHeight = 20 }
         automaticallyAdjustContentInsets={false}
         textZoom={100}
       />
-    </View>
+    </div>
   );
 }

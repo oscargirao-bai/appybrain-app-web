@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, ScrollView, ActivityIndicator, useWindowDimensions, Image, Animated, Easing } from 'react-native';
+import {Modal, Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import ApiManager from '../../services/ApiManager';
@@ -26,7 +26,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
   const scrollRef = useRef(null);
   const [chests, setChests] = useState([]);
   const [loadingChestId, setLoadingChestId] = useState(null);
-  const [progressData, setProgressData] = useState({ current: 0, nextThreshold: 100 });
+  const [progressData, setProgressData] = useState({ current: 0, nextThreshold: 100 };
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const chestPulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -64,7 +64,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
           grantedAt: null,
           openedAt: null,
           isUpcoming: true
-        });
+        };
       }
       
       // Sort chests by milestone ascending
@@ -143,8 +143,8 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
       const response = await ApiManager.openChest(chest.id);
       if (response?.success) {
         const rewards = [];
-        if (response.coins > 0) rewards.push({ id: 'coins', type: 'coins', amount: response.coins });
-        if (response.cosmeticId) rewards.push({ id: 'cosmetic', type: 'cosmetic', cosmeticId: response.cosmeticId, amount: 1 });
+        if (response.coins > 0) rewards.push({ id: 'coins', type: 'coins', amount: response.coins };
+        if (response.cosmeticId) rewards.push({ id: 'cosmetic', type: 'cosmetic', cosmeticId: response.cosmeticId, amount: 1 };
         // Refresh data
         await Promise.all([DataManager.refreshSection('userInfo'), DataManager.refreshSection('chests'), DataManager.refreshSection('shop')]);
         setLoadingChestId(null);
@@ -208,13 +208,12 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
-        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}>
-          <Text style={[styles.title, { color: colors.text }]}>Progressão de Baús</Text>
+      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}>
+        <button style={StyleSheet.absoluteFill} onClick={onClose} />
+        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}>
+          <span style={{...styles.title, ...{ color: colors.text }}}>Progressão de Baús</span>
           
-          <ScrollView
-            ref={scrollRef}
+          <div             ref={scrollRef}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true}
             onContentSizeChange={() => {
@@ -225,20 +224,18 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
               }
             }}
           >
-            <View style={styles.progressContainer}>
-              <View style={styles.leftCol}>
-                <View style={styles.progressInner}>
+            <div style={styles.progressContainer}>
+              <div style={styles.leftCol}>
+                <div style={styles.progressInner}>
                   {/* Progress bar background */}
-                  <View style={[styles.progressBarBg, { height: barHeight, backgroundColor: colors.text + '1A' }]}>
+                  <div style={{...styles.progressBarBg, ...{ height: barHeight}}>
                     {/* Progress fill - fills from top to bottom */}
-                    <View style={[styles.progressFill, { 
-                      height: fillHeight, 
-                      backgroundColor: colors.secondary + 'AA' 
-                    }]} />
-                  </View>
+                    <div style={{...styles.progressFill, ...{ 
+                      height: fillHeight}} />
+                  </div>
                   
                   {/* Chest checkpoints (positioned relative to the progressInner) */}
-                  <View style={[styles.checkpointsContainer, { height: barHeight + 24 }] }>
+                  <div style={[styles.checkpointsContainer, { height: barHeight + 24 }] }>
                     {sortedChests.map((chest, index) => {
                       const milestone = chest.milestone || 0;
                       // Position based on actual milestone values using the adaptive scaling
@@ -253,18 +250,17 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
                         : (chestImages[chest.chestType] || chestImages.bronze);
 
                       return (
-                        <View
-                          key={chest.id}
-                          style={[styles.checkpoint, { top: topPosition }]}
+                        <div                           key={chest.id}
+                          style={{...styles.checkpoint, ...{ top: topPosition }}}
                         >
                           {/* Milestone marker - centered */}
-                          <View style={styles.milestoneContainer}>
+                          <div style={styles.milestoneContainer}>
                             {/* Small vertical line that matches the modal background to create a subtle notch */}
-                            <View style={[styles.milestoneMarker, { backgroundColor: colors.card }]} />
-                          </View>
+                            <div style={{...styles.milestoneMarker, ...{ backgroundColor: colors.card }}} />
+                          </div>
 
                           {/* Chest icon and info */}
-                          <View style={styles.chestInfo}>
+                          <div style={styles.chestInfo}>
                             {canOpen && (
                               <Animated.View
                                 style={[
@@ -277,8 +273,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
                                 ]}
                               />
                             )}
-                            <Pressable
-                              onPress={() => canOpen ? handleOpen(chest) : null}
+                            <button                               onClick={() => canOpen ? handleOpen(chest) : null}
                               disabled={!canOpen || loadingChestId === chest.id}
                               style={({ pressed }) => [
                                 styles.chestButton,
@@ -289,37 +284,37 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
                                 opacity: chest.isUpcoming ? 0.6 : 1,
                                 transform: canOpen ? [{ scale: chestPulseAnim }] : []
                               }]}>
-                                <Image 
+                                <img 
                                   source={chestImage} 
                                   style={styles.chestImage}
-                                  resizeMode="contain"
+                                  style={{objectFit: "contain"}}
                                 />
                               </Animated.View>
                               {/* loading overlay intentionally removed: do not show spinner when opening a chest */}
-                            </Pressable>
-                          </View>
-                        </View>
+                            </button>
+                          </div>
+                        </div>
                       );
                     })}
-                  </View>
-                </View>
-              </View>
-              <View style={styles.rightCol} />
-            </View>
+                  </div>
+                </div>
+              </div>
+              <div style={styles.rightCol} />
+            </div>
             {/* Reduced spacer for more compact layout */}
-            <View style={{ height: 20 }} />
-          </ScrollView>
+            <div style={{ height: 20 }} />
+          </div>
           
-          <Pressable style={[styles.closeBtn, { borderColor: colors.text + '22' }]} onPress={onClose}>
-            <Text style={[styles.closeText, { color: colors.text }]}>Fechar</Text>
-          </Pressable>
-        </View>
-      </View>
+          <button style={{...styles.closeBtn, ...{ borderColor: colors.text + '22' }}} onClick={onClose}>
+            <span style={{...styles.closeText, ...{ color: colors.text }}}>Fechar</span>
+          </button>
+        </div>
+      </div>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
   panel: { width: '100%', maxWidth: 400, borderRadius: 16, padding: 20, borderWidth: 1, maxHeight: '85%' },
   title: { fontSize: 18, fontFamily: family.bold, textAlign: 'center', marginBottom: 16 },
@@ -439,4 +434,4 @@ const styles = StyleSheet.create({
   },
   closeBtn: { marginTop: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 12, alignItems: 'center' },
   closeText: { fontSize: 15, fontFamily: family.bold },
-});
+};

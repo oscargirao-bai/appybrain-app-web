@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, View } from 'react-native';
+
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -8,25 +8,24 @@ import { family } from '../../constants/font';
 export default function Button4({ label, onPress, danger, style, accessibilityLabel }) {
 	const colors = useThemeColors();
 	return (
-		<Pressable
-			onPress={onPress}
+		<button 			onClick={onPress}
 			style={({ pressed }) => [
 				styles.root,
 				{ borderColor: colors.text + '25', backgroundColor: colors.card + '55' },
 				pressed && { opacity: 0.85 },
 				style,
 			]}
-			accessibilityRole="button"
-			accessibilityLabel={accessibilityLabel || label}
+			
+			aria-label={accessibilityLabel || label}
 		>
-			<View style={styles.inner}> 
-				<Text style={[styles.label, { color: danger ? colors.error || '#ff4d50' : colors.text }]}>{label}</Text>
-			</View>
-		</Pressable>
+			<div style={styles.inner}> 
+				<span style={{...styles.label, ...{ color: danger ? colors.error || '#ff4d50' : colors.text }}}>{label}</span>
+			</div>
+		</button>
 	);
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	root: {
 		borderWidth: 1,
 		borderRadius: 22,
@@ -39,4 +38,4 @@ const styles = StyleSheet.create({
 	},
 	inner: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 },
 	label: { fontSize: 15, fontWeight: '700', fontFamily: family.bold, letterSpacing: 0.2 },
-});
+};
