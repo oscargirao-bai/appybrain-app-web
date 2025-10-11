@@ -87,7 +87,8 @@ export default function Settings({ onNavigate, previousScreen = 'Learn' }) {
   }, []);
 
   return (
-    <div className="page-container-50">
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+    <div className="page-50">
       <div className="settings-screen" style={{ backgroundColor: colors.background }}>
         <div className="settings-header">
           <button className="settings-back-btn" onClick={() => onNavigate('Profile')} aria-label="Voltar">
@@ -129,6 +130,7 @@ export default function Settings({ onNavigate, previousScreen = 'Learn' }) {
       <ChangeNameModal visible={changeNameOpen} currentName={currentUserName} onCancel={() => setChangeNameOpen(false)} onConfirm={handleChangeName} />
       <PrivacyModal visible={privacyOpen} onClose={() => setPrivacyOpen(false)} />
       <MessageModal visible={messageModal.visible} title={messageModal.title} message={messageModal.message} onClose={() => setMessageModal({ visible: false, title: '', message: '' })} />
+      </div>
       </div>
     </div>
   );

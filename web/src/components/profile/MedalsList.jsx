@@ -17,6 +17,8 @@ const FALLBACK_MEDALS = Array.from({ length: 20 }, (_, i) => ({
 
 export default function MedalsList({ medals: medalsProp, title = 'Medalhas', onMedalPress, style = {} }) {
   const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
+  console.log('[MedalsList] Received medals:', medalsProp);
+  console.log('[MedalsList] Using medals:', medals);
   const [internalMedals, setInternalMedals] = useState(medals);
   const [page, setPage] = useState(0);
   const scrollRef = useRef(null);
@@ -79,6 +81,8 @@ function MedalButton({ medal, onPress }) {
   const iconColor = medal.iconColor || '#222';
   const iconToRender = medal.icon;
   const isSvg = iconToRender && typeof iconToRender === 'string' && iconToRender.includes('<svg');
+  
+  console.log('[MedalButton] Medal:', medal.title, '| Icon:', iconToRender?.substring(0, 50), '| isSvg:', isSvg);
 
   return (
     <div className={`medal-cell ${isNew ? 'new' : ''}`}>

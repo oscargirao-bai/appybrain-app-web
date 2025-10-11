@@ -22,6 +22,7 @@ export default function Profile({ onNavigate }) {
       setUserInfo(userData);
       
       if (badgesData && badgesData.length > 0) {
+        console.log('[Profile] Badges from API:', badgesData);
         const transformedBadges = badgesData.map(badge => ({
           id: badge.id,
           icon: badge.icon,
@@ -41,6 +42,7 @@ export default function Profile({ onNavigate }) {
           nextLevel: badge.nextLevel,
           nextLevelCoins: badge.nextLevelCoins
         }));
+        console.log('[Profile] Transformed badges:', transformedBadges);
         setBadges(transformedBadges);
       } else {
         setBadges([]);
@@ -70,7 +72,8 @@ export default function Profile({ onNavigate }) {
   };
 
   return (
-    <div className="page-50" style={{ minHeight: '100vh', paddingBottom: '80px', backgroundColor: colors.background, color: colors.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background, color: colors.text }}>
+      <div className="page-50" style={{ paddingBottom: '80px' }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px', justifyContent: 'space-between' }}>
         <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8, width: 40 }}>
           <Icon name="arrow-left" size={24} />
@@ -105,6 +108,7 @@ export default function Profile({ onNavigate }) {
         onClose={() => setModalVisible(false)}
         medal={selectedMedal}
       />
+      </div>
     </div>
   );
 }
