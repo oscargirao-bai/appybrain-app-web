@@ -1,48 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from '../../components/common/Icon.jsx';
 import { t } from '../../services/Translate.js';
-import { getAppData } from '../../services/DataStore.js';
 import ApiManager from '../../services/ApiManager.js';
 import './Learn.css';
 import NotificationsModal from '../../components/learn/NotificationsModal.jsx';
 import RankingsModal from '../../components/learn/RankingsModal.jsx';
 import ChestBrowserModal from '../../components/learn/ChestBrowserModal.jsx';
+import ChestRewardModal from '../../components/General/ChestRewardModal.jsx';
 import Chest from '../../components/General/Chest.jsx';
-import { updateAppData } from '../../services/DataStore.js';
 import Banner from '../../components/profile/Banner.jsx';
 import Info from '../../components/learn/Info.jsx';
+import Stars from '../../components/learn/Stars.jsx';
+import Area from '../../components/learn/Area.jsx';
 
 // Small inline SVG star that can be partially filled (0..1)
-function Star({ fraction = 0, size = 28 }) {
-  const frac = Math.max(0, Math.min(1, Number(fraction) || 0));
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <defs>
-        <clipPath id="starFill">
-          <rect x="0" y={24 - 24 * frac} width="24" height={24 * frac} />
-        </clipPath>
-      </defs>
-      <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#fff" stroke="#222" strokeWidth="1.2" />
-      <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#FFC107" stroke="#222" strokeWidth="1.2" clipPath="url(#starFill)" />
-    </svg>
-  );
-}
-
-function StarsRow({ earned = 0, max = 3 }) {
-  const ratio = max > 0 ? earned / max : 0;
-  const v = ratio * 3; // convert to 0..3 stars visually
-  const f1 = Math.min(1, Math.max(0, v - 0));
-  const f2 = Math.min(1, Math.max(0, v - 1));
-  const f3 = Math.min(1, Math.max(0, v - 2));
-  return (
-    <div className="stars">
-      <div style={{ marginTop: 14 }}><Star fraction={f1} /></div>
-      <div style={{ margin: '0 10px' }}><Star fraction={f2} /></div>
-      <div style={{ marginTop: 14 }}><Star fraction={f3} /></div>
-    </div>
-  );
-}
-
 function HeaderBar({ title, notifications = 0, onOpenNotifications, onOpenSettings }) {
   return (
     <header className="learn-header">
@@ -60,97 +31,95 @@ function HeaderBar({ title, notifications = 0, onOpenNotifications, onOpenSettin
   );
 }
 
-function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals, onOpenChest, chestData }) {
+function ChestStarsRow({ starsValue = 0, onMedals, onOpenChest, chestData }) {
   return (
     <div className="chest-line">
       <button className="chest-circle" aria-label="Baú" onClick={onOpenChest} style={{ cursor:'pointer', background:'transparent' }}>
         <Chest size={78} data={chestData} />
       </button>
-      <StarsRow earned={starsEarned} max={starsMax} />
+      <div className="stars"><Stars value={starsValue} size={48} /></div>
       <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Icon name="medal" size={22} /></button>
     </div>
   );
 }
 
-function SubjectsRow({ subjects = [], onOpenFirst }) {
-  const first = subjects[0] || null;
-  if (!first) return null;
+function SubjectsGrid({ disciplines = [], onOpen }) {
+  if (!disciplines?.length) return null;
   return (
-    <div className="subjects">
-      <div className="subject-pill">
-        <div className="icon"><Icon name="book-open" size={28} /></div>
-        <div className="label">{first.title || first.name || '—'}</div>
-      </div>
-      <div className="cta-wrap">
-        <button className="primary-cta" onClick={onOpenFirst}>{t('titles.learn')}</button>
-      </div>
+    <div style={{ width:'100%', display:'flex', flexWrap:'wrap', justifyContent:'space-around', padding:'0 20px' }}>
+      {disciplines.map(d => (
+        <div key={d.id} style={{ margin:8 }}>
+          <Area title={d.title} svgIcon={d.icon} color={d.color} iconColor={d.iconColor} onPress={() => onOpen(d.id)} />
+        </div>
+      ))}
     </div>
   );
 }
 
-export default function Learn() {
-  const [state, setState] = useState({ loading: true, subjects: [], user: null, totals: { earned: 0, max: 3 }, notifications: 0 });
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [rankOpen, setRankOpen] = useState(false);
-  const [chestOpen, setChestOpen] = useState(false);
+export default function Learn({ onNavigate }){
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [rankingsOpen, setRankingsOpen] = useState(false);
+  const [chestBrowserOpen, setChestBrowserOpen] = useState(false);
+  const [chestRewardOpen, setChestRewardOpen] = useState(false);
+  const [chestRewards, setChestRewards] = useState([]);
+  const [chestType, setChestType] = useState('bronze');
+  const [userInfo, setUserInfo] = useState(null);
+  const [disciplines, setDisciplines] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
+  // subscribe to data from ApiManager/DataStore sequence (same order as RN boot)
   useEffect(() => {
-    const load = async () => {
-      const boot = getAppData();
-      const data = boot || {};
-      let subjects = [];
-      const raw = data.disciplines;
-      if (Array.isArray(raw)) subjects = raw;
-      else if (raw?.areas) subjects = raw.areas;
-      else if (raw?.data) subjects = raw.data;
-      const notifications = Array.isArray(data?.notifications?.notifications)
-        ? data.notifications.notifications.filter(n => !n.readAt).length
-        : 0;
-      const user = data?.userInfo?.user || null;
-      // Totals for stars (fallback from user)
-      const totals = data?.userStars?.totals || { earnedStars: user?.stars || 0, maxStars: 3 };
-      setState({ loading: false, subjects, user, totals: { earned: totals.earnedStars || 0, max: totals.maxStars || 3 }, notifications });
-    };
-    load();
+    const data = window.__APP_DATA__ || {}; // optional hydration
+    const u = data?.userInfo?.user || null;
+    setUserInfo(u);
+    const disc = Array.isArray(data?.disciplines) ? data.disciplines : (data?.disciplines?.areas || data?.disciplines?.data || []);
+    setDisciplines(disc);
+    const n = Array.isArray(data?.notifications?.notifications)
+      ? data.notifications.notifications.filter(n => !n.readAt).length
+      : 0;
+    setUnreadCount(n);
   }, []);
 
-  if (state.loading) return <div className="learn-wrap"><div className="loading-label page-50">{t('common.loading')}</div></div>;
-
-  const { user, subjects, notifications } = state;
-  const openFirst = async () => {
-    if (!subjects.length) return;
-    try {
-      await ApiManager.authJson('app/learn_content_list'); // no-op call to keep sequence discipline
-      // On web MVP we just log; navigation to categories will be added later
-      console.log('Open discipline', subjects[0]);
-    } catch (e) {}
+  const handleChestOpen = () => setChestBrowserOpen(true);
+  const handleChestOpenedFromBrowser = (rewards, type) => {
+    setChestRewards(rewards || []);
+    setChestType(type || 'bronze');
+    setChestRewardOpen(true);
   };
 
-  const handleChestOpened = async (rewards, chestType) => {
-    // After opening, refresh userInfo, chests and shop in series like mobile
+  const openDiscipline = async (disciplineId) => {
+    // Serialize like RN: navigate to Category after ensuring API call is queued
     try {
-      const userInfo = await ApiManager.authJson('app/gamification_user_badges');
-      const userChests = await ApiManager.authJson('app/gamification_user_chests');
-      const cosmetics = await ApiManager.authJson('app/cosmetics_list');
-      updateAppData({ userInfo, userChests, cosmetics });
-    } catch (e) { console.warn('Refresh after open chest failed', e); }
+      await ApiManager.authJson('app/learn_content_list');
+      onNavigate && onNavigate('Category');
+      console.log('Open discipline', disciplineId);
+    } catch(e) {}
   };
 
   return (
     <div className="learn-wrap">
       <div className="page-50">
-        <HeaderBar title={t('titles.learn')} notifications={notifications} onOpenNotifications={() => setNotifOpen(true)} onOpenSettings={() => console.log('settings')} />
+        <HeaderBar title={t('titles.learn')} notifications={unreadCount} onOpenNotifications={() => setNotificationsOpen(true)} onOpenSettings={() => onNavigate && onNavigate('Settings')} />
       </div>
       <div className="content page-50">
-        <Banner avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
-        <Info username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
-        <ChestStarsRow chestData={getAppData()?.userChests} starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => setRankOpen(true)} onOpenChest={() => setChestOpen(true)} />
-        <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
+        <Banner avatarUrl={userInfo?.avatarUrl} backgroundUrl={userInfo?.backgroundUrl} />
+        <Info username={userInfo?.nickname || '—'} tribe={userInfo?.tribes?.[0]?.name || t('common.noTribe')} stars={userInfo?.stars || 0} coins={userInfo?.coins || 0} />
+        <ChestStarsRow chestData={window.__APP_DATA__?.userChests} starsValue={userInfo?.stars || 0} onMedals={() => setRankingsOpen(true)} onOpenChest={handleChestOpen} />
+        <div style={{ height: 0 }} />
+        <div style={{ width:'100%', display:'flex', justifyContent:'center', alignItems:'center' }} />
+        <div style={{ width:'100%', display:'flex', justifyContent:'center', alignItems:'center' }}>
+          <SubjectsGrid disciplines={disciplines} onOpen={openDiscipline} />
+        </div>
+        <div style={{ width:'100%', display:'flex', justifyContent:'center', alignItems:'center', paddingBottom:8, paddingTop:2 }}>
+          <div style={{ paddingBottom:0, marginBottom:-20, marginTop:-2, alignItems:'center', display:'flex' }}>
+            <button className="primary-cta" onClick={() => { if (disciplines.length > 0) openDiscipline(disciplines[0].id); }}>{t('titles.learn')}</button>
+          </div>
+        </div>
       </div>
-      <BottomTabs onNavigate={() => {}} />
-      <NotificationsModal visible={notifOpen} onClose={() => setNotifOpen(false)} items={(getAppData()?.notifications?.notifications)||[]} />
-      <RankingsModal visible={rankOpen} onClose={() => setRankOpen(false)} />
-      <ChestBrowserModal visible={chestOpen} onClose={() => setChestOpen(false)} onChestOpened={handleChestOpened} />
+      <NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} items={(window.__APP_DATA__?.notifications?.notifications)||[]} />
+      <RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
+      <ChestRewardModal visible={chestRewardOpen} onClose={() => { setChestRewardOpen(false); if (true) setTimeout(() => setChestBrowserOpen(true), 120); }} rewards={chestRewards} chestType={chestType} />
+      <ChestBrowserModal visible={chestBrowserOpen} onClose={() => setChestBrowserOpen(false)} onChestOpened={handleChestOpenedFromBrowser} dataSource="stars" />
     </div>
   );
 }
@@ -158,7 +127,7 @@ export default function Learn() {
 // Basic bottom tabs to match RN icons layout; no navigation yet
 function BottomTabs({ current = 'Learn', onNavigate }) {
   const items = [
-    { key: 'Learn', icon: 'book' },
+    { key: 'Learn', icon: 'book-open' },
     { key: 'Battle', icon: 'swords' },
     { key: 'Challenges', icon: 'crosshair' },
     { key: 'Tribes', icon: 'tent' },
