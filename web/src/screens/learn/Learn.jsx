@@ -107,7 +107,7 @@ export default function Learn({ onNavigate, openNotifications }){
   };
 
   return (
-    <div className="learn-wrap">
+    <div className="learn-screen" style={{ backgroundColor: colors.background, minHeight: '100vh' }}>
       <div className="page-50">
         <HeaderBar title={t('titles.learn')} notifications={unreadCount} onOpenNotifications={() => setNotificationsOpen(true)} onOpenSettings={() => onNavigate && onNavigate('Settings')} />
       </div>

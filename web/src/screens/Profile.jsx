@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DataManager from '../services/DataManager.js';
+import { useThemeColors } from '../services/Theme.jsx';
 import Icon from '../components/common/Icon.jsx';
 import Banner from '../components/profile/Banner.jsx';
 import Info from '../components/profile/Info.jsx';
@@ -7,6 +8,7 @@ import MedalsList from '../components/profile/MedalsList.jsx';
 import MedalModal from '../components/profile/MedalModal.jsx';
 
 export default function Profile({ onNavigate }) {
+  const colors = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedMedal, setSelectedMedal] = useState(null);
   const [userInfo, setUserInfo] = useState(null);

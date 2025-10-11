@@ -77,16 +77,20 @@ function MedalButton({ medal, onPress }) {
   const isNew = !!medal.justUnlocked;
   const badgeColor = medal.color || '#FFD700';
   const iconColor = medal.iconColor || '#222';
+  const iconToRender = medal.icon;
+  const isSvg = iconToRender && typeof iconToRender === 'string' && iconToRender.includes('<svg');
 
   return (
     <div className={`medal-cell ${isNew ? 'new' : ''}`}>
       <button onClick={onPress} className="medal-btn">
         <div className={medal.unlocked ? 'medal-outer active' : 'medal-outer inactive'} style={{ borderColor: medal.unlocked ? badgeColor : '#00000033' }}>
           <div className={medal.unlocked ? 'medal-inner active' : 'medal-inner inactive'} style={{ backgroundColor: medal.unlocked ? badgeColor : '#00000011' }}>
-            {medal.icon && medal.icon.includes('<svg') ? (
-              <SvgIcon svgString={medal.icon} size={34} color={medal.unlocked ? iconColor : '#00000055'} />
+            {isSvg ? (
+              <div style={{ width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SvgIcon svgString={iconToRender} size={34} />
+              </div>
             ) : (
-              <Icon name={medal.icon || 'medal'} size={34} color={medal.unlocked ? iconColor : '#00000055'} />
+              <Icon name={iconToRender || 'medal'} size={34} color={medal.unlocked ? iconColor : '#00000055'} />
             )}
             {isNew && <div className="new-dot" />}
           </div>

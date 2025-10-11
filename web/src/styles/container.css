@@ -1,13 +1,29 @@
-/* Container 50% centrado para todos os screens */
+/* Container com largura fixa matching mobile */
 .page-container-50 {
-  max-width: 50%;
+  max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 640px) {
   .page-container-50 {
     max-width: 100%;
+    box-shadow: none;
   }
+}
+
+/* Body background colors */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.theme-light {
+  background-color: #E2E8F0;
+}
+
+body.theme-dark {
+  background-color: #0A0D12;
 }

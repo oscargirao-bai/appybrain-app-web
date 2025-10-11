@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import DataManager from '../../services/DataManager.js';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { t } from '../../services/Translate.js';
 import Icon from '../../components/common/Icon.jsx';
 import SvgIcon from '../../components/common/SvgIcon.jsx';
@@ -54,6 +55,7 @@ function CategoryCard({ item, onPress }) {
 }
 
 export default function Category({ onNavigate, disciplineId }) {
+  const colors = useThemeColors();
   const [discipline, setDiscipline] = useState(null);
   const [categories, setCategories] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -98,7 +100,8 @@ export default function Category({ onNavigate, disciplineId }) {
   }, [categories, discipline, searchText]);
 
   return (
-    <div className="page-50" style={{ minHeight: '100vh', padding: '20px', paddingBottom: '100px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <div className="page-50" style={{ padding: '20px', paddingBottom: '100px' }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}>
           <Icon name="arrow-left" size={24} />
@@ -126,6 +129,7 @@ export default function Category({ onNavigate, disciplineId }) {
             />
           ))
         )}
+      </div>
       </div>
     </div>
   );
