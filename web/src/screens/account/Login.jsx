@@ -36,12 +36,12 @@ export default function Login({ onNavigate }) {
         </div>
 
         <form className="form" onSubmit={onSubmit}>
-          <label className="label"><Mail size={16}/> Email</label>
+          <div className="label"><Mail size={16}/></div>
           <div className="field">
             <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email" disabled={busy} />
           </div>
 
-          <label className="label"><Lock size={16}/> Palavra-passe</label>
+          <div className="label"><Lock size={16}/></div>
           <div className="field">
             <input type={show ? 'text' : 'password'} value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Palavra-passe" disabled={busy} />
             <button type="button" className="eye" onClick={()=>setShow(!show)} aria-label="toggle password">
