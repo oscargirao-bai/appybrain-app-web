@@ -1,48 +1,163 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Bell, Settings, Medal, BookOpen } from 'lucide-react';
+import { t } from '../../services/Translate.js';
 import { getAppData } from '../../services/DataStore.js';
 import ApiManager from '../../services/ApiManager.js';
+import './Learn.css';
+
+// Small inline SVG star that can be partially filled (0..1)
+function Star({ fraction = 0, size = 28 }) {
+  const frac = Math.max(0, Math.min(1, Number(fraction) || 0));
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      <defs>
+        <clipPath id="starFill">
+          <rect x="0" y={24 - 24 * frac} width="24" height={24 * frac} />
+        </clipPath>
+      </defs>
+      <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#fff" stroke="#222" strokeWidth="1.2" />
+      <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#FFC107" stroke="#222" strokeWidth="1.2" clipPath="url(#starFill)" />
+    </svg>
+  );
+}
+
+function StarsRow({ earned = 0, max = 3 }) {
+  const ratio = max > 0 ? earned / max : 0;
+  const v = ratio * 3; // convert to 0..3 stars visually
+  const f1 = Math.min(1, Math.max(0, v - 0));
+  const f2 = Math.min(1, Math.max(0, v - 1));
+  const f3 = Math.min(1, Math.max(0, v - 2));
+  return (
+    <div className="stars">
+      <div style={{ marginTop: 14 }}><Star fraction={f1} /></div>
+      <div style={{ margin: '0 10px' }}><Star fraction={f2} /></div>
+      <div style={{ marginTop: 14 }}><Star fraction={f3} /></div>
+    </div>
+  );
+}
+
+function HeaderBar({ title, notifications = 0 }) {
+  return (
+    <header className="learn-header">
+      <div className="title">{title}</div>
+      <div className="actions">
+        <button className="icon-btn" aria-label="Notificações">
+          <Bell size={22} />
+          {notifications > 0 && <span className="badge">{notifications}</span>}
+        </button>
+        <button className="icon-btn" aria-label="Definições">
+          <Settings size={22} />
+        </button>
+      </div>
+    </header>
+  );
+}
+
+function BannerCard({ avatarUrl, backgroundUrl }) {
+  return (
+    <div className="banner">
+      {backgroundUrl ? (
+        <img className="banner-bg" src={backgroundUrl} alt="banner" />
+      ) : (
+        <div className="banner-grad" />
+      )}
+      <div className="avatar-ring">
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="avatar" />
+        ) : (
+          <div className="avatar-fallback" />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function InfoRow({ username = '—', tribe = t('common.noTribe'), stars = 0, coins = 0 }) {
+  const fmt = (n) => new Intl.NumberFormat('pt-PT').format(n || 0);
+  return (
+    <div className="info-row">
+      <div className="left">
+        <div className="username">{username}</div>
+        <div className="tribe">{tribe}</div>
+      </div>
+      <div className="metrics">
+        <div className="pill"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896 4.664 23.165l1.402-8.168L.132 9.21l8.2-1.192L12 .587z" fill="#FFD54F" stroke="#222" strokeWidth="1"/></svg><span>{fmt(stars)}</span></div>
+        <div className="pill"><span className="coin" />{fmt(coins)}</div>
+      </div>
+    </div>
+  );
+}
+
+function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals }) {
+  return (
+    <div className="chest-line">
+      <div className="chest-circle" aria-label="Baú"><div className="chest-icon" /></div>
+      <StarsRow earned={starsEarned} max={starsMax} />
+      <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Medal size={22} /></button>
+    </div>
+  );
+}
+
+function SubjectsRow({ subjects = [], onOpenFirst }) {
+  const first = subjects[0] || null;
+  if (!first) return null;
+  return (
+    <div className="subjects">
+      <div className="subject-pill">
+        <div className="icon"><BookOpen size={28} /></div>
+        <div className="label">{first.title || first.name || '—'}</div>
+      </div>
+      <div className="cta-wrap">
+        <button className="primary-cta" onClick={onOpenFirst}>{t('titles.learn')}</button>
+      </div>
+    </div>
+  );
+}
 
 export default function Learn() {
-  const [disciplines, setDisciplines] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({ loading: true, subjects: [], user: null, totals: { earned: 0, max: 3 }, notifications: 0 });
 
   useEffect(() => {
     const load = async () => {
-      // Try from DataStore first (loaded in Loading)
       const boot = getAppData();
-      if (boot?.disciplines?.data) {
-        setDisciplines(boot.disciplines.data || []);
-        setLoading(false);
-        return;
-      }
-      try {
-        const resp = await ApiManager.authJson('app/learn_content_list');
-        setDisciplines(resp?.data || []);
-      } finally {
-        setLoading(false);
-      }
+      const data = boot || {};
+      let subjects = [];
+      const raw = data.disciplines;
+      if (Array.isArray(raw)) subjects = raw;
+      else if (raw?.areas) subjects = raw.areas;
+      else if (raw?.data) subjects = raw.data;
+      const notifications = Array.isArray(data?.notifications?.notifications)
+        ? data.notifications.notifications.filter(n => !n.readAt).length
+        : 0;
+      const user = data?.userInfo?.user || null;
+      // Totals for stars (fallback from user)
+      const totals = data?.userStars?.totals || { earnedStars: user?.stars || 0, maxStars: 3 };
+      setState({ loading: false, subjects, user, totals: { earned: totals.earnedStars || 0, max: totals.maxStars || 3 }, notifications });
     };
     load();
   }, []);
 
-  if (loading) {
-    return <div style={{ padding: 16 }}>A carregar...</div>;
-  }
+  if (state.loading) return <div className="learn-wrap"><div className="loading-label">{t('common.loading')}</div></div>;
+
+  const { user, subjects, notifications } = state;
+  const openFirst = async () => {
+    if (!subjects.length) return;
+    try {
+      await ApiManager.authJson('app/learn_content_list'); // no-op call to keep sequence discipline
+      // On web MVP we just log; navigation to categories will be added later
+      console.log('Open discipline', subjects[0]);
+    } catch (e) {}
+  };
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>Aprender</h2>
-      {disciplines.length === 0 ? (
-        <p>Sem conteúdos disponíveis</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {disciplines.map((item) => (
-            <li key={item.id} style={{ padding: 12, border: '1px solid #ddd', borderRadius: 8, marginBottom: 8 }}>
-              <strong>{item.name || item.title}</strong>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="learn-wrap">
+      <HeaderBar title={t('titles.learn')} notifications={notifications} />
+      <div className="content">
+        <BannerCard avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
+        <InfoRow username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
+        <ChestStarsRow starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => console.log('Open medals')} />
+        <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
+      </div>
     </div>
   );
 }
