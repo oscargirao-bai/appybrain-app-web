@@ -12,6 +12,11 @@ export function getAppData() {
   return store.appData;
 }
 
+export function updateAppData(partial) {
+  const current = store.appData || {};
+  store.appData = { ...current, ...partial };
+}
+
 export function setOrganization(org) {
   store.organization = org || null;
 }
@@ -23,6 +28,7 @@ export function getOrganization() {
 export default {
   setAppData,
   getAppData,
+  updateAppData,
   setOrganization,
   getOrganization,
 };

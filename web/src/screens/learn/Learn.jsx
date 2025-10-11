@@ -7,6 +7,8 @@ import './Learn.css';
 import NotificationsModal from '../../components/learn/NotificationsModal.jsx';
 import RankingsModal from '../../components/learn/RankingsModal.jsx';
 import ChestBrowserModal from '../../components/learn/ChestBrowserModal.jsx';
+import Chest from '../../components/general/Chest.jsx';
+import { updateAppData } from '../../services/DataStore.js';
 
 // Small inline SVG star that can be partially filled (0..1)
 function Star({ fraction = 0, size = 28 }) {
@@ -91,11 +93,11 @@ function InfoRow({ username = '—', tribe = t('common.noTribe'), stars = 0, coi
   );
 }
 
-function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals, onOpenChest }) {
+function ChestStarsRow({ starsEarned = 0, starsMax = 3, onMedals, onOpenChest, chestData }) {
   return (
     <div className="chest-line">
-      <button className="chest-circle" aria-label="Baú" onClick={onOpenChest} style={{ cursor:'pointer' }}>
-        <img src="/assets/chests/chest-bronze.png" alt="baú" className="chest-img" />
+      <button className="chest-circle" aria-label="Baú" onClick={onOpenChest} style={{ cursor:'pointer', background:'transparent' }}>
+        <Chest size={78} data={chestData} />
       </button>
       <StarsRow earned={starsEarned} max={starsMax} />
       <button className="medal-btn" onClick={onMedals} aria-label="Medalhas"><Medal size={22} /></button>
@@ -157,6 +159,16 @@ export default function Learn() {
     } catch (e) {}
   };
 
+  const handleChestOpened = async (rewards, chestType) => {
+    // After opening, refresh userInfo, chests and shop in series like mobile
+    try {
+      const userInfo = await ApiManager.authJson('app/gamification_user_badges');
+      const userChests = await ApiManager.authJson('app/gamification_user_chests');
+      const cosmetics = await ApiManager.authJson('app/cosmetics_list');
+      updateAppData({ userInfo, userChests, cosmetics });
+    } catch (e) { console.warn('Refresh after open chest failed', e); }
+  };
+
   return (
     <div className="learn-wrap">
       <div className="page-50">
@@ -165,13 +177,13 @@ export default function Learn() {
       <div className="content page-50">
         <BannerCard avatarUrl={user?.avatarUrl} backgroundUrl={user?.backgroundUrl} />
         <InfoRow username={user?.nickname || '—'} tribe={user?.tribes?.[0]?.name || t('common.noTribe')} stars={user?.stars || 0} coins={user?.coins || 0} />
-        <ChestStarsRow starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => setRankOpen(true)} onOpenChest={() => setChestOpen(true)} />
+        <ChestStarsRow chestData={getAppData()?.userChests} starsEarned={state.totals.earned} starsMax={state.totals.max} onMedals={() => setRankOpen(true)} onOpenChest={() => setChestOpen(true)} />
         <SubjectsRow subjects={subjects} onOpenFirst={openFirst} />
       </div>
       <BottomTabs onNavigate={() => {}} />
       <NotificationsModal visible={notifOpen} onClose={() => setNotifOpen(false)} items={(getAppData()?.notifications?.notifications)||[]} />
       <RankingsModal visible={rankOpen} onClose={() => setRankOpen(false)} />
-      <ChestBrowserModal visible={chestOpen} onClose={() => setChestOpen(false)} onChestOpened={() => {}} />
+      <ChestBrowserModal visible={chestOpen} onClose={() => setChestOpen(false)} onChestOpened={handleChestOpened} />
     </div>
   );
 }
