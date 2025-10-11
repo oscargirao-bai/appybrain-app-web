@@ -29,4 +29,4 @@ export function isAppReady() {
   return navigationRef.current?.getCurrentRoute()?.name !== 'Loading';
 }
 
-export default { navigate, resetRoot, navigationRef, setPendingNotificationNavigation, getPendingNotificationNavigation, clearPendingNotificationNavigation, isAppReady };
+export default { navigate, resetRoot, navigationRef, setPendingNotificationNavigation, getPendingNotificationNavigation, clearPendingNotificationNavigation, isAppReady });

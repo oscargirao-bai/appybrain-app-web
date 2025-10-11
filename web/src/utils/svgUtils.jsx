@@ -77,7 +77,7 @@ export const normalizeSvg = (svgString, options = {}) => {
     if (!v) return undefined;
     const num = parseFloat(v);
     return Number.isFinite(num) ? num : undefined;
-  };
+  });
   const w = parseSize(widthMatch?.[1]);
   const h = parseSize(heightMatch?.[1]);
 
@@ -99,7 +99,7 @@ export const normalizeSvg = (svgString, options = {}) => {
     existing.split(';').forEach(pair => {
       const [k, v] = pair.split(':').map(s => s?.trim());
       if (k && v) styleObj[k] = v;
-    };
+    });
     styleObj.display = 'block';
     // Rebuild style string
     return Object.entries(styleObj).map(([k, v]) => `${k}:${v}`).join(';');

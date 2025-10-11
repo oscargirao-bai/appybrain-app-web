@@ -14,7 +14,7 @@ export default function Coins({ style }) {
 		const updateCoins = () => {
 			const userData = DataManager.getUser();
 			setCoins(userData?.coins || 0);
-		};
+		});
 
 		// Initial load
 		updateCoins();

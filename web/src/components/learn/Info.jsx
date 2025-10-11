@@ -20,8 +20,8 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	const showTrophies = trophies !== undefined;
 
 	const metrics = [];
-	if (showStars) metrics.push({ key: 'stars' };
-	if (showTrophies) metrics.push({ key: 'trophies' };
+	if (showStars) metrics.push({ key: 'stars' });
+	if (showTrophies) metrics.push({ key: 'trophies' });
 	if (showCoins) metrics.push({ key: 'coins' }); // Coins always last (rightmost)
 	return (
 		<div style={styles.container}>

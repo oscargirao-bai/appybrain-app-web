@@ -93,7 +93,7 @@ export default function SolutionModal({
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     if (onReport) onReport();
-  };
+  });
 
   return (
     <>

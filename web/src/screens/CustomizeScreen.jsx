@@ -50,7 +50,7 @@ export default function CustomizeScreen({ navigation }) {
       setBackgrounds(backgroundItems);
       setFrames(frameItems);
       setUserProfile(DataManager.getUserProfile());
-    };
+    });
     updateData();
     const unsub = DataManager.subscribe(updateData);
     return unsub;
@@ -91,7 +91,7 @@ export default function CustomizeScreen({ navigation }) {
         }
 
         // Apply changes locally in DataManager
-        DataManager.equipCosmetics({ avatarId: selAvatarId, backgroundId: selBackgroundId, frameId: selFrameId };
+        DataManager.equipCosmetics({ avatarId: selAvatarId, backgroundId: selBackgroundId, frameId: selFrameId });
         
         navigation?.goBack?.();
       } catch (error) {

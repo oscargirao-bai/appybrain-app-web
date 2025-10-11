@@ -135,7 +135,7 @@ export default function ProfileScreen() {
 				}
 
 				// Clear the navigation parameters to prevent reopening on subsequent visits
-				navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined };
+				navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined });
 			}, 800); // 800ms delay to wait for screen transition to complete
 		}
 	}, [openBadgeModal, badges, handleMedalPress, timestamp, lastProcessedTimestamp, navigation]);
@@ -152,7 +152,7 @@ export default function ProfileScreen() {
 			target: medal.target,
 			unlocked: medal.unlocked,
 			hideLevel: medal.hideLevel,
-		};
+		});
 		setModalVisible(true);
 	}, []);
 

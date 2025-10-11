@@ -79,7 +79,7 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
     if (!maxStars || maxStars <= 0) return 0;
     const ratio = earnedStars / maxStars;
     return Math.round(ratio * 3);
-  };
+  });
 
   // Load initial data from DataManager based on provided scope
   const loadFromDataManager = () => {
@@ -103,21 +103,21 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
       }
 
       if (categoryId) {
-        const cat = DataManager.getCategoryStars(categoryId) || { earnedStars: 0, maxStars: 0 };
+        const cat = DataManager.getCategoryStars(categoryId) || { earnedStars: 0, maxStars: 0 });
         setEarned(cat.earnedStars || 0);
         setMax(cat.maxStars || 0);
         return;
       }
 
       if (areaId) {
-        const area = DataManager.getAreaStars(areaId) || { earnedStars: 0, maxStars: 0 };
+        const area = DataManager.getAreaStars(areaId) || { earnedStars: 0, maxStars: 0 });
         setEarned(area.earnedStars || 0);
         setMax(area.maxStars || 0);
         return;
       }
 
       // Default: total stars
-      const totals = DataManager.getTotalStars() || { earnedStars: 0, maxStars: 0 };
+      const totals = DataManager.getTotalStars() || { earnedStars: 0, maxStars: 0 });
       setEarned(totals.earnedStars || 0);
       setMax(totals.maxStars || 0);
     } catch (e) {
@@ -130,7 +130,7 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
     // Subscribe to updates so stars refresh when DataManager notifies
     const unsubscribe = DataManager.subscribe(() => {
       loadFromDataManager();
-    };
+    });
     return unsubscribe;
   }, [areaId, categoryId, contentId]);
 

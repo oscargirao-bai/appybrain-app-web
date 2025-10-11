@@ -100,7 +100,7 @@ export default function ForgotScreen({ navigation }) {
 		
 		return () => {
 			listeners.forEach(listener => listener.remove());
-		};
+		});
 	}, [logoScale, logoOpacity]);
 
 	async function handleSubmit() {

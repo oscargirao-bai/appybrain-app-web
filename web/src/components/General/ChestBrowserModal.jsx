@@ -18,7 +18,7 @@ const chestImagesOpened = {
   silver: require('../../../assets/chests/chest-silver-opened.png'),
   gold: require('../../../assets/chests/chest-gold-opened.png'),
   epic: require('../../../assets/chests/chest-epic-opened.png'),
-};
+});
 
 export default function ChestBrowserModal({ visible, onClose, onChestOpened, dataSource = 'stars' }) {
   const colors = useThemeColors();
@@ -26,7 +26,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
   const scrollRef = useRef(null);
   const [chests, setChests] = useState([]);
   const [loadingChestId, setLoadingChestId] = useState(null);
-  const [progressData, setProgressData] = useState({ current: 0, nextThreshold: 100 };
+  const [progressData, setProgressData] = useState({ current: 0, nextThreshold: 100 });
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const chestPulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -36,12 +36,12 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
       console.log('ChestBrowserModal: Raw chest data:', chestData);
       
       // Use the specified dataSource prop (same as Chest component)
-      let sourceData = {};
+      let sourceData = {});
       if (dataSource === 'points') {
         sourceData = chestData?.points || {};
         console.log('ChestBrowserModal: Using points data');
       } else {
-        sourceData = chestData?.stars || {};
+        sourceData = chestData?.stars || {});
         console.log('ChestBrowserModal: Using stars data');
       }
       
@@ -76,7 +76,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
       const progressInfo = {
         current: sourceData?.current || 0,
         nextThreshold: sourceData?.nextThreshold || 100
-      };
+      });
       console.log('ChestBrowserModal: Progress info:', progressInfo);
       setProgressData(progressInfo);
     }
@@ -129,7 +129,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
       return () => {
         glowPulse.stop();
         chestPulse.stop();
-      };
+      });
     } else {
       pulseAnim.setValue(1);
       chestPulseAnim.setValue(1);
@@ -143,8 +143,8 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
       const response = await ApiManager.openChest(chest.id);
       if (response?.success) {
         const rewards = [];
-        if (response.coins > 0) rewards.push({ id: 'coins', type: 'coins', amount: response.coins };
-        if (response.cosmeticId) rewards.push({ id: 'cosmetic', type: 'cosmetic', cosmeticId: response.cosmeticId, amount: 1 };
+        if (response.coins > 0) rewards.push({ id: 'coins', type: 'coins', amount: response.coins });
+        if (response.cosmeticId) rewards.push({ id: 'cosmetic', type: 'cosmetic', cosmeticId: response.cosmeticId, amount: 1 });
         // Refresh data
         await Promise.all([DataManager.refreshSection('userInfo'), DataManager.refreshSection('chests'), DataManager.refreshSection('shop')]);
         setLoadingChestId(null);

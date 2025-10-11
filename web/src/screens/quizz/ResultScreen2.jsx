@@ -124,7 +124,7 @@ export default function ResultScreen2() {
 			total: totalQuestions || 0,
 			correct: typeof correct === 'number' ? correct : (battle.myScore ?? 0),
 			timeout: inferTimeouts(activeBattleData, 'me')
-		};
+		});
 	}, [activeBattleData, totalQuestions, correct, battle.myScore]);
 
 	const oppSeq = useMemo(() => {
@@ -136,7 +136,7 @@ export default function ResultScreen2() {
 			total: totalQuestions || 0,
 			correct: battle.opponentScore ?? 0,
 			timeout: inferTimeouts(activeBattleData, 'opponent')
-		};
+		});
 	}, [isFinal, activeBattleData, totalQuestions, battle.opponentScore]);
 
 	// Total time (seconds) per user
@@ -495,7 +495,7 @@ function getUserProfile() {
 	return DataManager.getUserProfile?.() || null;
 }
 function getStats() {
-	return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 };
+	return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 });
 }
 function getTribeName() {
 	const tribe = DataManager.getUserTribe?.();
@@ -515,7 +515,7 @@ function getUsername() {
 }
 function safeImageSource(url) {
 	if (!url || typeof url !== 'string') return null;
-	return { uri: url };
+	return { uri: url });
 }
 function getAvatarSource() {
 	const user = getUserProfile();
@@ -691,7 +691,7 @@ function HelpIcons({ helpsData, colors }) {
 }
 
 function extractHelpsUsed(sessionResult, who = 'me', fallback = 0) {
-	if (!sessionResult) return { count: fallback, heroes: [] };
+	if (!sessionResult) return { count: fallback, heroes: [] });
 	
 	// Get results array for the specified player
 	const results = who === 'me' ? sessionResult.myAnswers : sessionResult.opponentAnswers;
@@ -705,7 +705,7 @@ function extractHelpsUsed(sessionResult, who = 'me', fallback = 0) {
 		return {
 			count: heroesUsed.length,
 			heroes: heroesUsed // Array of hero IDs used
-		};
+		});
 	}
 	
 	// Fallback to old logic if no results array
@@ -714,7 +714,7 @@ function extractHelpsUsed(sessionResult, who = 'me', fallback = 0) {
 		: ['opponentHelps', 'opponentHelpsUsed', 'rivalHelps', 'rivalHelpsUsed'];
 	for (const k of keys) {
 		const v = sessionResult[k];
-		if (typeof v === 'number' && isFinite(v)) return { count: v, heroes: [] };
+		if (typeof v === 'number' && isFinite(v)) return { count: v, heroes: [] });
 	}
 	return { count: fallback, heroes: [] };
 }

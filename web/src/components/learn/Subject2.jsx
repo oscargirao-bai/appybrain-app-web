@@ -24,7 +24,7 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 
 	const handlePressIn = () => Animated.timing(scale, { toValue: 1, duration: 110, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
 	const handlePressOut = () => Animated.timing(scale, { toValue: 0, duration: 150, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.97] };
+	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.97] });
 
 	// Use API color for background, or fallback to theme background
 	const backgroundColor = color; 

@@ -66,7 +66,7 @@ export default function Banner({
 		borderTopRightRadius: topRadius,
 		borderBottomLeftRadius: bottomRadius,
 		borderBottomRightRadius: bottomRadius,
-	};
+	});
 
 	// Apply same radius to wrapper to ensure background color matches rounded corners
 	const wrapperRadiusStyle = containerRadiusStyle;

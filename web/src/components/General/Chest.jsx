@@ -127,7 +127,7 @@ export default function Chest({ stars = 0, target = 10, size = 64, progress, sty
 				])
 			);
 			loop.start();
-			return () => { loop.stop(); };
+			return () => { loop.stop(); });
 		} else {
 			glowDriver.stopAnimation?.();
 			glowDriver.setValue(0);
@@ -135,9 +135,9 @@ export default function Chest({ stars = 0, target = 10, size = 64, progress, sty
 	}, [isFull, glowDriver]);
 
 	// Derived animated values
-	const chestScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.08] };
-	const glowScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] };
-	const glowOpacity = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0.9] };
+	const chestScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.08] });
+	const glowScale = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] });
+	const glowOpacity = glowDriver.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0.9] });
 
 	return (
 		<div style={{...styles.container, ...style}}>

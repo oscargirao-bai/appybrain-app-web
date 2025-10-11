@@ -64,9 +64,9 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 		}
 	}, [visible, scale, opacity, glow, chestFloat]);
 
-	const glowOpacity = glow.interpolate({ inputRange: [0,1], outputRange: [0.35, 0.8] };
-	const glowScale = glow.interpolate({ inputRange: [0,1], outputRange: [1, 1.25] };
-	const chestTranslate = chestFloat.interpolate({ inputRange: [0,1], outputRange: [0, -12] };
+	const glowOpacity = glow.interpolate({ inputRange: [0,1], outputRange: [0.35, 0.8] });
+	const glowScale = glow.interpolate({ inputRange: [0,1], outputRange: [1, 1.25] });
+	const chestTranslate = chestFloat.interpolate({ inputRange: [0,1], outputRange: [0, -12] });
 
 	const RewardItem = ({ item, index }) => {
 		// Handle different reward types

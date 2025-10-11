@@ -17,7 +17,7 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 	const handleChange = (t) => {
 		setText(t);
 		onChange && onChange(t);
-	};
+	});
 
 	const clear = () => handleChange('');
 

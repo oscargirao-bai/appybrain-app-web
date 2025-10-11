@@ -37,7 +37,7 @@ export default function DisciplineCircle({
 
   const handlePressIn = () => Animated.timing(scale, { toValue: 1, duration: 110, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
   const handlePressOut = () => Animated.timing(scale, { toValue: 0, duration: 150, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-  const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] };
+  const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] });
 
   // Use API colors
   const circleBackgroundColor = color ? addAlpha(color, 0.2) : colors.card;

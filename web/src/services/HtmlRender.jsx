@@ -135,7 +135,7 @@ function buildHtmlTemplate(bodyHtml, theme) {
 				
 				window.addEventListener('load', function(){ 
 					setTimeout(postHeight, 30); 
-				};
+				});
 			</script>
 		</body>
 	</html>`;

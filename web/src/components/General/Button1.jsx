@@ -36,10 +36,10 @@ export default function Button1({ label, color, onPress, style }) {
 		let x = h?.replace('#', '') || '000000';
 		if (x.length === 3) x = x.split('').map(c => c + c).join('');
 		const n = parseInt(x, 16);
-		return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+		return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 });
 	};
 	const rgbToHex = ({ r, g, b }) => '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
-	const mix = (a, b, t) => ({ r: Math.round(a.r + (b.r - a.r) * t), g: Math.round(a.g + (b.g - a.g) * t), b: Math.round(a.b + (b.b - a.b) * t) };
+	const mix = (a, b, t) => ({ r: Math.round(a.r + (b.r - a.r) * t), g: Math.round(a.g + (b.g - a.g) * t), b: Math.round(a.b + (b.b - a.b) * t) });
 	const addAlpha = (hex, alpha) => {
 		const { r, g, b } = hexToRgb(hex);
 		return `rgba(${r},${g},${b},${alpha})`;
@@ -97,26 +97,26 @@ export default function Button1({ label, color, onPress, style }) {
 			]).start(({ finished }) => { if (finished && !cancelled) runSweep(); };
 		};
 		runSweep();
-		return () => { cancelled = true; };
+		return () => { cancelled = true; });
 	}, [bob, glow, shine]);
 
 	// Interpolations
-	const bobTranslate = bob.interpolate({ inputRange: [0, 1], outputRange: [0, -4] };
+	const bobTranslate = bob.interpolate({ inputRange: [0, 1], outputRange: [0, -4] });
 	// Reduced breathing amplitude (smaller effect)
-	const glowScale = glow.interpolate({ inputRange: [0, 1], outputRange: [0.97, 1.0] };
-	const glowOpacity = glow.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.18] };
+	const glowScale = glow.interpolate({ inputRange: [0, 1], outputRange: [0.97, 1.0] });
+	const glowOpacity = glow.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.18] });
 	// Shine travels fully across using numeric pixel values (percent strings break native driver)
 	const startX = faceW ? -1.2 * faceW : -400; // further off-screen so it's not visible initially
 	const endX = faceW ? 1.2 * faceW : 400;
-	const shineX = shine.interpolate({ inputRange: [0, 1], outputRange: [startX, endX] };
+	const shineX = shine.interpolate({ inputRange: [0, 1], outputRange: [startX, endX] });
 	// Opacity stays 0 at rest, fades in quickly, stays, then fades out near end
 	const shineOpacity = shine.interpolate({
 		inputRange: [0, 0.08, 0.85, 1],
 		outputRange: [0, 0.55, 0.55, 0],
 		// clamp is default
-	};
-	const pressScale = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0.96] };
-	const pressTranslate = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 5] };
+	});
+	const pressScale = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0.96] });
+	const pressTranslate = pressAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 5] });
 
 	const handlePressIn = () => {
 		Animated.timing(pressAnim, { toValue: 1, duration: 120, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();

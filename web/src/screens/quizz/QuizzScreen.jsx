@@ -152,7 +152,7 @@ export default function QuizzScreen() {
 
 		const submitAnswerResult = async (answerType) => {
 			if (!sessionId || !current?.quizId || questionStartTimeRef.current === null) {
-				console.warn('Missing data for answer submission:', { sessionId, quizId: current?.quizId, startTime: questionStartTimeRef.current };
+				console.warn('Missing data for answer submission:', { sessionId, quizId: current?.quizId, startTime: questionStartTimeRef.current });
 				return null;
 			}
 
@@ -179,7 +179,7 @@ export default function QuizzScreen() {
 						correctValue = -1; // Default to incorrect
 				}
 				
-				//console.log('Submitting answer result:', { answerType, correctValue, timeMs };
+				//console.log('Submitting answer result:', { answerType, correctValue, timeMs });
 				
 				// Only submit helpId if it was used for this specific question
 				const helpIdToSubmit = usedHelpId && usedHelpId !== 3 ? usedHelpId : null;
@@ -260,7 +260,7 @@ export default function QuizzScreen() {
 				title,
 				sessionResult: currentSessionResult, // Pass the API response data
 				battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
-			};
+			});
 			
 			//console.log('Navigating to result with params:', navParams);
 			
@@ -313,7 +313,7 @@ export default function QuizzScreen() {
 						title,
 						sessionResult: currentSessionResult, // Pass the API response data
 						battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
-					};
+					});
 					
 					if (quizType === 'battle') {
 						navigation.navigate('Result2', navParams);
@@ -335,7 +335,7 @@ export default function QuizzScreen() {
 			timerRef.current = setInterval(() => {
 				setRemaining((r) => (r > 0 ? r - 1 : 0));
 			}, 1000);
-			return () => { if (timerRef.current) clearInterval(timerRef.current); };
+			return () => { if (timerRef.current) clearInterval(timerRef.current); });
 		}, [currentTimeSec, qIndex]);
 
 		useEffect(() => {
@@ -445,7 +445,7 @@ export default function QuizzScreen() {
 														const newQuestions = [...prevQuestions];
 														newQuestions[qIndex] = randomReplacement;
 														return newQuestions;
-													};
+													});
 													
 													// Remove the used replacement from available ones
 													setReplaceQuestions(prev => prev.filter(q => q.quizId !== randomReplacement.quizId));

@@ -85,7 +85,7 @@ export default function ContentScreen() {
 
 	// Create starsByDifficulty object for ContentList
 	const starsByDifficulty = useMemo(() => {
-		const result = {};
+		const result = {});
 		// Use filteredContents which already has updated star data
 		filteredContents.forEach(content => {
 			const contentStars = DataManager.getContentStars(content.id);
@@ -105,7 +105,7 @@ export default function ContentScreen() {
 			navigation.navigate('Html', {
 				title: item.title,
 				html: response?.content?.longDescription || '<p>Conteúdo não disponível</p>'
-			};
+			});
 		} catch (error) {
 			console.error('Failed to load content for study:', error);
 			
@@ -113,7 +113,7 @@ export default function ContentScreen() {
 			navigation.navigate('Html', {
 				title: item.title,
 				html: '<p>Erro ao carregar o conteúdo. Tente novamente mais tarde.</p>'
-			};
+			});
 		}
 	};
 

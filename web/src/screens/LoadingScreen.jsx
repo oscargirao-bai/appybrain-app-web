@@ -103,7 +103,7 @@ export default function LoadingScreen({ navigation }) {
 		// Cleanup timer on unmount
 		return () => {
 			clearTimeout(textSwitchTimer);
-		};
+		});
 	}, [navigation, translate]);
 
 	// Responsive sizing based on screen dimensions
@@ -118,7 +118,7 @@ export default function LoadingScreen({ navigation }) {
 	// Handler for when organization logo loads
 	const handleOrgLogoLoad = () => {
 		setTimeout(() => setOrgLogoOpacity(1), 50);
-	};
+	});
 
 	// Skater animation (horizontal loop)
 	useEffect(() => {

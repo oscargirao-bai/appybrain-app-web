@@ -24,7 +24,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 			const currentNews = DataManager.getNews();
 			setNews(currentNews);
 			// Don't create animations here - let loadNews() handle them when modal opens
-		};
+		});
 
 		DataManager.subscribe(handleDataUpdate);
 		
@@ -33,7 +33,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 
 		return () => {
 			// DataManager doesn't have unsubscribe yet, but we'll add it when needed
-		};
+		});
 	}, []);
 
 	// Load news on mount
@@ -130,11 +130,11 @@ export default function NewsList({ style, limit, onPressItem }) {
 			.replace(/>/g, '&gt;')
 			.replace(/"/g, '&quot;')
 			.replace(/'/g, '&#39;');
-	};
+	});
 
 	const openNews = (item) => {
 		if (typeof onPressItem === 'function') return onPressItem(item);
-		navigation.navigate('Html', { title: item.title || 'News', newsId: item.id };
+		navigation.navigate('Html', { title: item.title || 'News', newsId: item.id });
 	};
 
 	const renderItem = ({ item, index }) => {

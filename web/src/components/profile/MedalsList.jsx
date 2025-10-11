@@ -75,7 +75,7 @@ export default function MedalsList({
 			const m = internalMedals[i];
 			// Support both `newMedal` and the requested `new` flag as aliases
 			const isNew = !!(m.newMedal || m.new);
-			cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew };
+			cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew });
 		}
 		return cols;
 	}, [internalMedals]);
@@ -93,7 +93,7 @@ export default function MedalsList({
 	}
 
 	function goToPage(i) {
-		flatRef.current?.scrollToOffset({ offset: i * width, animated: true };
+		flatRef.current?.scrollToOffset({ offset: i * width, animated: true });
 	}
 
 	return (
@@ -254,8 +254,8 @@ function MedalButton({ item, colors, onPress }) {
 	const bgColor = isNew
 		? flash.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '55'] })
 		: '#00000022';
-	const pulseBorder = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] };
-	const pulseBg = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '44'] };
+	const pulseBorder = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] });
+	const pulseBg = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '44'] });
 
 	const finalBorder = isNew ? pulseBorder : borderColor;
 	const finalBg = isNew ? pulseBg : bgColor;

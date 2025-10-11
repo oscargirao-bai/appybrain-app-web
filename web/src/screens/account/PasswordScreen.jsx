@@ -41,9 +41,9 @@ export default function PasswordScreen({ navigation, route }) {
       const kbHeight = e?.endCoordinates?.height || 0;
       const desired = Math.max(0, kbHeight - insets.bottom - 40);
       setKeyboardShift(desired > 260 ? 260 : desired);
-    };
+    });
     const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardShift(0));
-    return () => { showSub.remove(); hideSub.remove(); };
+    return () => { showSub.remove(); hideSub.remove(); });
   }, [insets.bottom]);
 
   async function onSubmit() {

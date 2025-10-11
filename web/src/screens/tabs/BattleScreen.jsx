@@ -42,7 +42,7 @@ function transformBattleDataForResult(battleData) {
     opponentAnswers: battleData.opponentAnswers || battleData.rivalAnswers,
     // Add any other relevant fields from the battle data
     ...battleData
-  };
+  });
 
   return {
     correct: battleData.myScore || battleData.score || 0,
@@ -71,7 +71,7 @@ export default function BattleScreen(props) {
   const [reopenBrowserAfterReward, setReopenBrowserAfterReward] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [disciplines, setDisciplines] = useState([]);
-  const [battleHistory, setBattleHistory] = useState({ pending: [], completed: [] };
+  const [battleHistory, setBattleHistory] = useState({ pending: [], completed: [] });
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
@@ -80,7 +80,7 @@ export default function BattleScreen(props) {
   const propsParams = props || {};
   const { openBattleResult, timestamp, reopenHistory, highlightBattleId } = { ...routeParams, ...propsParams };
   
-  //console.log('BattleScreen: Received params', { routeParams, propsParams, openBattleResult, timestamp };
+  //console.log('BattleScreen: Received params', { routeParams, propsParams, openBattleResult, timestamp });
 
   useEffect(() => {
     const updateData = () => {
@@ -95,7 +95,7 @@ export default function BattleScreen(props) {
 
       const unreadCount = DataManager.getUnreadNotificationsCount();
       setUnreadNotificationsCount(unreadCount);
-    };
+    });
 
     // Initial load
     updateData();
@@ -112,7 +112,7 @@ export default function BattleScreen(props) {
     const unsubscribe = navigation.addListener('focus', () => {
       // Refresh battle data when screen is focused
       DataManager.refreshSection('battles');
-    };
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -126,7 +126,7 @@ export default function BattleScreen(props) {
       lastProcessedTimestamp, 
       pendingCount: battleHistory.pending.length,
       completedCount: battleHistory.completed.length
-    };
+    });
     */
     // Only process if we have a new timestamp (avoid processing the same navigation twice)
     if (openBattleResult && timestamp && timestamp !== lastProcessedTimestamp && (battleHistory.pending.length > 0 || battleHistory.completed.length > 0)) {
@@ -162,7 +162,7 @@ export default function BattleScreen(props) {
       }
 
       // Clear the navigation parameters to prevent reopening on subsequent visits
-      navigation.setParams({ openBattleResult: undefined, timestamp: undefined };
+      navigation.setParams({ openBattleResult: undefined, timestamp: undefined });
     }
   }, [openBattleResult, battleHistory, timestamp, lastProcessedTimestamp, navigation]);
 
@@ -175,7 +175,7 @@ export default function BattleScreen(props) {
       }, 120);
       // Optionally clear params to avoid repeated triggers (route params or props vary by navigation path)
       try {
-        navigation.setParams && navigation.setParams({ reopenHistory: undefined, highlightBattleId: undefined };
+        navigation.setParams && navigation.setParams({ reopenHistory: undefined, highlightBattleId: undefined });
       } catch (e) {}
     }
   }, [reopenHistory, highlightBattleId]);
@@ -193,7 +193,7 @@ export default function BattleScreen(props) {
     setChestType(chestType || 'bronze');
     setChestRewardOpen(true);
     setReopenBrowserAfterReward(true);
-  };
+  });
 
   // Proportions (relative to full screen height)
   const HEADER_PCT = 0.10; // header handled by Header component
@@ -299,7 +299,7 @@ export default function BattleScreen(props) {
                 onClick={() => {
                   // Navigate to battle quiz
                   //console.log('Battle button pressed - starting battle quiz');
-                  navigation.navigate('Quizz', { battleMode: true };
+                  navigation.navigate('Quizz', { battleMode: true });
                 }}
               />
             </div>
@@ -321,7 +321,7 @@ export default function BattleScreen(props) {
             
             if (resultParams) {
               // Mark that this navigation originated from the HistoryModal so ResultScreen2 can return and reopen it
-              navigation.navigate('Result2', { ...resultParams, openedFromHistory: true, openedFromHistoryBattleId: battleSessionId };
+              navigation.navigate('Result2', { ...resultParams, openedFromHistory: true, openedFromHistoryBattleId: battleSessionId });
             } else {
               console.warn('Battle not found with id:', battleSessionId);
             }

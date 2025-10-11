@@ -44,7 +44,7 @@ export default function ShopScreen(props) {
 
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		};
+		});
 
 		// Initial load
 		updateData();
@@ -59,7 +59,7 @@ export default function ShopScreen(props) {
 	function onSelect(key) {
 		setTab(key);
 		const index = key === 'avatar' ? 0 : key === 'background' ? 1 : 2;
-		scrollRef.current?.scrollTo({ x: index * width, animated: true };
+		scrollRef.current?.scrollTo({ x: index * width, animated: true });
 	}
 
 	function handleMomentumEnd(e) {

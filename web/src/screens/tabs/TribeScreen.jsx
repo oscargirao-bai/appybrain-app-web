@@ -61,7 +61,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 		const updateNotificationsData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		};
+		});
 
 		// Initial load
 		updateNotificationsData();
@@ -80,7 +80,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 		
 		// Fetch members for the selected tribe
 		fetchTribeMembers(tribe.id);
-	};
+	});
 
 	const fetchTribeMembers = async (tribeId) => {
 		if (!tribeId) return;
@@ -101,7 +101,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				const nameA = (a.name || a.firstName || '').toLowerCase();
 				const nameB = (b.name || b.firstName || '').toLowerCase();
 				return nameA.localeCompare(nameB);
-			};
+			});
 			
 			//console.log('TribeScreen: Fetched members for tribe', tribeId, ':', sortedMembers);
 			

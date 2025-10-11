@@ -79,7 +79,7 @@ export default function HtmlScreen() {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <style>
           :root {
-            --text: ${textColor};
+            --text: ${textColor});
             --bg: ${backgroundColor};
             --link: ${colors.primary || '#0a7'};
           }
@@ -105,7 +105,7 @@ export default function HtmlScreen() {
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
-      };
+      });
     } catch (error) {
       return dateString;
     }

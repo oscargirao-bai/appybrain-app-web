@@ -221,7 +221,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
     
     // Use normalizeSvg to handle viewBox and dimensions
     // For monochrome SVGs, use currentColor mode; for multi-color, preserve colors
-    xml = normalizeSvg(xml, { colorMode: isMonochrome ? 'currentColor' : 'preserve' };
+    xml = normalizeSvg(xml, { colorMode: isMonochrome ? 'currentColor' : 'preserve' });
     
     // Replace currentColor with the actual color prop
     if (xml.includes('currentColor')) {

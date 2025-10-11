@@ -101,10 +101,8 @@ function MainTabs({ route, navigation }) {
 	const getScreenParams = (screenIndex) => {
 		const screen = screens[screenIndex];
 		if (!screen) return {};
-		
-		const screenName = screen.name;
-		
-		if (route?.params?.screen === screenName && route?.params?.params) {
+
+		const screenName = screen.name;		if (route?.params?.screen === screenName && route?.params?.params) {
 			return route.params.params;
 		}
 		

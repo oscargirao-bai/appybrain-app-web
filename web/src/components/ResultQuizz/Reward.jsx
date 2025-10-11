@@ -39,7 +39,7 @@ function getConfig(type, colors) {
 				icon: 'coins',
 					label: 'Moedas',
 				tint: colors.accent,
-				};
+				});
 			case 'trophies':
 				return {
 					icon: 'trophy',

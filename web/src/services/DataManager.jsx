@@ -52,7 +52,7 @@ class DataManagerClass {
 
             // Create fresh cache directory for this session
             const cacheDir = `${FileSystem.documentDirectory}session_cache/`;
-            await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true };
+            await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true });
 
             // Reset cache tracking
             this.imageCache.clear();
@@ -248,7 +248,7 @@ class DataManagerClass {
             data: this.data,
             loading: this.loading,
             error: this.error
-        };
+        });
     }
 
     // Load all app data from API
@@ -278,7 +278,7 @@ class DataManagerClass {
                 points: null,
                 stars: null,
                 xp: null
-            };
+            });
             
             try {
                 // Load all ranking types in parallel
@@ -311,29 +311,29 @@ class DataManagerClass {
             const cosmeticsData = await this.apiManager.getCosmetics().catch(error => {
                 console.warn('DataManager: Failed to load cosmetics:', error);
                 return [];
-            };
+            });
 
             // Load challenges separately
             //console.log('DataManager: Loading challenges...');
             const challengesApiData = await this.apiManager.getChallenges().catch(error => {
                 console.warn('DataManager: Failed to load challenges:', error);
                 return [];
-            };
+            });
 
             // Load quotes separately
             //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('/api/gamification/quotes').catch(error => {
                 console.warn('DataManager: Failed to load quotes:', error);
-                return { items: [] };
+                return { items: [] });
             };
 
             // Process and cache cosmetic images
             //console.log('DataManager: Processing and caching cosmetic images...');
-            const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData };
+            const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData });
 
             // Process and cache challenge images
             //console.log('DataManager: Processing and caching challenge images...');
-            const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData };
+            const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData });
 
             // Store initial IDs for future diff detection
             this.previousNewsIds = new Set(newsData.map(item => item.id));
@@ -356,7 +356,7 @@ class DataManagerClass {
                 const localReadAt = localReadStatuses.get(notification.id);
                 if (localReadAt && !notification.readAt) {
                     // Preserve local read status if API hasn't caught up yet
-                    return { ...notification, readAt: localReadAt };
+                    return { ...notification, readAt: localReadAt });
                 }
                 return notification;
             };
@@ -407,7 +407,7 @@ class DataManagerClass {
             chests: '/api/app/gamification_user_chests',
             challenges: '/api/app/challenges_list',
             battles: '/api/app/battle_list'
-        };
+        });
 
         if (!endpoints[section]) {
             throw new Error(`Unknown section: ${section}`);
@@ -426,7 +426,7 @@ class DataManagerClass {
             }
 
             // Process and cache images for this section
-            const processedData = await this._processAndCacheImages({ [section]: data };
+            const processedData = await this._processAndCacheImages({ [section]: data });
 
             // Handle special cases for data mapping
             if (section === 'disciplines') {
@@ -473,7 +473,7 @@ class DataManagerClass {
             badges: [],
             battles: [],
             lastUpdated: null
-        };
+        });
         this.loading = false;
         this.error = null;
         this.imageCache.clear();
@@ -586,7 +586,7 @@ class DataManagerClass {
                     name: user.organizationName || '',
                     logoUrl: user.organizationUrl || '',
                     id: user.organizationId || null,
-                };
+                });
 
                 // Cache the organization logo if URL exists
                 if (this.data.organizationInfo.logoUrl) {
@@ -650,7 +650,7 @@ class DataManagerClass {
             organization: user.organizationName || '',
             groups: user.groups || [],
             tribes: user.tribes || []
-        };
+        });
     }
 
     // Get user profile display info
@@ -672,7 +672,7 @@ class DataManagerClass {
             status: user.status || 'active',
             lastLogin: user.lastLogin || null,
             createdAt: user.createdAt || null
-        };
+        });
     }
 
     // Get all quotes
@@ -858,17 +858,17 @@ class DataManagerClass {
 
     // Get total stars for user
     getTotalStars() {
-        return this.data.userStars?.totals || { earnedStars: 0, maxStars: 0 };
+        return this.data.userStars?.totals || { earnedStars: 0, maxStars: 0 });
     }
 
     // Get stars for specific area/discipline
     getAreaStars(areaId) {
-        return this.data.userStars?.byArea?.find(area => area.areaId === areaId) || { earnedStars: 0, maxStars: 0 };
+        return this.data.userStars?.byArea?.find(area => area.areaId === areaId) || { earnedStars: 0, maxStars: 0 });
     }
 
     // Get stars for specific category
     getCategoryStars(categoryId) {
-        return this.data.userStars?.byCategory?.find(category => category.categoryId === categoryId) || { earnedStars: 0, maxStars: 0 };
+        return this.data.userStars?.byCategory?.find(category => category.categoryId === categoryId) || { earnedStars: 0, maxStars: 0 });
     }
 
     // Get stars for specific content
@@ -945,7 +945,7 @@ class DataManagerClass {
                         name: joinedTribe.name,
                         color: joinedTribe.color,
                         icon: joinedTribe.icon
-                    };
+                    });
                 }
             } else {
                 // User left the tribe - clear tribes array
@@ -1042,7 +1042,7 @@ class DataManagerClass {
             const aRead = a.readAt !== null;
             const bRead = b.readAt !== null;
             return Number(aRead) - Number(bRead);
-        };
+        });
     }
 
     getUnreadNotificationsCount() {
@@ -1065,7 +1065,7 @@ class DataManagerClass {
 
             if (!hasChanges) {
                 //console.log('DataManager: No changes in notifications, skipping update');
-                return { hasChanges: false, newItems: [] };
+                return { hasChanges: false, newItems: [] });
             }
 
             // Find new items that weren't in previous notifications
@@ -1079,7 +1079,7 @@ class DataManagerClass {
             // Notify subscribers
             this._notifySubscribers();
 
-            return { hasChanges: true, newItems: newItemIds };
+            return { hasChanges: true, newItems: newItemIds });
         } catch (error) {
             console.error('DataManager: Failed to load notifications:', error);
             throw error;
@@ -1094,7 +1094,7 @@ class DataManagerClass {
             if (isMarkAll) {
                 // Optimistically mark all unread as read
                 this.data.notifications = this.data.notifications.map(n =>
-                    n.readAt ? n : { ...n, readAt: currentTime };
+                    n.readAt ? n : { ...n, readAt: currentTime });
             } else {
                 // Optimistically mark a single notification
                 this.data.notifications = this.data.notifications.map(n =>
@@ -1134,7 +1134,7 @@ class DataManagerClass {
 
             if (!hasChanges) {
                 //console.log('DataManager: No changes in news, skipping update');
-                return { hasChanges: false, newItems: [] };
+                return { hasChanges: false, newItems: [] });
             }
 
             // Find new items that weren't in previous news
@@ -1148,7 +1148,7 @@ class DataManagerClass {
             // Notify subscribers
             this._notifySubscribers();
 
-            return { hasChanges: true, newItems: newItemIds };
+            return { hasChanges: true, newItems: newItemIds });
         } catch (error) {
             console.error('DataManager: Failed to load news:', error);
             throw error;
@@ -1190,7 +1190,7 @@ class DataManagerClass {
                 if (endTime && now > endTime) return 'expired'; // Priority 3
                 if (startTime && now < startTime) return 'not-started'; // Priority 2
                 return 'available'; // Priority 1
-            };
+            });
 
             const stateA = getChallengeState(a);
             const stateB = getChallengeState(b);
@@ -1201,7 +1201,7 @@ class DataManagerClass {
                 'not-started': 2,
                 'expired': 3,
                 'completed': 3
-            };
+            });
             
             const priorityDiff = priorityOrder[stateA] - priorityOrder[stateB];
             if (priorityDiff !== 0) return priorityDiff;
@@ -1263,7 +1263,7 @@ class DataManagerClass {
                 this.data.cosmetics[cosmeticsIndex] = {
                     ...this.data.cosmetics[cosmeticsIndex],
                     acquired: 1
-                };
+                });
             }
 
             // Update user coins
@@ -1287,7 +1287,7 @@ class DataManagerClass {
                     this.data.cosmetics[cosmeticsIndex] = {
                         ...this.data.cosmetics[cosmeticsIndex],
                         acquired: 0
-                    };
+                    });
                 }
 
                 // Revert user coins
@@ -1306,7 +1306,7 @@ class DataManagerClass {
                 success: true,
                 newCoins,
                 cosmetic: this.data.cosmetics[cosmeticsIndex]
-            };
+            });
 
         } catch (error) {
             console.error('Purchase failed:', error);
@@ -1330,7 +1330,7 @@ class DataManagerClass {
         const currentUser = this.getUser();
         
         if (!battles || !currentUser) {
-            return { pending: [], completed: [] };
+            return { pending: [], completed: [] });
         }
 
         const pending = [];
@@ -1373,7 +1373,7 @@ class DataManagerClass {
                 const correct = results.filter(r => r.correct === 1).length;
                 const total = results.length;
                 const timeSec = results.reduce((sum, r) => sum + (r.timeMs || 0), 0) / 1000;
-                return { correct, total, timeSec };
+                return { correct, total, timeSec });
             };
 
             const userStats = calculateStats(userResults);
@@ -1408,7 +1408,7 @@ class DataManagerClass {
             const dateA = new Date(a.startedAt || 0);
             const dateB = new Date(b.startedAt || 0);
             return dateB - dateA;
-        };
+        });
 
         return {
             pending: pending.sort(sortByDate),
@@ -1484,7 +1484,7 @@ class DataManagerClass {
             minutesSinceUpdate: this.data.lastUpdated
                 ? Math.round((Date.now() - new Date(this.data.lastUpdated)) / 60000)
                 : null
-        };
+        });
 
         if (isDataStale && autoReload) {
             //console.log('Auto-reloading stale data');
@@ -1509,7 +1509,7 @@ class DataManagerClass {
             loading: this.loading,
             error: this.error,
             freshness: freshnessCheck
-        };
+        });
     }
 
     // Update user stats from quiz quit response
@@ -1555,13 +1555,13 @@ class DataManagerClass {
             coins: user.coins,
             stars: user.stars,
             points: user.points
-        };
+        });
     }
 
     // Equip cosmetics (apply selections for avatar/background/frame) locally and notify
     equipCosmetics({ avatarId = null, backgroundId = null, frameId = null } = {}) {
         try {
-            //console.log('DataManager.equipCosmetics called with:', { avatarId, backgroundId, frameId };
+            //console.log('DataManager.equipCosmetics called with:', { avatarId, backgroundId, frameId });
             const user = this.data.userInfo?.user;
             if (!user) {
                 //console.log('DataManager.equipCosmetics: No user found');
@@ -1570,7 +1570,7 @@ class DataManagerClass {
             const cosmetics = this.data.cosmetics || [];
 
             // Create a new user object to ensure React detects the change
-            const updatedUser = { ...user };
+            const updatedUser = { ...user });
             //console.log('DataManager.equipCosmetics: Original user:', user.avatarUrl);
 
             const applyEquip = (id, typeId, userField) => {
@@ -1619,7 +1619,7 @@ class DataManagerClass {
         this.userConfig = {
             randomPosition: config.randomPosition ?? this.userConfig.randomPosition,
             fullAccess: config.fullAccess ?? this.userConfig.fullAccess
-        };
+        });
         //console.log('DataManager: User config set:', this.userConfig);
     }
 

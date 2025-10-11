@@ -22,14 +22,14 @@ export default function SettingsScreen({ navigation }) {
 	const [privacyOpen, setPrivacyOpen] = useState(false);
 	const [changeNameOpen, setChangeNameOpen] = useState(false);
 	const [currentUserName, setCurrentUserName] = useState('');
-	const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' };
+	const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
 
 	// Load current user name
 	useEffect(() => {
 		const updateData = () => {
 			const userData = DataManager.getUser();
 			setCurrentUserName(userData?.nickname || userData?.firstName || '');
-		};
+		});
 		
 		// Initial load
 		updateData();
@@ -59,13 +59,13 @@ export default function SettingsScreen({ navigation }) {
                     title: translate('error'),
                     message: translate('settings.nick_in_use'),
                     visible: true,
-                };
+                });
             } else {
                 setMessageModal({
                     title: translate('error'),
                     message: translate('settings.nick_error'),
                     visible: true,
-                };
+                });
             }
         }
     };

@@ -36,7 +36,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
     Animated.timing(anim, { toValue: visible ? 1 : 0, duration: visible ? 180 : 150, useNativeDriver: true }).start();
   }, [visible, anim]);
 
-  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] };
+  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] });
   const opacity = anim;
 
   const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;

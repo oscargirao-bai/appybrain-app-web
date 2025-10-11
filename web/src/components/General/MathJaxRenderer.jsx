@@ -178,7 +178,7 @@ const MathJaxRenderer = ({
                     const h = n;
                     h.style.marginTop = '0';
                     h.style.marginBottom = '0';
-                  };
+                  });
                   ` : ''}
 
                   // Fallback: if no math got processed (still contains $$), retry a few more times
@@ -195,7 +195,7 @@ const MathJaxRenderer = ({
                   console.error('MathJax queue typeset error (attempt ' + attempt + '):', err);
                   if (attempt < 3) setTimeout(() => queueTypeset(target, attempt + 1), 80 * attempt);
                   else showContentAndPostHeight();
-                };
+                });
             } catch (e) {
               console.error('MathJax queue exception:', e);
               if (attempt < 3) setTimeout(() => queueTypeset(target, attempt + 1), 80 * attempt);
@@ -308,7 +308,7 @@ const MathJaxRenderer = ({
           
           window.addEventListener('load', function(){ 
             setTimeout(postHeight, 100); 
-          };
+          });
         </script>
       </body>
     </html>`;
@@ -323,7 +323,7 @@ const MathJaxRenderer = ({
     enabled,
     textAlign,
     padding
-  };
+  });
 
   const handleMessage = (event) => {
     try {

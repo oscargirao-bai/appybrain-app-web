@@ -47,7 +47,7 @@ export default function ChallengeScreen(props) {
 
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		};
+		});
 
 		// Initial load
 		updateData();
@@ -136,7 +136,7 @@ export default function ChallengeScreen(props) {
 					setConfirmOpen(false);
 					if (selectedChallenge) {
 						// Navigate directly to quiz with challengeId - no API call needed
-						navigation.navigate('Quizz', { challengeId: selectedChallenge.id };
+						navigation.navigate('Quizz', { challengeId: selectedChallenge.id });
 					}
 					setSelectedChallenge(null);
 				}}

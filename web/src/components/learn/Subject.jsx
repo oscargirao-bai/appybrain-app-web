@@ -25,7 +25,7 @@ export default function Subject({ title, iconName = 'book-open', onPress, size =
 		Animated.timing(scale, { toValue: 0, duration: 160, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
 	};
 
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] };
+	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] });
 
 	return (
 		<div style={{...styles.wrap, ...style}}>      

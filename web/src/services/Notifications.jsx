@@ -40,7 +40,7 @@ async function ensureAndroidChannel() {
       sound: 'default',
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
-    };
+    });
   }
 }
 
@@ -54,7 +54,7 @@ async function askPermissions() {
 
 async function getExpoPushToken() {
   const projectId = getProjectId();
-  const { data } = await Notifications.getExpoPushTokenAsync({ projectId };
+  const { data } = await Notifications.getExpoPushTokenAsync({ projectId });
   if (!data) throw new Error('Failed to obtain Expo Push Token.');
   return data; // ExponentPushToken[...]
 }
@@ -64,7 +64,7 @@ async function getNativePushToken() {
     const dev = await Notifications.getDevicePushTokenAsync();
     const nativeType = dev?.type ?? null;
     const raw = dev?.data ?? dev?.token ?? null;
-    return { nativeType, nativeToken: raw ?? null };
+    return { nativeType, nativeToken: raw ?? null });
   } catch {
     return { nativeType: null, nativeToken: null };
   }
@@ -79,7 +79,7 @@ async function registerTokenOnBackend(expoPushToken, nativeType, nativeToken) {
     appVersion: Constants?.expoConfig?.version ?? null,
     buildNumber:
       Constants?.expoConfig?.ios?.buildNumber ?? Constants?.expoConfig?.android?.versionCode ?? null,
-  };
+  });
 
   // Use the authenticated JSON request to include Authorization + handle rotation
   const resp = await ApiManager.makeAuthenticatedJSONRequest('api/information/register_token', {
@@ -97,7 +97,7 @@ async function registerTokenOnBackend(expoPushToken, nativeType, nativeToken) {
     const msg = resp?.message || resp?.error || 'register_token failed';
     throw new Error(msg);
   }
-  return resp ?? { ok: true };
+  return resp ?? { ok: true });
 }
 
 export function PushNotificationsRegistrar() {
@@ -136,7 +136,7 @@ export function PushNotificationsRegistrar() {
       console.warn(`[Push] Registration error (attempt ${retryCountRef.current}):`, e?.message || String(e));
       if (retryCountRef.current < 3) {
         setTimeout(() => {
-          attemptRegister().catch(() => {};
+          attemptRegister().catch(() => {});
         }, 2000 * retryCountRef.current);
       } else {
         console.warn('[Push] Max retries reached; will retry on next foreground if authenticated');
@@ -188,7 +188,7 @@ export function executeNotificationNavigation({ sourceType, sourceId, data }) {
     case 'battles':
     case 'battle':
       // Open battle result screen
-      navigate('Result2', { battleSessionId: sourceId };
+      navigate('Result2', { battleSessionId: sourceId });
       break;
     case 'challenges':
       // Open Challenges tab
@@ -196,12 +196,12 @@ export function executeNotificationNavigation({ sourceType, sourceId, data }) {
       break;
     case 'news':
       // Open Html screen with newsId
-      navigate('Html', { newsId: Number(sourceId) || sourceId };
+      navigate('Html', { newsId: Number(sourceId) || sourceId });
       break;
     case 'badges':
     case 'badge':
       // Open Profile and show badge modal for the given ID
-      navigate('Profile', { openBadgeModal: sourceId, timestamp: Date.now() };
+      navigate('Profile', { openBadgeModal: sourceId, timestamp: Date.now() });
       break;
     default:
       console.log('[Push][Router] Unknown sourceType, no navigation performed');
@@ -223,7 +223,7 @@ export function PushNotificationsLogger() {
     }
 
     const onReceived = (notification) => {
-      const content = notification?.request?.content ?? {};
+      const content = notification?.request?.content ?? {});
       console.log('[Push][Received] Notification RAW:', notification);
       console.log('[Push][Received] Title:', content.title);
       console.log('[Push][Received] Body:', content.body);
@@ -247,14 +247,14 @@ export function PushNotificationsLogger() {
           const dm = getDataManager();
           dm.markNotificationAsRead(notificationId).catch(error => {
             console.warn('[Push][Router] Failed to mark notification as read:', error);
-          };
+          });
         } catch (error) {
           console.warn('[Push][Router] Failed to get DataManager:', error);
         }
       }
 
       // Create navigation info object
-      const navigationInfo = { sourceType, sourceId, data };
+      const navigationInfo = { sourceType, sourceId, data });
 
       // Check if app is ready (not on loading screen)
       if (!isAppReady()) {
@@ -287,7 +287,7 @@ export function PushNotificationsLogger() {
     }
 
     const onResponse = (response) => {
-      const content = response?.notification?.request?.content ?? {};
+      const content = response?.notification?.request?.content ?? {});
       console.log('[Push][Response] Notification RAW:', response);
       console.log('[Push][Response] Title:', content.title);
       console.log('[Push][Response] Body:', content.body);

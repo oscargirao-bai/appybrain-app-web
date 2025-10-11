@@ -91,7 +91,7 @@ export default function RankingsModal({ visible, onClose }) {
 				navigation.navigate('Profile', {
 					externalUser: userBadgesResponse.user,
 					externalBadges: userBadgesResponse.items || []
-				};
+				});
 			} else {
 				console.warn('Failed to load user data:', userBadgesResponse);
 			}
@@ -109,7 +109,7 @@ export default function RankingsModal({ visible, onClose }) {
 		const getMetricValue = (user) => {
 			// The API now returns consistent points data regardless of metric type
 			return user.points ?? 0;
-		};
+		});
 
 		// Transform API data to match UserList component format
 		const transformRanking = (rankings) => {
@@ -130,7 +130,7 @@ export default function RankingsModal({ visible, onClose }) {
 					avatarUrl: user.avatarUrl,
 					backgroundUrl: user.backgroundUrl,
 					frameUrl: user.frameUrl
-				};
+				});
 			};
 		};
 

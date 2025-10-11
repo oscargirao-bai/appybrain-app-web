@@ -57,7 +57,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 			setDisciplines(disciplinesData);
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		};
+		});
 
 		// Initial load
 		updateData();
@@ -73,7 +73,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 	const handleChestOpen = async () => {
 		setChestBrowserOpen(true);
 		setReopenBrowserAfterReward(false); // fresh open
-	};
+	});
 
 	const handleChestOpenedFromBrowser = (rewards, chestType) => {
 		setChestRewards(rewards || []);
@@ -194,7 +194,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 								label={translate('titles.learn')}
 								color="#FFD700"
 								onClick={() => {
-								if (disciplines.length > 0) navigation.navigate('Category', { disciplineId: disciplines[0].id };
+								if (disciplines.length > 0) navigation.navigate('Category', { disciplineId: disciplines[0].id });
 								}}
 							/>
 						</div>

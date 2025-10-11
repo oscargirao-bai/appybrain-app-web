@@ -40,7 +40,7 @@ export default function RankDisplay({ trophies = 0, size = 170, style }) {
 
   // Rank every 50 trophies, clamped to 0..10
   const rankIndex = Math.max(0, Math.min(10, Math.floor((Number(trophies) || 0) / 50)));
-  const title = translate('rank.rank', { n: rankIndex };
+  const title = translate('rank.rank', { n: rankIndex });
   const ShieldComponent = shields[rankIndex] || Shield10;
 
   return (

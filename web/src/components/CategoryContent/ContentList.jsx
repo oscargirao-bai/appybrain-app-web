@@ -246,11 +246,11 @@ export default function ContentList({ data, onPressStudy, starsByDifficulty }) {
 	const closeConfirm = useCallback(() => setPendingQuiz(null), []);
 	const confirmStart = useCallback(() => {
 		if (pendingQuiz) {
-			const payload = { ...pendingQuiz.item, difficulty: pendingQuiz.difficulty };
+			const payload = { ...pendingQuiz.item, difficulty: pendingQuiz.difficulty });
 			//console.log('ContentList: Navigating to quiz with payload:', payload);
 			setPendingQuiz(null);
 			// Go directly to Quizz screen with selected content + difficulty
-			navigation.navigate('Quizz', { quiz: payload };
+			navigation.navigate('Quizz', { quiz: payload });
 			// Note: Do NOT call onPressStudy here as that would trigger study navigation
 		}
 	}, [pendingQuiz, navigation]);

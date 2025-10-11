@@ -19,7 +19,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			const notificationData = DataManager.getSortedNotifications();
 			setNotifications(notificationData);
 			// Don't create animations here - let loadNotifications() handle them when modal opens
-		};
+		});
 
 		// Initial load
 		updateData();
@@ -152,7 +152,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 		}
 
 		const { sourceType, sourceId } = notification;
-		//console.log('Navigating for notification:', { sourceType, sourceId, notification };
+		//console.log('Navigating for notification:', { sourceType, sourceId, notification });
 
 		// Add timestamp to ensure unique navigation calls
 		const timestamp = Date.now();
@@ -165,7 +165,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('Profile', { 
 					openBadgeModal: sourceId, 
 					timestamp 
-				};
+				});
 				break;
 			
 			case 'battle':
@@ -194,7 +194,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				navigationRef.current.navigate('Profile', { 
 					highlightChests: true, 
 					timestamp 
-				};
+				});
 				break;
 			
 			case 'learn':
@@ -210,7 +210,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				//console.log('Unknown notification sourceType:', sourceType, 'navigating to Profile');
 				navigationRef.current.navigate('Profile', { 
 					timestamp 
-				};
+				});
 				break;
 		}
 	};

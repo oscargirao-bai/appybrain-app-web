@@ -78,7 +78,7 @@ export default function DevConsoleOverlay() {
   const nextCorner = () => {
     setCornerIndex(prev => (prev + 1) % corners.length);
     didCycleRef.current = true;
-  };
+  });
 
   const clearTimers = () => {
     if (longPressTimeoutRef.current) { clearTimeout(longPressTimeoutRef.current); longPressTimeoutRef.current = null; }
@@ -103,7 +103,7 @@ export default function DevConsoleOverlay() {
     const shouldOpen = !didCycleRef.current; // tap (no cycling) => open
     setPressing(false);
     if (shouldOpen) setOpen(true);
-  };
+  });
 
   const cornerStyle = (() => {
     const m = 16;

@@ -45,7 +45,7 @@ const secureSet = async (key, value) => {
 
 const secureGet = async (key) => {
     return AsyncStorage.getItem(key);
-};
+});
 
 const secureDelete = async (key) => {
     await AsyncStorage.removeItem(key);
@@ -99,14 +99,14 @@ class ApiManager {
                 accessToken: this.accessToken,
                 refreshToken: this.refreshToken,
                 expiresAt: this.expiresAt
-            };
+            });
         } catch (error) {
             console.error('Failed to load session:', error);
             return {
                 accessToken: null,
                 refreshToken: null,
                 expiresAt: null
-            };
+            });
         }
     }
 
@@ -188,7 +188,7 @@ class ApiManager {
                 newAccessToken,
                 newRefreshToken,
                 newExpiresIn
-            };
+            });
         } catch (error) {
             console.error('Failed to update rotated tokens:', error);
         }
@@ -211,7 +211,7 @@ class ApiManager {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password })
-            };
+            });
 
             const data = await response.json();
 
@@ -266,7 +266,7 @@ class ApiManager {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email })
-            };
+            });
 
             const data = await response.json();
 
@@ -276,7 +276,7 @@ class ApiManager {
                 message: data.message || 'No message provided',
                 status: response.status,
                 ...data
-            };
+            });
         } catch (error) {
             console.error('Forgot password error:', error);
             throw error;
@@ -293,7 +293,7 @@ class ApiManager {
                     newPassword,
                     confirmPassword
                 })
-            };
+            });
 
             // Return the response data
             return {
@@ -315,7 +315,7 @@ class ApiManager {
                 try {
                     await this.makeAuthenticatedRequest('api/auth/logout', {
                         method: 'POST'
-                    };
+                    });
                 } catch (error) {
                     // Ignore logout API errors, still clear local session
                     console.warn('Logout API call failed:', error);
@@ -414,7 +414,7 @@ class ApiManager {
                 dm.setUserConfig({
                     randomPosition: response.user.randomPosition,
                     fullAccess: response.user.fullAccess
-                };
+                });
             }
 
             return true;
@@ -458,55 +458,55 @@ class ApiManager {
             const userInfo = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges').catch(err => {
                 console.warn('Failed to load user info:', err);
                 return null;
-            };
+            });
 
             // Make request to disciplines endpoint
             const disciplines = await this.makeAuthenticatedJSONRequest('api/app/learn_content_list').catch(err => {
                 console.warn('Failed to load disciplines:', err);
                 return null;
-            };
+            });
 
             // Make request to user stars endpoint
             const userStars = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_stars').catch(err => {
                 console.warn('Failed to load user stars:', err);
                 return null;
-            };
+            });
 
             // Make request to tribes list endpoint
             const tribes = await this.makeAuthenticatedJSONRequest('api/app/tribes_list').catch(err => {
                 console.warn('Failed to load tribes:', err);
                 return null;
-            };
+            });
 
             // Make request to user chests endpoint
             const userChests = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_chests').catch(err => {
                 console.warn('Failed to load user chests:', err);
                 return null;
-            };
+            });
 
             // Make request to notifications endpoint
             const notifications = await this.makeAuthenticatedJSONRequest('api/app/user_notifications').catch(err => {
                 console.warn('Failed to load notifications:', err);
                 return null;
-            };
+            });
 
             // Make request to news endpoint
             const news = await this.makeAuthenticatedJSONRequest('api/app/information_news').catch(err => {
                 console.warn('Failed to load news:', err);
                 return null;
-            };
+            });
 
             // Make request to rankings endpoint
             const rankings = await this.makeAuthenticatedJSONRequest('api/app/ranking').catch(err => {
                 console.warn('Failed to load rankings:', err);
                 return null;
-            };
+            });
 
             // Make request to challenges endpoint
             const challenges = await this.makeAuthenticatedJSONRequest('api/app/challenges_list').catch(err => {
                 console.warn('Failed to load challenges:', err);
                 return null;
-            };
+            });
 
             // Return consolidated data object
             return {
@@ -537,11 +537,11 @@ class ApiManager {
     // Get tribe members for a specific tribe
     async getTribeMembers(tribeId) {
         try {
-            const payload = { tribeId: tribeId };
+            const payload = { tribeId: tribeId });
             const response = await this.makeAuthenticatedJSONRequest('api/organization/tribe_members', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -553,11 +553,11 @@ class ApiManager {
     // Join a tribe
     async joinTribe(tribeId) {
         try {
-            const payload = { tribeId: tribeId };
+            const payload = { tribeId: tribeId });
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_join', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -571,7 +571,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_leave', {
                 method: 'POST'
-            };
+            });
 
             return response;
         } catch (error) {
@@ -609,11 +609,11 @@ class ApiManager {
     // Mark notification as read
     async markNotificationAsRead(notificationId) {
         try {
-            const payload = { notificationId: notificationId };
+            const payload = { notificationId: notificationId });
             const response = await this.makeAuthenticatedJSONRequest('api/app/user_notification_read', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -628,7 +628,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/ranking', {
                 method: 'POST',
                 body: JSON.stringify({ type })
-            };
+            });
 
             // Return the full response including ranking array and metadata
             return response || { success: false, ranking: [] };
@@ -641,11 +641,11 @@ class ApiManager {
     // Get user badges and profile info for a specific user
     async getUserBadges(userId) {
         try {
-            const payload = { userId: userId };
+            const payload = { userId: userId });
             const response = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -677,7 +677,7 @@ class ApiManager {
                 payload = {
                     quizType: 'challenge',
                     challengeId: idParam
-                };
+                });
             } else if (quizType === 'battle') {
                 // For battle quizzes, use simple battle payload
                 payload = {
@@ -695,7 +695,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_questions', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -713,12 +713,12 @@ class ApiManager {
                 correct: correct,
                 timeMs: timeMs,
                 heroUsedId: heroUsedId
-            };
+            });
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/answer_result', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -733,7 +733,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_buy', {
                 method: 'POST',
                 body: JSON.stringify({ cosmeticId })
-            };
+            });
 
             return response;
         } catch (error) {
@@ -747,12 +747,12 @@ class ApiManager {
         try {
             const payload = {
                 nickname: nickname
-            };
+            });
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/nickname_update', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -767,7 +767,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/learn_content_full', {
                 method: 'POST',
                 body: JSON.stringify({ id: contentId })
-            };
+            });
 
             // Return the content data
             return response;
@@ -796,7 +796,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenges_start', {
                 method: 'POST',
                 body: JSON.stringify({ challengeId })
-            };
+            });
 
             return response;
         } catch (error) {
@@ -810,7 +810,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/information_news', {
                 method: 'POST',
                 body: JSON.stringify({ id: newsId })
-            };
+            });
 
             // Return the news array from the response
             return response?.news || [];
@@ -836,11 +836,11 @@ class ApiManager {
     // Start a challenge
     async startChallenge(challengeId) {
         try {
-            const payload = { challengeId: challengeId };
+            const payload = { challengeId: challengeId });
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_start', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -856,11 +856,11 @@ class ApiManager {
                 challengeId: challengeId,
                 questionId: questionId,
                 answerId: answerId
-            };
+            });
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_answer', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -872,11 +872,11 @@ class ApiManager {
     // Complete a challenge
     async completeChallenge(challengeId) {
         try {
-            const payload = { challengeId: challengeId };
+            const payload = { challengeId: challengeId });
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_complete', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -891,7 +891,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_use', {
                 method: 'POST',
                 body: JSON.stringify({ cosmeticId })
-            };
+            });
 
             return response;
         } catch (error) {
@@ -906,7 +906,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/open_chest', {
                 method: 'POST',
                 body: JSON.stringify({ chestId })
-            };
+            });
 
             return response;
         } catch (error) {
@@ -921,12 +921,12 @@ class ApiManager {
             const payload = {
                 sessionId: sessionId,
                 quizIds: remainingQuizIds
-            };
+            });
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_quit', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            };
+            });
 
             return response;
         } catch (error) {
@@ -940,7 +940,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/battle_list', {
                 method: 'POST'
-            };
+            });
 
             return response;
         } catch (error) {
@@ -955,7 +955,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/app/battle_result', {
                 method: 'POST',
                 body: JSON.stringify({ battleSessionId })
-            };
+            });
 
             return response;
         } catch (error) {
@@ -970,7 +970,7 @@ class ApiManager {
             const response = await this.makeAuthenticatedRequest('api/app/error_report', {
                 method: 'POST',
                 body: JSON.stringify({ quizId })
-            };
+            });
             
             // Return success object without trying to parse
             return response;

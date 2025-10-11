@@ -102,8 +102,8 @@ export default function ResultScreen1() {
         <div style={styles.rewardWrap}>
           {(() => {
             const rewardType = getRewardType(quizType);
-            const rewardAmount = getRewardAmount(sessionResult, { correct, total };
-            //console.log('Rendering Reward with:', { rewardType, rewardAmount, quizType, sessionResult };
+            const rewardAmount = getRewardAmount(sessionResult, { correct, total });
+            //console.log('Rendering Reward with:', { rewardType, rewardAmount, quizType, sessionResult });
             return (
               <Reward 
                 type={rewardType} 
@@ -204,7 +204,7 @@ function getUserProfile() {
 }
 
 function getStats() {
-  return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 };
+  return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 });
 }
 
 function getTribeName() {
@@ -220,7 +220,7 @@ function getUsername() {
 
 function safeImageSource(url) {
   if (!url || typeof url !== 'string') return null;
-  return { uri: url };
+  return { uri: url });
 }
 
 function getAvatarSource() {
@@ -240,7 +240,7 @@ function getFrameSource() {
 
 // Updated reward amount function to use session result
 function getRewardAmount(sessionResult, fallbackData) {
-  //console.log('getRewardAmount called with:', { sessionResult, fallbackData };
+  //console.log('getRewardAmount called with:', { sessionResult, fallbackData });
   
   // If we have session result with specific reward data, use it
   if (sessionResult) {

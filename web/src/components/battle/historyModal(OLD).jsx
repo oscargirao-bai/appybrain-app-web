@@ -51,7 +51,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
               if (r && (r.correct === true || r.correct === 1)) correct += 1;
               if (r && typeof r.timeMs === 'number') timeMs += r.timeMs;
               if (r && typeof r.timeSec === 'number') timeMs += r.timeSec * 1000;
-            };
+            });
             return { correct, total, timeSec: (timeMs / 1000) };
           };
 
@@ -109,10 +109,10 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 
     if (visible) fetchBattles();
 
-    return () => { mounted = false; };
+    return () => { mounted = false; });
   }, [visible, meName, user]);
 
-  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] };
+  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] });
   const opacity = anim;
 
   // If parent passed arrays, use them as initial values; otherwise our fetch will populate
@@ -192,7 +192,7 @@ function HistoryItem({ left, right, leftStats, rightStats, status = 'pending', b
         if (battleSessionId) {
           // Close modal first so navigation isn't blocked by modal overlay
           try { onClose && onClose(); } catch (e) {}
-          navigation?.navigate('battleResult', { battleSessionId };
+          navigation?.navigate('battleResult', { battleSessionId });
         }
       }}
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}

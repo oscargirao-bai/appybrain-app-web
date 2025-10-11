@@ -34,7 +34,7 @@ export default function UserList({
 			if (metric === 'points') return u.trophies || 0;
 			if (metric === 'xp') return u.xp || 0;
 			return u.stars || 0;
-		};
+		});
 		return [...users].sort((a, b) => getValue(b) - getValue(a));
 	}, [users, metric]);
 

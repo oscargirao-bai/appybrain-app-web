@@ -19,7 +19,7 @@ export default function NewScreen() {
 		const updateData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		};
+		});
 
 		// Initial load
 		updateData();

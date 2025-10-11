@@ -61,7 +61,7 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 			const price = i.coins || 0;
 			if (price === 0) return true;
 			return typeof price === 'number' && price > 0 && price <= userCoins;
-		};
+		});
 		let loop;
 		if (hasHighlight) {
 			loop = Animated.loop(
@@ -76,7 +76,7 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 		}
 		return () => {
 			loop && loop.stop();
-		};
+		});
 	}, [data, userCoins, affordableAnim]);
 
 	const itemSize = useMemo(() => {

@@ -82,7 +82,7 @@ export default function CustomizeList({ data = [], numColumns = 3, style, scroll
 				<button 					style={{...styles.card, ...{ width: itemSize}}
 					onClick={() => {
 						if (onSelect && owned) onSelect(item);
-						else if (!owned && onPurchase) onPurchase({ ...item, price };
+						else if (!owned && onPurchase) onPurchase({ ...item, price });
 					}}
 					android_ripple={{ color: rarityColor + '33' }}
 				>

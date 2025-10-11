@@ -75,7 +75,7 @@ export default function CategoryScreen() {
 				content.title?.toLowerCase().includes(searchLower) ||
 				content.description?.toLowerCase().includes(searchLower)
 			);
-		};
+		});
 	}, [categories, discipline, searchText]);
 
 	const handlePressItem = useCallback((item) => {
@@ -84,7 +84,7 @@ export default function CategoryScreen() {
 			categoryId: item.id,
 			categoryColor: item.color,
 			categoryIconColor: item.iconColor
-		};
+		});
 	}, [navigation]);
 
 	return (
