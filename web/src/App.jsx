@@ -3,6 +3,7 @@ import { ThemeProvider } from './services/Theme.jsx';
 import LoginScreen from './screens/account/Login.jsx';
 import LoadingScreen from './screens/Loading.jsx';
 import LearnScreen from './screens/learn/Learn.jsx';
+import BattleScreen from './screens/tabs/Battle.jsx';
 import SettingsScreen from './screens/Settings.jsx';
 import ProfileScreen from './screens/Profile.jsx';
 import CategoryScreen from './screens/learn/Category.jsx';
@@ -70,6 +71,7 @@ export default function App() {
       case 'Category':
         return <CategoryScreen onNavigate={navigate} disciplineId={screenParams.disciplineId} />;
       case 'Battle':
+        return <BattleScreen onNavigate={navigate} />;
       case 'Challenges':
       case 'Tribes':
       case 'News':
