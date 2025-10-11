@@ -13,9 +13,10 @@ export default function Loading({ onNavigate }) {
     const run = async () => {
       try {
         // First, validate session in the background
-        const isSessionValid = await ApiManager.validateSession();
+        const sessionResult = await ApiManager.validateSession();
         
-        if (!isSessionValid) {
+        // validateSession returns the user data object if valid, or false if invalid
+        if (!sessionResult) {
           // Session is invalid or doesn't exist, redirect to login
           console.log('Session invalid, redirecting to login');
           onNavigate('Login');
