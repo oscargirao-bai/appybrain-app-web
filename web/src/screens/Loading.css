@@ -1,8 +1,8 @@
 .loading-page{min-height:100vh;position:relative;background:#FDD92B;overflow:hidden}
 .logo-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;padding-top:8px}
-.logo-crop{width:min(48vw,380px);aspect-ratio:1/1;overflow:hidden}
-.logo-crop img{width:100%;height:125%;object-fit:contain;transform:translateY(-10%)}
-.center{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.logo-crop{width:min(44vw,360px);height:calc(min(44vw,360px) * 0.55);overflow:hidden;pointer-events:none}
+.logo-crop img{width:100%;height:180%;object-fit:contain;transform:translateY(-20%)}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:clamp(60px,10vh,140px)}
 .center{flex-direction:column;gap:22px}
 .org-card{width:min(72vw,420px);aspect-ratio:1/1;border:10px solid #000;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center}
 .org-card img{max-width:90%;max-height:90%;object-fit:contain}
