@@ -112,7 +112,7 @@ export default function Learn({ onNavigate, openNotifications }){
         <HeaderBar title={t('titles.learn')} notifications={unreadCount} onOpenNotifications={() => setNotificationsOpen(true)} onOpenSettings={() => onNavigate && onNavigate('Settings')} />
       </div>
       <div className="content page-50">
-        <Banner avatarUrl={userInfo?.avatarUrl} backgroundUrl={userInfo?.backgroundUrl} frameUrl={userInfo?.frameUrl} />
+        <Banner avatarUrl={userInfo?.avatarUrl} backgroundUrl={userInfo?.backgroundUrl} frameUrl={userInfo?.frameUrl} onClick={() => onNavigate && onNavigate('Profile')} />
         <Info username={userInfo?.nickname || '—'} tribe={userInfo?.tribes?.[0]?.name || t('common.noTribe')} stars={userInfo?.stars || 0} coins={userInfo?.coins || 0} />
         <ChestStarsRow onMedals={() => setRankingsOpen(true)} onOpenChest={handleChestOpen} />
         <div style={{ height: 0 }} />
