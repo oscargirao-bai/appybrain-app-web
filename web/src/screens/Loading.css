@@ -7,7 +7,12 @@
 .org-card{width:min(60vw,315px);aspect-ratio:1/1;border:10px solid #000;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center}
 .org-card img{max-width:90%;max-height:90%;object-fit:contain}
 .spinner-text{font-weight:600;color:#000;opacity:.9}
-.bottom{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:flex-end;height:160px;}
+.bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;display:flex;justify-content:center;align-items:flex-end;height:160px;width:100%;max-width:600px;}
 .rainbow{position:absolute;left:0;right:0;bottom:0;width:100%;height:80px;object-fit:cover}
 .skater{position:absolute;bottom:80px;left:-90px;width:75px;animation:skate 6s linear infinite}
-@keyframes skate{0%{transform:translateX(-90px) scaleX(1)}48%{transform:translateX(calc(100vw - 75px)) scaleX(1)}52%{transform:translateX(calc(100vw - 75px)) scaleX(-1)}100%{transform:translateX(-90px) scaleX(-1)}}
+@keyframes skate{0%{transform:translateX(-90px) scaleX(1)}48%{transform:translateX(calc(600px - 75px)) scaleX(1)}52%{transform:translateX(calc(600px - 75px)) scaleX(-1)}100%{transform:translateX(-90px) scaleX(-1)}}
+
+@media (max-width: 640px) {
+  .bottom{max-width:100vw;}
+  @keyframes skate{0%{transform:translateX(-90px) scaleX(1)}48%{transform:translateX(calc(100vw - 75px)) scaleX(1)}52%{transform:translateX(calc(100vw - 75px)) scaleX(-1)}100%{transform:translateX(-90px) scaleX(-1)}}
+}

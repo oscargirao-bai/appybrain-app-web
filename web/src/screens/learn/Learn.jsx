@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useThemeColors } from '../../services/Theme.jsx';
 import Icon from '../../components/common/Icon.jsx';
 import { t } from '../../services/Translate.js';
 import DataManager from '../../services/DataManager.js';

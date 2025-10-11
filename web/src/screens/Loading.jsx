@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useThemeColors } from '../services/Theme.jsx';
 import ApiManager from '../services/ApiManager.js';
 import DataManager from '../services/DataManager.js';
 import './Loading.css';
 
 export default function Loading({ onNavigate }) {
+  const colors = useThemeColors();
   const [text, setText] = useState('A validar sessão...');
   const [orgLogo, setOrgLogo] = useState(null);
 
@@ -41,6 +43,7 @@ export default function Loading({ onNavigate }) {
   }, [onNavigate]);
 
   return (
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
     <div className="loading-page">
       <div className="logo-top">
         <div className="logo-crop page-50">
@@ -59,6 +62,7 @@ export default function Loading({ onNavigate }) {
         <img src="/assets/rainbow.png" alt="rainbow" className="rainbow" />
         <img src="/assets/skater.svg" alt="skater" className="skater" />
       </div>
+    </div>
     </div>
   );
 }
