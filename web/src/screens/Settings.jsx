@@ -1,19 +1,125 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { t } from '../services/Translate.js';
-import Icon from '../components/common/Icon.jsx';
+import { useThemeColors } from '../services/Theme.jsx';
+import apiManagerInstance from '../services/ApiManager';
+import DataManager from '../services/DataManager';
+import Button3 from '../components/common/Button3';
+import Button4 from '../components/common/Button4';
+import ButtonLightDark from '../components/settings/ButtonLightDark';
+import ButtonLanguage from '../components/settings/ButtonLanguage';
+import PrivacyModal from '../components/settings/PrivacyModal';
+import ChangeNameModal from '../components/settings/ChangeNameModal';
+import MessageModal from '../components/common/MessageModal';
+import './Settings.css';
 
 export default function Settings({ onNavigate }) {
+  const colors = useThemeColors();
+  const [vibration, setVibration] = useState(true);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [changeNameOpen, setChangeNameOpen] = useState(false);
+  const [currentUserName, setCurrentUserName] = useState('');
+  const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
+
+  useEffect(() => {
+    const updateData = () => {
+      const userData = DataManager.getUser();
+      setCurrentUserName(userData?.nickname || userData?.firstName || '');
+    };
+    updateData();
+    const unsubscribe = DataManager.subscribe(updateData);
+    return unsubscribe;
+  }, []);
+
+  const handleVibrationChange = useCallback((val) => {
+    setVibration(val);
+  }, []);
+
+  const handleChangeName = async (newNickname) => {
+    setChangeNameOpen(false);
+    try {
+      await apiManagerInstance.updateNickname(newNickname);
+      await DataManager.refreshSection('userInfo');
+      setCurrentUserName(newNickname);
+    } catch (error) {
+      console.error('Error updating nickname:', error);
+      if (error.status === 409) {
+        setMessageModal({
+          title: t('error'),
+          message: t('settings.nick_in_use'),
+          visible: true,
+        });
+      } else {
+        setMessageModal({
+          title: t('error'),
+          message: t('settings.nick_error'),
+          visible: true,
+        });
+      }
+    }
+  };
+
+  const handleLogout = useCallback(() => {
+    const confirmed = window.confirm('Tem a certeza de que deseja terminar a sessão?');
+    if (confirmed) {
+      (async () => {
+        try {
+          await apiManagerInstance.logout();
+          onNavigate('Login');
+        } catch (error) {
+          console.error('Logout error:', error);
+          onNavigate('Login');
+        }
+      })();
+    }
+  }, [onNavigate]);
+
+  const INSTAGRAM_URL = 'https://www.instagram.com/appy_brain/';
+  const handleOpenInstagram = useCallback(() => {
+    window.open(INSTAGRAM_URL, '_blank', 'noopener,noreferrer');
+  }, []);
+
   return (
-    <div className="page-50" style={{ minHeight: '100vh', padding: '20px' }}>
-      <header style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-        <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}>
-          <Icon name="arrow-left" size={24} />
+    <div className="settings-screen" style={{ backgroundColor: colors.background }}>
+      <div className="settings-header">
+        <button className="settings-back-btn" onClick={() => onNavigate('Profile')} aria-label="Voltar">
+          <i data-lucide="arrow-left" style={{ color: colors.text }} />
         </button>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{t('settings.settings')}</h1>
-      </header>
-      <div style={{ padding: '40px 0', textAlign: 'center' }}>
-        <p>Página de configurações em desenvolvimento...</p>
+        <h1 className="settings-title" style={{ color: colors.text }}>
+          {t('settings.settings')}
+        </h1>
+        <div style={{ width: 40 }} />
       </div>
+
+      <div className="settings-content">
+        <h3 className="settings-section-title" style={{ color: colors.text }}>
+          {t('profile.overviewTitle')}
+        </h3>
+        <Button4 label={t('profile.customize')} onPress={() => onNavigate('Customize')} />
+        <Button4 label={t('settings.customizeProfile')} onPress={() => setChangeNameOpen(true)} />
+
+        <h3 className="settings-section-title" style={{ color: colors.text }}>
+          {t('settings.general')}
+        </h3>
+        <Button3 icon="vibrate" label={t('settings.vibrations')} value={vibration} onValueChange={handleVibrationChange} />
+        <ButtonLightDark />
+
+        <h3 className="settings-section-title" style={{ color: colors.text, marginTop: 24 }}>
+          {t('settings.account')}
+        </h3>
+        <Button4 label={t('settings.privacyPolicy')} onPress={() => setPrivacyOpen(true)} />
+        <Button4 label={t('settings.logout')} onPress={handleLogout} danger />
+      </div>
+
+      <div className="settings-instagram-row">
+        <button className="settings-instagram-btn" onClick={handleOpenInstagram}>
+          <img src="/assets/Instagram_Glyph_Gradient.png" alt="Instagram" className="settings-instagram-img" />
+          <span className="settings-instagram-text" style={{ color: colors.text }}>appy_brain</span>
+        </button>
+      </div>
+
+      <ChangeNameModal visible={changeNameOpen} currentName={currentUserName} onCancel={() => setChangeNameOpen(false)} onConfirm={handleChangeName} />
+      <PrivacyModal visible={privacyOpen} onClose={() => setPrivacyOpen(false)} />
+      <MessageModal visible={messageModal.visible} title={messageModal.title} message={messageModal.message} onClose={() => setMessageModal({ visible: false, title: '', message: '' })} />
     </div>
   );
 }

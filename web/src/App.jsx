@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from './services/Theme.jsx';
 import LoginScreen from './screens/account/Login.jsx';
 import LoadingScreen from './screens/Loading.jsx';
 import LearnScreen from './screens/learn/Learn.jsx';
@@ -75,16 +76,18 @@ export default function App() {
   };
 
   return (
-    <div style={{ paddingBottom: showNavBar ? '80px' : '0' }}>
-      {render()}
-      {showNavBar && (
-        <NavBar 
-          icons={tabs.map(t => t.icon)} 
-          currentPage={currentTab} 
-          handleTabPress={handleTabPress} 
-        />
-      )}
-    </div>
+    <ThemeProvider defaultTheme="dark">
+      <div style={{ paddingBottom: showNavBar ? '80px' : '0' }}>
+        {render()}
+        {showNavBar && (
+          <NavBar 
+            icons={tabs.map(t => t.icon)} 
+            currentPage={currentTab} 
+            handleTabPress={handleTabPress} 
+          />
+        )}
+      </div>
+    </ThemeProvider>
   );
 }
 

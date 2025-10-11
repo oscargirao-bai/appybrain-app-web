@@ -151,6 +151,24 @@ class ApiManager {
     const challenges = await this.authJson('app/challenges_list').catch(() => null);
     return { userInfo, disciplines, userStars, tribes, userChests, notifications, news, rankings, challenges };
   }
+
+  async updateNickname(nickname) {
+    const payload = { nickname };
+    return await this.authJson('app/nickname_update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async logout() {
+    try {
+      await this.authJson('auth/logout', { method: 'POST' });
+    } catch (e) {
+      console.warn('Logout API call failed, clearing session anyway:', e);
+    }
+    await this.clearSession();
+  }
 }
 
 export default new ApiManager();

@@ -1,17 +1,26 @@
 import React from 'react';
 import Icon from '../common/Icon.jsx';
+import SvgIcon from '../common/SvgIcon.jsx';
 
-export default function Area({ title, svgIcon, color = '#222', iconColor = '#222', onPress }){
+export default function Area({ title, svgIcon, color = '#FFD700', iconColor = '#222', onPress }){
   return (
     <button onClick={onPress} style={{
-      display:'flex', alignItems:'center', gap:10,
-      border:'1px solid rgba(0,0,0,.15)', borderRadius:14, padding:'10px 14px',
-      background:'#fff', cursor:'pointer', minWidth:140, justifyContent:'flex-start'
+      display:'flex', flexDirection:'row', alignItems:'center', gap:12,
+      border:'none', background:'transparent', cursor:'pointer', padding:0, marginVertical:6, width:200
     }}>
-      <div style={{ width:32, height:32, borderRadius:8, background: color + '22', display:'grid', placeItems:'center' }}>
-        <Icon name={svgIcon || 'book-open'} size={20} color={iconColor} />
+      <div style={{ 
+        width:65, height:65, borderRadius:'50%', 
+        background: color, 
+        border: `3px solid ${color}22`,
+        display:'flex', alignItems:'center', justifyContent:'center'
+      }}>
+        {svgIcon && svgIcon.includes('<svg') ? (
+          <SvgIcon svgString={svgIcon} size={32} color={iconColor} />
+        ) : (
+          <Icon name={svgIcon || 'book-open'} size={32} color={iconColor} />
+        )}
       </div>
-      <div style={{ fontWeight:700 }}>{title}</div>
+      <div style={{ fontSize:20, fontWeight:700, textAlign:'left', flex:1, lineHeight:'22px' }}>{title}</div>
     </button>
   );
 }

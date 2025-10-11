@@ -70,13 +70,11 @@ export default function Profile({ onNavigate }) {
   return (
     <div className="page-50" style={{ minHeight: '100vh', paddingBottom: '80px' }}>
       <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}>
-            <Icon name="arrow-left" size={24} />
-          </button>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>Perfil</h1>
-        </div>
-        <button onClick={() => onNavigate('Settings')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}>
+        <button onClick={() => onNavigate('Learn')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8, width: 40 }}>
+          <Icon name="arrow-left" size={24} />
+        </button>
+        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, flex: 1, textAlign: 'center' }}>Perfil</h1>
+        <button onClick={() => onNavigate('Settings')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8, width: 40 }}>
           <Icon name="settings" size={24} />
         </button>
       </header>

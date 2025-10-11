@@ -49,6 +49,13 @@ class DataManagerClass {
   getData() { return this.data; }
   getUser() { return this.data.userInfo?.user || null; }
   getDisciplines() { return this.data.disciplines || []; }
+  getAreaById(id) { 
+    return this.data.disciplines?.find(d => d.id === id); 
+  }
+  getCategoryStars(categoryId) {
+    const userStars = this.data.userStars?.categories || {};
+    return userStars[categoryId] || { earnedStars: 0, maxStars: 0 };
+  }
   getUserStars() { return this.data.userStars; }
   getUserChests() { return this.data.userChests; }
   getUserBadges() { return this.data.badges || []; }
@@ -64,8 +71,23 @@ class DataManagerClass {
   getTotalStars() { return this.data.userStars?.totals || { earnedStars:0, maxStars:0 }; }
 
   async refreshSection(section) {
-    // Stub: web calls ApiManager directly; refresh done at LoadingScreen
-    console.log('DataManager.refreshSection stub:', section);
+    console.log('DataManager.refreshSection:', section);
+    const api = (await import('./ApiManager.js')).default;
+    if (section === 'userInfo') {
+      const userInfo = await api.authJson('app/gamification_user_badges');
+      this.data.userInfo = userInfo;
+      this.data.badges = userInfo?.items || [];
+      const user = userInfo?.user || null;
+      if (user) this.data.user = user;
+      this._notifySubscribers();
+      return userInfo;
+    } else if (section === 'disciplines') {
+      const disciplines = await api.authJson('app/learn_content_list');
+      this.data.disciplines = disciplines?.areas || disciplines || [];
+      this._notifySubscribers();
+      return disciplines;
+    }
+    console.warn('refreshSection: unknown section', section);
   }
 
   async markNotificationAsRead(id) {
