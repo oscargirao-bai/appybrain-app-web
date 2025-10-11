@@ -1,0 +1,442 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Modal, View, Text, StyleSheet, Pressable, ScrollView, ActivityIndicator, useWindowDimensions, Image, Animated, Easing } from 'react-native';
+import { useThemeColors } from '../../services/Theme';
+import DataManager from '../../services/DataManager';
+import ApiManager from '../../services/ApiManager';
+import { family } from '../../constants/font';
+
+// Import chest images
+const chestImages = {
+  bronze: require('../../../assets/chests/chest-bronze.png'),
+  silver: require('../../../assets/chests/chest-silver.png'),
+  gold: require('../../../assets/chests/chest-gold.png'),
+  epic: require('../../../assets/chests/chest-epic.png'),
+};
+
+const chestImagesOpened = {
+  bronze: require('../../../assets/chests/chest-bronze-opened.png'),
+  silver: require('../../../assets/chests/chest-silver-opened.png'),
+  gold: require('../../../assets/chests/chest-gold-opened.png'),
+  epic: require('../../../assets/chests/chest-epic-opened.png'),
+};
+
+export default function ChestBrowserModal({ visible, onClose, onChestOpened, dataSource = 'stars' }) {
+  const colors = useThemeColors();
+  const { height } = useWindowDimensions();
+  const scrollRef = useRef(null);
+  const [chests, setChests] = useState([]);
+  const [loadingChestId, setLoadingChestId] = useState(null);
+  const [progressData, setProgressData] = useState({ current: 0, nextThreshold: 100 });
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const chestPulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (visible) {
+      const chestData = DataManager.getUserChests();
+      console.log('ChestBrowserModal: Raw chest data:', chestData);
+      
+      // Use the specified dataSource prop (same as Chest component)
+      let sourceData = {};
+      if (dataSource === 'points') {
+        sourceData = chestData?.points || {};
+        console.log('ChestBrowserModal: Using points data');
+      } else {
+        sourceData = chestData?.stars || {};
+        console.log('ChestBrowserModal: Using stars data');
+      }
+      
+      console.log('ChestBrowserModal: Source data:', sourceData);
+      
+      const existingChests = sourceData?.chests || [];
+      
+      // Create combined list: existing chests + upcoming chest at nextThreshold
+      const allChests = [...existingChests];
+      
+      // Add upcoming chest if it doesn't already exist at nextThreshold
+      const nextThreshold = sourceData?.nextThreshold;
+      const nextChestType = sourceData?.nextChestType || 'bronze';
+      if (nextThreshold && !existingChests.find(c => c.milestone === nextThreshold)) {
+        allChests.push({
+          id: `upcoming-${nextThreshold}`,
+          source: sourceData.source || 'stars',
+          chestType: nextChestType,
+          milestone: nextThreshold,
+          grantedAt: null,
+          openedAt: null,
+          isUpcoming: true
+        });
+      }
+      
+      // Sort chests by milestone ascending
+      const sortedChests = allChests.sort((a, b) => (a.milestone || 0) - (b.milestone || 0));
+      console.log('ChestBrowserModal: Final chests:', sortedChests);
+      setChests(sortedChests);
+      
+      // Set progress data
+      const progressInfo = {
+        current: sourceData?.current || 0,
+        nextThreshold: sourceData?.nextThreshold || 100
+      };
+      console.log('ChestBrowserModal: Progress info:', progressInfo);
+      setProgressData(progressInfo);
+    }
+  }, [visible, dataSource]);
+
+  // Pulse animation for available chests
+  useEffect(() => {
+    const hasAvailableChests = chests.some(chest => chest.grantedAt && !chest.openedAt && !chest.isUpcoming);
+    
+    if (hasAvailableChests) {
+      // Glow pulse (larger range)
+      const glowPulse = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.15,
+            duration: 1000,
+            easing: Easing.inOut(Easing.quad),
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.inOut(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      
+      // Chest pulse (smaller range)
+      const chestPulse = Animated.loop(
+        Animated.sequence([
+          Animated.timing(chestPulseAnim, {
+            toValue: 1.08,
+            duration: 1000,
+            easing: Easing.inOut(Easing.quad),
+            useNativeDriver: true,
+          }),
+          Animated.timing(chestPulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.inOut(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      
+      glowPulse.start();
+      chestPulse.start();
+      
+      return () => {
+        glowPulse.stop();
+        chestPulse.stop();
+      };
+    } else {
+      pulseAnim.setValue(1);
+      chestPulseAnim.setValue(1);
+    }
+  }, [chests, pulseAnim, chestPulseAnim]);
+
+  const handleOpen = async (chest) => {
+    if (!chest || chest.openedAt) return; // only open unopened
+    setLoadingChestId(chest.id);
+    try {
+      const response = await ApiManager.openChest(chest.id);
+      if (response?.success) {
+        const rewards = [];
+        if (response.coins > 0) rewards.push({ id: 'coins', type: 'coins', amount: response.coins });
+        if (response.cosmeticId) rewards.push({ id: 'cosmetic', type: 'cosmetic', cosmeticId: response.cosmeticId, amount: 1 });
+        // Refresh data
+        await Promise.all([DataManager.refreshSection('userInfo'), DataManager.refreshSection('chests'), DataManager.refreshSection('shop')]);
+        setLoadingChestId(null);
+        onChestOpened && onChestOpened(rewards, chest.chestType);
+        onClose && onClose();
+      } else {
+        setLoadingChestId(null);
+        console.warn('Open chest API did not succeed', response);
+      }
+    } catch (e) {
+      console.error('Error opening chest from browser modal', e);
+      setLoadingChestId(null);
+    }
+  };
+
+  // Calculate progression bar height based on data source and milestones
+  const sortedChests = [...chests].sort((a, b) => (a.milestone || 0) - (b.milestone || 0));
+  const maxMilestone = sortedChests.length > 0 ? Math.max(...sortedChests.map(c => c.milestone || 0)) : 100;
+  
+  // Adaptive scaling based on data source to maintain visual consistency
+  let pixelsPerUnit;
+  if (dataSource === 'points') {
+    // For points: each 200 points (1 checkpoint) = 100px, so 0.5px per point
+    // This maintains the same visual scaling as stars (4 stars = 100px = 25px per star)
+    pixelsPerUnit = 0.5;
+  } else {
+    // For stars: each 4 stars (1 checkpoint) = 100px, so 25px per star
+    pixelsPerUnit = 25;
+  }
+  
+  const barHeight = maxMilestone * pixelsPerUnit;
+  
+  // Find the current chest index and calculate precise progress including partial progress
+  let currentChestIndex = -1;
+  let nextChestIndex = 0;
+  for (let i = 0; i < sortedChests.length; i++) {
+    if (progressData.current >= (sortedChests[i].milestone || 0)) {
+      currentChestIndex = i;
+      nextChestIndex = i + 1;
+    } else {
+      nextChestIndex = i;
+      break;
+    }
+  }
+  
+  // Calculate precise progress including partial progress to next chest
+  let progressPercent = 0;
+  if (sortedChests.length > 0) {
+    if (currentChestIndex === sortedChests.length - 1) {
+      // All chests completed, fill to current progress
+      progressPercent = progressData.current / maxMilestone;
+    } else if (nextChestIndex < sortedChests.length) {
+      // Show exact progress based on data source scaling
+      progressPercent = progressData.current / maxMilestone;
+    } else {
+      progressPercent = progressData.current / maxMilestone;
+    }
+  }
+  
+  const fillHeight = barHeight * progressPercent; // Direct calculation: current units * pixelsPerUnit
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}>
+          <Text style={[styles.title, { color: colors.text }]}>Progressão de Baús</Text>
+          
+          <ScrollView
+            ref={scrollRef}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={true}
+            onContentSizeChange={() => {
+              // When content grows (many chests), scroll to the end so the user sees the bottom portion by default
+              if (scrollRef.current) {
+                // small timeout to ensure layout is settled on some devices
+                setTimeout(() => scrollRef.current?.scrollToEnd({ animated: false }), 0);
+              }
+            }}
+          >
+            <View style={styles.progressContainer}>
+              <View style={styles.leftCol}>
+                <View style={styles.progressInner}>
+                  {/* Progress bar background */}
+                  <View style={[styles.progressBarBg, { height: barHeight, backgroundColor: colors.text + '1A' }]}>
+                    {/* Progress fill - fills from top to bottom */}
+                    <View style={[styles.progressFill, { 
+                      height: fillHeight, 
+                      backgroundColor: colors.secondary + 'AA' 
+                    }]} />
+                  </View>
+                  
+                  {/* Chest checkpoints (positioned relative to the progressInner) */}
+                  <View style={[styles.checkpointsContainer, { height: barHeight + 24 }] }>
+                    {sortedChests.map((chest, index) => {
+                      const milestone = chest.milestone || 0;
+                      // Position based on actual milestone values using the adaptive scaling
+                      const topPosition = milestone * pixelsPerUnit;
+                      const isReached = progressData.current >= milestone;
+                      const canOpen = chest.grantedAt && !chest.openedAt && !chest.isUpcoming;
+                      const isOpened = chest.openedAt;
+
+                      // Select appropriate chest image based on opened status
+                      const chestImage = isOpened 
+                        ? (chestImagesOpened[chest.chestType] || chestImagesOpened.bronze)
+                        : (chestImages[chest.chestType] || chestImages.bronze);
+
+                      return (
+                        <View
+                          key={chest.id}
+                          style={[styles.checkpoint, { top: topPosition }]}
+                        >
+                          {/* Milestone marker - centered */}
+                          <View style={styles.milestoneContainer}>
+                            {/* Small vertical line that matches the modal background to create a subtle notch */}
+                            <View style={[styles.milestoneMarker, { backgroundColor: colors.card }]} />
+                          </View>
+
+                          {/* Chest icon and info */}
+                          <View style={styles.chestInfo}>
+                            {canOpen && (
+                              <Animated.View
+                                style={[
+                                  styles.chestGlow,
+                                  {
+                                    transform: [{ scale: pulseAnim }],
+                                    backgroundColor: colors.secondary + '40',
+                                    shadowColor: colors.secondary,
+                                  }
+                                ]}
+                              />
+                            )}
+                            <Pressable
+                              onPress={() => canOpen ? handleOpen(chest) : null}
+                              disabled={!canOpen || loadingChestId === chest.id}
+                              style={({ pressed }) => [
+                                styles.chestButton,
+                                { opacity: pressed ? 0.8 : 1 }
+                              ]}
+                            >
+                              <Animated.View style={[styles.chestContainer, { 
+                                opacity: chest.isUpcoming ? 0.6 : 1,
+                                transform: canOpen ? [{ scale: chestPulseAnim }] : []
+                              }]}>
+                                <Image 
+                                  source={chestImage} 
+                                  style={styles.chestImage}
+                                  resizeMode="contain"
+                                />
+                              </Animated.View>
+                              {/* loading overlay intentionally removed: do not show spinner when opening a chest */}
+                            </Pressable>
+                          </View>
+                        </View>
+                      );
+                    })}
+                  </View>
+                </View>
+              </View>
+              <View style={styles.rightCol} />
+            </View>
+            {/* Reduced spacer for more compact layout */}
+            <View style={{ height: 20 }} />
+          </ScrollView>
+          
+          <Pressable style={[styles.closeBtn, { borderColor: colors.text + '22' }]} onPress={onClose}>
+            <Text style={[styles.closeText, { color: colors.text }]}>Fechar</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
+  panel: { width: '100%', maxWidth: 400, borderRadius: 16, padding: 20, borderWidth: 1, maxHeight: '85%' },
+  title: { fontSize: 18, fontFamily: family.bold, textAlign: 'center', marginBottom: 16 },
+  scrollContent: { paddingVertical: 8, paddingBottom: 56 },
+  progressContainer: { 
+    alignItems: 'center',
+    position: 'relative',
+    paddingHorizontal: 68,
+    flexDirection: 'row', // layout leftCol and rightCol side-by-side
+    width: '100%',
+  },
+  progressInner: {
+    width: 120, // fixed inner width so the bar can be centered and chests positioned relative to it
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -8, // small nudge left so the bar sits closer to the visual center of the left half
+  },
+  leftCol: {
+    width: '48%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rightCol: {
+    width: '52%',
+  },
+  progressBarBg: {
+    width: 8,
+    borderRadius: 4,
+    position: 'relative',
+  },
+  progressFill: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    borderRadius: 4,
+  },
+  checkpointsContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+  },
+  checkpoint: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    transform: [{ translateY: -12 }],
+  },
+  milestoneContainer: {
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -7, // center a slightly wider horizontal notch
+    alignItems: 'center',
+  },
+  milestoneMarker: {
+    width: 14,
+    height: 4,
+    borderRadius: 3,
+  },
+  chestInfo: {
+    position: 'absolute',
+    left: '100%', // place chest content immediately to the right of the progressInner container
+    marginLeft: -32,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  chestGlow: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    left: -4,
+    top: -4,
+    zIndex: 0,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    elevation: 10,
+  },
+  chestButton: {
+    position: 'relative',
+    zIndex: 1,
+  },
+  chestContainer: {
+    // Container for chest with potential opacity
+  },
+  chestImage: {
+    width: 52,
+    height: 52,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 26,
+  },
+  chestText: {
+    alignItems: 'flex-start',
+    marginLeft: 12,
+  },
+  milestoneText: {
+    fontSize: 16,
+    fontFamily: family.bold,
+  },
+  statusText: {
+    fontSize: 14,
+    fontFamily: family.medium,
+    marginTop: 4,
+  },
+  closeBtn: { marginTop: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 12, alignItems: 'center' },
+  closeText: { fontSize: 15, fontFamily: family.bold },
+});

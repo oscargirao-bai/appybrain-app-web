@@ -1,0 +1,178 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, useWindowDimensions, KeyboardAvoidingView, Platform, Keyboard, Alert } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import TextInputField from '../../components/LoginComponents/TextInput';
+import PrimaryButton from '../../components/LoginComponents/PrimaryButton';
+import MessageModal from '../../components/General/MessageModal';
+import Button2 from '../../components/General/Button2';
+import { useThemeColors } from '../../services/Theme';
+import { useTranslate } from '../../services/Translate';
+import ApiManager from '../../services/ApiManager';
+
+// Local require for logo
+const logoSource = require('../../../assets/logo.png');
+
+export default function PasswordScreen({ navigation, route }) {
+  const colors = useThemeColors();
+  const { translate } = useTranslate();
+  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+
+  // Get current password from route params (passed from login screen)
+  const currentPassword = route?.params?.currentPassword || '';
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const isTablet = width >= 768;
+  const containerMaxWidth = isTablet ? 520 : 480;
+  const logoWidth = Math.min(width * 0.6, 480);
+  const baseLift = isTablet ? 40 : 90;
+
+  // Keyboard handling to shift content so inputs remain visible
+  const [keyboardShift, setKeyboardShift] = useState(0);
+  useEffect(() => {
+    const showEvent = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
+    const hideEvent = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
+    const showSub = Keyboard.addListener(showEvent, (e) => {
+      const kbHeight = e?.endCoordinates?.height || 0;
+      const desired = Math.max(0, kbHeight - insets.bottom - 40);
+      setKeyboardShift(desired > 260 ? 260 : desired);
+    });
+    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardShift(0));
+    return () => { showSub.remove(); hideSub.remove(); };
+  }, [insets.bottom]);
+
+  async function onSubmit() {
+    // Basic validations
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      Alert.alert(
+        translate('password.error') || 'Erro',
+        translate('password.fillFields') || 'Por favor, preencha todos os campos.'
+      );
+      return;
+    }
+    if (newPassword.length < 6) {
+      Alert.alert(
+        translate('password.weak') || 'Palavra-passe fraca',
+        translate('password.minLength') || 'A palavra-passe deve ter pelo menos 6 caracteres.'
+      );
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      Alert.alert(
+        translate('password.mismatch') || 'As palavras-passe não coincidem',
+        translate('password.mismatchDesc') || 'Certifique-se de que ambas são iguais.'
+      );
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Use ApiManager's changePassword method with the new API format
+      const response = await ApiManager.changePassword(currentPassword, newPassword, confirmPassword);
+      
+      // Show modal with response message
+      setModalMessage(response.message || 'Password updated');
+      setIsSuccess(response.success || false);
+      setModalVisible(true);
+      
+    } catch (error) {
+      console.error('Password change error:', error);
+      // Show error in modal
+      setModalMessage(error.message || 'Falha ao alterar a palavra-passe.');
+      setIsSuccess(false);
+      setModalVisible(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // Handle modal close
+  function handleModalClose() {
+    setModalVisible(false);
+    if (isSuccess) {
+      // If success, go back to login screen
+      navigation?.replace?.('Login');
+    }
+    // If not success, stay on password screen
+  }
+
+  return (
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>      
+      <View style={styles.topBar}>
+        <Button2
+          iconName="arrow-left"
+          size={44}
+          onPress={() => {
+            if (navigation?.canGoBack?.()) navigation.goBack();
+            else navigation?.replace?.('Login');
+          }}
+        />
+      </View>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={insets.top + 12}
+        pointerEvents="box-none"
+      >
+        <View style={[styles.staticContainer]}> 
+          <View style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
+            {/* Brand Logo */}
+            <Image
+              source={logoSource}
+              style={{ width: logoWidth, aspectRatio: 1, marginTop: 24 }}
+              resizeMode="contain"
+              accessibilityRole="image"
+              accessibilityLabel="App logo"
+            />
+            <Text style={[styles.welcome, { color: colors.text }]}>{translate('password.changeTitle') || 'Alterar Palavra‑passe'}</Text>
+            <View style={styles.form}>
+              <TextInputField
+                value={newPassword}
+                onChangeText={setNewPassword}
+                placeholder={translate('password.new') || 'Nova palavra‑passe'}
+                secureTextEntry
+                icon="password"
+              />
+              <TextInputField
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder={translate('password.confirm') || 'Confirmar palavra‑passe'}
+                secureTextEntry
+                icon="password"
+              />
+              <PrimaryButton
+                title={translate('password.change') || 'Alterar palavra‑passe'}
+                onPress={onSubmit}
+                disabled={!currentPassword || !newPassword || !confirmPassword || isLoading}
+                loading={isLoading}
+              />
+            </View>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+      
+      {/* Message Modal */}
+      <MessageModal
+        visible={modalVisible}
+        message={modalMessage}
+        onClose={handleModalClose}
+        buttonLabel={translate('common.ok') || 'OK'}
+      />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1 },
+  flex: { flex: 1 },
+  topBar: { paddingHorizontal: 12, paddingTop: 8, zIndex: 10, elevation: 10 },
+  staticContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 24 },
+  inner: { width: '100%', alignItems: 'center', flexGrow: 1 },
+  welcome: { fontSize: 42, fontWeight: '700', letterSpacing: -1, textAlign: 'center' },
+  form: { width: '100%', alignItems: 'center', marginTop: 8 },
+});

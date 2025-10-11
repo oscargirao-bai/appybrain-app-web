@@ -1,114 +1,49 @@
-# AppyBrain Web - AI Coding Agent Instructions
+# AppyBrain - Copilot Instructions (STRICT)
 
-## Project Overview
-React Native Expo app being adapted for web deployment using **React Native Web + Vite**. The codebase contains both mobile (React Native) and web-specific implementations.
+## Project Layout
+- `mobile/`: cópia do projeto original React Native (Expo Go). Não editar.
+- `web/`: aplicação React pura (Vite). Sem React Native.
 
-## Critical Architecture Patterns
+## Regras Obrigatórias
+1) Endpoints de API: manter EXACTAMENTE iguais aos do projeto original.
+  - Base URL: `https://appybrain.skillade.com/api/`
+  - Exemplos: `auth/logon_user`, `app/learn_content_list`, etc. Nunca prefixar com `/api/` adicional.
+  - Todas as chamadas têm que ser FEITAS EM SÉRIE (nunca em paralelo) por causa dos refresh tokens.
+2) UI Web sem React Native:
+  - SafeAreaView → div (remover safe areas)
+  - View/Text/Image/Pressable → div/span/img/button/form inputs
+  - Alert.alert → window.alert
+  - Animated → CSS animations
+  - Sem `@react-navigation` no web. Usar router por estado (`onNavigate`).
+3) Ícones:
+  - Usar apenas `lucide-react` e mapear 1:1 os ícones do projeto RN.
+4) Traduções e conteúdo:
+  - Manter pt/en em JSON. Todo texto estático passa pela função de tradução.
+  - Conteúdo dinâmico vem de JSON/API tal como no RN.
+5) Notificações:
+  - Na versão web não há notificações. Funções RN correspondentes são no-op com logs.
+6) Código limpo e pequeno:
+  - Ideal: ≤ 200 linhas por ficheiro. Dividir em subcomponentes.
 
-### Dual-Platform File Resolution
-- **Web files take precedence**: `*.web.js` → `*.js` (configured in `vite.config.ts` extensions)
-- Mobile screens use `navigation` prop; web screens use `onNavigate` callback
-- Example: `LoginScreen.js` (mobile) vs `LoginScreen.web.js` (web with no SafeAreaView/Alert)
+## Fluxo de Arranque (igual ao RN)
+1. Login: `POST auth/login` → guardar tokens (aceitar `expiresAt` ou `expiresIn`).
+2. Validar sessão: `GET auth/logon_user` → obter user/organization.
+3. Carregar dados sequencialmente:
+  - `app/gamification_user_badges`
+  - `app/learn_content_list`
+  - `app/gamification_user_stars`
+  - `app/tribes_list`
+  - `app/gamification_user_chests`
+  - `app/user_notifications`
+  - `app/information_news`
+  - `app/ranking`
+  - `app/challenges_list`
 
-### Web-Specific Entry Points
-- **Mobile**: `App.js` → `AppRouter.js` (React Navigation)
-- **Web**: `src/web/main.jsx` → `App.web.minimal.jsx` → `WebAppRouter.jsx` (state-based routing)
-- No `@react-navigation` on web - simple switch/case router with `useState`
-
-### Native Module Shimming
-All React Native-specific modules must be shimmed for web:
-- `src/services/ApiManager.web.js` - uses AsyncStorage only (no SecureStore)
-- `src/web/shims/merge-options.js` - replaces problematic CommonJS module
-- `src/components/LoginComponents/*.web.js` - replaces @react-native-vector-icons with emojis
-
-### API Communication
-- **ApiManager** (`src/services/ApiManager.js`):
-  - Singleton with `init({ baseUrl })` - MUST be called before use
-  - Sequential request queue to handle token refresh safely
-  - Auto token refresh on 401 responses
-  - Web version excludes `expo-secure-store`, uses only `AsyncStorage`
-
-### Theme & Translation Services
-- **ThemeProvider** (`src/services/Theme.js`):
-  - Context-based dark/light/system theme
-  - `useThemeColors()` hook provides color palette
-  - Persists to AsyncStorage
-  
-- **TranslationProvider** (`src/services/Translate.js`):
-  - Fixed to Portuguese (`pt.json`)
-  - `useTranslate()` provides `translate(key, vars)` function
-  - Key format: dot-notation (`'login.email'`)
-
-## Build & Development Commands
-
+## Build (web)
 ```bash
-# Web development (Vite)
-npm run dev:vite          # Dev server at localhost:5173
-npm run build:vite        # Production build to dist/
-npm run preview:vite      # Preview production build
-
-# Mobile (Expo)
-npm start                 # Expo dev server
-npm run android/ios       # Platform-specific
+cd web
+npm install
+npm run build
 ```
 
-### Vite Configuration Essentials
-- **JSX in .js files**: Custom `rn-web-jsx-pre` plugin transforms JSX before React plugin
-- **Excluded deps**: React Native packages in `optimizeDeps.exclude` to prevent bundling errors
-- **Aliases**: Force web implementations via resolve.alias (see `vite.config.ts`)
-- **BUILD_ID**: Unique timestamp for cache busting
-
-## Component Development Rules
-
-### When Creating Web Components
-1. **Check for `.web.js` version first** - don't modify mobile files
-2. **Replace native-only APIs**:
-   - `SafeAreaView` → `View`
-   - `Alert.alert()` → `window.alert()` (with Platform check)
-   - `@react-native-vector-icons` → emoji or SVG
-3. **Navigation pattern**:
-   ```jsx
-   // Mobile: navigation.navigate('Screen')
-   // Web: onNavigate?.('Screen')
-   ```
-
-### File Size Limits
-- Target: < 200 lines per file
-- Split large screens into sub-components in same directory
-
-### Translation Pattern
-```jsx
-import { useTranslate } from '../../services/Translate';
-
-function Component() {
-  const { translate } = useTranslate();
-  return <Text>{translate('common.save')}</Text>;
-}
-```
-
-## Common Pitfalls
-
-### ❌ Don't
-- Import `@react-navigation` in web files
-- Use `expo-secure-store` on web
-- Assume `navigation` prop exists in web screens
-- Import native vector icons directly
-
-### ✅ Do
-- Create `.web.js` variants for components with native dependencies
-- Use `ApiManager.init()` in App entry before any API calls
-- Check Platform.OS === 'web' for conditional web logic
-- Add new native deps to `optimizeDeps.exclude` in vite.config
-
-## Key Files Reference
-- `vite.config.ts` - Web build configuration, aliases, shimming
-- `src/services/ApiManager.web.js` - Web-safe API client
-- `src/WebAppRouter.jsx` - Simple state-based web navigation
-- `src/web/shims/` - CommonJS module replacements for web
-- `App.web.minimal.jsx` - Web app entry point
-
-## Testing Web Changes Locally
-1. Clear Vite cache: `rm -rf node_modules/.vite`
-2. Start dev: `npm run dev:vite`
-3. Hard refresh browser: Ctrl+Shift+R (Win) / Cmd+Shift+R (Mac)
-4. Check console for BUILD_ID to confirm fresh bundle
+Depois do build, publicar `web/dist/` no servidor. Ver logs no console do browser.

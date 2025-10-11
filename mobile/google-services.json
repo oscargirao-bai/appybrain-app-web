@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "964180983746",
+    "project_id": "servers-chat4business",
+    "storage_bucket": "servers-chat4business.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964180983746:android:f20597a254b1ee4867a05b",
+        "android_client_info": {
+          "package_name": "com.baidigital.appybrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964180983746-s5ij16ho55tirmi0da6reavnet4a9iue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDP2w1Awrfs8_Yy9nJKOsiwmxB2nGfJlxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964180983746-s5ij16ho55tirmi0da6reavnet4a9iue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

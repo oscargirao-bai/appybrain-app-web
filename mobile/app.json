@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "appybrain",
+    "slug": "appybrain",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.baidigital.appybrain",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "43"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-notifications",
+      "expo-font"
+    ],
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.baidigital.appybrain",
+      "versionCode": 140,
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "INTERNET",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "SYSTEM_ALERT_WINDOW",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_PHONE_STATE"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "51f9af94-87a5-480a-bd3f-840df07a0f51"
+      }
+    }
+  }
+}
