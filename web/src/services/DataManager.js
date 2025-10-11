@@ -51,6 +51,7 @@ class DataManagerClass {
   getDisciplines() { return this.data.disciplines || []; }
   getUserStars() { return this.data.userStars; }
   getUserChests() { return this.data.userChests; }
+  getUserBadges() { return this.data.badges || []; }
   getNotifications() { return this.data.notifications || []; }
   getSortedNotifications() {
     const n = this.getNotifications();

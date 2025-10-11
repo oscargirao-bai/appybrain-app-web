@@ -1,0 +1,116 @@
+.medals-list {
+  width: 100%;
+  margin-top: 28px;
+}
+
+.medals-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.medals-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.medals-row {
+  display: flex;
+  min-height: 160px;
+}
+
+.medals-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  gap: 10px;
+}
+
+.medal-cell {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medal-cell.new {
+  animation: medalPop 0.5s ease-out;
+}
+
+@keyframes medalPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.medal-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s;
+}
+
+.medal-btn:active {
+  transform: scale(0.9);
+}
+
+.medal-outer {
+  padding: 2px;
+  border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
+  position: relative;
+}
+
+.medal-inner {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.new-dot {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFE247;
+  border: 2px solid #222;
+  box-shadow: 0 0 6px #FFE247;
+  animation: newPulse 2s ease-in-out infinite;
+}
+
+@keyframes newPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.medals-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  gap: 10px;
+}
+
+.medals-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.medals-dots .dot.active {
+  background: #FFD700;
+}
