@@ -20,14 +20,14 @@ export default function LoginScreen({ onNavigate }) {
 
     try {
       const loginResult = await ApiManager.login(email, password);
+      console.log('[Login] API response:', loginResult);
 
       if (loginResult && loginResult.success) {
-        if (loginResult.resetPassword === 1) {
-          onNavigate?.('Password');
-        } else {
-          onNavigate?.('Loading');
-        }
+        const next = loginResult.resetPassword === 1 ? 'Password' : 'Loading';
+        console.log('[Login] Success. Navigating to:', next);
+        onNavigate?.(next);
       } else {
+        console.warn('[Login] Unexpected server response (no success flag)');
         alert('Resposta inesperada do servidor.');
       }
     } catch (error) {

@@ -191,8 +191,26 @@ class ApiManager {
     async login(email, password) {
         const data = await this.post('auth/login', { email, password });
 
-        if (data.accessToken && data.refreshToken && data.expiresAt) {
-            await this.saveSession(data.accessToken, data.refreshToken, data.expiresAt);
+        // Accept both expiresAt (timestamp) and expiresIn (seconds) from server
+        const hasTokens = !!(data && data.accessToken && data.refreshToken);
+        const expiresAtFromApi = data?.expiresAt;
+        const expiresInFromApi = data?.expiresIn;
+
+        if (hasTokens) {
+            let computedExpiresAt = null;
+            if (typeof expiresAtFromApi === 'number') {
+                computedExpiresAt = expiresAtFromApi;
+            } else if (typeof expiresInFromApi === 'number') {
+                computedExpiresAt = Date.now() + (expiresInFromApi * 1000);
+            } else {
+                // Fallback: 1 hour
+                computedExpiresAt = Date.now() + (60 * 60 * 1000);
+            }
+
+            console.log('[ApiManager] Saving session tokens (access + refresh), expiresAt:', computedExpiresAt);
+            await this.saveSession(data.accessToken, data.refreshToken, computedExpiresAt);
+        } else {
+            console.warn('[ApiManager] Login succeeded but response missing tokens. validateSession will likely fail.');
         }
 
         return data;
