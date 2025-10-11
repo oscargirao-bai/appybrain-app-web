@@ -9,6 +9,7 @@ import CategoryScreen from './screens/learn/Category.jsx';
 import NavBar from './components/common/NavBar.jsx';
 import ApiManager from './services/ApiManager.js';
 import DataManager from './services/DataManager.js';
+import './styles/container.css';
 
 export default function App() {
   const [screen, setScreen] = useState('Login');
@@ -77,7 +78,7 @@ export default function App() {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div style={{ paddingBottom: showNavBar ? '80px' : '0' }}>
+      <div className="page-container-50" style={{ paddingBottom: showNavBar ? '80px' : '0' }}>
         {render()}
         {showNavBar && (
           <NavBar 

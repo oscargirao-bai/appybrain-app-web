@@ -1,0 +1,13 @@
+/* Container 50% centrado para todos os screens */
+.page-container-50 {
+  max-width: 50%;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+@media (max-width: 1200px) {
+  .page-container-50 {
+    max-width: 100%;
+  }
+}

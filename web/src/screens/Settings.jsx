@@ -3,6 +3,7 @@ import { t } from '../services/Translate.js';
 import { useThemeColors } from '../services/Theme.jsx';
 import apiManagerInstance from '../services/ApiManager';
 import DataManager from '../services/DataManager';
+import Icon from '../components/common/Icon.jsx';
 import Button3 from '../components/common/Button3';
 import Button4 from '../components/common/Button4';
 import ButtonLightDark from '../components/settings/ButtonLightDark';
@@ -10,11 +11,17 @@ import ButtonLanguage from '../components/settings/ButtonLanguage';
 import PrivacyModal from '../components/settings/PrivacyModal';
 import ChangeNameModal from '../components/settings/ChangeNameModal';
 import MessageModal from '../components/common/MessageModal';
+import '../styles/container.css';
 import './Settings.css';
+
+const VIBRATION_KEY = 'appybrain.vibration';
 
 export default function Settings({ onNavigate }) {
   const colors = useThemeColors();
-  const [vibration, setVibration] = useState(true);
+  const [vibration, setVibration] = useState(() => {
+    const stored = localStorage.getItem(VIBRATION_KEY);
+    return stored === null ? true : stored === '1';
+  });
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [changeNameOpen, setChangeNameOpen] = useState(false);
   const [currentUserName, setCurrentUserName] = useState('');
@@ -32,6 +39,7 @@ export default function Settings({ onNavigate }) {
 
   const handleVibrationChange = useCallback((val) => {
     setVibration(val);
+    localStorage.setItem(VIBRATION_KEY, val ? '1' : '0');
   }, []);
 
   const handleChangeName = async (newNickname) => {
@@ -79,16 +87,17 @@ export default function Settings({ onNavigate }) {
   }, []);
 
   return (
-    <div className="settings-screen" style={{ backgroundColor: colors.background }}>
-      <div className="settings-header">
-        <button className="settings-back-btn" onClick={() => onNavigate('Profile')} aria-label="Voltar">
-          <i data-lucide="arrow-left" style={{ color: colors.text }} />
-        </button>
-        <h1 className="settings-title" style={{ color: colors.text }}>
-          {t('settings.settings')}
-        </h1>
-        <div style={{ width: 40 }} />
-      </div>
+    <div className="page-container-50">
+      <div className="settings-screen" style={{ backgroundColor: colors.background }}>
+        <div className="settings-header">
+          <button className="settings-back-btn" onClick={() => onNavigate('Profile')} aria-label="Voltar">
+            <Icon name="arrow-left" size={24} color={colors.text} />
+          </button>
+          <h1 className="settings-title" style={{ color: colors.text }}>
+            {t('settings.settings')}
+          </h1>
+          <div style={{ width: 40 }} />
+        </div>
 
       <div className="settings-content">
         <h3 className="settings-section-title" style={{ color: colors.text }}>
@@ -120,6 +129,7 @@ export default function Settings({ onNavigate }) {
       <ChangeNameModal visible={changeNameOpen} currentName={currentUserName} onCancel={() => setChangeNameOpen(false)} onConfirm={handleChangeName} />
       <PrivacyModal visible={privacyOpen} onClose={() => setPrivacyOpen(false)} />
       <MessageModal visible={messageModal.visible} title={messageModal.title} message={messageModal.message} onClose={() => setMessageModal({ visible: false, title: '', message: '' })} />
+      </div>
     </div>
   );
 }

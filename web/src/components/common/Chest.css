@@ -1,0 +1,50 @@
+.chest-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chest-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.chest-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.3);
+  filter: blur(8px);
+  animation: glowPulse 1.4s ease-in-out infinite;
+}
+
+.chest-image {
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+}
+
+.chest-image.pulse {
+  animation: chestPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes chestPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
