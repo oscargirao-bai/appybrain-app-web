@@ -59,6 +59,7 @@ function SubjectsGrid({ disciplines = [], onOpen }) {
 }
 
 export default function Learn({ onNavigate, openNotifications }){
+  const colors = useThemeColors();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [rankingsOpen, setRankingsOpen] = useState(false);
   const [chestBrowserOpen, setChestBrowserOpen] = useState(false);
