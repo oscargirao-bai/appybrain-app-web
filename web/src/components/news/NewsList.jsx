@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
-import DataManager from '../../services/DataManager.js';
+import { View, Text, StyleSheet, FlatList, Pressable, ImageBackground, Animated } from 'react-native';
+import { useThemeColors } from '../../services/Theme';
+import DataManager from '../../services/DataManager';
+import { useNavigation } from '@react-navigation/native';
+import { family } from '../../constants/font';
 
 // Inline News List (view-based, no modal)
 // Props:
 // - style: optional container style override
 // - limit: optional number to limit items displayed
-// - onPressItem: optional handler override (item) => navigate to HtmlScreen
+// - onPressItem: optional handler override
 export default function NewsList({ style, limit, onPressItem }) {
 	const colors = useThemeColors();
+	const navigation = useNavigation();
 	const [news, setNews] = useState([]);
 	const [newsAnimations, setNewsAnimations] = useState([]);
 	const [firstRender, setFirstRender] = useState(true);
@@ -16,16 +20,20 @@ export default function NewsList({ style, limit, onPressItem }) {
 	// Subscribe to DataManager updates
 	useEffect(() => {
 		const handleDataUpdate = () => {
-			const currentNews = DataManager.getNews?.() || [];
+			//console.log('NewsModal: DataManager updated, refreshing news...');
+			const currentNews = DataManager.getNews();
 			setNews(currentNews);
+			// Don't create animations here - let loadNews() handle them when modal opens
 		};
 
-		const unsubscribe = DataManager.subscribe(handleDataUpdate);
-
+		DataManager.subscribe(handleDataUpdate);
+		
 		// Initial load
 		handleDataUpdate();
 
-		return unsubscribe;
+		return () => {
+			// DataManager doesn't have unsubscribe yet, but we'll add it when needed
+		};
 	}, []);
 
 	// Load news on mount
@@ -35,59 +43,69 @@ export default function NewsList({ style, limit, onPressItem }) {
 
 	const loadNews = async () => {
 		try {
-			const result = await DataManager.loadNews?.();
-			const newsData = DataManager.getNews?.() || [];
-
+			//console.log('NewsModal: Loading news...');
+			const result = await DataManager.loadNews();
+			const newsData = DataManager.getNews();
+			
 			// Determine if we should animate items
 			const isFirstLoad = firstRender;
 			const needsAnimations = newsAnimations.length !== newsData.length;
-			const shouldAnimateItems = isFirstLoad || (result?.hasChanges && result?.newItems?.length > 0);
-
+			const shouldAnimateItems = isFirstLoad || (result.hasChanges && result.newItems.length > 0);
+			
 			if (isFirstLoad) {
 				setFirstRender(false);
+				//console.log('NewsList: First load, animating all items');
 			}
-
+			
 			// Always create animations if they don't exist
 			if (needsAnimations || shouldAnimateItems) {
+				//console.log('NewsModal: Creating animations for items');
+				
 				// Create or update animation values
 				const animations = newsData.map((item) => {
 					// If first time opening, animate all items
 					// Otherwise, only animate new items
-					const shouldAnimateItem = isFirstLoad || result?.newItems?.includes(item.id);
-
+					const shouldAnimateItem = isFirstLoad || result.newItems.includes(item.id);
+					
 					// Find existing animation if item already exists
 					const existingIndex = news.findIndex(existingItem => existingItem.id === item.id);
 					const existingAnimation = existingIndex >= 0 ? newsAnimations[existingIndex] : null;
-
+					
 					if (existingAnimation && !shouldAnimateItem) {
 						// Keep existing animation values for unchanged items
 						return existingAnimation;
 					} else {
 						// Create new animation values for items that should animate
 						return {
-							translateY: shouldAnimateItem ? 30 : 0,
-							opacity: shouldAnimateItem ? 0 : 1
+							translateY: new Animated.Value(shouldAnimateItem ? 30 : 0),
+							opacity: new Animated.Value(shouldAnimateItem ? 0 : 1)
 						};
 					}
 				});
-
+				
 				setNewsAnimations(animations);
-
+				
 				// Only animate items that should be animated
 				if (shouldAnimateItems) {
 					setTimeout(() => {
 						let animationDelay = 0;
 						newsData.forEach((item, index) => {
-							const shouldAnimateItem = isFirstLoad || result?.newItems?.includes(item.id);
+							const shouldAnimateItem = isFirstLoad || result.newItems.includes(item.id);
 							if (shouldAnimateItem) {
+								const anim = animations[index];
 								setTimeout(() => {
-									setNewsAnimations(prev => {
-										const newAnims = [...prev];
-										if (newAnims[index]) {
-											newAnims[index] = { translateY: 0, opacity: 1 };
-										}
-										return newAnims;
-									});
+									Animated.parallel([
+										Animated.timing(anim.translateY, {
+											toValue: 0,
+											duration: 400,
+											useNativeDriver: true,
+										}),
+										Animated.timing(anim.opacity, {
+											toValue: 1,
+											duration: 400,
+											useNativeDriver: true,
+										})
+									]).start();
 								}, animationDelay);
 								animationDelay += 100; // 100ms delay between each item
 							}
@@ -95,121 +113,96 @@ export default function NewsList({ style, limit, onPressItem }) {
 					}, 50); // Small delay before starting animations
 				}
 			}
-
+			
 		} catch (error) {
-			console.error('NewsList: Failed to load news:', error);
+			console.error('NewsModal: Failed to load news:', error);
 			setNews([]);
 			setNewsAnimations([]);
 		}
 	};
 
+	// Basic escape to avoid breaking the inline HTML when injecting text fields
+	const escapeHtml = (s) => {
+		if (!s) return '';
+		return String(s)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	};
+
 	const openNews = (item) => {
 		if (typeof onPressItem === 'function') return onPressItem(item);
-		// Default: navigate to Html screen (onPressItem should be provided by parent)
+		navigation.navigate('Html', { title: item.title || 'News', newsId: item.id });
+	};
+
+	const renderItem = ({ item, index }) => {
+		const animation = newsAnimations[index];
+		
+		if (!animation) return null;
+
+		return (
+			<Animated.View 
+				style={[
+					styles.cardOuter, 
+					{ 
+						borderColor: colors.text + '20', 
+						backgroundColor: colors.card + '22',
+						transform: [{ translateY: animation.translateY }],
+						opacity: animation.opacity
+					}
+				]}
+			> 
+				<Pressable
+					accessibilityRole="button"
+					accessibilityLabel={`Abrir notícia ${item.title}`}
+					onPress={() => openNews(item)}
+					style={{ flex: 1 }}
+				>
+					<ImageBackground
+						source={{ uri: item.imageUrl }}
+						style={styles.image}
+						imageStyle={styles.imageRadius}
+						resizeMode="cover"
+					>
+						<View style={[styles.overlay, { backgroundColor: '#00000055' }]} />
+						<View style={styles.cardContent}> 
+							<Text style={[styles.cardTitle, { color: '#fff' }]} numberOfLines={2}>{item.title}</Text>
+							<Text style={[styles.cardBody, { color: '#fff' }]} numberOfLines={2}>{item.description}</Text>
+							<Text style={[styles.cardDate, { color: '#ffffffdd' }]}>{item.publishedDate}</Text>
+						</View>
+					</ImageBackground>
+				</Pressable>
+			</Animated.View>
+		);
 	};
 
 	const data = Array.isArray(news) ? (limit ? news.slice(0, limit) : news) : [];
-
 	return (
-		<div style={{ width: '100%', ...style }}>
-			<div style={{ paddingBottom: 0 }}>
-				{data.map((item, index) => {
-					const animation = newsAnimations[index] || { translateY: 0, opacity: 1 };
-
-					return (
-						<div
-							key={item.id}
-							style={{
-								border: `1px solid ${colors.text}20`,
-								backgroundColor: `${colors.card}22`,
-								borderRadius: 22,
-								overflow: 'hidden',
-								marginBottom: 14,
-								transform: `translateY(${animation.translateY}px)`,
-								opacity: animation.opacity,
-								transition: 'transform 400ms, opacity 400ms'
-							}}
-						>
-							<button
-								onClick={() => openNews(item)}
-								style={{
-									flex: 1,
-									width: '100%',
-									padding: 0,
-									border: 'none',
-									background: 'transparent',
-									cursor: 'pointer',
-									textAlign: 'left'
-								}}
-								aria-label={`Abrir notícia ${item.title}`}
-							>
-								<div
-									style={{
-										width: '100%',
-										height: 140,
-										backgroundImage: item.imageUrl ? `url(${item.imageUrl})` : 'none',
-										backgroundSize: 'cover',
-										backgroundPosition: 'center',
-										borderRadius: 22,
-										display: 'flex',
-										justifyContent: 'flex-end',
-										position: 'relative'
-									}}
-								>
-									<div style={{
-										position: 'absolute',
-										top: 0,
-										left: 0,
-										right: 0,
-										bottom: 0,
-										backgroundColor: '#00000055',
-										borderRadius: 22
-									}} />
-									<div style={{
-										paddingLeft: 14,
-										paddingRight: 14,
-										paddingTop: 12,
-										paddingBottom: 16,
-										position: 'relative',
-										zIndex: 1
-									}}>
-										<div style={{
-											fontSize: 15,
-											fontWeight: 700,
-											color: '#fff',
-											marginBottom: 4,
-											display: '-webkit-box',
-											WebkitLineClamp: 2,
-											WebkitBoxOrient: 'vertical',
-											overflow: 'hidden',
-											textOverflow: 'ellipsis'
-										}}>{item.title}</div>
-										<div style={{
-											fontSize: 13,
-											fontWeight: 500,
-											color: '#fff',
-											lineHeight: '18px',
-											marginBottom: 6,
-											display: '-webkit-box',
-											WebkitLineClamp: 2,
-											WebkitBoxOrient: 'vertical',
-											overflow: 'hidden',
-											textOverflow: 'ellipsis'
-										}}>{item.description}</div>
-										<div style={{
-											fontSize: 11,
-											fontWeight: 600,
-											color: '#ffffffdd',
-											marginTop: 8,
-											marginBottom: 4
-										}}>{item.publishedDate}</div>
-									</div>
-								</div>
-							</button>
-						</div>
-					);
-				})}
-			</div>
-		</div>
+		<View style={[styles.listContainer, style]}>
+			<FlatList
+				data={data}
+				keyExtractor={item => item.id.toString()}
+				renderItem={renderItem}
+				ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: 0 }}
+			/>
+		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	listContainer: { width: '100%' },
+	headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
+	title: { fontSize: 18, fontFamily: family.bold },
+	cardOuter: { borderWidth: 1, borderRadius: 22, overflow: 'hidden' },
+	image: { width: '100%', height: 140, justifyContent: 'flex-end' },
+	imageRadius: { borderRadius: 22 },
+	overlay: { ...StyleSheet.absoluteFillObject, borderRadius: 22 },
+	cardContent: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 16 },
+	cardTitle: { fontSize: 15, fontFamily: family.bold, marginBottom: 4 },
+	cardBody: { fontSize: 13, fontFamily: family.medium, lineHeight: 18, marginBottom: 6 },
+	cardDate: { fontSize: 11, fontFamily: family.semibold, marginTop: 8, marginBottom: 4 },
+});

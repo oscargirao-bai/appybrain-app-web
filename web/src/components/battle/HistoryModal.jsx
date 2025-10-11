@@ -1,61 +1,235 @@
-import React from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
+import React, { useEffect, useRef } from 'react';
+import { Modal, View, Text, StyleSheet, Pressable, Animated, ScrollView, Dimensions } from 'react-native';
+import { useThemeColors } from '../../services/Theme';
+import { useTranslate } from '../../services/Translate';
+import Icon from '@react-native-vector-icons/lucide';
+import { family } from '../../constants/font';
 
-export default function HistoryModal({ visible, onClose, pending = [], completed = [], onOpenBattle }) {
+/**
+ * HistoryModal (no-API)
+ * Modal listing Battle history split in two sections: Pending and Completed.
+ * Receives all data via props (no fetching, no services inside).
+ *
+ * Props:
+ *  - visible: boolean
+ *  - onClose: () => void
+ *  - pending: Array<HistoryItem>
+ *  - completed: Array<HistoryItem>
+ *  - title?: string (override)
+ *  - onOpenBattle?: (battleSessionId: string) => void
+ *
+ * HistoryItem shape:
+ *  { left: string, right: string,
+ *    leftStats?: { correct: number, total: number, timeSec?: number },
+ *    rightStats?: { correct: number, total: number, timeSec?: number },
+ *    status: 'pending' | 'win' | 'lose',
+ *    battleSessionId?: string }
+ */
+export default function HistoryModal({ visible, onClose, pending = [], completed = [], title, onOpenBattle }) {
   const colors = useThemeColors();
-  if (!visible) return null;
+  const { translate } = useTranslate();
+  const styles = React.useMemo(() => createStyles(colors), [colors]); // Reactive to color changes
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-  };
+  // simple mount/unmount animation
+  const anim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(anim, { toValue: visible ? 1 : 0, duration: visible ? 180 : 150, useNativeDriver: true }).start();
+  }, [visible, anim]);
+
+  const scale = anim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] });
+  const opacity = anim;
+
+  const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: colors.backdrop + 'AA', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: 16 }} onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: colors.card, borderRadius: 16, padding: 16, maxWidth: 520, width: '100%', maxHeight: '80vh', overflow: 'hidden', border: `1px solid ${colors.border}` }}>
-        <h3 style={{ fontSize: 18, fontWeight: 700, textAlign: 'center', marginBottom: 12, color: colors.text }}>Histórico de Batalhas</h3>
-        
-        <div style={{ maxHeight: 'calc(80vh - 120px)', overflow: 'auto' }}>
-          {pending.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: colors.text, marginBottom: 8 }}>Pendentes</h4>
-              {pending.map((battle) => (
-                <div key={battle.battleSessionId} style={{ background: colors.surface, padding: 12, borderRadius: 8, marginBottom: 8, border: `1px solid ${colors.border}` }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{battle.opponent?.nickname || 'Adversário'}</div>
-                  <div style={{ fontSize: 12, color: colors.muted, marginTop: 4 }}>{formatDate(battle.createdAt)}</div>
-                </div>
-              ))}
-            </div>
-          )}
+    <Modal visible={!!visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.backdrop}>
+        <Pressable style={styles.backdropHit} onPress={onClose} />
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <Animated.View style={[styles.card, { opacity, transform: [{ scale }] }]}> 
+            {/* Close button */}
+            <Pressable onPress={onClose} style={styles.closeWrap} accessibilityRole="button" accessibilityLabel={translate('common.close')}>
+              <Icon name="x" size={22} color={colors.text} />
+            </Pressable>
 
-          {completed.length > 0 && (
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: colors.text, marginBottom: 8 }}>Concluídas</h4>
-              {completed.map((battle) => (
-                <button
-                  key={battle.battleSessionId}
-                  onClick={() => onOpenBattle?.(battle.battleSessionId)}
-                  style={{ width: '100%', background: colors.surface, padding: 12, borderRadius: 8, marginBottom: 8, border: `1px solid ${colors.border}`, cursor: 'pointer', textAlign: 'left' }}
-                >
-                  <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{battle.opponent?.nickname || 'Adversário'}</div>
-                  <div style={{ fontSize: 12, color: colors.muted, marginTop: 4 }}>
-                    {battle.myScore ?? 0} - {battle.opponentScore ?? 0} • {formatDate(battle.completedAt || battle.createdAt)}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+            <Text style={[styles.title, { color: colors.text }]}>
+              {title || translate('battle.history.title')}
+            </Text>
 
-          {pending.length === 0 && completed.length === 0 && (
-            <div style={{ textAlign: 'center', padding: 40, color: colors.muted }}>Sem batalhas</div>
-          )}
-        </div>
-
-        <button onClick={onClose} style={{ marginTop: 12, width: '100%', padding: 10, border: `1px solid ${colors.border}`, borderRadius: 10, background: 'transparent', cursor: 'pointer', fontSize: 15, fontWeight: 700, color: colors.text }}>
-          Fechar
-        </button>
-      </div>
-    </div>
+            <View style={styles.scrollBox}>
+              {!hasAny ? (
+                <View style={styles.emptyWrap}>
+                  <Text style={[styles.emptyText, { color: colors.muted }]}>{translate('battle.history.empty')}</Text>
+                </View>
+              ) : (
+                <ScrollView contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
+                  {/* Pending */}
+                  {pending?.length > 0 && (
+                    <>
+                      <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('battle.history.pending')}</Text>
+                      <View style={styles.sectionBox}>
+                        {pending.map((it, idx) => (
+                          <HistoryRow key={`p-${idx}`} item={it} colors={colors} translate={translate} onOpenBattle={onOpenBattle} onClose={onClose} />
+                        ))}
+                      </View>
+                    </>
+                  )}
+                  {/* Completed */}
+                  {completed?.length > 0 && (
+                    <>
+                      <Text style={[styles.sectionTitle, { color: colors.text, marginTop: 18 }]}>{translate('battle.history.completed')}</Text>
+                      <View style={styles.sectionBox}>
+                        {completed.map((it, idx) => (
+                          <HistoryRow key={`c-${idx}`} item={it} colors={colors} translate={translate} onOpenBattle={onOpenBattle} onClose={onClose} />
+                        ))}
+                      </View>
+                    </>
+                  )}
+                </ScrollView>
+              )}
+            </View>
+          </Animated.View>
+        </View>
+      </View>
+    </Modal>
   );
 }
+
+function HistoryRow({ item, colors, translate, onOpenBattle, onClose }) {
+  const { left, right, leftStats, rightStats, status = 'pending', battleSessionId } = item || {};
+  const isPending = status === 'pending';
+  const isWin = status === 'win';
+  const isLose = status === 'lose';
+
+  let bg = colors.card;
+  let border = colors.border;
+  if (isWin) { bg = 'rgba(16,185,129,0.15)'; border = colors.success || '#10B981'; }
+  if (isLose) { bg = 'rgba(239,68,68,0.15)'; border = colors.error || '#EF4444'; }
+
+  return (
+    <Pressable
+      onPress={() => {
+        if (battleSessionId && onOpenBattle) {
+          // First navigate, then close modal to avoid navigation state issues
+          onOpenBattle(battleSessionId);
+          // Close modal after a brief delay to ensure navigation completes
+          setTimeout(() => {
+            try { onClose && onClose(); } catch {}
+          }, 100);
+        }
+      }}
+      style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
+    >
+      <View style={[rowStyles.item, { backgroundColor: bg, borderColor: border }]}> 
+        <View pointerEvents="none" style={rowStyles.vsOverlay}>
+          <Text style={[rowStyles.vs, rowStyles.vsCenter, { color: colors.text }]}>{translate('battle.vs')}</Text>
+        </View>
+        <View style={rowStyles.itemRow}>
+          <Text style={[rowStyles.itemName, { textAlign: 'left', color: colors.text }]} numberOfLines={1}>{left}</Text>
+          <Text style={[rowStyles.itemName, { textAlign: 'right', color: colors.text }]} numberOfLines={1}>{right}</Text>
+        </View>
+        <View style={rowStyles.statsRow}>
+          <View style={rowStyles.statsCol}>
+            {leftStats ? (
+              <>
+                <Text style={[rowStyles.statsText, { color: colors.muted }]}>{leftStats.correct}/{leftStats.total} {translate('battle.history.correct')}</Text>
+                <Text style={[rowStyles.statsText, { color: colors.muted }]}>{Number(leftStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</Text>
+              </>
+            ) : (
+              <Text style={[rowStyles.statsText, { color: colors.muted }]}>?/? {translate('battle.history.correct')}</Text>
+            )}
+          </View>
+          <View style={rowStyles.statsCol}>
+            {rightStats ? (
+              <>
+                <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>{rightStats.correct}/{rightStats.total} {translate('battle.history.correct')}</Text>
+                <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>{Number(rightStats.timeSec || 0).toFixed(1)}s {translate('battle.history.totalTime')}</Text>
+              </>
+            ) : (
+              <Text style={[rowStyles.statsText, { textAlign: 'right', color: colors.muted }]}>?/? {translate('battle.history.correct')}</Text>
+            )}
+          </View>
+        </View>
+      </View>
+    </Pressable>
+  );
+}
+
+const { width: W, height: H } = Dimensions.get('window');
+const CARD_W = Math.min(640, Math.round(W * 0.94));
+const CARD_BASE_H = Math.min(760, Math.round(H * 0.86));
+const CARD_H = Math.max(120, Math.round(CARD_BASE_H * 0.625));
+const SCROLL_H = Math.max(60, CARD_H - 70);
+
+function createStyles(colors) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: colors.overlay?.black50 || 'rgba(0,0,0,0.5)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 16,
+    },
+    backdropHit: { ...StyleSheet.absoluteFillObject },
+    card: {
+      width: CARD_W,
+      maxWidth: '94%',
+      height: CARD_H,
+      backgroundColor: colors.card || colors.background,
+      borderRadius: 18,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 12,
+      shadowColor: '#000',
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 8,
+    },
+    closeWrap: { position: 'absolute', right: 10, top: 10, zIndex: 2, padding: 6 },
+    title: {
+      fontSize: 20,
+      fontFamily: family.bold,
+      letterSpacing: 0.5,
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    scrollBox: { height: SCROLL_H, width: '100%' },
+    sectionTitle: {
+      fontSize: 16,
+      fontFamily: family.bold,
+      marginTop: 4,
+      marginBottom: 6,
+    },
+    sectionBox: { gap: 10, width: '92%', alignSelf: 'center' },
+    emptyWrap: { flex: 1, height: SCROLL_H, alignItems: 'center', justifyContent: 'center' },
+    emptyText: { fontSize: 14, fontFamily: family.bold, textAlign: 'center' },
+  });
+}
+
+const rowStyles = StyleSheet.create({
+  item: {
+    borderRadius: 14,
+    borderWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    position: 'relative',
+  },
+  itemRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  itemName: { flex: 1, fontSize: 16, fontFamily: family.bold },
+  vs: { fontSize: 18, fontFamily: family.bold, marginHorizontal: 12 },
+  vsCenter: { marginHorizontal: 0 },
+  vsOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
+  statsCol: { flex: 1 },
+  statsText: { fontSize: 12, fontFamily: family.semibold },
+});

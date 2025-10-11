@@ -1,64 +1,127 @@
-import React, { useEffect, useState } from 'react';
-import Icon from '../common/Icon.jsx';
-import SvgIcon from '../common/SvgIcon.jsx';
-import './MedalModal.css';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Modal, Pressable, Animated, Easing, ScrollView } from 'react-native';
+import Icon from '@react-native-vector-icons/lucide';
+import { useThemeColors } from '../../services/Theme';
+import SvgIcon from '../General/SvgIcon';
+import { family } from '../../constants/font';
 
+/**
+ * MedalModal
+ * Props:
+ *  visible: boolean
+ *  onClose: () => void
+ *  medal: {
+ *    id: string
+ *    icon: string
+ *    title: string
+ *    description: string
+ *    level: number
+ *    current: number
+ *    target: number
+ *    unlocked?: boolean
+ *    hideLevel?: boolean (if true, don't show level badge)
+ *  }
+ */
 export default function MedalModal({ visible, onClose, medal }) {
-  const [show, setShow] = useState(false);
+	const colors = useThemeColors();
+	const scale = useRef(new Animated.Value(0.9)).current;
+	const opacity = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (visible) {
-      setTimeout(() => setShow(true), 10);
-    } else {
-      setShow(false);
-    }
-  }, [visible]);
+	useEffect(() => {
+		if (visible) {
+			Animated.parallel([
+				Animated.timing(scale, { toValue: 1, duration: 220, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+				Animated.timing(opacity, { toValue: 1, duration: 180, useNativeDriver: true }),
+			]).start();
+		} else {
+			Animated.parallel([
+				Animated.timing(scale, { toValue: 0.9, duration: 160, useNativeDriver: true }),
+				Animated.timing(opacity, { toValue: 0, duration: 120, useNativeDriver: true }),
+			]).start();
+		}
+	}, [visible, scale, opacity]);
 
-  if (!visible || !medal) return null;
+	if (!medal) {
+		return null;
+	}
 
-  const progress = Math.min(1, medal.target ? medal.current / medal.target : 0);
+	const progress = Math.min(1, medal.target ? medal.current / medal.target : 0);
+	// Removed percentage display per request
 
-  return (
-    <div className={`medal-modal ${show ? 'show' : ''}`} onClick={onClose}>
-      <div className="medal-modal-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="medal-modal-content">
-          <div className="medal-row-top">
-            <div className={`medal-icon-circle ${medal.unlocked ? 'unlocked' : 'locked'}`} style={{ 
-              backgroundColor: medal.unlocked ? (medal.color || '#FFD700') : '#00000011',
-              borderColor: medal.unlocked ? (medal.color ? medal.color + '66' : '#FFD70066') : '#00000033'
-            }}>
-              {medal.icon && medal.icon.includes('<svg') ? (
-                <div style={{ transform: 'scale(1.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <SvgIcon svgString={medal.icon} size={34} />
-                </div>
-              ) : (
-                <div style={{ transform: 'scale(1.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon name={medal.icon || 'medal'} size={38} color={medal.unlocked ? (medal.iconColor || '#222') : '#00000055'} />
-                </div>
-              )}
-              {!medal.hideLevel && medal.unlocked && medal.level > 0 && (
-                <div className="level-badge" style={{ backgroundColor: medal.color || '#FFD700' }}>
-                  <span>{medal.level ?? 1}</span>
-                </div>
-              )}
-            </div>
-            <div style={{ flex: 1, paddingLeft: 14 }}>
-              <h3 className="medal-title">{medal.title || medal.id}</h3>
-              <p className="medal-desc">{medal.description || 'Sem descrição.'}</p>
-            </div>
-          </div>
-          {medal.target !== null && medal.target !== undefined && (
-            <div className="medal-progress-wrap">
-              <div className="medal-progress-bar">
-                <div className="medal-progress-fill" style={{ width: `${progress * 100}%` }} />
-                <div className="medal-progress-label">
-                  <span>{medal.current}/{medal.target}</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
+			<Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Fechar modal medalha" />
+			<View style={styles.centerWrap} pointerEvents="box-none">
+				<Animated.View style={[styles.panel, { backgroundColor: colors.card || '#0E1620', transform: [{ scale }], opacity, maxHeight: '95%', overflow: 'visible' }]}>      
+					<ScrollView contentContainerStyle={{ padding: 0, paddingTop: 8 }} showsVerticalScrollIndicator={false}>
+						<View style={styles.rowTop}>
+						<View style={[styles.iconCircle, { 
+							backgroundColor: medal.unlocked ? (medal.color || colors.primary) : colors.cardBackground, 
+							borderColor: medal.unlocked ? (medal.color ? medal.color + '66' : colors.primary + '66') : colors.placeholder 
+						}]}> 
+							{medal.icon ? (
+									<View style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
+										<SvgIcon
+											svgString={medal.icon}
+											size={34}
+										/>
+									</View>
+								) : (
+									<View style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
+										<Icon 
+											name="medal" 
+											size={38} 
+											color={medal.unlocked ? (medal.iconColor || colors.text) : colors.placeholder} 
+										/>
+									</View>
+								)}
+							{!medal.hideLevel && medal.unlocked && medal.level > 0 && (
+								<View style={[styles.levelBadge, { backgroundColor: medal.color || colors.primary }]}> 
+									<Text style={styles.levelText}>{medal.level ?? 1}</Text>
+								</View>
+							)}
+						</View>
+						<View style={{ flex: 1, paddingLeft: 14 }}>
+							<Text style={[styles.title, { color: colors.text }]}>{medal.title || medal.id}</Text>
+							<Text style={[styles.desc, { color: colors.text + 'AA' }]}>{medal.description || 'Sem descrição.'}</Text>
+						</View>
+						</View>
+						{medal.target !== null && medal.target !== undefined && (
+						<View style={styles.progressWrap}>
+							<View style={[styles.progressBar, { backgroundColor: colors.border || '#14202C' }]}> 
+								<View style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: colors.primary }]} />
+								<View style={styles.progressLabelWrap} pointerEvents="none">
+									<Text style={[styles.progressLabel, { color: colors.text }]}>{medal.current}/{medal.target}</Text>
+								</View>
+							</View>
+						</View>
+						)}
+					</ScrollView>
+				</Animated.View>
+			</View>
+		</Modal>
+	);
 }
+
+const styles = StyleSheet.create({
+	backdrop: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.55)' },
+	centerWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, overflow: 'visible' },
+	// allow the medal badge to overflow the rounded panel edge
+	panel: { width: '100%', borderRadius: 18, padding: 18, paddingTop: 26, maxWidth: 560, overflow: 'visible' },
+	rowTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
+	// icon container should also allow overflow so the badge isn't clipped
+	iconCircle: { width: 70, height: 70, borderRadius: 35, alignItems: 'center', justifyContent: 'center', borderWidth: 2, position: 'relative', overflow: 'visible' },
+	// raise the badge slightly and ensure it renders above the panel on Android/iOS
+	levelBadge: { position: 'absolute', top: -10, right: -6, width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center', zIndex: 999, elevation: 20 },
+	levelText: { fontSize: 14, fontFamily: family.bold, color: '#0E1620' },
+	title: { fontSize: 18, fontFamily: family.bold, marginBottom: 4 },
+	desc: { fontSize: 13, lineHeight: 18, fontFamily: family.medium },
+	progressWrap: { marginTop: 4 },
+	progressBar: { height: 28, borderRadius: 14, overflow: 'hidden', position: 'relative' },
+	progressFill: { position: 'absolute', left: 0, top: 0, bottom: 0 },
+	progressLabelWrap: { position: 'absolute', left: 0, top: 0, bottom: 0, right: 0, alignItems: 'center', justifyContent: 'center' },
+	progressLabel: { fontSize: 13, fontFamily: family.bold },
+	progressPct: { fontSize: 12, fontFamily: family.semibold, textAlign: 'right', marginTop: 6 },
+	closeBtn: { marginTop: 20, alignSelf: 'flex-end', paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, borderWidth: 1 },
+	closeText: { fontSize: 15, fontFamily: family.bold },
+});

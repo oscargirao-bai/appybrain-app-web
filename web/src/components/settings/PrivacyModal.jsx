@@ -1,6 +1,7 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
-import './PrivacyModal.css';
+import { Modal, View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { useThemeColors } from '../../services/Theme';
+import { family } from '../../constants/font';
 
 const PRIVACY_TEXT = `Esta Política de Privacidade explica como a AppyBrain recolhe, utiliza e protege as suas informações.
 
@@ -23,43 +24,51 @@ Contacto
 Se tiver questões sobre esta política, contacte o suporte em support@example.com.`;
 
 export default function PrivacyModal({ visible, onClose }) {
-  const colors = useThemeColors();
-
-  if (!visible) return null;
-
-  return (
-    <div className="privacy-modal-backdrop">
-      <div
-        className="privacy-modal-sheet"
-        style={{
-          backgroundColor: colors.card || colors.background,
-          borderColor: colors.text + '20',
-        }}
-      >
-        <div className="privacy-modal-header">
-          <h3 className="privacy-modal-title" style={{ color: colors.text }}>
-            Política de Privacidade
-          </h3>
-        </div>
-        <div className="privacy-modal-scroll-content">
-          <p className="privacy-modal-body" style={{ color: colors.text }}>
-            {PRIVACY_TEXT}
-          </p>
-          <button
-            className="privacy-modal-close-btn"
-            style={{
-              borderColor: colors.text + '25',
-              backgroundColor: colors.card + '66',
-            }}
-            onClick={onClose}
-            aria-label="Fechar política de privacidade"
-          >
-            <span className="privacy-modal-close-label" style={{ color: colors.text }}>
-              Fechar
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+	const colors = useThemeColors();
+	return (
+		<Modal
+			visible={visible}
+			animationType="slide"
+			onRequestClose={onClose}
+			transparent
+		>
+			<View style={[styles.backdrop]}> 
+				<View style={[styles.sheet, { backgroundColor: colors.card || colors.background, borderColor: colors.text + '20' }]}> 
+					<View style={styles.header}> 
+						<Text style={[styles.title, { color: colors.text }]}>Política de Privacidade</Text>
+					</View>
+					<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+						<Text style={[styles.body, { color: colors.text }]}>{PRIVACY_TEXT}</Text>
+						<Pressable
+							style={({ pressed }) => [styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, pressed && { opacity: 0.85 }]}
+							onPress={onClose}
+							accessibilityRole="button"
+							accessibilityLabel="Fechar política de privacidade"
+						>
+							<Text style={[styles.closeLabel, { color: colors.text }]}>Fechar</Text>
+						</Pressable>
+					</ScrollView>
+				</View>
+			</View>
+		</Modal>
+	);
 }
+
+const styles = StyleSheet.create({
+	backdrop: { flex: 1, justifyContent: 'flex-end' },
+	sheet: {
+		maxHeight: '100%',
+		borderTopLeftRadius: 28,
+		borderTopRightRadius: 28,
+		paddingHorizontal: 20,
+		paddingTop: 18,
+		paddingBottom: 24,
+		borderWidth: 1,
+	},
+	header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+	title: { fontSize: 18, fontWeight: '700', fontFamily: family.bold },
+	scrollContent: { paddingBottom: 32 },
+	body: { fontSize: 14, lineHeight: 20, fontWeight: '500', fontFamily: family.medium, whiteSpace: 'pre-wrap' },
+	closeBtn: { marginTop: 28, borderWidth: 1, borderRadius: 18, paddingVertical: 12, alignItems: 'center' },
+	closeLabel: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
+});

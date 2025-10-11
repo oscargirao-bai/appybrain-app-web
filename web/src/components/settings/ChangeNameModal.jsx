@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
-import './ChangeNameModal.css';
+import React, { useState } from 'react';
+import { Modal, View, Text, StyleSheet, Pressable, TextInput } from 'react-native';
+import { useThemeColors } from '../../services/Theme';
+import { family } from '../../constants/font';
 
 /**
  * ChangeNameModal
@@ -11,11 +12,17 @@ import './ChangeNameModal.css';
  *  - onCancel () => void
  *  - onConfirm (newName: string) => void
  */
-export default function ChangeNameModal({ visible, currentName = '', onCancel, onConfirm }) {
+export default function ChangeNameModal({
+  visible,
+  currentName = '',
+  onCancel,
+  onConfirm,
+}) {
   const colors = useThemeColors();
   const [newName, setNewName] = useState(currentName);
 
-  useEffect(() => {
+  // Reset name when modal opens
+  React.useEffect(() => {
     if (visible) {
       setNewName(currentName);
     }
@@ -30,67 +37,113 @@ export default function ChangeNameModal({ visible, currentName = '', onCancel, o
 
   const isValidName = newName.trim().length > 0;
 
-  if (!visible) return null;
-
   return (
-    <div className="change-name-modal-backdrop" style={{ backgroundColor: colors.backdrop + 'AA' }}>
-      <div className="change-name-modal-overlay" onClick={onCancel} aria-label="Fechar modal" />
-      <div
-        className="change-name-modal-panel"
-        style={{
-          backgroundColor: colors.card,
-          borderColor: colors.text + '22',
-        }}
-      >
-        <h3 className="change-name-modal-title" style={{ color: colors.text }}>
-          Mudar Nome
-        </h3>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <View style={[styles.backdrop, { backgroundColor: colors.backdrop + 'AA' }]}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} accessibilityRole="button" accessibilityLabel="Fechar modal" />
+        <View style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22' }]}>
+          <Text style={[styles.title, { color: colors.text }]}>Mudar Nome</Text>
 
-        <input
-          type="text"
-          className="change-name-modal-input"
-          style={{
-            backgroundColor: colors.surface,
-            borderColor: colors.text + '25',
-            color: colors.text,
-          }}
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          placeholder="Novo nome"
-          maxLength={50}
-          autoFocus
-        />
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor: colors.surface,
+                borderColor: colors.text + '25',
+                color: colors.text
+              }
+            ]}
+            value={newName}
+            onChangeText={setNewName}
+            placeholder="Novo nome"
+            placeholderTextColor={colors.muted}
+            maxLength={50}
+            autoFocus
+            selectTextOnFocus
+          />
 
-        <div className="change-name-modal-row">
-          <button
-            onClick={onCancel}
-            className="change-name-modal-btn"
-            style={{
-              backgroundColor: colors.surface,
-              borderColor: colors.text + '25',
-            }}
-            aria-label="Cancelar"
-          >
-            <span style={{ color: colors.text }}>Cancelar</span>
-          </button>
+          <View style={styles.row}>
+            <Pressable
+              onPress={onCancel}
+              style={({ pressed }) => [
+                styles.btn,
+                { backgroundColor: colors.surface, borderColor: colors.text + '25' },
+                pressed && { opacity: 0.85 },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Cancelar"
+            >
+              <Text style={[styles.btnText, { color: colors.text }]}>Cancelar</Text>
+            </Pressable>
 
-          <button
-            onClick={handleConfirm}
-            disabled={!isValidName}
-            className="change-name-modal-btn"
-            style={{
-              backgroundColor: isValidName ? colors.secondary : colors.surface,
-              borderColor: isValidName ? colors.secondary + '55' : colors.text + '25',
-              opacity: isValidName ? 1 : 0.5,
-            }}
-            aria-label="Confirmar mudança de nome"
-          >
-            <span style={{ color: isValidName ? colors.onSecondary : colors.text }}>
-              Confirmar
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
+            <Pressable
+              onPress={handleConfirm}
+              disabled={!isValidName}
+              style={({ pressed }) => [
+                styles.btn,
+                {
+                  backgroundColor: isValidName ? colors.secondary : colors.surface,
+                  borderColor: isValidName ? colors.secondary + '55' : colors.text + '25',
+                  opacity: isValidName ? 1 : 0.5
+                },
+                pressed && isValidName && { opacity: 0.9 },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Confirmar mudança de nome"
+            >
+              <Text style={[styles.btnText, { color: isValidName ? colors.onSecondary : colors.text }]}>
+                Confirmar
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
+  panel: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 22,
+    paddingBottom: 20,
+    borderWidth: 1,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: family.bold,
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 24
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: family.semibold,
+    marginBottom: 20,
+  },
+  row: { flexDirection: 'row', gap: 14 },
+  btn: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingVertical: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnText: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
+});

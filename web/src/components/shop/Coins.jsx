@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
-import Icon from '../common/Icon.jsx';
-import DataManager from '../../services/DataManager.js';
+import { View, Text, StyleSheet } from 'react-native';
+import Icon from '@react-native-vector-icons/lucide';
+import { useThemeColors } from '../../services/Theme';
+import { family } from '../../constants/font';
+import DataManager from '../../services/DataManager';
 
 // Simple coins pill that displays current user coins from DataManager
 export default function Coins({ style }) {
@@ -25,27 +27,29 @@ export default function Coins({ style }) {
 	}, []);
 
 	return (
-		<div style={{
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			border: `2px solid ${colors.primary}AA`,
-			paddingLeft: 14,
-			paddingRight: 14,
-			paddingTop: 8,
-			paddingBottom: 8,
-			borderRadius: 18,
-			alignSelf: 'center',
-			backgroundColor: 'transparent',
-			...style
-		}}>
+		<View style={[styles.wrap, { borderColor: colors.primary + 'AA' }, style]}>
 			<Icon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
-			<span style={{
-				fontSize: 18,
-				fontWeight: 700,
-				color: colors.primary,
-				letterSpacing: 0.5
-			}}>{coins}</span>
-		</div>
+			<Text style={[styles.value, { color: colors.primary }]}>{coins}</Text>
+		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	wrap: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		borderWidth: 2,
+		paddingHorizontal: 14,
+		paddingVertical: 8,
+		borderRadius: 18,
+		alignSelf: 'center',
+		backgroundColor: 'transparent',
+	},
+	value: {
+		fontSize: 18,
+		fontWeight: '700',
+		fontFamily: family.bold,
+		letterSpacing: 0.5,
+	},
+});
+
