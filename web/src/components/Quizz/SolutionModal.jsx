@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
-// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 import { family } from '../../constants/font';
 import ApiManager from '../../services/ApiManager';
 import MessageModal from '../General/MessageModal';
 
-/**
- * SolutionModal - Quiz solution modal with MathJax mathematical notation support
- * Props:
- *  - visible (bool)
- *  - correctOption: { id, text?, html? }
- *  - explanation: string | html (optional)
- *  - quizId: number (required for reporting)
- *  - onClose: () => void    (Continuar)
- *  - onReport: () => void   (Reportar)
- */
 export default function SolutionModal({
   visible,
   correctOption,
@@ -32,7 +21,7 @@ export default function SolutionModal({
     if (!correctOption) return null;
     if (correctOption.html) {
       return (
-        <div style={{...styles.correctPill, ...{ backgroundColor: colors.secondary + '1A'}}> 
+        <div style={{...styles.correctPill, backgroundColor: colors.secondary + '1A'}}> 
           <MathJaxRenderer 
             content={correctOption.html} 
             enabled={true} 
@@ -45,8 +34,10 @@ export default function SolutionModal({
       );
     }
     return (
-      <div style={{...styles.correctPill, ...{ backgroundColor: colors.secondary + '1A'}}> 
-        <span style={{...styles.correctText, ...{ color: colors.secondary }}}>{correctOption.text}</span>
+      <div style={{...styles.correctPill, backgroundColor: colors.secondary + '1A'}}> 
+        <span style={{...styles.correctText, color: colors.secondary}}>
+          {correctOption.text}
+        </span>
       </div>
     );
   };
@@ -56,35 +47,36 @@ export default function SolutionModal({
     const isHtml = /<[^>]+>|\\\\|\$/.test(String(explanation));
     if (isHtml) {
       return (
-        <div style={styles.explainerHtml} showsVerticalScrollIndicator={true}>
+        <div style={{...styles.explainerHtml, overflowY: 'auto'}}>
           <MathJaxRenderer 
             content={`<div style="text-align:left">${explanation}</div>`} 
             enabled={true} 
-            style={{ minHeight: 80 }}
+            compact={false} 
+            baseFontSize={14} 
+            style={{ width: '100%' }}
           />
         </div>
       );
     }
     return (
-      <div style={styles.explainerText} contentContainerStyle={{ paddingBottom: 4 }}>
-        <span style={{...styles.expText, ...{ color: colors.text }}}>{String(explanation)}</span>
+      <div style={styles.explainer}>
+        <span style={{...styles.explainerText, color: colors.text}}>
+          {explanation}
+        </span>
       </div>
     );
   };
 
   const handleReport = async () => {
-    if (!quizId) {
-      console.warn('No quizId provided for report');
-      return;
-    }
-
+    if (!quizId || reporting) return;
     setReporting(true);
     try {
-      await ApiManager.reportQuizError(quizId);
+      await ApiManager.reportQuiz({ quizId });
       setShowSuccessModal(true);
+      onReport && onReport();
     } catch (error) {
-      console.error('Error reporting quiz:', error);
-      if (onReport) onReport();
+      console.error('Report error:', error);
+      alert('Erro ao reportar. Por favor tente novamente.');
     } finally {
       setReporting(false);
     }
@@ -92,111 +84,210 @@ export default function SolutionModal({
 
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
-    if (onReport) onReport();
+    onClose && onClose();
   };
 
+  if (!visible || showSuccessModal) {
+    return showSuccessModal ? (
+      <MessageModal
+        visible={showSuccessModal}
+        title="Obrigado!"
+        message="O teu reporte foi enviado com sucesso."
+        onClose={handleSuccessModalClose}
+      />
+    ) : null;
+  }
+
   return (
-    <>
-      <div style={{display: visible && !showSuccessModal} transparent animationType="fade" onRequestClose={onClose}>
-      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
-        <button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar explicação" />
+    <div style={styles.modalContainer}>
+      <div style={{...styles.backdrop, backgroundColor: colors.backdrop + 'CC'}}>
+        <button 
+          style={styles.backdropButton} 
+          onClick={onClose}  
+          aria-label="Fechar explicação" 
+        />
+        
+        <div style={{...styles.panel, backgroundColor: colors.card}}>
+          <div style={{...styles.header, borderBottomColor: colors.text + '22'}}>
+            <span style={{...styles.headerTitle, color: colors.text}}>
+              Explicação
+            </span>
+          </div>
 
-        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}> 
-          <span style={{...styles.title, ...{ color: colors.text }}}>Resposta correta</span>
+          <div style={styles.body}>
+            <span style={{...styles.label, color: colors.text}}>
+              Resposta correta:
+            </span>
+            {renderOption()}
+            {renderExplanation()}
+          </div>
 
-          {renderOption()}
-
-          {explanation ? (
-            <span style={{...styles.subtitle, ...{ color: colors.text + 'CC' }}}>Explicação</span>
-          ) : null}
-          {renderExplanation()}
-
-          <div style={styles.row}> 
-            <button               onClick={handleReport}
+          <div style={styles.footer}>
+            <button
+              onClick={handleReport}
               disabled={reporting}
-              style={({ pressed }) => [
-                styles.btn,
-                { backgroundColor: colors.surface, borderColor: colors.text + '25' },
-                pressed && { opacity: 0.9 },
-                reporting && { opacity: 0.5 },
-              ]}
-              
-              aria-label="Reportar questão"
+              style={{
+                ...styles.reportBtn,
+                borderColor: colors.text + '33',
+                opacity: reporting ? 0.6 : 1,
+              }}
             >
-              {reporting ? (
-                <div size="small" color={colors.text} />
-              ) : (
-                <span style={{...styles.btnText, ...{ color: colors.text }}}>Reportar</span>
-              )}
+              <span style={{...styles.reportBtnText, color: colors.text}}>
+                {reporting ? 'A reportar...' : 'Reportar erro'}
+              </span>
             </button>
-            <button               onClick={onClose}
-              style={({ pressed }) => [
-                styles.btn,
-                { backgroundColor: colors.secondary, borderColor: colors.secondary + '55' },
-                pressed && { opacity: 0.9 },
-              ]}
-              
-              aria-label="Continuar"
+
+            <button
+              onClick={onClose}
+              style={{
+                ...styles.continueBtn,
+                backgroundColor: colors.primary,
+              }}
             >
-              <span style={{...styles.btnText, ...{ color: colors.onSecondary }}}>Continuar</span>
+              <span style={styles.continueBtnText}>
+                Continuar
+              </span>
             </button>
           </div>
         </div>
       </div>
     </div>
-
-    <MessageModal
-      visible={showSuccessModal}
-      title="Reportado"
-      message="Problema reportado com sucesso"
-      onClose={handleSuccessModalClose}
-    />
-    </>
   );
 }
 
 const styles = {
-  backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
+  modalContainer: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  backdropButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'transparent',
+    border: 'none',
+    cursor: 'default',
+  },
   panel: {
+    position: 'relative',
     width: '100%',
-    maxWidth: 420,
-    borderRadius: 24,
-    paddingHorizontal: 20,
+    maxWidth: 500,
+    maxHeight: '90vh',
+    borderRadius: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 20,
     paddingBottom: 16,
-    borderWidth: 1,
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
   },
-  title: { fontSize: 18, fontFamily: family.bold, textAlign: 'center', marginBottom: 12 },
-  correctPill: {
-    borderWidth: 1,
-    borderRadius: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    minHeight: 50,
-  },
-  correctText: { 
-    fontSize: 16, 
+  headerTitle: {
+    fontSize: 20,
     fontFamily: family.bold,
-    textAlign: 'center',
-    flexWrap: 'wrap',
-    lineHeight: 22,
+    fontWeight: '800',
   },
-  subtitle: { fontSize: 14, fontFamily: family.bold, marginTop: 6, marginBottom: 6 },
-  explainerText: { maxHeight: 220 },
-  expText: { fontSize: 15, fontFamily: family.regular, lineHeight: 22 },
-  explainerHtml: { maxHeight: 220 },
-  htmlBox: { minHeight: 60, maxHeight: 100, marginBottom: 6 },
-  row: { flexDirection: 'row', gap: 12, marginTop: 12 },
-  btn: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 18,
-    paddingVertical: 13,
+  body: {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    overflowY: 'auto',
+    gap: 12,
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: family.bold,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  correctPill: {
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: 12,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnText: { fontSize: 15, fontFamily: family.bold },
+  correctText: {
+    fontSize: 16,
+    fontFamily: family.bold,
+    fontWeight: '700',
+  },
+  explainer: {
+    paddingTop: 12,
+  },
+  explainerHtml: {
+    maxHeight: 300,
+    paddingTop: 12,
+  },
+  explainerText: {
+    fontSize: 14,
+    fontFamily: family.regular,
+    lineHeight: 1.5,
+  },
+  footer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 16,
+    paddingBottom: 20,
+  },
+  reportBtn: {
+    flex: 1,
+    paddingTop: 14,
+    paddingBottom: 14,
+    borderRadius: 12,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    background: 'transparent',
+    cursor: 'pointer',
+  },
+  reportBtnText: {
+    fontSize: 14,
+    fontFamily: family.bold,
+    fontWeight: '700',
+  },
+  continueBtn: {
+    flex: 2,
+    paddingTop: 14,
+    paddingBottom: 14,
+    borderRadius: 12,
+    border: 'none',
+    cursor: 'pointer',
+  },
+  continueBtnText: {
+    fontSize: 16,
+    fontFamily: family.bold,
+    fontWeight: '800',
+    color: '#fff',
+  },
 };

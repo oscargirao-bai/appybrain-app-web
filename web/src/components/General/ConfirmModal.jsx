@@ -1,65 +1,46 @@
 import React from 'react';
-// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
-/**
- * ConfirmModal
- * Props:
- *  - visible (bool)
- *  - message (string | ReactNode)
- *  - onCancel () => void   (fires for "Não" & backdrop press)
- *  - onConfirm () => void  (fires for "Sim")
- *  - confirmLabel (optional string) default 'Sim'
- *  - cancelLabel  (optional string) default 'Não'
- *  - destructive (bool) -> color emphasis on confirm (uses error color)
- */
 export default function ConfirmModal({
   visible,
-  message = 'Tens a certeza?',
-  onCancel,
+  message = 'Tem a certeza?',
+  confirmLabel = 'Confirmar',
+  cancelLabel = 'Cancelar',
   onConfirm,
-  confirmLabel = 'Sim',
-  cancelLabel = 'Não',
+  onCancel,
   destructive = false,
 }) {
   const colors = useThemeColors();
 
+  if (!visible) {
+    return null;
+  }
+
   return (
-    <Modal
-      style={{display: visible ? "flex" : "none"}}
-      transparent
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
-        <button style={StyleSheet.absoluteFill} onClick={onCancel}  aria-label="Fechar confirmação" />
-        <div style={{...styles.panel, ...{ backgroundColor: colors.card}}> 
-          <span style={{...styles.message, ...{ color: colors.text }}}>{message}</span>
-          <div style={styles.row}> 
-            <button               onClick={onCancel}
-              style={({ pressed }) => [
-                styles.btn,
-                { backgroundColor: colors.surface, borderColor: colors.text + '25' },
-                pressed && { opacity: 0.85 },
-              ]}
-              
+    <div style={styles.modalContainer}>
+      <div style={{...styles.backdrop, backgroundColor: colors.backdrop + 'AA'}}>
+        <button style={styles.backdropHit} onClick={onCancel} aria-label="Fechar confirmação" />
+        <div style={{...styles.panel, backgroundColor: colors.card}}>
+          <span style={{...styles.message, color: colors.text}}>{message}</span>
+          <div style={styles.row}>
+            <button
+              onClick={onCancel}
+              style={{...styles.btn, backgroundColor: colors.surface, borderColor: colors.text + '25'}}
               aria-label={cancelLabel}
             >
-              <span style={{...styles.btnText, ...{ color: colors.text }}}>{cancelLabel}</span>
+              <span style={{...styles.btnText, color: colors.text}}>{cancelLabel}</span>
             </button>
-            <button               onClick={onConfirm}
-              style={({ pressed }) => [
-                styles.btn,
-                destructive
-                  ? { backgroundColor: colors.error, borderColor: colors.error + '55' }
-                  : { backgroundColor: colors.secondary, borderColor: colors.secondary + '55' },
-                pressed && { opacity: 0.9 },
-              ]}
-              
+            <button
+              onClick={onConfirm}
+              style={{
+                ...styles.btn,
+                backgroundColor: destructive ? colors.error : colors.success,
+                borderColor: destructive ? (colors.error + '55') : (colors.success + '55'),
+              }}
               aria-label={confirmLabel}
             >
-              <span style={{...styles.btnText, ...{ color: destructive ? colors.onError : colors.onSecondary }}}>{confirmLabel}</span>
+              <span style={styles.btnTextWhite}>{confirmLabel}</span>
             </button>
           </div>
         </div>
@@ -69,25 +50,76 @@ export default function ConfirmModal({
 }
 
 const styles = {
-  backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 },
-  panel: {
-    width: '100%',
-    maxWidth: 400,
-    borderRadius: 24,
-    paddingHorizontal: 20,
-    paddingTop: 22,
-    paddingBottom: 20,
-    borderWidth: 1,
+  modalContainer: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+    display: 'flex',
   },
-  message: { fontSize: 16, fontWeight: '600', fontFamily: family.semibold, textAlign: 'center', marginBottom: 20, lineHeight: 22 },
-  row: { flexDirection: 'row', gap: 14 },
+  backdrop: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    position: 'relative',
+  },
+  backdropHit: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+  },
+  panel: {
+    width: '90%',
+    maxWidth: 360,
+    borderRadius: 18,
+    padding: 22,
+    boxShadow: '0 6px 12px rgba(0,0,0,0.2)',
+    position: 'relative',
+    zIndex: 1,
+  },
+  message: {
+    fontSize: 17,
+    fontFamily: family.medium,
+    textAlign: 'center',
+    display: 'block',
+    marginBottom: 20,
+    lineHeight: '22px',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+  },
   btn: {
     flex: 1,
-    borderWidth: 1,
-    borderRadius: 18,
-    paddingVertical: 13,
+    paddingTop: 13,
+    paddingBottom: 13,
+    borderRadius: 12,
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    cursor: 'pointer',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnText: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
+  btnText: {
+    fontSize: 15,
+    fontFamily: family.bold,
+    letterSpacing: '0.3px',
+  },
+  btnTextWhite: {
+    fontSize: 15,
+    fontFamily: family.bold,
+    letterSpacing: '0.3px',
+    color: '#FFFFFF',
+  },
 };

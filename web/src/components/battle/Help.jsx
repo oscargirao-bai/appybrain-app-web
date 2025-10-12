@@ -45,9 +45,7 @@ function IconButton({ icon, label, onPress, disabled, colors }) {
       aria-label={label}
       onClick={disabled ? undefined : onPress}
       disabled={disabled}
-      style={{...styles.btn, ...{
-          borderColor: colors.text + '22'}}
-      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      style={{...styles.btn, borderColor: colors.text + '22'}}
     >
       <SvgIcon name={icon} size={20} color={colors.text} />
     </button>

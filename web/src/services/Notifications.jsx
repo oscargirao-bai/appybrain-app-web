@@ -31,8 +31,13 @@ export async function cancelAllScheduledNotificationsAsync() {
 }
 
 export async function getAllScheduledNotificationsAsync() {
-  console.log('[Notifications] getAllScheduledNotificationsAsync - no-op on web');
+  console.log('[Web] getAllScheduledNotificationsAsync no-op');
   return [];
+}
+
+export function executeNotificationNavigation(notification) {
+  console.log('[Web] executeNotificationNavigation no-op', notification);
+  // Web version doesn't support notification-driven navigation
 }
 
 export default {

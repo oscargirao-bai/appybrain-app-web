@@ -40,7 +40,7 @@ export const header = {
   fontFamily: family.bold,
   // -2% letter spacing for headers
   letterSpacing: -0.02 * sizeMap.big,
-});
+};
 
 export const normal = {
   fontSize: sizeMap.medium,

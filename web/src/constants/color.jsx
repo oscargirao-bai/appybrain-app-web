@@ -6,6 +6,42 @@
 // 3. Keep brand identity: energetic yellow (primary), sky blue (secondary), playful purple (accent)
 // 4. Offer subtle elevation layers (surface, card) & consistent translucent overlays
 // 5. Avoid hard‑coding hexes elsewhere – ALWAYS 
+
+// Dark palette
+export const colorsDark = {
+  // Core backgrounds / text
+  background: '#0E131A',      // Deep desaturated navy/graphite – softer than pure black
+  surface: '#17202A',         // Slight elevation 1
+  card: '#1E2A35',            // Elevation 2 (panels, modals)
+  border: '#2D3A46',          // Neutral outline
+  text: '#F5F7FA',            // High contrast primary text
+  muted: '#8C98A8',           // Secondary text
+
+  // Brand & semantic
+  primary: '#F9E547',         // Brand yellow (vibrant but readable on dark)
+  secondary: '#59B3FF',       // Sky blue CTA / highlights
+  accent: '#C792EA',          // Playful purple accent
+  error: '#FF5F56',           // Alert red tuned for dark
+  correct: '#33D087',         // Success green
+  warning: '#FFB347',         // Optional warning / amber
+  info: '#4DB9FF',            // Informational cyan
+
+  // On-colors (foregrounds placed against fills)
+  onPrimary: '#1F1A00',       // Dark text on yellow
+  onSecondary: '#041018',     // Dark navy on light blue
+  onAccent: '#1B0F23',        // Deep purple-black
+  onError: '#FFFFFF',         // White on error background
+  onCorrect: '#062015',       // Deep green text for badges (if needed)
+
+  // Utility / extras
+  shadow: '#000000',
+  focus: '#F9E547',
+  outline: '#59B3FF',
+  backdrop: '#0E131A',        // Base for dimmed modals (add alpha in component)
+  gradientPrimary: ['#F9E547', '#FFCA28'],
+  gradientSecondary: ['#59B3FF', '#2F7FD9'],
+};
+
 // Light palette
 export const colorsLight = {
   background: '#FFFDF5',      // Soft warm near-white (reduces eye strain vs pure #FFF)

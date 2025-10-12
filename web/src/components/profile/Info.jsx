@@ -47,17 +47,20 @@ export default function Info({
 }
 
 function createStyles(colors) {
-  return StyleSheet.create({
+  return {
     wrapper: {
+      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       width: '100%',
-      paddingVertical: 6,
-      paddingHorizontal: 2,
+      paddingTop: 6,
+      paddingBottom: 6,
+      paddingLeft: 2,
+      paddingRight: 2,
     },
     textBlock: { flex: 1, paddingRight: 8 },
-    nameRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    nameRow: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 },
     username: {
       fontSize: 26,
       fontWeight: '800',
@@ -73,12 +76,16 @@ function createStyles(colors) {
       color: colors.text + '99',
     },
     starsPill: {
+      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: StyleSheet.hairlineWidth,
+      borderWidth: '1px',
+      borderStyle: 'solid',
       borderColor: colors.text + '35',
-      paddingHorizontal: 16,
-      paddingVertical: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+      paddingTop: 8,
+      paddingBottom: 8,
       borderRadius: 18,
       backgroundColor: colors.background + '40',
       minWidth: 90,

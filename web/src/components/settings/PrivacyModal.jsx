@@ -25,26 +25,26 @@ Se tiver questões sobre esta política, contacte o suporte em support@example.c
 
 export default function PrivacyModal({ visible, onClose }) {
 	const colors = useThemeColors();
+	
+	if (!visible) {
+		return null;
+	}
+	
 	return (
-		<Modal
-			style={{display: visible ? "flex" : "none"}}
-			animationType="slide"
-			onRequestClose={onClose}
-			transparent
-		>
+		<div style={styles.modalContainer}>
 			<div style={styles.backdrop}> 
-				<div style={{...styles.sheet, ...{ backgroundColor: colors.card || colors.background}}> 
+				<div style={{...styles.sheet, backgroundColor: colors.card || colors.background}}> 
 					<div style={styles.header}> 
-						<span style={{...styles.title, ...{ color: colors.text }}}>Política de Privacidade</span>
+						<span style={{...styles.title, color: colors.text}}>Política de Privacidade</span>
 					</div>
-					<div showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-						<span style={{...styles.body, ...{ color: colors.text }}}>{PRIVACY_TEXT}</span>
-						<button 							style={{styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, /* pressed */ { opacity: 0.85 }}}
+					<div style={styles.scrollContent}>
+						<span style={{...styles.body, color: colors.text}}>{PRIVACY_TEXT}</span>
+						<button 
+							style={{...styles.closeBtn, borderColor: colors.text + '25', backgroundColor: colors.card + '66'}}
 							onClick={onClose}
-							
 							aria-label="Fechar política de privacidade"
 						>
-							<span style={{...styles.closeLabel, ...{ color: colors.text }}}>Fechar</span>
+							<span style={{...styles.closeLabel, color: colors.text}}>Fechar</span>
 						</button>
 					</div>
 				</div>
@@ -54,7 +54,20 @@ export default function PrivacyModal({ visible, onClose }) {
 }
 
 const styles = {
-	backdrop: { flex: 1, justifyContent: 'flex-end' },
+	modalContainer: {
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		zIndex: 1000,
+		display: 'flex',
+	},
+	backdrop: {
+		flex: 1,
+		display: 'flex',
+		justifyContent: 'flex-end',
+	},
 	sheet: {
 		maxHeight: '100%',
 		borderTopLeftRadius: 28,

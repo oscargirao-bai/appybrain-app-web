@@ -118,13 +118,11 @@ export const normalizeSvg = (svgString, options = {}) => {
     // For stroke-only icons: if a path/shape has stroke but no explicit fill attribute, add fill="none"
     // This prevents unwanted default black fill on stroke-only SVGs
     svg = svg.replace(/<(path|line|polyline|polygon|rect|circle|ellipse)([^>]*stroke="currentColor"[^>]*?)>/gi, (match, tag, attrs) => {
-      // Check if this element already has a fill attribute
       if (/fill=/i.test(attrs)) {
-        return match; // Already has fill, don't modify
+        return match;
       }
-      // No fill attribute found, add fill="none" to make it stroke-only
       return `<${tag}${attrs} fill="none">`;
-    };
+    });
   }
 
   return svg;

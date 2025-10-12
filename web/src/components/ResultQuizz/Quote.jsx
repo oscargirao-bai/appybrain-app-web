@@ -11,9 +11,7 @@ import DataManager from '../../services/DataManager';
  */
 export default function Quote({ percentage = 50 }) {
 	const colors = useThemeColors();
-	const styles = useMemo(() => createStyles(colors), [colors]);
 
-	// Get a random quote based on percentage from DataManager
 	const message = useMemo(() => {
 		return DataManager.getRandomQuoteByPercentage(percentage);
 	}, [percentage]);
@@ -21,7 +19,7 @@ export default function Quote({ percentage = 50 }) {
 	return (
 		<div style={styles.container}>
 			<div style={styles.messageBox}>
-				<span style={{...styles.messageText, ...{ color: colors.text }}}>
+				<span style={{...styles.messageText, color: colors.text}}>
 					{message}
 				</span>
 			</div>
@@ -29,23 +27,27 @@ export default function Quote({ percentage = 50 }) {
 	);
 }
 
-const createStyles = (colors) => StyleSheet.create({
+const styles = {
 	container: {
 		width: '100%',
-		paddingHorizontal: 20,
+		paddingLeft: 20,
+		paddingRight: 20,
+		display: 'flex',
 		alignItems: 'center',
 	},
 	messageBox: {
-		paddingHorizontal: 16,
-		paddingVertical: 10,
+		paddingLeft: 16,
+		paddingRight: 16,
+		paddingTop: 10,
+		paddingBottom: 10,
 		backgroundColor: 'transparent',
 		maxWidth: '100%',
 	},
 	messageText: {
 		fontSize: 24,
 		fontFamily: family.semibold,
-		lineHeight: 24,
+		lineHeight: '24px',
 		textAlign: 'center',
-		letterSpacing: 0.2,
+		letterSpacing: '0.2px',
 	},
 };

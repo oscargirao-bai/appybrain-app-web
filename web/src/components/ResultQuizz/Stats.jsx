@@ -32,16 +32,21 @@ export default function Stats({ correct = null, total = null, totalSec = null })
   );
 }
 
-const createStyles = (colors) => StyleSheet.create({
+const createStyles = (colors) => ({
   container: {
     width: '100%',
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    paddingVertical: 12,
-    marginVertical: 12,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginTop: 12,
+    marginBottom: 12,
   },
   item: {
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 120,
@@ -57,4 +62,4 @@ const createStyles = (colors) => StyleSheet.create({
     fontWeight: '600',
     color: colors.text + 'AA',
   },
-};
+});

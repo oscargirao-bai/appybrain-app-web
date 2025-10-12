@@ -1,125 +1,214 @@
-import React, { useEffect, useRef } from 'react';
-// Modal, Easing converted
-import SvgIcon from '../../components/General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import React from 'react';
 import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
-/**
- * MedalModal
- * Props:
- *  visible: boolean
- *  onClose: () => void
- *  medal: {
- *    id: string
- *    icon: string
- *    title: string
- *    description: string
- *    level: number
- *    current: number
- *    target: number
- *    unlocked?: boolean
- *    hideLevel?: boolean (if true, don't show level badge)
- *  }
- */
 export default function MedalModal({ visible, onClose, medal }) {
 	const colors = useThemeColors();
-	const scale = useRef(new Animated.Value(0.9)).current;
-	const opacity = useRef(new Animated.Value(0)).current;
 
-	useEffect(() => {
-		if (visible) {
-			Animated.parallel([
-				Animated.timing(scale, { toValue: 1, duration: 220, easing: Easing.out(Easing.quad), useNativeDriver: true }),
-				Animated.timing(opacity, { toValue: 1, duration: 180, useNativeDriver: true }),
-			]).start();
-		} else {
-			Animated.parallel([
-				Animated.timing(scale, { toValue: 0.9, duration: 160, useNativeDriver: true }),
-				Animated.timing(opacity, { toValue: 0, duration: 120, useNativeDriver: true }),
-			]).start();
-		}
-	}, [visible, scale, opacity]);
-
-	if (!medal) {
+	if (!visible || !medal) {
 		return null;
 	}
 
 	const progress = Math.min(1, medal.target ? medal.current / medal.target : 0);
-	// Removed percentage display per request
+
+	const panelStyle = {
+		...styles.panel,
+		backgroundColor: colors.card || '#0E1620'
+	};
+
+	const iconCircleStyle = {
+		...styles.iconCircle,
+		backgroundColor: medal.unlocked ? (medal.color || colors.primary) : colors.cardBackground
+	};
+
+	const progressFillStyle = {
+		...styles.progressFill,
+		width: `${progress * 100}%`,
+		backgroundColor: medal.color || colors.primary
+	};
 
 	return (
-		<div style={{display: visible ? "flex" : "none"}} transparent animationType="none" onRequestClose={onClose}>
-			<button style={styles.backdrop} onClick={onClose}  aria-label="Fechar modal medalha" />
-			<div style={styles.centerWrap} pointerEvents="box-none">
-				<Animated.View style={[styles.panel, { backgroundColor: colors.card || '#0E1620', transform: [{ scale }], opacity, maxHeight: '95%', overflow: 'visible' }]}>      
-					<div contentContainerStyle={{ padding: 0, paddingTop: 8 }} showsVerticalScrollIndicator={false}>
+		<div style={styles.modalContainer}>
+			<button style={styles.backdrop} onClick={onClose} aria-label="Fechar modal medalha" />
+			<div style={styles.centerWrap}>
+				<div style={panelStyle}>
+					<div style={styles.scrollContent}>
 						<div style={styles.rowTop}>
-						<div style={{...styles.iconCircle, ...{ 
-							backgroundColor: medal.unlocked ? (medal.color || colors.primary) : colors.cardBackground}}> 
-							{medal.icon ? (
-									<div style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
-										<SvgIcon
-											svgString={medal.icon}
-											size={34}
-										/>
+							<div style={iconCircleStyle}>
+								{medal.icon ? (
+									<div style={styles.iconWrap}>
+										<SvgIcon svgString={medal.icon} size={34} />
 									</div>
 								) : (
-									<div style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
-										<SvgIcon 
-											name="medal" 
-											size={38} 
-											color={medal.unlocked ? (medal.iconColor || colors.text) : colors.placeholder} 
-										/>
+									<div style={styles.iconWrap}>
+										<SvgIcon name="medal" size={38} color={colors.text} />
 									</div>
 								)}
-							{!medal.hideLevel && medal.unlocked && medal.level > 0 && (
-								<div style={{...styles.levelBadge, ...{ backgroundColor: medal.color || colors.primary }}}> 
-									<span style={styles.levelText}>{medal.level ?? 1}</span>
-								</div>
-							)}
-						</div>
-						<div style={{ flex: 1, paddingLeft: 14 }}>
-							<span style={{...styles.title, ...{ color: colors.text }}}>{medal.title || medal.id}</span>
-							<span style={{...styles.desc, ...{ color: colors.text + 'AA' }}}>{medal.description || 'Sem descrição.'}</span>
-						</div>
-						</div>
-						{medal.target !== null && medal.target !== undefined && (
-						<div style={styles.progressWrap}>
-							<div style={{...styles.progressBar, ...{ backgroundColor: colors.border || '#14202C' }}}> 
-								<div style={{...styles.progressFill, ...{ width: `${progress * 100}%`}} />
-								<div style={styles.progressLabelWrap} pointerEvents="none">
-									<span style={{...styles.progressLabel, ...{ color: colors.text }}}>{medal.current}/{medal.target}</span>
-								</div>
+							</div>
+							<div style={styles.rightCol}>
+								<span style={{...styles.titleText, color: colors.text}}>{medal.title}</span>
+								{!medal.hideLevel && medal.level && (
+									<div style={{...styles.levelBadge, backgroundColor: medal.color || colors.primary}}>
+										<span style={styles.levelText}>Nível {medal.level}</span>
+									</div>
+								)}
 							</div>
 						</div>
+						<span style={{...styles.descriptionText, color: colors.text + 'CC'}}>
+							{medal.description || 'Sem descrição'}
+						</span>
+						{medal.target && (
+							<div style={styles.progressSection}>
+								<div style={styles.progressBar}>
+									<div style={progressFillStyle} />
+								</div>
+								<span style={{...styles.progressText, color: colors.text + 'AA'}}>
+									{medal.current} / {medal.target}
+								</span>
+							</div>
 						)}
+						<button
+							style={{...styles.closeBtn, backgroundColor: colors.primary}}
+							onClick={onClose}
+							aria-label="Fechar"
+						>
+							<span style={styles.closeBtnText}>Fechar</span>
+						</button>
 					</div>
-				</Animated.View>
+				</div>
 			</div>
 		</div>
 	);
 }
 
 const styles = {
-	backdrop: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.55)' },
-	centerWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, overflow: 'visible' },
-	// allow the medal badge to overflow the rounded panel edge
-	panel: { width: '100%', borderRadius: 18, padding: 18, paddingTop: 26, maxWidth: 560, overflow: 'visible' },
-	rowTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-	// icon container should also allow overflow so the badge isn't clipped
-	iconCircle: { width: 70, height: 70, borderRadius: 35, alignItems: 'center', justifyContent: 'center', borderWidth: 2, position: 'relative', overflow: 'visible' },
-	// raise the badge slightly and ensure it renders above the panel on Android/iOS
-	levelBadge: { position: 'absolute', top: -10, right: -6, width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center', zIndex: 999, elevation: 20 },
-	levelText: { fontSize: 14, fontFamily: family.bold, color: '#0E1620' },
-	title: { fontSize: 18, fontFamily: family.bold, marginBottom: 4 },
-	desc: { fontSize: 13, lineHeight: 18, fontFamily: family.medium },
-	progressWrap: { marginTop: 4 },
-	progressBar: { height: 28, borderRadius: 14, overflow: 'hidden', position: 'relative' },
-	progressFill: { position: 'absolute', left: 0, top: 0, bottom: 0 },
-	progressLabelWrap: { position: 'absolute', left: 0, top: 0, bottom: 0, right: 0, alignItems: 'center', justifyContent: 'center' },
-	progressLabel: { fontSize: 13, fontFamily: family.bold },
-	progressPct: { fontSize: 12, fontFamily: family.semibold, textAlign: 'right', marginTop: 6 },
-	closeBtn: { marginTop: 20, alignSelf: 'flex-end', paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, borderWidth: 1 },
-	closeText: { fontSize: 15, fontFamily: family.bold },
+	modalContainer: {
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		zIndex: 1000,
+		display: 'flex',
+	},
+	backdrop: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: 'rgba(0,0,0,0.7)',
+		border: 'none',
+		cursor: 'pointer',
+	},
+	centerWrap: {
+		flex: 1,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		pointerEvents: 'none',
+	},
+	panel: {
+		borderRadius: 20,
+		padding: 24,
+		width: '90%',
+		maxWidth: 400,
+		maxHeight: '95%',
+		pointerEvents: 'auto',
+		position: 'relative',
+	},
+	scrollContent: {
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 16,
+	},
+	rowTop: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 16,
+	},
+	iconCircle: {
+		width: 64,
+		height: 64,
+		borderRadius: 32,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	iconWrap: {
+		transform: 'scale(1.2)',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	rightCol: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 4,
+	},
+	titleText: {
+		fontSize: 18,
+		fontFamily: family.bold,
+		fontWeight: '700',
+	},
+	levelBadge: {
+		alignSelf: 'flex-start',
+		paddingLeft: 10,
+		paddingRight: 10,
+		paddingTop: 4,
+		paddingBottom: 4,
+		borderRadius: 12,
+	},
+	levelText: {
+		fontSize: 12,
+		fontFamily: family.semibold,
+		color: '#FFFFFF',
+	},
+	descriptionText: {
+		fontSize: 14,
+		fontFamily: family.medium,
+		lineHeight: '18px',
+	},
+	progressSection: {
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 6,
+	},
+	progressBar: {
+		height: 8,
+		backgroundColor: 'rgba(255,255,255,0.15)',
+		borderRadius: 4,
+		overflow: 'hidden',
+		position: 'relative',
+	},
+	progressFill: {
+		height: '100%',
+		borderRadius: 4,
+		transition: 'width 0.3s ease',
+	},
+	progressText: {
+		fontSize: 12,
+		fontFamily: family.medium,
+		textAlign: 'right',
+	},
+	closeBtn: {
+		paddingTop: 12,
+		paddingBottom: 12,
+		borderRadius: 12,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		border: 'none',
+		cursor: 'pointer',
+		marginTop: 8,
+	},
+	closeBtnText: {
+		fontSize: 16,
+		fontFamily: family.bold,
+		fontWeight: '700',
+		color: '#FFFFFF',
+	},
 };

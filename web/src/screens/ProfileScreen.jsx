@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeColors } from '../services/Theme';
 import DataManager from '../services/DataManager';
 import Header from '../components/General/Header';
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../components/General/SvgIcon';
 import Banner from '../components/Profile/Banner';
 import Info from '../components/Profile/Info';
 import MedalsList from '../components/Profile/MedalsList';

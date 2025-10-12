@@ -10,7 +10,7 @@ import DataManager from '../services/DataManager';
 import Button3 from '../components/General/Button3';
 import ButtonLightDark from '../components/Settings/ButtonLightDark';
 import ButtonLanguage from '../components/Settings/ButtonLanguage';
-import Button4 from '../components/General/Button4.js';
+import Button4 from '../components/General/Button4.jsx';
 import PrivacyModal from '../components/Settings/PrivacyModal';
 import ChangeNameModal from '../components/Settings/ChangeNameModal';
 import MessageModal from '../components/General/MessageModal';

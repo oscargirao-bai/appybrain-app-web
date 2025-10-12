@@ -13,9 +13,8 @@ export default function Question({ html, height, style }) {
 	const [contentHeight, setContentHeight] = useState(height || 0);
 
 	return (
-		<div 			style={{...styles.wrapper, ...{ borderColor: colors.text + 'CC' }}}
-		>
-			<div style={{...styles.inner, ...{ backgroundColor: 'transparent'}}> 
+		<div style={{...styles.wrapper, borderColor: colors.text + 'CC'}}>
+			<div style={{...styles.inner, backgroundColor: 'transparent'}}> 
 				<MathJaxRenderer
 					content={html}
 					enabled={true}
@@ -31,7 +30,8 @@ export default function Question({ html, height, style }) {
 
 const styles = {
 	wrapper: {
-		borderWidth: 3,
+		borderWidth: '3px',
+		borderStyle: 'solid',
 		borderRadius: 20,
 		padding: 10,
 	},

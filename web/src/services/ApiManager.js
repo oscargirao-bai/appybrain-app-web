@@ -990,4 +990,4 @@ class ApiManager {
 // Create singleton instance
 const apiManager = new ApiManager();
 
-module.exports = apiManager;
+export default apiManager;

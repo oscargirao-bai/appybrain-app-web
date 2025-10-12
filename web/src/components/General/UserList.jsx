@@ -1,21 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
-
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from './SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
-/**
- * UserList (Ranking)
- * Lista de utilizadores ordenada pelo número de estrelas (desc).
- * Props:
- *  - users: Array<{ id|string, name:string, stars:number, avatarIcon?:string }>
- *  - currentUserId?: id para destacar a linha do próprio utilizador
- *  - topN?: limitar resultados (default: todos)
- *  - showMedals?: mostra ícones especiais nos Top 3 (default true)
- *  - onUserPress?: (user) => void
- *  - denseRanking?: se true usa ranking denso (1,2,2,3); caso contrário ranking competição (1,2,2,4). default false
- *  - showRelativeBar?: mostra barra relativa às estrelas do 1º (default true)
- */
 export default function UserList({
 	users = [],
 	currentUserId,
@@ -25,7 +12,7 @@ export default function UserList({
 	denseRanking = false,
 	showRelativeBar = true,
 	emptyLabel = 'Sem utilizadores',
-	metric = '', // 'stars' | 'trophies' | 'xp'
+	metric = '',
 }) {
 	const colors = useThemeColors();
 
@@ -40,8 +27,8 @@ export default function UserList({
 
 	const ranked = useMemo(() => {
 		let lastStars = null;
-		let lastRank = 0; // rank atribuído (1-based)
-		let itemsProcessed = 0; // utilizado em ranking competição
+		let lastRank = 0;
+		let itemsProcessed = 0;
 		return sorted.map((u) => {
 			itemsProcessed += 1;
 			const s = metric === 'points' ? (u.trophies || 0) : metric === 'xp' ? (u.xp || 0) : (u.stars || 0);
@@ -49,18 +36,18 @@ export default function UserList({
 			if (lastStars === null) {
 				rank = 1;
 			} else if (s === lastStars) {
-				rank = lastRank; // empate
+				rank = lastRank;
 			} else {
 				if (denseRanking) {
-					rank = lastRank + 1; // denso
+					rank = lastRank + 1;
 				} else {
-					rank = itemsProcessed; // competição: salta valores
+					rank = itemsProcessed;
 				}
 			}
 			lastStars = s;
 			lastRank = rank;
 			return { ...u, rank };
-		};
+		});
 	}, [sorted, denseRanking, metric]);
 
 	const maxValue = useMemo(() => {
@@ -69,6 +56,7 @@ export default function UserList({
 		if (metric === 'xp') return ranked[0].xp || 0;
 		return ranked[0].stars || 0;
 	}, [ranked, metric]);
+
 	const finalList = useMemo(() => (topN ? ranked.slice(0, topN) : ranked), [ranked, topN]);
 
 	const renderItem = useCallback(({ item }) => {
@@ -80,160 +68,172 @@ export default function UserList({
 		const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
 
 		return (
-			<button 				onClick={onUserPress ? () => onUserPress(item) : undefined}
-				style={({ pressed }) => [
-					styles.row,
-					{ backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08', borderColor: colors.text + '15' },
-					pressed && { opacity: 0.8 },
-				]}
-				accessibilityRole={onUserPress ? 'button' : 'text'}
+			<button
+				onClick={onUserPress ? () => onUserPress(item) : undefined}
+				style={{
+					...styles.row,
+					backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08',
+					borderColor: colors.text + '15',
+					cursor: onUserPress ? 'pointer' : 'default',
+				}}
 				aria-label={`Rank ${item.rank}. ${item.name}. ${currentValue} ${metric === 'trophies' ? 'troféus' : metric === 'xp' ? 'XP' : 'estrelas'}.`}
 			>
 				<div style={styles.rankCol}>
 					{topMedal ? (
 						<SvgIcon name={medalIcon} size={22} color={medalColor} />
 					) : (
-						<span style={{...styles.rankText, ...{ color: colors.text + 'AA' }}}>{item.rank}</span>
+						<span style={{ ...styles.rankText, color: colors.text + 'AA' }}>
+							{item.rank}
+						</span>
 					)}
 				</div>
-				<div style={{...styles.avatar, ...{ borderColor: colors.primary + '66' }}}> 
-					{item.avatarIcon ? (
-						<SvgIcon name={item.avatarIcon} size={20} color={colors.primary} />
-					) : (
-						<span style={{...styles.avatarLetter, ...{ color: colors.primary }}}>{(item.name || '?').charAt(0).toUpperCase()}</span>
-					)}
+				<div style={{ ...styles.avatar, borderColor: colors.primary + '66' }}>
+					<SvgIcon name={item.avatarIcon || 'user'} size={24} color={colors.primary} />
 				</div>
-				<div style={styles.mainCol}>
-					<span style={{...styles.name, ...{ color: colors.text }}} numberOfLines={1}>{item.name}</span>
-					{showRelativeBar && maxValue > 0 && (
-						<div style={styles.barWrapper}>
-							<div style={{...styles.barBg, ...{ backgroundColor: colors.text + '22' }}} />
-							<div style={{...styles.barFill, ...{ backgroundColor: colors.primary}} />
+				<div style={styles.nameCol}>
+					<span style={{ ...styles.nameText, color: colors.text }}>
+						{item.name || 'User'}
+					</span>
+					{showRelativeBar && (
+						<div style={{ ...styles.barBg, backgroundColor: colors.text + '0D' }}>
+							<div 
+								style={{
+									...styles.barFill,
+									backgroundColor: colors.primary,
+									width: `${pct * 100}%`,
+								}}
+							/>
 						</div>
 					)}
 				</div>
 				<div style={styles.starsCol}>
-					{metric === 'points' ? (
-						<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
-					) : metric === 'xp' ? (
-						<span style={{...styles.valuePrefix, ...{ color: colors.primary}}>XP</span>
-					) : (
-						<SvgIcon name="star" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
+					<span style={{ ...styles.starsText, color: colors.text }}>
+						{currentValue}
+					</span>
+					{metric === 'xp' && (
+						<span style={{ ...styles.valuePrefix, color: colors.primary }}>
+							XP
+						</span>
 					)}
-					<span style={{...styles.starsText, ...{ color: colors.text }}}>{currentValue}</span>
 				</div>
 			</button>
 		);
-		}, [colors, currentUserId, maxValue, metric, onUserPress, showMedals, showRelativeBar]);
+	}, [colors, currentUserId, maxValue, metric, onUserPress, showMedals, showRelativeBar]);
 
-	if (finalList.length === 0) {
+	if (!finalList || finalList.length === 0) {
 		return (
-			<div style={{...styles.emptyWrapper, ...{ borderColor: colors.text + '22'}}> 
-				<span style={{ color: colors.text + '99', fontSize: 14, fontFamily: family.regular }}>{emptyLabel}</span>
+			<div style={{ ...styles.emptyWrapper, borderColor: colors.text + '22' }}>
+				<span style={{ ...styles.emptyText, color: colors.text + '88' }}>{emptyLabel}</span>
 			</div>
 		);
 	}
 
 	return (
-		<div 			data={finalList}
-			keyExtractor={(item, idx) => `user-${item.id || idx}-${item.email || ''}-${idx}`}
-			renderItem={renderItem}
-			style={styles.list}
-			contentContainerStyle={styles.contentContainer}
-			showsVerticalScrollIndicator={false}
-		/>
+		<div style={styles.list}>
+			{finalList.map((item) => (
+				<div key={item.id} style={styles.itemWrapper}>
+					{renderItem({ item })}
+				</div>
+			))}
+		</div>
 	);
 }
 
 const styles = {
 	list: {
-		flexGrow: 0,
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 8,
 	},
-	contentContainer: {
-		paddingHorizontal: 8,
-		paddingBottom: 24,
+	itemWrapper: {
+		paddingLeft: 8,
+		paddingRight: 8,
 	},
 	row: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingVertical: 10,
-		paddingHorizontal: 10,
-		borderWidth: 1,
-		borderRadius: 14,
-		marginTop: 10,
+		paddingTop: 8,
+		paddingBottom: 8,
+		paddingLeft: 12,
+		paddingRight: 12,
+		borderRadius: 12,
+		borderWidth: '1px',
+		borderStyle: 'solid',
+		gap: 12,
+		background: 'transparent',
+		border: 'none',
+		width: '100%',
 	},
 	rankCol: {
-		width: 34,
+		width: 32,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	rankText: {
+		fontSize: 16,
+		fontWeight: '700',
+		fontFamily: family.bold,
+	},
+	avatar: {
+		width: 36,
+		height: 36,
+		borderRadius: 18,
+		borderWidth: '2px',
+		borderStyle: 'solid',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	nameCol: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 4,
+	},
+	nameText: {
+		fontSize: 14,
+		fontWeight: '700',
+		fontFamily: family.bold,
+	},
+	barBg: {
+		width: '100%',
+		height: 4,
+		borderRadius: 2,
+		overflow: 'hidden',
+	},
+	barFill: {
+		height: '100%',
+		borderRadius: 2,
+	},
+	starsCol: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 4,
+	},
+	starsText: {
 		fontSize: 16,
 		fontWeight: '800',
 		fontFamily: family.bold,
 	},
-	avatar: {
-		width: 40,
-		height: 40,
-		borderRadius: 12,
-		borderWidth: 2,
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginRight: 12,
-	},
-	avatarLetter: {
-		fontSize: 18,
-		fontWeight: '700',
-		fontFamily: family.bold,
-	},
-	mainCol: {
-		flex: 1,
-		justifyContent: 'center',
-		marginRight: 10,
-	},
-	name: {
-		fontSize: 15,
-		fontWeight: '700',
-		fontFamily: family.bold,
-	},
-	barWrapper: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginTop: 4,
-		height: 6,
-		borderRadius: 4,
-		overflow: 'hidden',
-	},
-	barBg: {
-		...StyleSheet.absoluteFillObject,
-		borderRadius: 4,
-	},
-	barFill: {
-		height: 6,
-		borderRadius: 4,
-	},
-	starsCol: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginLeft: 4,
-	},
-	starsText: {
-		fontSize: 15,
-		fontWeight: '700',
-		fontFamily: family.bold,
-	},
 	valuePrefix: {
-		fontSize: 12,
-		fontWeight: '800',
+		fontSize: 10,
+		fontWeight: '700',
 		fontFamily: family.bold,
-		letterSpacing: 0.5,
 	},
 	emptyWrapper: {
-		marginTop: 16,
-		marginHorizontal: 16,
-		borderWidth: 1,
-		borderRadius: 16,
-		padding: 24,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
+		paddingTop: 40,
+		paddingBottom: 40,
+		borderTopWidth: '1px',
+		borderTopStyle: 'solid',
+	},
+	emptyText: {
+		fontSize: 14,
+		fontFamily: family.regular,
 	},
 };
-

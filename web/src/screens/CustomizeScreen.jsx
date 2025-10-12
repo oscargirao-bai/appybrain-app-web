@@ -10,7 +10,7 @@ import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import DataManager from '../services/DataManager';
 import ApiManager from '../services/ApiManager';
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../components/General/SvgIcon';
 
 // Simple, responsive Customize screen based on wireframe
 // Sections: avatar header, divider, segmented control, 3x3 grid, "Buy More" CTA
