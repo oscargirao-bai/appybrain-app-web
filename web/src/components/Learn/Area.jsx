@@ -2,6 +2,7 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
 
 export default function DisciplineCircle({ 
@@ -27,7 +28,8 @@ export default function DisciplineCircle({
 
   const circleStyle = {
     ...styles.circle,
-    backgroundColor: circleColor
+    backgroundColor: circleColor,
+    borderColor: circleBackgroundColor,
   };
 
   const titleStyle = {
@@ -46,7 +48,7 @@ export default function DisciplineCircle({
               color={finalIconColor} 
             />
           ) : (
-            <SvgIcon 
+            <LucideIcon 
               name={iconName} 
               size={32} 
               color={finalIconColor} 
@@ -80,30 +82,39 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '100%',
-    padding: 12,
+    justifyContent: 'flex-start',
+    width: 200, // Match mobile
+    marginTop: 6,
+    marginBottom: 6,
     border: 'none',
     background: 'transparent',
     cursor: 'pointer',
+    padding: 0,
   },
   contentRow: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    justifyContent: 'center',
+    width: '100%',
   },
   circle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 65, // Match mobile (was 56)
+    height: 65,
+    borderRadius: 32.5,
+    borderWidth: 3, // Match mobile border
+    borderStyle: 'solid',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12, // Match mobile
   },
   title: {
     fontFamily: family.bold,
-    fontSize: 16,
+    fontSize: 20, // Match mobile (was 16)
     fontWeight: '700',
     textAlign: 'left',
+    lineHeight: '22px', // Match mobile
+    flex: 1,
   },
 };

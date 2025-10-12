@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
@@ -31,7 +31,7 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
       }}
     >
       <div style={styles.inner}>
-        {iconName ? <SvgIcon name={iconName} size={iconSize} color={colors.text} /> : null}
+        {iconName ? <LucideIcon name={iconName} size={iconSize} color={colors.text} /> : null}
       </div>
     </button>
   );
