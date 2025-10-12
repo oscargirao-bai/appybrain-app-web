@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font';
@@ -12,7 +11,7 @@ export default function TribesHeader({
   onSelect 
 }) {
   const colors = useThemeColors();
-  const width = window.innerWidth; const height = window.innerHeight;
+  const width = window.innerWidth;
   const horizontalPadding = width >= 768 ? 28 : 16;
 
   // Sort tribes: user's tribe first, then others
@@ -39,104 +38,75 @@ export default function TribesHeader({
     }
   }, [sortedTribes, active, isInTribe, userTribe]);
 
-  // Removed indicator logic; keeping simple scale highlight only
-  const layouts = useRef({};
-
-  const scaleMap = useRef({};
-
-  // Initialize scales for all tribes
+  // Update active when active changes
   useEffect(() => {
-    sortedTribes.forEach(t => {
-      if (!scaleMap.current[t.id]) {
-        scaleMap.current[t.id] = new Animated.Value(t.id === active ? 1 : 0.94);
+    if (active) {
+      const selectedTribe = sortedTribes.find(t => t.id === active);
+      if (selectedTribe && onSelect) {
+        onSelect(selectedTribe);
       }
-    })
-  }, [sortedTribes, active]);
-
-  // Update animations when active tribe changes
-  useEffect(() => {
-    sortedTribes.forEach(t => {
-      const scale = scaleMap.current[t.id];
-      if (scale) {
-        const isActive = t.id === active;
-        Animated.spring(scale, { 
-          toValue: isActive ? 1 : 0.75, 
-          useNativeDriver: true, 
-          damping: 18, 
-          stiffness: 240, 
-          mass: 0.6 
-        }).start();
-      }
-    };
-  }, [active, sortedTribes]);
+    }
+  }, [active, sortedTribes, onSelect]);
 
   const handlePress = useCallback((tribe) => {
     setActive(tribe.id);
-    onSelect && onSelect(tribe);
-  }, [onSelect]);
+  }, []);
 
   return (
-    <div style={{...styles.container, ...{ paddingHorizontal: horizontalPadding }}}>      
-      <div         horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+    <div style={styles.container}>
+      <div style={styles.titleRow}>
+        <span style={{...styles.title, color: colors.text}}>{title}</span>
+      </div>
+      <div 
+        style={{
+          ...styles.scrollView,
+          paddingLeft: horizontalPadding,
+          paddingRight: horizontalPadding,
+        }}
       >
-        {sortedTribes.map(t => {
-          const isActive = t.id === active; // This should be ANY selected tribe, not just user's tribe
-          const isUserTribe = isInTribe && userTribe && t.id === userTribe.id;
-          const scale = scaleMap.current[t.id] || new Animated.Value(0.94);
-          
-          // Use the tribe's color or fallback to theme color
+        {sortedTribes.map((t) => {
+          const isActive = t.id === active;
           const tribeColor = t.color || colors.primary;
-          const tribeIconColor = t.iconColor || colors.text;
-          
+
           return (
-            <div key={t.id} style={{...styles.tribeWrapper, ...// Add container glow for even more visibility
-              isActive ? {
-                shadowColor: tribeColor}}>
-              <button                 onClick={() => handlePress(t)}
-                onLayout={(e) => {
-                  const { x, width: w, height: h } = e.nativeEvent.layout;
-                  layouts.current[t.id] = { x, w, h };
+            <button
+              key={t.id}
+              onClick={() => handlePress(t)}
+              style={{
+                ...styles.tribeButton,
+                backgroundColor: tribeColor + (isActive ? '22' : '11'),
+                borderColor: tribeColor + (isActive ? '66' : '33'),
+                transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                boxShadow: isActive ? `0 4px 12px ${tribeColor}44` : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <div
+                style={{
+                  ...styles.tribeInner,
+                  borderColor: tribeColor + (isActive ? '44' : '22'),
                 }}
-                style={({ pressed }) => [
-                  styles.pill,
-                  { 
-                    borderColor: isActive ? tribeColor : colors.border, 
-                    backgroundColor: tribeColor, // Always show tribe color
-                    // Add glow effect for selected tribe only
-                    ...(isActive ? {
-                      shadowColor: tribeColor,
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.8,
-                      shadowRadius: 12,
-                      elevation: 8, // For Android
-                    } : {})
-                  },
-                  pressed && { opacity: 0.6 }
-                ]}
-                
-                accessibilityState={{ selected: isActive }}
-                aria-label={`Abrir tribo ${t.name}`}
               >
-                <Animated.View style={[styles.symbolContainer, { transform: [{ scale }] }]}>
-                  {t.icon && t.icon.includes('<svg') ? (
-                    <SvgIcon 
-                      svgString={t.icon} 
-                      size={60} 
-                      color={tribeIconColor} 
-                    />
-                  ) : (
-                    <Animated.Text style={{...styles.symbol, ...{ color: tribeIconColor }}}>
-                      {t.icon || '◇'}
-                    </Animated.Text>
-                  )}
-                </Animated.View>
-              </button>
-              <span style={{...styles.tribeLabel, ...{ color: colors.text}} numberOfLines={1}>
+                {t.icon && (
+                  <div 
+                    style={styles.iconBox}
+                    dangerouslySetInnerHTML={{ __html: t.icon }}
+                  />
+                )}
+              </div>
+              <span 
+                style={{
+                  ...styles.tribeLabel, 
+                  color: colors.text,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}
+              >
                 {t.name}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -146,43 +116,66 @@ export default function TribesHeader({
 
 const styles = {
   container: {
-    paddingTop: 4,
-    paddingBottom: 10,
-    overflow: 'visible', // Prevent shadow clipping
+    width: '100%',
+    marginBottom: 20,
+  },
+  titleRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
   },
   title: {
-    fontSize: 22,
+    fontSize: 18,
+    fontWeight: '700',
     fontFamily: family.bold,
-    letterSpacing: 0.5,
+  },
+  scrollView: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+    overflowX: 'auto',
+    paddingBottom: 8,
+  },
+  tribeButton: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    borderRadius: 16,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    background: 'transparent',
+    cursor: 'pointer',
+    minWidth: 90,
+  },
+  tribeInner: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  iconBox: {
+    width: 32,
+    height: 32,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tribeLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: family.semibold,
     textAlign: 'center',
   },
-  scrollContent: {
-    paddingVertical: 16, // Increased to prevent shadow clipping
-    paddingRight: 4,
-    paddingLeft: 16, // Increased left padding to prevent shadow clipping on first item
-  },
-  tribeWrapper: {
-    width: 92,
-    alignItems: 'center',
-    marginRight: 12,
-    marginLeft: 4, // Add small left margin for better shadow visibility
-    overflow: 'visible', // Ensure shadow is not clipped
-  },
-  pill: {
-    width: '100%',
-    aspectRatio: 1.35,
-    borderWidth: 2,
-    borderRadius: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  symbol: { fontSize: 32, fontFamily: family.semibold },
-  symbolContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tribeLabel: { marginTop: 6, fontSize: 12, fontStyle: 'italic', fontFamily: family.bold }
-  // indicator removed
 };
-
