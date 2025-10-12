@@ -1,19 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
 // Modal converted to div
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import { family } from '../../constants/font';
 
-/**
- * ButtonLanguage
- * Mostra linha com ícone de idioma, label "Idioma" e pill à direita com idioma atual.
- * Ao clicar abre modal simples de seleção.
- * Props:
- *  - value: código atual (ex: 'pt', 'en')
- *  - onChange: (code) => void
- *  - options: [{ code, label }]
- */
+const DEFAULT_OPTIONS = [
+	{ code: 'pt', label: 'Português' },
+	{ code: 'en', label: 'English' },
+];
+
 export default function ButtonLanguage({
 	value,
 	onChange,
@@ -26,13 +22,11 @@ export default function ButtonLanguage({
 	const [open, setOpen] = useState(false);
 	const [internal, setInternal] = useState(value || currentLanguage || options[0].code);
 
-	// Sync when parent value changes
 	useEffect(() => {
 		if (value && value !== internal) setInternal(value);
 	}, [value, internal]);
 
 	useEffect(() => {
-		// sync with context language if no external value provided
 		if (!value && currentLanguage && currentLanguage !== internal) {
 			setInternal(currentLanguage);
 		}
@@ -53,78 +47,75 @@ export default function ButtonLanguage({
 
 	return (
 		<>
-			<button 				onClick={() => setOpen(true)}
+			<button
+				onClick={() => setOpen(true)}
 				style={{
-					styles.card,
-					{ borderColor: colors.text + '22', backgroundColor: colors.text + '06' },
-					/* pressed */ { opacity: 0.85 },
-					style,
+					...styles.card,
+					borderColor: colors.text + '22',
+					backgroundColor: colors.text + '06',
+					...style,
 				}}
-				
 				aria-label={`${translate('settings.language')}: ${current.label}.`}
 			>
 				<div style={styles.leftRow}>
 					<SvgIcon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
-					<span style={{...styles.label, ...{ color: colors.text }}}>{translate('settings.language')}</span>
+					<span style={{...styles.label, color: colors.text}}>{translate('settings.language')}</span>
 				</div>
-				<div style={{...styles.pill, ...{ borderColor: colors.text + '33'}}> 
-					<span style={{...styles.pillText, ...{ color: colors.text }}} numberOfLines={1}>{current.label}</span>
+				<div style={{...styles.pill, borderColor: colors.text + '33', backgroundColor: colors.text + '05'}}>
+					<span style={{...styles.pillText, color: colors.text}}>{current.label}</span>
 					<SvgIcon name="chevron-down" size={16} color={colors.text + 'AA'} />
 				</div>
 			</button>
 
-			<div style={{display: open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
-				<button style={styles.backdrop} onClick={() => setOpen(false)} />
-				<div style={{...styles.modalCard, ...{ backgroundColor: colors.background}}> 
-					<span style={{...styles.modalTitle, ...{ color: colors.text }}}>{modalTitle || translate('settings.language')}</span>
-					<div 						data={options}
-						keyExtractor={(item) => item.code}
-						renderItem={({ item }) => {
-							const active = item.code === currentCode;
-							return (
-								<button 									onClick={() => handleSelect(item.code)}
-									style={{
-										styles.optionRow,
-										{ borderColor: colors.text + '15' },
-										active && { backgroundColor: colors.secondary + '22' },
-										/* pressed */ { opacity: 0.8 },
-									}}
-									
-									accessibilityState={{ selected: active }}
-								>
-									<span style={{...styles.optionText, ...{ color: colors.text}}>{item.label}</span>
-									{active && <SvgIcon name="check" size={18} color={colors.secondary} />}
-								</button>
-							);
-						}}
-						style={{ maxHeight: 260 }}
-					/>
+			<div style={{display: open ? 'flex' : 'none', ...styles.backdrop}} onClick={() => setOpen(false)}>
+				<div style={{...styles.modalCard, backgroundColor: colors.background, borderColor: colors.text + '22'}} onClick={(e) => e.stopPropagation()}>
+					<span style={{...styles.modalTitle, color: colors.text}}>{modalTitle || translate('settings.language')}</span>
+					{options.map((item) => {
+						const active = item.code === currentCode;
+						return (
+							<button
+								key={item.code}
+								onClick={() => handleSelect(item.code)}
+								style={{
+									...styles.optionRow,
+									borderColor: colors.text + '15',
+									...(active ? { backgroundColor: colors.secondary + '22' } : {}),
+								}}
+								aria-label={item.label}
+								aria-selected={active}
+							>
+								<span style={{...styles.optionText, color: colors.text, fontWeight: active ? '700' : '500'}}>{item.label}</span>
+								{active && <SvgIcon name="check" size={18} color={colors.secondary} />}
+							</button>
+						);
+					})}
 				</div>
 			</div>
 		</>
 	);
 }
 
-const DEFAULT_OPTIONS = [
-	{ code: 'pt', label: 'Português' },
-	{ code: 'en', label: 'English' },
-];
-
 const styles = {
 	card: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: 16,
-		paddingVertical: 16,
-		borderWidth: 1,
-		borderRadius: 18,
+		paddingLeft: 16,
+		paddingRight: 16,
+		paddingTop: 14,
+		paddingBottom: 14,
+		border: '1px solid',
+		borderRadius: 24,
 		marginBottom: 16,
+		background: 'transparent',
+		cursor: 'pointer',
 	},
 	leftRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		flexShrink: 1,
+		flex: 1,
 	},
 	label: {
 		fontSize: 16,
@@ -134,56 +125,65 @@ const styles = {
 		letterSpacing: 0.5,
 	},
 	pill: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingHorizontal: 14,
-		paddingVertical: 8,
-		borderRadius: 14,
-		borderWidth: 1,
-		gap: 6,
+		paddingLeft: 12,
+		paddingRight: 12,
+		paddingTop: 6,
+		paddingBottom: 6,
+		border: '1px solid',
+		borderRadius: 16,
 	},
 	pillText: {
 		fontSize: 13,
-		fontWeight: '700',
-		fontFamily: family.bold,
-		letterSpacing: 0.3,
-		marginRight: 2,
+		fontWeight: '600',
+		fontFamily: family.semibold,
+		marginRight: 6,
 	},
 	backdrop: {
-		...StyleSheet.absoluteFillObject,
-		backgroundColor: '#000000AA',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: 'rgba(0,0,0,0.5)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		zIndex: 1000,
 	},
 	modalCard: {
-		position: 'absolute',
-		left: 20,
-		right: 20,
-		top: '25%',
-		borderWidth: 1,
-		borderRadius: 20,
-		padding: 18,
+		width: '90%',
+		maxWidth: 400,
+		border: '1px solid',
+		borderRadius: 24,
+		padding: 20,
+		maxHeight: '80vh',
+		overflowY: 'auto',
 	},
 	modalTitle: {
-		fontSize: 16,
-		fontWeight: '800',
+		fontSize: 18,
+		fontWeight: '700',
 		fontFamily: family.bold,
-		marginBottom: 12,
+		marginBottom: 16,
+		textAlign: 'center',
 	},
 	optionRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingVertical: 12,
-		paddingHorizontal: 4,
-		borderWidth: 1,
-		borderRadius: 12,
-		paddingRight: 12,
-		marginBottom: 8,
+		paddingLeft: 16,
+		paddingRight: 16,
+		paddingTop: 14,
+		paddingBottom: 14,
+		border: 'none',
+		borderBottom: '1px solid',
+		background: 'transparent',
+		cursor: 'pointer',
 	},
 	optionText: {
-		fontSize: 14,
+		fontSize: 15,
 		fontFamily: family.medium,
-		letterSpacing: 0.3,
 	},
-	sep: { height: 4 },
 };
-

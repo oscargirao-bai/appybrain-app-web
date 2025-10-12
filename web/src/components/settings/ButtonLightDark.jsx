@@ -1,20 +1,12 @@
 import React, { useCallback } from 'react';
-
-import SvgIcon from '../../components/General/SvgIcon';
-import { useTheme } from '../../services/Theme';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from '../General/SvgIcon';
+import { useTheme, useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
-/**
- * ButtonLightDark - selector 2 estados (Light / Dark) estilo segmented control.
- * Props opcionais:
- *  - style
- *  - onChange? callback(t)
- */
 export default function ButtonLightDark({ style, onChange }) {
 	const { theme, setTheme, resolvedTheme } = useTheme();
 	const colors = useThemeColors();
-	const active = resolvedTheme; // 'light' | 'dark'
+	const active = resolvedTheme;
 
 	const handleSelect = useCallback((t) => {
 		setTheme(t);
@@ -25,7 +17,12 @@ export default function ButtonLightDark({ style, onChange }) {
 	const darkActive = active === 'dark';
 
 	return (
-		<div style={{...styles.wrapper, ...{ borderColor: colors.text + '22'}}> 
+		<div style={{
+			...styles.wrapper,
+			borderColor: colors.text + '22',
+			backgroundColor: colors.text + '06',
+			...style
+		}}>
 			<Segment
 				label="Modo Claro"
 				icon="sun"
@@ -46,22 +43,36 @@ export default function ButtonLightDark({ style, onChange }) {
 	);
 }
 
-function Segment({ label, icon, active, onPress, onClick, colors, position }) {
-	const handleClick = onClick || onPress;
+function Segment({ label, icon, active, onClick, colors, position }) {
+	const activeStyles = active ? {
+		backgroundColor: colors.secondary,
+		boxShadow: '0 2px 8px ' + colors.secondary + '55'
+	} : {};
+
+	const positionStyles = position === 'left' ? styles.segmentLeft : 
+	                        position === 'right' ? styles.segmentRight : {};
+
 	return (
 		<button
-			onClick={handleClick}
+			onClick={onClick}
 			style={{
 				...styles.segment,
-				...(position === 'left' ? styles.segmentLeft : {}),
-				...(position === 'right' ? styles.segmentRight : {}),
-				...(active ? { backgroundColor: colors.secondary, shadowColor: colors.secondary } : {}),
+				...positionStyles,
+				...activeStyles
 			}}
-			aria-label={label}
-			aria-selected={active}
 		>
-			<SvgIcon name={icon} size={18} color={active ? '#fff' : colors.text} style={{ marginRight: 8 }} />
-			<span style={{...styles.label, ...{ color: active ? '#fff' : colors.text }}}>{label}</span>
+			<SvgIcon 
+				name={icon} 
+				size={18} 
+				color={active ? '#fff' : colors.text} 
+				style={{ marginRight: 8 }} 
+			/>
+			<span style={{
+				...styles.label,
+				color: active ? '#fff' : colors.text
+			}}>
+				{label}
+			</span>
 		</button>
 	);
 }
@@ -70,7 +81,8 @@ const styles = {
 	wrapper: {
 		display: 'flex',
 		flexDirection: 'row',
-		border: '1px solid',
+		borderWidth: 1,
+		borderStyle: 'solid',
 		borderRadius: 28,
 		overflow: 'hidden',
 		marginBottom: 20,
@@ -88,6 +100,7 @@ const styles = {
 		border: 'none',
 		background: 'transparent',
 		cursor: 'pointer',
+		transition: 'all 0.2s ease',
 	},
 	segmentLeft: {
 		borderTopLeftRadius: 28,
@@ -105,4 +118,3 @@ const styles = {
 		letterSpacing: 0.4,
 	},
 };
-

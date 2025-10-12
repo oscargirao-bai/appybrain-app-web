@@ -140,10 +140,10 @@ export default function SettingsScreen({ navigation }) {
 					onValueChange={handleVibrationChange}
 					aria-label={translate('settings.vibrations')}
 				/>
-				<ButtonLightDark />
-				{/* <ButtonLanguage /> */}
+			<ButtonLightDark />
+			{/* <ButtonLanguage /> */}
 
-				<span style={{...styles.sectionTitle, ...{ color: colors.text}}>{translate('settings.account')}</span>
+			<span style={{...styles.sectionTitle, color: colors.text}}>{translate('settings.account')}</span>
 				<Button4
 					label={translate('settings.privacyPolicy')}
 					onClick={() => setPrivacyOpen(true)}
@@ -159,7 +159,7 @@ export default function SettingsScreen({ navigation }) {
 
 			{/* Instagram link button - bottom */}
 			<div style={styles.instagramRow}>
-				<button 					style={({ pressed }) => [styles.instagramBtn, pressed && { opacity: 0.8 }]}
+				<button 					style={{...styles.instagramBtn}}
 					onClick={handleOpenInstagram}
 					
 					aria-label="Abrir Instagram do Appy Brain"

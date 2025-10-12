@@ -151,11 +151,11 @@ export default function ResultScreen2() {
 	// Show loading screen while fetching battle result
 	if (isLoading && battleSessionId) {
 		return (
-			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
-				<div style={{...styles.content, ...{ justifyContent: 'center'}}>
+			<div style={{...styles.safe, backgroundColor: colors.background}}>
+				<div style={{...styles.content, justifyContent: 'center'}>
 					<div style={styles.loadingContainer}>
 						<SvgIcon name="loader" size={32} color={colors.primary} style={{ marginBottom: 16 }} />
-						<span style={{...styles.loadingText, ...{ color: colors.text }}}>A carregar resultado...</span>
+						<span style={{...styles.loadingText, color: colors.text}}>A carregar resultado...</span>
 					</div>
 				</div>
 			</div>
@@ -163,7 +163,7 @@ export default function ResultScreen2() {
 	}
 
 	return (
-		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}> 
+		<div style={{...styles.safe, backgroundColor: colors.background}}> 
 			{/* Bottom glow like ResultScreen1: only for win/lose */}
 			{(() => {
 				if (!showGlow) return null;
@@ -179,7 +179,7 @@ export default function ResultScreen2() {
 			})()}
 			<div style={styles.content}>
 				<div style={styles.header}> 
-					<span style={{...styles.quizTitle, ...{ color: outcomeColor }}} numberOfLines={2}>
+					<span style={{...styles.quizTitle, color: outcomeColor}}>
 						{outcomeHeader}
 					</span>
 				</div>
@@ -199,7 +199,7 @@ export default function ResultScreen2() {
 										return (
 											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
 											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
+											<span style={{...styles.trophyValue, color: colors.text}}>...</span>
 										</div>
 									);
 									}
@@ -214,9 +214,9 @@ export default function ResultScreen2() {
 									const value = typeof v === 'number' ? Math.abs(v) : 0;
 									return (
 										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
-											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
+											{sign ? (<span style={{...styles.trophySign, color: tone}}>{sign}</span>) : null}
 											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
+											<span style={{...styles.trophyValue, color: tone}}>{value}</span>
 										</div>
 									);
 								})()}
@@ -230,7 +230,7 @@ export default function ResultScreen2() {
 								style={{ width: '75%' }}
 							/>
 						</div>
-						<div style={{...styles.infoWrap, ...{ width: '75%'}}>
+						<div style={{...styles.infoWrap, width: '75%'}>
 							<Info
 								username={opponentUsername}
 								tribe={opponentTribe}
@@ -239,38 +239,38 @@ export default function ResultScreen2() {
 					</div>
 
 					{/* Versus block (middle) */}
-					<div style={{...styles.vsSection, ...{ paddingHorizontal: isShort ? 16 : 24}}> 
+					<div style={{...styles.vsSection, paddingHorizontal: isShort ? 16 : 24}> 
 						<div style={styles.vsScoreAbove}>
 							<ResultsDots sequence={oppSeq} colors={colors} dotSize={isShort ? 24 : 30} />
 							<div style={styles.timeHelpRow}>
 								<div style={styles.timeSection}>
 									<SvgIcon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
-									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{isFinal ? formatSeconds(oppTotalSec) : '...'}</span>
+									<span style={{...styles.timeLabel, color: colors.text + '99'}}>Tempo Total</span>
+									<span style={{...styles.timeValue, color: colors.text}}>{isFinal ? formatSeconds(oppTotalSec) : '...'}</span>
 								</div>
 								<div style={styles.helpSection}>
 									<SvgIcon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
+									<span style={{...styles.helpLabel, color: colors.text + '99'}}>Ajuda</span>
 									<HelpIcons helpsData={oppHelps} colors={colors} />
 								</div>
 							</div>
 						</div>
 						<div style={styles.vsDividerRow}>
-							<div style={{...styles.vsBar, ...{ backgroundColor: (colors.text + '22') }}} />
-							<span style={{...styles.vsText, ...{ color: colors.text + '99' }}}>VS</span>
-							<div style={{...styles.vsBar, ...{ backgroundColor: (colors.text + '22') }}} />
+							<div style={{...styles.vsBar, backgroundColor: (colors.text + '22')}} />
+							<span style={{...styles.vsText, color: colors.text + '99'}}>VS</span>
+							<div style={{...styles.vsBar, backgroundColor: (colors.text + '22')}} />
 						</div>
 						<div style={styles.vsScoreBelow}>
 							<ResultsDots sequence={mySeq} colors={colors} dotSize={isShort ? 24 : 30} />
 							<div style={styles.timeHelpRow}>
 								<div style={styles.timeSection}>
 									<SvgIcon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
-									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{formatSeconds(myTotalSec)}</span>
+									<span style={{...styles.timeLabel, color: colors.text + '99'}}>Tempo Total</span>
+									<span style={{...styles.timeValue, color: colors.text}}>{formatSeconds(myTotalSec)}</span>
 								</div>
 								<div style={styles.helpSection}>
 									<SvgIcon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
-									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
+									<span style={{...styles.helpLabel, color: colors.text + '99'}}>Ajuda</span>
 									<HelpIcons helpsData={myHelps} colors={colors} />
 								</div>
 							</div>
@@ -295,7 +295,7 @@ export default function ResultScreen2() {
 										return (
 											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
 											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
+											<span style={{...styles.trophyValue, color: colors.text}}>...</span>
 										</div>
 									);
 									}
@@ -309,15 +309,15 @@ export default function ResultScreen2() {
 									const value = typeof v === 'number' ? Math.abs(v) : 0;
 									return (
 										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
-											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
+											{sign ? (<span style={{...styles.trophySign, color: tone}}>{sign}</span>) : null}
 											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
-											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
+											<span style={{...styles.trophyValue, color: tone}}>{value}</span>
 										</div>
 									);
 								})()}
 							</div>
 						</div>
-						<div style={{...styles.infoWrap, ...{ width: '75%'}}>
+						<div style={{...styles.infoWrap, width: '75%'}>
 							<Info
 								username={getUsername()}
 								tribe={getTribeName()}
@@ -352,9 +352,9 @@ function DeltaPill({ label, value, positiveColor, negativeColor, colors }) {
 	const sign = typeof value === 'number' && value > 0 ? '+' : '';
 	const tone = typeof value === 'number' && value !== 0 ? (value > 0 ? positiveColor : negativeColor) : colors.text;
 	return (
-		<div style={{...styles.deltaPill, ...{ borderColor: colors.text + '22'}}> 
-			<span style={{...styles.deltaText, ...{ color: colors.text }}}>{label}</span>
-			<span style={{...styles.deltaValue, ...{ color: tone }}}>{typeof value === 'number' ? `${sign}${value}` : '-'}</span>
+		<div style={{...styles.deltaPill, borderColor: colors.text + '22'}> 
+			<span style={{...styles.deltaText, color: colors.text}}>{label}</span>
+			<span style={{...styles.deltaValue, color: tone}}>{typeof value === 'number' ? `${sign}${value}` : '-'}</span>
 		</div>
 	);
 }
@@ -659,7 +659,7 @@ const HERO_ICONS = {
 // Component to display help icons used by a player
 function HelpIcons({ helpsData, colors }) {
 	if (!helpsData || helpsData.count === 0) {
-		return <span style={{...styles.helpValue, ...{ color: colors.text }}}>-</span>;
+		return <span style={{...styles.helpValue, color: colors.text}}>-</span>;
 	}
 	
 	// Show only icons if we have hero data
@@ -679,14 +679,14 @@ function HelpIcons({ helpsData, colors }) {
 					) : null;
 				})}
 				{helpsData.heroes.length > 4 && (
-					<span style={{...styles.helpValue, ...{ color: colors.text}}>+{helpsData.heroes.length - 4}</span>
+					<span style={{...styles.helpValue, color: colors.text}>+{helpsData.heroes.length - 4}</span>
 				)}
 			</div>
 		);
 	}
 	
 	// Fallback: show count if no hero data available
-	return <span style={{...styles.helpValue, ...{ color: colors.text }}}>{helpsData.count}</span>;
+	return <span style={{...styles.helpValue, color: colors.text}}>{helpsData.count}</span>;
 }
 
 function extractHelpsUsed(sessionResult, who = 'me', fallback = 0) {
@@ -739,7 +739,7 @@ function ResultsDots({ sequence = [], colors, dotSize = 30 }) {
 				const size = dotSize;
 				const radius = Math.round(size / 2);
 				return (
-					<div key={idx} style={{...styles.dot, ...{ width: size}}> 
+					<div key={idx} style={{...styles.dot, width: size}> 
 						<SvgIcon name={iconName} size={12} color={iconColor} />
 					</div>
 				);

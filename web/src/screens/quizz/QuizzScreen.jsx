@@ -259,7 +259,7 @@ export default function QuizzScreen() {
 				title,
 				sessionResult: currentSessionResult, // Pass the API response data
 				battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
-			});
+			};
 			
 			//console.log('Navigating to result with params:', navParams);
 			
@@ -312,7 +312,7 @@ export default function QuizzScreen() {
 						title,
 						sessionResult: currentSessionResult, // Pass the API response data
 						battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
-					});
+					};
 					
 					if (quizType === 'battle') {
 						navigation.navigate('Result2', navParams);
@@ -334,7 +334,7 @@ export default function QuizzScreen() {
 			timerRef.current = setInterval(() => {
 				setRemaining((r) => (r > 0 ? r - 1 : 0));
 			}, 1000);
-			return () => { if (timerRef.current) clearInterval(timerRef.current); });
+			return () => { if (timerRef.current) clearInterval(timerRef.current); };
 		}, [currentTimeSec, qIndex]);
 
 		useEffect(() => {
@@ -399,7 +399,7 @@ export default function QuizzScreen() {
 													setCurrentMaxTime(newTime);
 												}
 												return newTime;
-											};
+											});
 											setHelpUsed(true);
 											setUsedHelpId(2);
 											//console.log('Help 2 used: Added 30 seconds');
