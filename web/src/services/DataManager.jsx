@@ -1,4 +1,4 @@
-import apiManagerInstance from './ApiManager.js';
+import apiManagerInstance from './ApiManager.jsx';
 
 class DataManagerClass {
     constructor() {
