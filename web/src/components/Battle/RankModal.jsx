@@ -7,16 +7,18 @@ const StyleSheet = {
 	absoluteFill: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
 };
 
-
-
-
-
-
-
-
-
-
-
+// Shield SVGs from public folder
+import Shield0 from '/assets/ranks/shield0.svg?react';
+import Shield1 from '/assets/ranks/shield1.svg?react';
+import Shield2 from '/assets/ranks/shield2.svg?react';
+import Shield3 from '/assets/ranks/shield3.svg?react';
+import Shield4 from '/assets/ranks/shield4.svg?react';
+import Shield5 from '/assets/ranks/shield5.svg?react';
+import Shield6 from '/assets/ranks/shield6.svg?react';
+import Shield7 from '/assets/ranks/shield7.svg?react';
+import Shield8 from '/assets/ranks/shield8.svg?react';
+import Shield9 from '/assets/ranks/shield9.svg?react';
+import Shield10 from '/assets/ranks/shield10.svg?react';
 
 const shields = [Shield0, Shield1, Shield2, Shield3, Shield4, Shield5, Shield6, Shield7, Shield8, Shield9, Shield10];
 

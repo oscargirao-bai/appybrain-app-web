@@ -234,7 +234,7 @@ function MedalButton({ item, colors, onPress }) {
 								color={item.unlocked ? iconColor : colors.text + '55'} 
 							/>
 						) : (
-							<Icon
+							<SvgIcon
 								name={item.icon}
 								size={34}
 								color={item.unlocked ? iconColor : colors.text + '55'}
