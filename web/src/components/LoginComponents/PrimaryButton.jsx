@@ -3,13 +3,16 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function PrimaryButton({ title, onPress, disabled, loading = false }) {
+export default function PrimaryButton({ title, onPress, onClick, disabled, loading = false }) {
   const colors = useThemeColors();
   const isDisabled = disabled || loading;
   
+  // Support both onPress (RN) and onClick (web)
+  const handleClick = onClick || onPress;
+  
   return (
     <button
-      onClick={onPress}
+      onClick={handleClick}
       disabled={isDisabled}
       style={{
         ...styles.base,
