@@ -162,7 +162,6 @@ export default function NewsList({ style, limit, onPressItem }) {
 						source={{ uri: item.imageUrl }}
 						style={styles.image}
 						imageStyle={styles.imageRadius}
-						style={{objectFit: "cover"}}
 					>
 						<div style={{...styles.overlay, ...{ backgroundColor: '#00000055' }}} />
 						<div style={styles.cardContent}> 
