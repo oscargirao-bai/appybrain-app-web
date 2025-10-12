@@ -12,6 +12,12 @@ import ApiManager from '../../services/ApiManager';
 import Button1 from '../../components/General/Button1';
 import Reward from '../../components/ResultQuizz/Reward';
 
+// Mock hooks for web (no navigation context)
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useRoute = () => ({ params: {} });
+const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
+const useSafeAreaInsets = () => ({ top: 0, bottom: 0, left: 0, right: 0 });
+
 export default function ResultScreen2() {
 	const colors = useThemeColors();
 	const navigation = useNavigation();
