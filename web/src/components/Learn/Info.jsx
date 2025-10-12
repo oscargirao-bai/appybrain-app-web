@@ -1,5 +1,5 @@
 import React from 'react';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -33,9 +33,9 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 								if (m.key === 'stars') {
 									return (
 										<div key="stars" style={pillStyle} aria-label={`Estrelas: ${stars}`}>
-											<div style={styles.pill}>
-												<SvgIcon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
-												<span style={styles.pillText}>{stars}</span>
+										<div style={styles.pill}>
+											<LucideIcon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
+											<span style={styles.pillText}>{stars}</span>
 											</div>
 										</div>
 									);
@@ -43,9 +43,9 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 								if (m.key === 'coins') {
 									return (
 										<div key="coins" style={pillStyle} aria-label={`Moedas: ${coins}`}>
-											<div style={styles.pill}>
-												<SvgIcon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
-												<span style={styles.pillText}>{coins}</span>
+										<div style={styles.pill}>
+											<LucideIcon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
+											<span style={styles.pillText}>{coins}</span>
 											</div>
 										</div>
 									);
@@ -53,9 +53,9 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 								if (m.key === 'trophies') {
 									return (
 										<div key="trophies" style={pillStyle} aria-label={`Troféus: ${trophies}`}>
-											<div style={styles.pill}>
-												<SvgIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
-												<span style={styles.pillText}>{trophies}</span>
+										<div style={styles.pill}>
+											<LucideIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
+											<span style={styles.pillText}>{trophies}</span>
 											</div>
 										</div>
 									);
@@ -133,12 +133,15 @@ const createStyles = (colors) => ({
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingLeft: 8,
+		borderWidth: 1,
+		borderStyle: 'solid',
+		borderColor: colors.text + '35',
+		paddingLeft: 10,
 		paddingRight: 10,
-		paddingTop: 4,
-		paddingBottom: 4,
+		paddingTop: 6,
+		paddingBottom: 6,
 		borderRadius: 12,
-		backgroundColor: colors.background2,
+		backgroundColor: colors.background + '40',
 	},
 	pillText: {
 		fontSize: 14,

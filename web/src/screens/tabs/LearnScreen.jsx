@@ -22,7 +22,7 @@ import ChestRewardModal from '../../components/General/ChestRewardModal.jsx';
 import ChestBrowserModal from '../../components/General/ChestBrowserModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 // (Content list removido ao retirar multi-part)
 
 // TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -119,7 +119,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<SvgIcon name="bell" size={22} color={colors.text} />
+							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -131,7 +131,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<SvgIcon name="settings" size={22} color={colors.text} />
+						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

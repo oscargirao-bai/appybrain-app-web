@@ -2,7 +2,7 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 
 export default function Header({
 	title = '',
@@ -39,7 +39,7 @@ export default function Header({
 						onClick={onBack}
 						style={styles.iconBtn}
 					>
-						<SvgIcon name="arrow-left" size={24} color={colors.text} />
+						<LucideIcon name="arrow-left" size={24} color={colors.text} />
 					</button>
 				)}
 				{left}

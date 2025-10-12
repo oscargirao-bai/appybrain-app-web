@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { useThemeColors } from '../../services/Theme.jsx';
 import LinearGradient from '../General/LinearGradient.jsx';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 
 export default function Banner({
 	avatarSource,
@@ -17,8 +17,17 @@ export default function Banner({
 }) {
 	const colors = useThemeColors();
 	
-	const bannerImg = bannerImageSource || null;
-	const avatarImg = avatarSource || null;
+	// Extract URL strings from {uri: string} objects (RN format) or use string directly
+	const extractUrl = (source) => {
+		if (!source) return null;
+		if (typeof source === 'string') return source;
+		if (source.uri) return source.uri;
+		return null;
+	};
+	
+	const bannerImg = extractUrl(bannerImageSource);
+	const avatarImg = extractUrl(avatarSource);
+	const frameImg = extractUrl(frameSource);
 	const hasBannerImg = !!bannerImg;
 
 	const avatarBgLightBlue = '#E3F0FF';
@@ -92,9 +101,9 @@ export default function Banner({
 							style={{...styles.absoluteFill, ...containerRadiusStyle}}
 						/>
 					)}
-					{frameSource && (
+					{frameImg && (
 						<img
-							src={frameSource}
+							src={frameImg}
 							onLoad={onFrameLoad}
 							style={{
 								...styles.bannerFrameOverlay,
@@ -129,7 +138,7 @@ export default function Banner({
 									alignItems: 'center',
 									backgroundColor: avatarBgLightBlue,
 								}}>
-									<SvgIcon name="user" size={64} color={avatarIconBlue} />
+									<LucideIcon name="user" size={64} color={avatarIconBlue} />
 								</div>
 							)}
 							{!avatarLoaded && avatarImg && (
