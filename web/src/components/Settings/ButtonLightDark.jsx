@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useTheme, useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -61,7 +61,7 @@ function Segment({ label, icon, active, onClick, colors, position }) {
 				...activeStyles
 			}}
 		>
-			<SvgIcon 
+			<LucideIcon 
 				name={icon} 
 				size={18} 
 				color={active ? '#fff' : colors.text} 

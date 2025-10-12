@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -35,7 +35,7 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 
 	return (
 		<div style={containerStyle}>
-			<SvgIcon name="search" size={18} color={colors.muted} style={{ marginRight: 8 }} />
+			<LucideIcon name="search" size={18} color={colors.muted} style={{ marginRight: 8 }} />
 			<input
 				style={inputStyle}
 				placeholder={placeholder}
@@ -45,7 +45,7 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 			/>
 			{text.length > 0 && (
 				<button onClick={clear} style={styles.clearBtn} aria-label="Limpar pesquisa">
-					<SvgIcon name="x" size={18} color={colors.muted} />
+					<LucideIcon name="x" size={18} color={colors.muted} />
 				</button>
 			)}
 		</div>

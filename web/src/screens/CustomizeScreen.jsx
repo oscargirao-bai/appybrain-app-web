@@ -10,7 +10,7 @@ import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import DataManager from '../services/DataManager.jsx';
 import ApiManager from '../services/ApiManager.jsx';
-import SvgIcon from '../components/General/SvgIcon.jsx';
+import LucideIcon from '../components/General/LucideIcon.jsx';
 
 // Simple, responsive Customize screen based on wireframe
 // Sections: avatar header, divider, segmented control, 3x3 grid, "Buy More" CTA
@@ -138,7 +138,7 @@ export default function CustomizeScreen({ navigation }) {
         {listData.length === 0 ? (
           <div style={styles.emptyContainer}>
             <div style={{...styles.emptyIconContainer, ...{ backgroundColor: colors.card }}}>
-              <SvgIcon name="shopping-bag" size={48} color={colors.muted} />
+              <LucideIcon name="shopping-bag" size={48} color={colors.muted} />
             </div>
             <span style={{...styles.emptyTitle, ...{ color: colors.text }}}>
               {translate('customize.empty.title')}

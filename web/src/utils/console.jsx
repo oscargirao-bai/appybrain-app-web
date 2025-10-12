@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { header, small, normal } from '../constants/font.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { useTheme, useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import { navigate } from '../services/navigationRef.jsx';
@@ -139,7 +139,7 @@ export default function DevConsoleOverlay() {
 				onClick={() => setOpen(true)}
 				style={{...styles.fab, ...cornerStyle}}
 			>
-				<SvgIcon name="wrench" color={colors.background} size={22} />
+				<LucideIcon name="wrench" color={colors.background} size={22} />
 			</button>
 		)}		{/* Console modal */}
 		{open && (
@@ -149,14 +149,14 @@ export default function DevConsoleOverlay() {
 					<div style={styles.sheetHeader}>
 						<span style={styles.sheetTitle}>Dev Console</span>
 						<button onClick={() => setOpen(false)} aria-label="Close dev console">
-							<SvgIcon name="x" size={22} color={colors.secondary} />
+							<LucideIcon name="x" size={22} color={colors.secondary} />
 						</button>
 					</div>
 
 					{/* Options */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<SvgIcon name={isLight ? 'sun' : 'moon'} size={18} color={colors.secondary} />
+							<LucideIcon name={isLight ? 'sun' : 'moon'} size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>
 								{isLight ? 'Theme: Light' : 'Theme: Dark'}
 							</span>
@@ -170,7 +170,7 @@ export default function DevConsoleOverlay() {
 					{/* Language switch */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<SvgIcon name="globe" size={18} color={colors.secondary} />
+							<LucideIcon name="globe" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>
 								{translate('settings.language')}: {currentLanguage === 'pt' ? translate('settings.portuguese') : translate('settings.english')}
 							</span>
@@ -192,7 +192,7 @@ export default function DevConsoleOverlay() {
 					{/* Navigate to Start screen */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<SvgIcon name="undo" size={18} color={colors.secondary} />
+							<LucideIcon name="undo" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>Go to Start</span>
 						</div>
 						<button style={styles.optionBtn} onClick={() => navigate('Login')}>
@@ -203,7 +203,7 @@ export default function DevConsoleOverlay() {
 					{/* Navigate to Home screen */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<SvgIcon name="home" size={18} color={colors.secondary} />
+							<LucideIcon name="home" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>Go to Tabs</span>
 						</div>
 						<button style={styles.optionBtn} onClick={() => { setOpen(false); navigate('MainTabs', { initialTab: 0 }); }}>
@@ -214,7 +214,7 @@ export default function DevConsoleOverlay() {
 					{/* Clear All Storage */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-						<SvgIcon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
+						<LucideIcon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
 						<span style={styles.optionLabel}>Clear All Storage</span>
 					</div>
 					<button style={{...styles.optionBtn, ...{ backgroundColor: colors.destructive || '#ff4444' }}} onClick={clearAllStorage}>

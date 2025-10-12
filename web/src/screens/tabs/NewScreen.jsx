@@ -7,7 +7,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import NewsList from '../../components/News/NewsList.jsx';
 
@@ -44,7 +44,7 @@ export default function NewScreen() {
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<SvgIcon name="bell" size={22} color={colors.text} />
+							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -56,7 +56,7 @@ export default function NewScreen() {
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<SvgIcon name="settings" size={22} color={colors.text} />
+						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

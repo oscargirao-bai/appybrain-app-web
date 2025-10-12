@@ -12,7 +12,7 @@ import Coins from '../../components/Shop/Coins.jsx';
 import Options from '../../components/Shop/Options.jsx';
 import List from '../../components/Shop/List.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 
 export default function ShopScreen(props) {
 	const colors = useThemeColors();
@@ -94,7 +94,7 @@ export default function ShopScreen(props) {
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<SvgIcon name="bell" size={22} color={colors.text} />
+							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -106,7 +106,7 @@ export default function ShopScreen(props) {
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<SvgIcon name="settings" size={22} color={colors.text} />
+						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

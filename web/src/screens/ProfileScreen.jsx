@@ -7,7 +7,7 @@ const useRoute = () => ({ params: {} });
 import { useThemeColors } from '../services/Theme.jsx';
 import DataManager from '../services/DataManager.jsx';
 import Header from '../components/General/Header.jsx';
-import SvgIcon from '../components/General/SvgIcon.jsx';
+import LucideIcon from '../components/General/LucideIcon.jsx';
 import Banner from '../components/Profile/Banner.jsx';
 import Info from '../components/Profile/Info.jsx';
 import MedalsList from '../components/Profile/MedalsList.jsx';
@@ -171,7 +171,7 @@ export default function ProfileScreen() {
 						style={styles.iconBtn}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<SvgIcon name="settings" size={24} color={colors.text} />
+						<LucideIcon name="settings" size={24} color={colors.text} />
 					</button>
 				) : null}
 			/>

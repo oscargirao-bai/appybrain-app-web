@@ -1,6 +1,6 @@
 import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from './SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -33,7 +33,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 		if (item.type === 'coins') {
 			return (
 				<div style={{...styles.rewardCard, borderColor: colors.text + '22'}}>
-					<SvgIcon name="coins" size={28} color={colors.secondary} />
+					<LucideIcon name="coins" size={28} color={colors.secondary} />
 					<span style={{...styles.rewardAmount, color: colors.text}}>{item.amount}</span>
 					<span style={{...styles.rewardLabel, color: colors.text + 'AA'}}>Coins</span>
 				</div>
@@ -50,7 +50,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 							alt="Cosmetic"
 						/>
 					) : (
-						<SvgIcon name="image" size={28} color={colors.secondary} />
+						<LucideIcon name="image" size={28} color={colors.secondary} />
 					)}
 					<span style={{...styles.rewardAmount, color: colors.text}}>+1</span>
 					<span style={{...styles.rewardLabel, color: colors.text + 'AA'}}>Cosmético</span>
@@ -59,7 +59,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 		} else {
 			return (
 				<div style={{...styles.rewardCard, borderColor: colors.text + '22'}}>
-					<SvgIcon name="lightbulb" size={28} color={colors.secondary} />
+					<LucideIcon name="lightbulb" size={28} color={colors.secondary} />
 					<span style={{...styles.rewardAmount, color: colors.text}}>{item.amount}</span>
 					<span style={{...styles.rewardLabel, color: colors.text + 'AA'}}>Dicas</span>
 				</div>

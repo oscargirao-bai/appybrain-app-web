@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { small, normal } from '../../constants/font.jsx';
 
 export default function TextInput({
@@ -32,7 +32,7 @@ export default function TextInput({
 		<div style={{...styles.container, ...containerStyle}}>
 			{(label || LabelIconName) && (
 				<div style={styles.labelRow}>
-					{LabelIconName ? <SvgIcon name={LabelIconName} size={16} color={colorTokens.secondary} /> : null}
+					{LabelIconName ? <LucideIcon name={LabelIconName} size={16} color={colorTokens.secondary} /> : null}
 					{label ? <span style={styles.labelText}>{label}</span> : null}
 				</div>
 			)}
@@ -58,7 +58,7 @@ export default function TextInput({
 						aria-label={hidden ? 'Show password' : 'Hide password'}
 						style={styles.trailingIcon}
 					>
-						<SvgIcon name={hidden ? 'eye-off' : 'eye'} size={20} color={colorTokens.secondary} />
+						<LucideIcon name={hidden ? 'eye-off' : 'eye'} size={20} color={colorTokens.secondary} />
 					</button>
 				</div>
 			) : (

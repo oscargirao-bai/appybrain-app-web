@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import { navigationRef } from '../../services/navigationRef.jsx';
 import { family } from '../../constants/font.jsx';
@@ -137,7 +137,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				aria-label={`Notificação: ${item.title}`}
 			>
 				<div style={iconWrapStyle}>
-					<SvgIcon name={iconForType(item.type)} size={22} color={unread ? colors.secondary : colors.text} />
+					<LucideIcon name={iconForType(item.type)} size={22} color={unread ? colors.secondary : colors.text} />
 				</div>
 				<div style={styles.textContainer}>
 					<span style={titleStyle}>{item.title}</span>

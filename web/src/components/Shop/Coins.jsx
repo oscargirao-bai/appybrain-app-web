@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -28,7 +28,7 @@ export default function Coins({ style }) {
 
 	return (
 		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }}}>
-			<SvgIcon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
+			<LucideIcon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
 			<span style={{...styles.value, ...{ color: colors.primary }}}>{coins}</span>
 		</div>
 	);

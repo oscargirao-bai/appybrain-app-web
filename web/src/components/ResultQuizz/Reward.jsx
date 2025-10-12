@@ -1,5 +1,5 @@
 import React from 'react';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -17,7 +17,7 @@ export default function Reward({ type = 'stars', amount = 0, style }) {
 			>
 				<span style={{...styles.plus, color: colors.text}}>+</span>
 				<div style={styles.space} />
-				<SvgIcon name={config.icon} size={22} color={config.tint} />
+				<LucideIcon name={config.icon} size={22} color={config.tint} />
 				<div style={styles.space} />
 				<span style={{...styles.value, color: colors.text}}>{amount}</span>
 			</div>

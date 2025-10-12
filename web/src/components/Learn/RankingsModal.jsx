@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import UserList from '../General/UserList.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -33,7 +33,7 @@ export default function RankingsModal({ visible, onClose, onFetchRankings }) {
 				aria-label={`Métrica ${label}`}
 			>
 				{icon ? (
-					<SvgIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
+					<LucideIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
 				) : (
 					<span style={{...styles.tabLabel, color: active ? colors.primary : colors.text}}>XP</span>
 				)}
@@ -49,7 +49,7 @@ export default function RankingsModal({ visible, onClose, onFetchRankings }) {
 				style={{...styles.tabBtn, borderColor: colors.text + '33', backgroundColor: active ? colors.primary + '22' : 'transparent'}}
 				aria-label={`Tab ${label}`}
 			>
-				<SvgIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
+				<LucideIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
 			</button>
 		);
 	};

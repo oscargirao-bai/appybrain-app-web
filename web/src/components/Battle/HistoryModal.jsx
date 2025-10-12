@@ -1,7 +1,7 @@
 import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function HistoryModal({ visible, onClose, pending = [], completed = [], title, onOpenBattle }) {
@@ -20,7 +20,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 				<div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
 					<div style={{...styles.card, backgroundColor: colors.card || colors.background, borderColor: colors.border}}>
 						<button onClick={onClose} style={styles.closeWrap} aria-label={translate('common.close')}>
-							<SvgIcon name="x" size={22} color={colors.text} />
+							<LucideIcon name="x" size={22} color={colors.text} />
 						</button>
 
 						<span style={{...styles.title, color: colors.text}}>

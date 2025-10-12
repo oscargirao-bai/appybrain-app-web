@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
@@ -47,7 +47,7 @@ function IconButton({ icon, label, onPress, disabled, colors }) {
       disabled={disabled}
       style={{...styles.btn, borderColor: colors.text + '22'}}
     >
-      <SvgIcon name={icon} size={20} color={colors.text} />
+      <LucideIcon name={icon} size={20} color={colors.text} />
     </button>
   );
 }

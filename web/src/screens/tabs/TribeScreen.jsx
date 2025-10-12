@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -221,7 +221,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 							>
 								<div style={memberListStyles.rankCol}>
 									{topMedal ? (
-										<SvgIcon name={medalIcon} size={22} color={medalColor} />
+										<LucideIcon name={medalIcon} size={22} color={medalColor} />
 									) : (
 										<span style={{...memberListStyles.rankText, color: colors.text + 'AA'}}>{item.rank}</span>
 									)}
@@ -231,7 +231,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 									borderColor: colors.primary + '66'
 								}}>
 									{item.avatarIcon ? (
-										<SvgIcon name={item.avatarIcon} size={20} color={colors.primary} />
+										<LucideIcon name={item.avatarIcon} size={20} color={colors.primary} />
 									) : (
 										<span style={{...memberListStyles.avatarLetter, color: colors.primary}}>
 											{(item.name || '?').charAt(0).toUpperCase()}
@@ -273,7 +273,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 								cursor: 'pointer',
 							}}
 						>
-							<SvgIcon name="bell" size={22} color={colors.text} />
+							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -288,7 +288,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 							cursor: 'pointer',
 						}}
 					>
-						<SvgIcon name="settings" size={22} color={colors.text} />
+						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 // Modal converted to div
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
@@ -58,12 +58,12 @@ export default function ButtonLanguage({
 				aria-label={`${translate('settings.language')}: ${current.label}.`}
 			>
 				<div style={styles.leftRow}>
-					<SvgIcon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
+					<LucideIcon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
 					<span style={{...styles.label, color: colors.text}}>{translate('settings.language')}</span>
 				</div>
 				<div style={{...styles.pill, borderColor: colors.text + '33', backgroundColor: colors.text + '05'}}>
 					<span style={{...styles.pillText, color: colors.text}}>{current.label}</span>
-					<SvgIcon name="chevron-down" size={16} color={colors.text + 'AA'} />
+					<LucideIcon name="chevron-down" size={16} color={colors.text + 'AA'} />
 				</div>
 			</button>
 
@@ -85,7 +85,7 @@ export default function ButtonLanguage({
 								aria-selected={active}
 							>
 								<span style={{...styles.optionText, color: colors.text, fontWeight: active ? '700' : '500'}}>{item.label}</span>
-								{active && <SvgIcon name="check" size={18} color={colors.secondary} />}
+								{active && <LucideIcon name="check" size={18} color={colors.secondary} />}
 							</button>
 						);
 					})}

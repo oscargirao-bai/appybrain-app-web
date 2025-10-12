@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -68,16 +68,16 @@ export default function ChallengeCard({
             style={{...styles.challengeImage, opacity: isAvailable ? 1 : 0.5}}
           />
         ) : (
-          <SvgIcon name="file-text" size={26} color={isAvailable ? colors.secondary : colors.muted} />
+          <LucideIcon name="file-text" size={26} color={isAvailable ? colors.secondary : colors.muted} />
         )}
         {isCompleted && (
           <div style={{...styles.statusBadge, backgroundColor: colors.success}}>
-            <SvgIcon name="check" size={12} color="white" />
+            <LucideIcon name="check" size={12} color="white" />
           </div>
         )}
         {isExpired && !isCompleted && (
           <div style={{...styles.statusBadge, backgroundColor: colors.danger || '#FF6B6B'}}>
-            <SvgIcon name="x" size={12} color="white" />
+            <LucideIcon name="x" size={12} color="white" />
           </div>
         )}
       </div>
@@ -99,7 +99,7 @@ export default function ChallengeCard({
         <div style={styles.footer}>
           {coins > 0 && (
             <div style={styles.coinsBox}>
-              <SvgIcon name="coins" size={14} color={colors.accent} />
+              <LucideIcon name="coins" size={14} color={colors.accent} />
               <span style={{...styles.coinsText, color: colors.accent}}>
                 {coins}
               </span>

@@ -23,7 +23,7 @@ import RankDisplay from '../../components/Battle/RankDisplay.jsx';
 import HistoryModal from '../../components/Battle/HistoryModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
 
 // Helper function to transform battle data for ResultScreen2
 function transformBattleDataForResult(battleData) {
@@ -233,7 +233,7 @@ export default function BattleScreen(props) {
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       style={{ paddingHorizontal: 4 }}
                     >
-                      <SvgIcon name="bell" size={22} color={colors.text} />
+                      <LucideIcon name="bell" size={22} color={colors.text} />
                     </button>
                     <NotificationBadge count={unreadNotificationsCount} />
                   </div>
@@ -245,7 +245,7 @@ export default function BattleScreen(props) {
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             style={{ paddingHorizontal: 4 }}
           >
-            <SvgIcon name="settings" size={22} color={colors.text} />
+            <LucideIcon name="settings" size={22} color={colors.text} />
           </button>
         )}
       />

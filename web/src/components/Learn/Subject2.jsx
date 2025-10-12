@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 
 export default function Subject2({ title, iconName = 'book-open', svgIcon, color, onPress, height = 70, style }) {
 	const colors = useThemeColors();
@@ -35,7 +36,7 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 					{svgIcon ? (
 						<SvgIcon svgString={svgIcon} size={28} color={textColor} />
 					) : (
-						<SvgIcon name={iconName} size={28} color={iconColor} />
+						<LucideIcon name={iconName} size={28} color={iconColor} />
 					)}
 				</div>
 				<div style={styles.titleWrapper}>
