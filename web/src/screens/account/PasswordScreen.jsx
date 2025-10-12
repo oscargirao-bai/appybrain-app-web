@@ -103,11 +103,7 @@ export default function PasswordScreen({ navigation, route }) {
           }}
         />
       </div>
-      <div         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={insets.top + 12}
-        pointerEvents="box-none"
-      >
+      <div style={styles.flex}>
         <div style={styles.staticContainer}> 
           <div style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
             {/* Brand Logo */}

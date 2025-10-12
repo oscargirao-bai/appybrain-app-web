@@ -144,6 +144,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+	medalButton: {
+		background: 'none',
+		border: 'none',
+		padding: 0,
+		cursor: 'pointer',
+		transition: 'transform 0.2s ease',
+	},
 	medalOuterActive: {
 		padding: 2,
 		borderRadius: CIRCLE_SIZE / 2,
@@ -195,83 +202,31 @@ const styles = {
 	},
 };
 
-// MedalButton component extracted for animation logic
+// MedalButton component (Web: simplified without React Native Animated)
 function MedalButton({ item, colors, onPress }) {
-	const baseScale = useRef(new Animated.Value(1)).current;
-	const pulse = useRef(new Animated.Value(0)).current; // only for new medals
-	const flash = useRef(new Animated.Value(0)).current; // one-shot for appearance
-	const popScale = useRef(new Animated.Value(1)).current;
+	const isNew = !!item.justUnlocked;
 
-	const isNew = !!item.justUnlocked; // we set justUnlocked when new flag present
-
-	useEffect(() => {
-		if (isNew) {
-			// start subtle pulse loop
-			const loop = Animated.loop(
-				Animated.sequence([
-					Animated.timing(pulse, { toValue: 1, duration: 1400, useNativeDriver: false, easing: Easing.inOut(Easing.quad) }),
-					Animated.timing(pulse, { toValue: 0, duration: 1200, useNativeDriver: false, easing: Easing.inOut(Easing.quad) }),
-				])
-			);
-			loop.start();
-			return () => loop.stop();
-		}
-	}, [isNew, pulse]);
-
-	useEffect(() => {
-		if (isNew) {
-			popScale.setValue(0.4);
-			flash.setValue(0);
-			Animated.parallel([
-				Animated.sequence([
-					Animated.timing(popScale, { toValue: 1.15, duration: 260, easing: Easing.out(Easing.quad), useNativeDriver: true }),
-					Animated.spring(popScale, { toValue: 1, useNativeDriver: true, friction: 5, tension: 180, delay: 40 }),
-				]),
-				Animated.sequence([
-					Animated.timing(flash, { toValue: 1, duration: 260, useNativeDriver: false }),
-					Animated.timing(flash, { toValue: 0, duration: 520, useNativeDriver: false }),
-				]),
-			]).start();
-		} else {
-			popScale.setValue(1);
-		}
-	}, [isNew, popScale, flash]);
-
-	function handlePressIn() {
-		Animated.spring(baseScale, { toValue: 0.9, useNativeDriver: true, friction: 6, tension: 300 }).start();
-	}
-	function handlePressOut() {
-		Animated.spring(baseScale, { toValue: 1, useNativeDriver: true, friction: 6, tension: 300 }).start();
-	}
-
-	// Interpolations only when new
-	const badgeColor = item.color || colors.primary; // Use badge color or fallback to primary
-	const iconColor = item.iconColor || colors.text; // Use icon color from API or fallback to text color
-	const borderColor = isNew
-		? flash.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] })
-		: badgeColor + '55';
-	const bgColor = isNew
-		? flash.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '55'] })
-		: '#00000022';
-	const pulseBorder = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '55', badgeColor] });
-	const pulseBg = pulse.interpolate({ inputRange: [0, 1], outputRange: [badgeColor + '22', badgeColor + '44'] });
-
-	const finalBorder = isNew ? pulseBorder : borderColor;
-	const finalBg = isNew ? pulseBg : bgColor;
-
-	const combinedScale = isNew ? popScale : baseScale;
+	const badgeColor = item.color || colors.primary;
+	const iconColor = item.iconColor || colors.text;
 
 	return (
-		<Animated.View style={[styles.cell, { transform: [{ scale: combinedScale }] }]}>      
-			<button 				activeOpacity={0.85}
+		<div style={styles.cell}>
+			<button
 				onClick={onPress}
-				onPressIn={handlePressIn}
-				onPressOut={handlePressOut}
-				
+				style={{
+					...styles.medalButton,
+					opacity: item.unlocked ? 1 : 0.5,
+				}}
 				aria-label={`Medalha ${item.id}${item.unlocked ? ' desbloqueada' : ' bloqueada'}`}
 			>
-				<Animated.View style={item.unlocked ? [styles.medalOuterActive, { borderColor: finalBorder }] : styles.medalOuterInactive}>
-					<Animated.View style={item.unlocked ? [styles.medalInnerActive, { backgroundColor: badgeColor }] : styles.medalInnerInactive}>
+				<div style={{
+					...(item.unlocked ? styles.medalOuterActive : styles.medalOuterInactive),
+					borderColor: isNew ? badgeColor : badgeColor + '55',
+				}}>
+					<div style={{
+						...(item.unlocked ? styles.medalInnerActive : styles.medalInnerInactive),
+						backgroundColor: item.unlocked ? badgeColor : '#00000022',
+					}}>
 						{item.icon && item.icon.includes('<svg') ? (
 							<SvgIcon 
 								svgString={item.icon} 
@@ -288,10 +243,10 @@ function MedalButton({ item, colors, onPress }) {
 						{isNew && (
 							<div style={styles.newDot} />
 						)}
-					</Animated.View>
-				</Animated.View>
+					</div>
+				</div>
 			</button>
-		</Animated.View>
+		</div>
 	);
 }
 

@@ -96,16 +96,11 @@ export default function SettingsScreen({ navigation }) {
 		);
 	}, [navigation]);
 
-	// Open Instagram link
+	// Open Instagram link (Web: usar window.open)
 	const INSTAGRAM_URL = 'https://www.instagram.com/appy_brain/';
 	const handleOpenInstagram = useCallback(async () => {
 		try {
-			const supported = await Linking.canOpenURL(INSTAGRAM_URL);
-			if (supported) {
-				await Linking.openURL(INSTAGRAM_URL);
-			} else {
-				window.alert('Não foi possível abrir o link.');
-			}
+			window.open(INSTAGRAM_URL, '_blank');
 		} catch (err) {
 			console.error('Error opening Instagram:', err);
 			window.alert('Não foi possível abrir o link.');

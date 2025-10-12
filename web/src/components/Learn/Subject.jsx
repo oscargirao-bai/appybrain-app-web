@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-// Easing removed
+import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
@@ -16,38 +15,27 @@ import SvgIcon from '../../components/General/SvgIcon.jsx';
 export default function Subject({ title, iconName = 'book-open', onPress, size = 160, style }) {
 	const colors = useThemeColors();
 
-	const scale = useRef(new Animated.Value(0)).current;
-
-	const handlePressIn = () => {
-		Animated.timing(scale, { toValue: 1, duration: 120, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	};
-	const handlePressOut = () => {
-		Animated.timing(scale, { toValue: 0, duration: 160, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	};
-
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.95] });
-
 	return (
 		<div style={{...styles.wrap, ...style}}>      
 			<button 				
 				aria-label={title}
 				onClick={onPress}
-				onPressIn={handlePressIn}
-				onPressOut={handlePressOut}
-				style={({ pressed }) => [
-					styles.touchArea,
-					{ width: size, height: size },
-				]}
+				style={{
+					...styles.touchArea,
+					width: size,
+					height: size,
+				}}
 			>
-				<Animated.View style={[styles.circle, {
-					width: size, height: size, borderRadius: size / 2,
+				<div style={{
+					...styles.circle,
+					width: size,
+					height: size,
+					borderRadius: size / 2,
 					borderColor: addAlpha(colors.text, 0.12),
 					backgroundColor: addAlpha(colors.text, 0.02),
-					transform: [{ scale: pressScale }],
-				}]}
-				>
+				}}>
 					<SvgIcon name={iconName} size={size * 0.36} color={addAlpha(colors.text, 0.9)} />
-				</Animated.View>
+				</div>
 			</button>
 			<span style={{...styles.label, ...{ color: colors.accent }}}>{(title || '').toUpperCase()}</span>
 		</div>
@@ -62,7 +50,7 @@ function addAlpha(hexOrRgba, alpha) {
 			const parts = inner.split(',').map(p => p.trim());
 			const [r,g,b] = parts;
 			return `rgba(${r},${g},${b},${alpha})`;
-		};
+		});
 	}
 	let h = hexOrRgba.replace('#', '');
 	if (h.length === 3) h = h.split('').map(c => c + c).join('');

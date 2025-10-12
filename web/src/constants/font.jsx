@@ -12,7 +12,7 @@ export const family = {
   medium: WORK_SANS_MEDIUM,
   semibold: WORK_SANS_SEMIBOLD,
   bold: WORK_SANS_BOLD,
-  mono: Platform.select({ ios: 'Courier', android: 'monospace', default: 'monospace' }),
+  mono: 'monospace', // Web usa monospace direto
 };
 
 // Keep weights for building the font styles
