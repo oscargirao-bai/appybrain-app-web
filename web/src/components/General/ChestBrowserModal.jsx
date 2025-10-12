@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Modal, Easing} from 'react-native';
+// Modal, Easing converted
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import ApiManager from '../../services/ApiManager';
@@ -207,7 +207,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
   const fillHeight = barHeight * progressPercent; // Direct calculation: current units * pixelsPerUnit
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
       <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}>
         <button style={StyleSheet.absoluteFill} onClick={onClose} />
         <div style={{...styles.panel, ...{ backgroundColor: colors.card}}>
@@ -310,7 +310,7 @@ export default function ChestBrowserModal({ visible, onClose, onChestOpened, dat
           </button>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

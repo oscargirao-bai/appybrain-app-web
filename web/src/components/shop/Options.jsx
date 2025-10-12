@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Easing} from 'react-native';
+// Easing removed
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 

@@ -72,7 +72,7 @@ export default function QuizzScreen() {
 					difficulty: apiQ.difficulty, // Preserve difficulty for help system
 					explanation, // Pass explanation for SolutionModal (supports HTML/LaTeX)
 				};
-			};
+			});
 		};
 
 		const [questions, setQuestions] = useState([]);

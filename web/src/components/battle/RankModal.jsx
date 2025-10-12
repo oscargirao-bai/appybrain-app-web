@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -26,7 +26,7 @@ export default function RankModal({ visible, onClose }) {
   const panelWidth = Math.min(520, width - 32);
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
       <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
         <button style={StyleSheet.absoluteFill} onClick={onClose} />
         <div style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22', maxHeight: panelMaxHeight, width: panelWidth }] }>
@@ -47,7 +47,7 @@ export default function RankModal({ visible, onClose }) {
           </button>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

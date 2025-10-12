@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import {LayoutAnimation, UIManager} from 'react-native';
+// LayoutAnimation, UIManager removed
 import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import ConfirmModal from '../General/ConfirmModal';

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import {TextInput as RNTextInput} from 'react-native';
+// TextInput converted to input
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 import { small, normal } from '../../constants/font';

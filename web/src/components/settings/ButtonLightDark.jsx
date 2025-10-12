@@ -46,41 +46,48 @@ export default function ButtonLightDark({ style, onChange }) {
 	);
 }
 
-function Segment({ label, icon, active, onPress, colors, position }) {
+function Segment({ label, icon, active, onPress, onClick, colors, position }) {
+	const handleClick = onClick || onPress;
 	return (
-		<button 			onClick={onPress}
-			style={({ pressed }) => [
-				styles.segment,
-				position === 'left' && styles.segmentLeft,
-				position === 'right' && styles.segmentRight,
-				active && { backgroundColor: colors.secondary, shadowColor: colors.secondary },
-				pressed && { opacity: 0.85 },
-			]}
-			
-			accessibilityState={{ selected: active }}
+		<button
+			onClick={handleClick}
+			style={{
+				...styles.segment,
+				...(position === 'left' ? styles.segmentLeft : {}),
+				...(position === 'right' ? styles.segmentRight : {}),
+				...(active ? { backgroundColor: colors.secondary, shadowColor: colors.secondary } : {}),
+			}}
 			aria-label={label}
+			aria-selected={active}
 		>
 			<SvgIcon name={icon} size={18} color={active ? '#fff' : colors.text} style={{ marginRight: 8 }} />
-			<span style={{...styles.label, ...{ color: active ? '#fff' : colors.text }}} numberOfLines={1}>{label}</span>
+			<span style={{...styles.label, ...{ color: active ? '#fff' : colors.text }}}>{label}</span>
 		</button>
 	);
 }
 
 const styles = {
 	wrapper: {
+		display: 'flex',
 		flexDirection: 'row',
-		borderWidth: 1,
+		border: '1px solid',
 		borderRadius: 28,
 		overflow: 'hidden',
 		marginBottom: 20,
 	},
 	segment: {
 		flex: 1,
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingVertical: 14,
-		paddingHorizontal: 12,
+		paddingTop: 14,
+		paddingBottom: 14,
+		paddingLeft: 12,
+		paddingRight: 12,
+		border: 'none',
+		background: 'transparent',
+		cursor: 'pointer',
 	},
 	segmentLeft: {
 		borderTopLeftRadius: 28,

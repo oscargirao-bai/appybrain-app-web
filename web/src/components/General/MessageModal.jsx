@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -24,7 +24,7 @@ export default function MessageModal({
 
   return (
     <Modal
-      visible={visible}
+      style={{display: visible ? "flex" : "none"}}
       transparent
       animationType="fade"
       onRequestClose={onClose}
@@ -49,7 +49,7 @@ export default function MessageModal({
           </button>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

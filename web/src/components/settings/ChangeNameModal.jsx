@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -39,7 +39,7 @@ export default function ChangeNameModal({
 
   return (
     <Modal
-      visible={visible}
+      style={{display: visible ? "flex" : "none"}}
       transparent
       animationType="fade"
       onRequestClose={onCancel}
@@ -62,11 +62,11 @@ export default function ChangeNameModal({
 
           <div style={styles.row}>
             <button               onClick={onCancel}
-              style={({ pressed }) => [
+              style={{
                 styles.btn,
                 { backgroundColor: colors.surface, borderColor: colors.text + '25' },
-                pressed && { opacity: 0.85 },
-              ]}
+                /* pressed */ { opacity: 0.85 },
+              }}
               
               aria-label="Cancelar"
             >
@@ -75,15 +75,15 @@ export default function ChangeNameModal({
 
             <button               onClick={handleConfirm}
               disabled={!isValidName}
-              style={({ pressed }) => [
+              style={{
                 styles.btn,
                 {
                   backgroundColor: isValidName ? colors.secondary : colors.surface,
                   borderColor: isValidName ? colors.secondary + '55' : colors.text + '25',
                   opacity: isValidName ? 1 : 0.5
                 },
-                pressed && isValidName && { opacity: 0.9 },
-              ]}
+                /* pressed */ isValidName && { opacity: 0.9 },
+              }}
               
               aria-label="Confirmar mudança de nome"
             >
@@ -94,7 +94,7 @@ export default function ChangeNameModal({
           </div>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

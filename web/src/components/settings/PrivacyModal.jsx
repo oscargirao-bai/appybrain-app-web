@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -27,7 +27,7 @@ export default function PrivacyModal({ visible, onClose }) {
 	const colors = useThemeColors();
 	return (
 		<Modal
-			visible={visible}
+			style={{display: visible ? "flex" : "none"}}
 			animationType="slide"
 			onRequestClose={onClose}
 			transparent
@@ -39,7 +39,7 @@ export default function PrivacyModal({ visible, onClose }) {
 					</div>
 					<div showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 						<span style={{...styles.body, ...{ color: colors.text }}}>{PRIVACY_TEXT}</span>
-						<button 							style={({ pressed }) => [styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, pressed && { opacity: 0.85 }]}
+						<button 							style={{styles.closeBtn, { borderColor: colors.text + '25', backgroundColor: colors.card + '66' }, /* pressed */ { opacity: 0.85 }}}
 							onClick={onClose}
 							
 							aria-label="Fechar política de privacidade"
@@ -49,7 +49,7 @@ export default function PrivacyModal({ visible, onClose }) {
 					</div>
 				</div>
 			</div>
-		</Modal>
+		</div>
 	);
 }
 

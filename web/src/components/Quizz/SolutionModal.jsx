@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 import { family } from '../../constants/font';
@@ -97,7 +97,7 @@ export default function SolutionModal({
 
   return (
     <>
-      <Modal visible={visible && !showSuccessModal} transparent animationType="fade" onRequestClose={onClose}>
+      <div style={{display: visible && !showSuccessModal} transparent animationType="fade" onRequestClose={onClose}>
       <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
         <button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar explicação" />
 
@@ -143,7 +143,7 @@ export default function SolutionModal({
           </div>
         </div>
       </div>
-    </Modal>
+    </div>
 
     <MessageModal
       visible={showSuccessModal}

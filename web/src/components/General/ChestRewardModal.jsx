@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {Modal, Easing} from 'react-native';
+// Modal, Easing converted
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 import DataManager from '../../services/DataManager';
@@ -111,7 +111,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 	};
 
 	return (
-		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+		<div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
 			<div style={{...styles.backdrop, ...{ backgroundColor: '#000000AA' }}}> 
 				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar recompensa" />
 				<Animated.View style={[styles.panel, { backgroundColor: colors.background, borderColor: colors.text + '22', transform: [{ scale }], opacity }]}> 
@@ -135,7 +135,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 					<Animated.View pointerEvents="none" style={[styles.glow, { backgroundColor: colors.secondary + '55', opacity: glowOpacity, transform: [{ scale: glowScale }] }]} />
 				</Animated.View>
 			</div>
-		</Modal>
+		</div>
 	);
 }
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { header, small, normal } from '../constants/font';
 
 import SvgIcon from '../../components/General/SvgIcon';
@@ -133,7 +133,7 @@ export default function DevConsoleOverlay() {
 			)}
 
 			{/* Console modal */}
-			<Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+			<div style={{display: open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
 				<button style={styles.backdrop} onClick={() => setOpen(false)} />
 				<div style={styles.sheet}>
 					<div style={styles.sheetHeader}>
@@ -212,7 +212,7 @@ export default function DevConsoleOverlay() {
 						</button>
 					</div>
 				</div>
-			</Modal>
+			</div>
 		</>
 	);
 }

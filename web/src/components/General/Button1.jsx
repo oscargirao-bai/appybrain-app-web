@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Easing} from 'react-native';
+// Easing removed
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';

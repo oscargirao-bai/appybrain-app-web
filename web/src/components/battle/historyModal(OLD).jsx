@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { colors } from '../../constants/color';
 import IconCircleButton from './IconCircleButton';
 import { post } from '../../services/serviceApi';
@@ -126,7 +126,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
   const completedToRender = completedList || [];
 
   return (
-    <Modal visible={!!visible} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: !!visible} transparent animationType="fade" onRequestClose={onClose}>
       <div style={styles.backdrop}>
         {/* Click outside to close */}
         <button style={styles.backdropHit} onClick={onClose} />
@@ -170,7 +170,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
           </Animated.View>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

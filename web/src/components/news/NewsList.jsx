@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {ImageBackground} from 'react-native';
+// ImageBackground - use div with background-image
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import { family } from '../../constants/font';

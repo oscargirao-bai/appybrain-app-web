@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 import UserList from '../General/UserList';
@@ -187,7 +187,7 @@ export default function RankingsModal({ visible, onClose }) {
 	};
 
 	return (
-		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+		<div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
 			<div style={{...styles.backdrop, ...{ backgroundColor: '#00000088' }}}> 
 				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar rankings" />
 				<div style={{...styles.panel, ...{ 
@@ -227,7 +227,7 @@ export default function RankingsModal({ visible, onClose }) {
 					</div>
 				</div>
 			</div>
-		</Modal>
+		</div>
 	);
 }
 

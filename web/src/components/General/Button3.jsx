@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import {Switch} from 'react-native';
 import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -30,31 +29,34 @@ export default function Button3({
 	}, [onValueChange, value, disabled]);
 
 	return (
-		<button 			onClick={handleToggle}
+		<button
+			onClick={handleToggle}
 			disabled={disabled}
-			style={({ pressed }) => [
-				styles.card,
-				{
-					borderColor: colors.text + '22',
-					backgroundColor: colors.text + '06',
-					opacity: disabled ? 0.5 : 1,
-				},
-				pressed && !disabled && { opacity: 0.85 },
-			]}
-			
-			accessibilityState={{ checked: value, disabled }}
+			style={{
+				...styles.card,
+				borderColor: colors.text + '22',
+				backgroundColor: colors.text + '06',
+				opacity: disabled ? 0.5 : 1,
+				cursor: disabled ? 'not-allowed' : 'pointer',
+			}}
 			aria-label={accessibilityLabel || label}
+			aria-checked={value}
 		>
 			<div style={styles.leftRow}>
 				<SvgIcon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
 				<span style={{...styles.label, ...{ color: colors.text }}}>{label}</span>
 			</div>
-			<Switch
-				value={value}
-				onValueChange={handleToggle}
-				trackColor={{ false: colors.text + '33', true: colors.secondary + '66' }}
-				thumbColor={value ? colors.secondary : colors.text}
-				ios_backgroundColor={colors.text + '33'}
+			<input
+				type="checkbox"
+				checked={value}
+				onChange={handleToggle}
+				disabled={disabled}
+				style={{
+					width: 48,
+					height: 28,
+					cursor: disabled ? 'not-allowed' : 'pointer',
+				}}
+				aria-label={accessibilityLabel || label}
 			/>
 		</button>
 	);
@@ -62,16 +64,21 @@ export default function Button3({
 
 const styles = {
 	card: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: 16,
-		paddingVertical: 14,
-		borderWidth: 1,
+		paddingLeft: 16,
+		paddingRight: 16,
+		paddingTop: 14,
+		paddingBottom: 14,
+		border: '1px solid',
 		borderRadius: 24,
 		marginBottom: 16,
+		background: 'transparent',
 	},
 	leftRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		flex: 1,

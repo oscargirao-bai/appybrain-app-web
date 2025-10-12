@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import SvgIcon from '../../components/General/SvgIcon';
@@ -42,7 +42,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
   const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
 
   return (
-    <Modal visible={!!visible} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: !!visible} transparent animationType="fade" onRequestClose={onClose}>
       <div style={styles.backdrop}>
         <button style={styles.backdropHit} onClick={onClose} />
         <div style={{ width: '100%', alignItems: 'center' }}>
@@ -91,7 +91,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
           </Animated.View>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 

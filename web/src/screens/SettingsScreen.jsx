@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {Linking} from 'react-native';
+// Linking removed - use window.open
 
 import Header from '../components/General/Header';
 import { useThemeColors } from '../services/Theme';

@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import {Easing} from 'react-native';
+// Easing removed
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';

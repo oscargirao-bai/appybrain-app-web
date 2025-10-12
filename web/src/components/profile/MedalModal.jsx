@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {Modal, Easing} from 'react-native';
+// Modal, Easing converted
 import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../General/SvgIcon';
@@ -49,7 +49,7 @@ export default function MedalModal({ visible, onClose, medal }) {
 	// Removed percentage display per request
 
 	return (
-		<Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
+		<div style={{display: visible ? "flex" : "none"}} transparent animationType="none" onRequestClose={onClose}>
 			<button style={styles.backdrop} onClick={onClose}  aria-label="Fechar modal medalha" />
 			<div style={styles.centerWrap} pointerEvents="box-none">
 				<Animated.View style={[styles.panel, { backgroundColor: colors.card || '#0E1620', transform: [{ scale }], opacity, maxHeight: '95%', overflow: 'visible' }]}>      
@@ -97,7 +97,7 @@ export default function MedalModal({ visible, onClose, medal }) {
 					</div>
 				</Animated.View>
 			</div>
-		</Modal>
+		</div>
 	);
 }
 

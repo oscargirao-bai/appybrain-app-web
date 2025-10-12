@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 import DataManager from '../../services/DataManager';
@@ -257,7 +257,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 	};
 
 	return (
-		<Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+		<div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
 			<div style={{...styles.backdrop, ...{ backgroundColor: '#00000088' }}}> 
 				<button style={StyleSheet.absoluteFill} onClick={onClose}  aria-label="Fechar notificações" />
 				<div style={{...styles.panel, ...{ backgroundColor: colors.background}}> 
@@ -287,7 +287,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				/>
 				</div>
 			</div>
-		</Modal>
+		</div>
 	);
 }
 

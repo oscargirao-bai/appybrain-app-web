@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -54,12 +54,12 @@ export default function ButtonLanguage({
 	return (
 		<>
 			<button 				onClick={() => setOpen(true)}
-				style={({ pressed }) => [
+				style={{
 					styles.card,
 					{ borderColor: colors.text + '22', backgroundColor: colors.text + '06' },
-					pressed && { opacity: 0.85 },
+					/* pressed */ { opacity: 0.85 },
 					style,
-				]}
+				}}
 				
 				aria-label={`${translate('settings.language')}: ${current.label}.`}
 			>
@@ -73,7 +73,7 @@ export default function ButtonLanguage({
 				</div>
 			</button>
 
-			<Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+			<div style={{display: open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
 				<button style={styles.backdrop} onClick={() => setOpen(false)} />
 				<div style={{...styles.modalCard, ...{ backgroundColor: colors.background}}> 
 					<span style={{...styles.modalTitle, ...{ color: colors.text }}}>{modalTitle || translate('settings.language')}</span>
@@ -83,12 +83,12 @@ export default function ButtonLanguage({
 							const active = item.code === currentCode;
 							return (
 								<button 									onClick={() => handleSelect(item.code)}
-									style={({ pressed }) => [
+									style={{
 										styles.optionRow,
 										{ borderColor: colors.text + '15' },
 										active && { backgroundColor: colors.secondary + '22' },
-										pressed && { opacity: 0.8 },
-									]}
+										/* pressed */ { opacity: 0.8 },
+									}}
 									
 									accessibilityState={{ selected: active }}
 								>
@@ -100,7 +100,7 @@ export default function ButtonLanguage({
 						style={{ maxHeight: 260 }}
 					/>
 				</div>
-			</Modal>
+			</div>
 		</>
 	);
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-native';
+// Modal converted to div
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -27,7 +27,7 @@ export default function ConfirmModal({
 
   return (
     <Modal
-      visible={visible}
+      style={{display: visible ? "flex" : "none"}}
       transparent
       animationType="fade"
       onRequestClose={onCancel}
@@ -64,7 +64,7 @@ export default function ConfirmModal({
           </div>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 
