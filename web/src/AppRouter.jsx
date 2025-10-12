@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTheme, useThemeColors } from './services/Theme.jsx';
 import DataManager from './services/DataManager.jsx';
 // Screens
@@ -10,7 +10,7 @@ import LearnScreen from './screens/tabs/LearnScreen.jsx';
 import BattleScreen from './screens/tabs/BattleScreen.jsx';
 import CategoryScreen from './screens/learn/CategoryScreen.jsx';
 import ContentScreen from './screens/learn/ContentScreen.jsx';
-// import TribeScreen from './screens/tabs/TribeScreen.jsx';
+import TribeScreen from './screens/tabs/TribeScreen.jsx';
 import ChallengeScreen from './screens/tabs/ChallengeScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import NewScreen from './screens/tabs/NewScreen.jsx';
@@ -39,13 +39,13 @@ function MainTabs({ route, navigation }) {
 			{ id: 0, Comp: LearnScreen, name: 'Learn' },
 			{ id: 1, Comp: BattleScreen, name: 'Battle' },
 			{ id: 2, Comp: ChallengeScreen, name: 'Challenges' },
-			// { id: 3, Comp: TribeScreen, name: 'Tribes' },
+			{ id: 3, Comp: TribeScreen, name: 'Tribes' },
 			{ id: 4, Comp: NewScreen, name: 'News' },
 			{ id: 5, Comp: ShopScreen, name: 'Shop' },
 		]
 		: [
 			{ id: 0, Comp: LearnScreen, name: 'Learn' },
-			// { id: 3, Comp: TribeScreen, name: 'Tribes' },
+			{ id: 3, Comp: TribeScreen, name: 'Tribes' },
 			{ id: 4, Comp: NewScreen, name: 'News' },
 			{ id: 5, Comp: ShopScreen, name: 'Shop' },
 		];
@@ -198,6 +198,19 @@ export default function AppRouter() {
 			}
 		}
 	};
+
+	// Listen for custom navigation events (e.g., from Banner component)
+	useEffect(() => {
+		const handleNavigateToProfile = () => {
+			navigation.navigate('Profile');
+		};
+
+		window.addEventListener('navigate-to-profile', handleNavigateToProfile);
+
+		return () => {
+			window.removeEventListener('navigate-to-profile', handleNavigateToProfile);
+		};
+	}, []);
 
 	const renderScreen = () => {
 		const commonProps = { navigation, route: { params: screenParams } };

@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-// Mock React Native navigation hook for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import Header from '../../components/General/Header.jsx';
@@ -11,9 +7,8 @@ import LucideIcon from '../../components/General/LucideIcon.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import NewsList from '../../components/News/NewsList.jsx';
 
-export default function NewScreen() {
+export default function NewScreen({ navigation }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 

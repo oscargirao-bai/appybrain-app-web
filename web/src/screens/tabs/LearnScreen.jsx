@@ -1,9 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-// Mock React Native hooks for web
-const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -23,17 +18,11 @@ import ChestBrowserModal from '../../components/General/ChestBrowserModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
-// (Content list removido ao retirar multi-part)
 
-// TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Corrigido caminho relativo: de '../../testing' (inexistente em src/) para '../../../testing'
-//import moldura from '../../../testing/moldura.png';
-
-export default function LearnScreen({ sourceId, timestamp, openNotifications }) {
+export default function LearnScreen({ sourceId, timestamp, openNotifications, navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const { height: windowHeight } = useWindowDimensions();
-	const navigation = useNavigation();
+	const windowHeight = window.innerHeight;
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [rankingsOpen, setRankingsOpen] = useState(false);
 	const [chestRewardOpen, setChestRewardOpen] = useState(false);

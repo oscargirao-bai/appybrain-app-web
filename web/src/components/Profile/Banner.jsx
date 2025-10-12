@@ -61,7 +61,9 @@ export default function Banner({
 			onPress();
 			return;
 		}
-		// Web: could navigate but for now no-op
+		// Default behavior: navigate to Profile screen
+		// Since we don't have navigation here, we'll emit a custom event
+		window.dispatchEvent(new CustomEvent('navigate-to-profile'));
 	}, [onPress]);
 
 	return (

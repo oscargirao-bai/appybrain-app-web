@@ -1,8 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-
-// Mock React Native navigation hook for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -14,11 +10,11 @@ import List from '../../components/Shop/List.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
 
-export default function ShopScreen(props) {
+export default function ShopScreen({ navigation }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
 	const { translate } = useTranslate();
-	const width = window.innerWidth; const height = window.innerHeight;
+	const width = window.innerWidth;
+	const height = window.innerHeight;
 	const scrollRef = useRef(null);
 	const [tab, setTab] = useState('avatar'); // avatar | background | frames
 	const [avatars, setAvatars] = useState([]);

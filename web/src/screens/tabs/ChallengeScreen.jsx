@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
@@ -7,28 +6,15 @@ import Banner from '../../components/Profile/Banner.jsx';
 import Info from '../../components/Learn/Info.jsx';
 import ChallengeList from '../../components/ChallengeComponents/ChallengeList.jsx';
 import Button2 from '../../components/General/Button2.jsx';
-// Removed Learn button and Subjects list
-// Chest removed from Challenge screen
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import RankingsModal from '../../components/Learn/RankingsModal.jsx';
 import ConfirmModal from '../../components/General/ConfirmModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
-// import ChestRewardModal removed
-// (Content list removido ao retirar multi-part)
 
-// Web stubs for RN hooks
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
-
-// TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Corrigido caminho relativo: de '../../testing' (inexistente em src/) para '../../../testing'
-//import moldura from '../../../testing/moldura.png';
-
-export default function ChallengeScreen(props) {
+export default function ChallengeScreen({ navigation }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [rankingsOpen, setRankingsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);

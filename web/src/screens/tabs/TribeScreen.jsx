@@ -10,13 +10,9 @@ import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 
-// Mock useNavigation for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-
-export default function TribeScreen({ sourceId, timestamp }) {
+export default function TribeScreen({ sourceId, timestamp, navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const navigation = useNavigation();
 	const [userTribe, setUserTribe] = useState(null);
 	const [allTribes, setAllTribes] = useState([]);
 	const [isInTribe, setIsInTribe] = useState(false);

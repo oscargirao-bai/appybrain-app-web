@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-// Mock React Native hooks for web
-const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -59,12 +53,11 @@ function transformBattleDataForResult(battleData) {
   };
 }
 
-export default function BattleScreen(props) {
+export default function BattleScreen({ navigation, route }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
-  const navigation = useNavigation();
-  const route = useRoute();
+  const windowHeight = window.innerHeight;
+  const windowWidth = window.innerWidth;
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [rankingsOpen, setRankingsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -79,10 +72,9 @@ export default function BattleScreen(props) {
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
-  // Get route params for battle result opening - check both route.params and props
-  const routeParams = route.params || {};
-  const propsParams = props || {};
-  const { openBattleResult, timestamp, reopenHistory, highlightBattleId } = { ...routeParams, ...propsParams };
+  // Get route params for battle result opening
+  const routeParams = route?.params || {};
+  const { openBattleResult, timestamp, reopenHistory, highlightBattleId } = routeParams;
   
   //console.log('BattleScreen: Received params', { routeParams, propsParams, openBattleResult, timestamp });
 
