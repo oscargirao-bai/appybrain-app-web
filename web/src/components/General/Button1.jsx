@@ -2,11 +2,14 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 
-export default function Button1({ label, color, onPress, style }) {
+export default function Button1({ label, color, onPress, onClick, style }) {
 	const themeColors = useThemeColors();
 	const { translate } = useTranslate();
 	const resolvedLabel = label || translate('common.play');
 	const baseColor = color || themeColors.primary;
+	
+	// Support both onPress (RN) and onClick (web)
+	const handleClick = onClick || onPress;
 	
 	const isYellow = baseColor && (baseColor.toLowerCase().includes('#ffd') || baseColor.toLowerCase().includes('#ff') || baseColor.toLowerCase() === '#ffd700');
 	const gradientColors = isYellow ? [baseColor, '#FFA500'] : [baseColor, themeColors.secondary];
@@ -61,7 +64,7 @@ export default function Button1({ label, color, onPress, style }) {
 	return (
 		<div style={buttonStyle}>
 			<div style={{...styles.aura, backgroundColor: auraColor}} />
-			<button style={faceStyle} onClick={onPress} aria-label={resolvedLabel}>
+			<button style={faceStyle} onClick={handleClick} aria-label={resolvedLabel}>
 				<span style={textStyle}>{resolvedLabel}</span>
 			</button>
 		</div>

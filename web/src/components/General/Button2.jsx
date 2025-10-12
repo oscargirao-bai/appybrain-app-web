@@ -11,24 +11,17 @@ import { useThemeColors } from '../../services/Theme.jsx';
  *  - iconName (lucide icon string)
  *  - style (optional extra styles)
  */
-export default function Button2({ onPress, size = 56, iconName = 'menu', style }) {
+export default function Button2({ iconName, iconSize = 22, onPress, onClick, style = {} }) {
   const colors = useThemeColors();
-  const radius = 14;
-  const iconSize = Math.round(size * 0.46);
+  
+  // Support both onPress (RN) and onClick (web)
+  const handleClick = onClick || onPress;
   
   return (
     <button
-      onClick={onPress}
-      aria-label={iconName || 'button'}
-      style={{
-        ...styles.base,
-        width: size,
-        height: size,
-        borderRadius: radius,
-        backgroundColor: colors.background + 'F0',
-        borderColor: colors.text + '22',
-        ...style,
-      }}
+      onClick={handleClick}
+      style={{...styles.container, ...style}}
+      aria-label="Button"
     >
       <div style={styles.inner}>
         {iconName ? <LucideIcon name={iconName} size={iconSize} color={colors.text} /> : null}

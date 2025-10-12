@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import SvgIcon from './SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
@@ -20,7 +20,15 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 	const innerPadding = 18;
 
 	return (
-		<div style={{ backgroundColor: barBg, width: '100%' }}>
+		<div style={{ 
+			position: 'fixed',
+			bottom: 0,
+			left: 0,
+			right: 0,
+			backgroundColor: barBg,
+			width: '100%',
+			zIndex: 1000
+		}}>
 			<div style={{...styles.container, ...{
 					backgroundColor: barBg,
 					borderColor: barBorder,

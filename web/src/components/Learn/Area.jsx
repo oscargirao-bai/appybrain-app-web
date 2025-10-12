@@ -12,10 +12,14 @@ export default function DisciplineCircle({
   color, 
   iconColor,
   disciplineId,
-  onPress, 
+  onPress,
+  onClick, // Support both onPress (RN) and onClick (web)
   style 
 }) {
   const colors = useThemeColors();
+  
+  // Use onClick if provided, otherwise onPress
+  const handleClick = onClick || onPress;
 
   const circleBackgroundColor = color ? addAlpha(color, 0.2) : colors.card;
   const circleColor = color || colors.border;
@@ -38,7 +42,7 @@ export default function DisciplineCircle({
   };
 
   return (
-    <button style={containerStyle} onClick={onPress} aria-label={title}>
+    <button style={containerStyle} onClick={handleClick} aria-label={title}>
       <div style={styles.contentRow}>
         <div style={circleStyle}>
           {svgIcon ? (

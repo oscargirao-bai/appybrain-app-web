@@ -17,11 +17,15 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div style={{
+        width: '50%',
+        minWidth: '375px',
         maxWidth: '600px',
-        width: '100%',
         margin: '0 auto',
-        minHeight: '100vh',
-        position: 'relative'
+        height: '100vh',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
         <ThemeProvider defaultTheme="dark">
           <TranslationProvider>

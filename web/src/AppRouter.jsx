@@ -110,9 +110,28 @@ function MainTabs({ route, navigation }) {
 	};
 
 	return (
-		<div style={{ flex: 1, backgroundColor: colors.background }}>
-			<div style={{ flex: 1, backgroundColor: colors.background }}>
-				<div style={{ flex: 1, backgroundColor: colors.background }}>
+		<div style={{ 
+			flex: 1,
+			display: 'flex',
+			flexDirection: 'column',
+			height: '100%',
+			width: '100%',
+			backgroundColor: colors.background 
+		}}>
+			<div style={{ 
+				flex: 1,
+				display: 'flex',
+				flexDirection: 'column',
+				overflow: 'auto',
+				paddingBottom: '80px',
+				backgroundColor: colors.background 
+			}}>
+				<div style={{ 
+					flex: 1,
+					display: 'flex',
+					flexDirection: 'column',
+					backgroundColor: colors.background 
+				}}>
 					{/* Renderizar APENAS o screen ativo, não todos simultaneamente */}
 					{screens.map(({ id, Comp }, screenIndex) => {
 						// Só renderizar o tab atual para evitar problemas de hooks
@@ -122,10 +141,13 @@ function MainTabs({ route, navigation }) {
 							<div
 								key={id}
 								style={{ 
-									flex: 1, 
+									flex: 1,
+									display: 'flex',
+									flexDirection: 'column',
 									position: 'relative',
 									width: '100%',
-									height: '100%'
+									height: '100%',
+									overflow: 'auto'
 								}}
 							>
 								<Comp navigation={navigation} {...getScreenParams(screenIndex)} />
@@ -215,7 +237,13 @@ export default function AppRouter() {
 	};
 
 	return (
-		<div style={{ backgroundColor: colors.background }}>
+		<div style={{ 
+			display: 'flex',
+			flexDirection: 'column',
+			height: '100%',
+			width: '100%',
+			backgroundColor: colors.background 
+		}}>
 			{renderScreen()}
 		</div>
 	);
