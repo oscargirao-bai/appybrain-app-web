@@ -113,20 +113,25 @@ function MainTabs({ route, navigation }) {
 		<div style={{ flex: 1, backgroundColor: colors.background }}>
 			<div style={{ flex: 1, backgroundColor: colors.background }}>
 				<div style={{ flex: 1, backgroundColor: colors.background }}>
-					{screens.map(({ id, Comp }, screenIndex) => (
-						<div
-							key={id}
-							style={{ 
-								flex: 1, 
-								position: screenIndex === tab ? 'relative' : 'absolute', 
-								inset: 0, 
-								opacity: screenIndex === tab ? 1 : 0, 
-								pointerEvents: screenIndex === tab ? 'auto' : 'none' 
-							}}
-						>
-							<Comp navigation={navigation} {...getScreenParams(screenIndex)} />
-						</div>
-					))}
+					{/* Renderizar APENAS o screen ativo, não todos simultaneamente */}
+					{screens.map(({ id, Comp }, screenIndex) => {
+						// Só renderizar o tab atual para evitar problemas de hooks
+						if (screenIndex !== tab) return null;
+						
+						return (
+							<div
+								key={id}
+								style={{ 
+									flex: 1, 
+									position: 'relative',
+									width: '100%',
+									height: '100%'
+								}}
+							>
+								<Comp navigation={navigation} {...getScreenParams(screenIndex)} />
+							</div>
+						);
+					})}
 				</div>
 			</div>
 			<NavBar
