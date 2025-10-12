@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import TextInputField from '../../components/LoginComponents/TextInput';
-import PrimaryButton from '../../components/LoginComponents/PrimaryButton';
-import Button2 from '../../components/General/Button2';
-import MessageModal from '../../components/General/MessageModal';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import ApiManager from '../../services/ApiManager';
+import TextInputField from '../../components/LoginComponents/TextInput.jsx';
+import PrimaryButton from '../../components/LoginComponents/PrimaryButton.jsx';
+import Button2 from '../../components/General/Button2.jsx';
+import MessageModal from '../../components/General/MessageModal.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import ApiManager from '../../services/ApiManager.js';
 
 const logoSource = require('../../../assets/logo.png');
 

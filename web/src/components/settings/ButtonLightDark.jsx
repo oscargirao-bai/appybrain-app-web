@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import SvgIcon from '../General/SvgIcon';
-import { useTheme, useThemeColors } from '../../services/Theme';
+import SvgIcon from '../General/SvgIcon.jsx';
+import { useTheme, useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 export default function ButtonLightDark({ style, onChange }) {

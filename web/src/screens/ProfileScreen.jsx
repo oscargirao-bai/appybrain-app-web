@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 
-import { useThemeColors } from '../services/Theme';
-import DataManager from '../services/DataManager';
-import Header from '../components/General/Header';
-import SvgIcon from '../components/General/SvgIcon';
-import Banner from '../components/Profile/Banner';
-import Info from '../components/Profile/Info';
-import MedalsList from '../components/Profile/MedalsList';
+import { useThemeColors } from '../services/Theme.jsx';
+import DataManager from '../services/DataManager.jsx';
+import Header from '../components/General/Header.jsx';
+import SvgIcon from '../components/General/SvgIcon.jsx';
+import Banner from '../components/Profile/Banner.jsx';
+import Info from '../components/Profile/Info.jsx';
+import MedalsList from '../components/Profile/MedalsList.jsx';
 import MedalModal from '../components/Profile/MedalModal';
 
 // TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

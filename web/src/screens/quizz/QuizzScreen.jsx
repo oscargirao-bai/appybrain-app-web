@@ -1,15 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 
-import { useThemeColors } from '../../services/Theme';
-import apiManagerInstance from '../../services/ApiManager';
-import DataManager from '../../services/DataManager';
-import QuizzHeader from '../../components/Quizz/Header';
-import Question from '../../components/Quizz/Question';
-import Answer from '../../components/Quizz/Answer';
-import ConfirmModal from '../../components/General/ConfirmModal';
-import SolutionModal from '../../components/Quizz/SolutionModal';
-import BattleHelp from '../../components/Battle/Help';
+import { useThemeColors } from '../../services/Theme.jsx';
+import apiManagerInstance from '../../services/ApiManager.js';
+import DataManager from '../../services/DataManager.jsx';
+import QuizzHeader from '../../components/Quizz/Header.jsx';
+import Question from '../../components/Quizz/Question.jsx';
+import Answer from '../../components/Quizz/Answer.jsx';
+import ConfirmModal from '../../components/General/ConfirmModal.jsx';
+import SolutionModal from '../../components/Quizz/SolutionModal.jsx';
+import BattleHelp from '../../components/Battle/Help.jsx';
+
+// Web stubs for RN hooks
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useRoute = () => ({ params: {} });
 
 export default function QuizzScreen() {
 		const colors = useThemeColors();

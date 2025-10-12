@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../../components/General/SvgIcon';
-import DataManager from '../../services/DataManager';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import DataManager from '../../services/DataManager.jsx';
 import { navigationRef } from '../../services/navigationRef';
 import { family } from '../../constants/font';
 

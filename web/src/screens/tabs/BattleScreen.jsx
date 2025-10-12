@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import DataManager from '../../services/DataManager';
-import ApiManager from '../../services/ApiManager';
-import Banner from '../../components/Profile/Banner';
-import Info from '../../components/Learn/Info';
-import Button2 from '../../components/General/Button2';
-import Button1 from '../../components/General/Button1';
-import Subject2 from '../../components/Learn/Subject2';
-import Chest from '../../components/General/Chest';
-import NotificationsModal from '../../components/Learn/NotificationsModal';
-import RankingsModal from '../../components/Learn/RankingsModal';
-import ChestRewardModal from '../../components/General/ChestRewardModal';
-import ChestBrowserModal from '../../components/General/ChestBrowserModal';
-import RankDisplay from '../../components/Battle/RankDisplay';
-import HistoryModal from '../../components/Battle/HistoryModal';
-import Header from '../../components/General/Header';
-import NotificationBadge from '../../components/General/NotificationBadge';
-import SvgIcon from '../../components/General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import ApiManager from '../../services/ApiManager.js';
+import Banner from '../../components/Profile/Banner.jsx';
+import Info from '../../components/Learn/Info.jsx';
+import Button2 from '../../components/General/Button2.jsx';
+import Button1 from '../../components/General/Button1.jsx';
+import Subject2 from '../../components/Learn/Subject2.jsx';
+import Chest from '../../components/General/Chest.jsx';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import RankingsModal from '../../components/Learn/RankingsModal.jsx';
+import ChestRewardModal from '../../components/General/ChestRewardModal.jsx';
+import ChestBrowserModal from '../../components/General/ChestBrowserModal.jsx';
+import RankDisplay from '../../components/Battle/RankDisplay.jsx';
+import HistoryModal from '../../components/Battle/HistoryModal.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 // Helper function to transform battle data for ResultScreen2
 function transformBattleDataForResult(battleData) {

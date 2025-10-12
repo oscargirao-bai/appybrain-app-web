@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import TextInputField from '../../components/LoginComponents/TextInput';
-import PrimaryButton from '../../components/LoginComponents/PrimaryButton';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import ApiManager from '../../services/ApiManager';
-import DataManager from '../../services/DataManager';
+import TextInputField from '../../components/LoginComponents/TextInput.jsx';
+import PrimaryButton from '../../components/LoginComponents/PrimaryButton.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import ApiManager from '../../services/ApiManager.js';
+import DataManager from '../../services/DataManager.jsx';
 
 // Local require for logo (as per instruction uses assets/logo.png)
 const logoSource = '/assets/logo.png';

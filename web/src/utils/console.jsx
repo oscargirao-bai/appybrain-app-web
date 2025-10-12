@@ -2,9 +2,9 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 // Modal converted to div
 import { header, small, normal } from '../constants/font';
 
-import SvgIcon from '../../components/General/SvgIcon';
-import { useTheme, useThemeColors } from '../services/Theme';
-import { useTranslate } from '../services/Translate';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import { useTheme, useThemeColors } from '../services/Theme.jsx';
+import { useTranslate } from '../services/Translate.jsx';
 import { navigate } from '../services/navigationRef';
 
 import * as SecureStore from 'expo-secure-store';

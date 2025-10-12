@@ -1,7 +1,7 @@
 import React, { useRef, useState, useMemo, useCallback } from 'react';
 
 import { WebView } from 'react-native-webview';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 // Detect if string contains LaTeX delimiters $...$ or $$...$$
 function containsMath(str) {

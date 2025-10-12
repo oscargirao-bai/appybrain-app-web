@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useTheme, useThemeColors } from './services/Theme';
-import DataManager from './services/DataManager';
+import { useTheme, useThemeColors } from './services/Theme.jsx';
+import DataManager from './services/DataManager.jsx';
 // Screens
 import LoginScreen from './screens/account/LoginScreen';
 import PasswordScreen from './screens/account/PasswordScreen';

@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 
 
-import Header from '../components/General/Header';
-import Options from '../components/Shop/Options';
-import Banner from '../components/Profile/Banner';
-import CustomizeList from '../components/Profile/CustomizeList';
-import Button1 from '../components/General/Button1';
-import { useThemeColors } from '../services/Theme';
-import { useTranslate } from '../services/Translate';
-import DataManager from '../services/DataManager';
-import ApiManager from '../services/ApiManager';
-import SvgIcon from '../components/General/SvgIcon';
+import Header from '../components/General/Header.jsx';
+import Options from '../components/Shop/Options.jsx';
+import Banner from '../components/Profile/Banner.jsx';
+import CustomizeList from '../components/Profile/CustomizeList.jsx';
+import Button1 from '../components/General/Button1.jsx';
+import { useThemeColors } from '../services/Theme.jsx';
+import { useTranslate } from '../services/Translate.jsx';
+import DataManager from '../services/DataManager.jsx';
+import ApiManager from '../services/ApiManager.js';
+import SvgIcon from '../components/General/SvgIcon.jsx';
 
 // Simple, responsive Customize screen based on wireframe
 // Sections: avatar header, divider, segmented control, 3x3 grid, "Buy More" CTA

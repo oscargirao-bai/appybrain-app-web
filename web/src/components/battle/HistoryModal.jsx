@@ -1,7 +1,7 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font';
 
 export default function HistoryModal({ visible, onClose, pending = [], completed = [], title, onOpenBattle }) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 export default function NotificationBadge({ count = 0, size = 16, style }) {
 	const colors = useThemeColors();

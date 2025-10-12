@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../../components/General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 export default function Options({
   value,

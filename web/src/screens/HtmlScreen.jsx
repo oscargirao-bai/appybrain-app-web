@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
-import { useThemeColors } from '../services/Theme';
-import { useTranslate } from '../services/Translate';
-import ApiManager from '../services/ApiManager';
-import Header from '../components/General/Header';
+import { useThemeColors } from '../services/Theme.jsx';
+import { useTranslate } from '../services/Translate.jsx';
+import ApiManager from '../services/ApiManager.js';
+import Header from '../components/General/Header.jsx';
 import MathJaxRenderer from '../components/General/MathJaxRenderer';
 
 // Mock navigation hooks for web

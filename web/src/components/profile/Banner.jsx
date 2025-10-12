@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import LinearGradient from '../General/LinearGradient';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import LinearGradient from '../General/LinearGradient.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 
 export default function Banner({
 	avatarSource,

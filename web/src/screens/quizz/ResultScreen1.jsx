@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 
-import LinearGradient from '../../components/General/LinearGradient';
-import { useThemeColors } from '../../services/Theme';
-import Banner from '../../components/Profile/Banner';
-import Info from '../../components/Learn/Info';
-import DataManager from '../../services/DataManager';
+import LinearGradient from '../../components/General/LinearGradient.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
+import Banner from '../../components/Profile/Banner.jsx';
+import Info from '../../components/Learn/Info.jsx';
+import DataManager from '../../services/DataManager.jsx';
 import Stats from '../../components/ResultQuizz/Stats';
-import Button1 from '../../components/General/Button1';
+import Button1 from '../../components/General/Button1.jsx';
 import Reward from '../../components/ResultQuizz/Reward';
 import Quote from '../../components/ResultQuizz/Quote';
 

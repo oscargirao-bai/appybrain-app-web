@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DataManager from '../../services/DataManager';
+import DataManager from '../../services/DataManager.jsx';
 
 const Star = ({ fillFraction = 0, size = 48, filledColor = '#FFC107', strokeColor = 'transparent' }) => {
   const d = 'M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-7.336 3.869 1.402-8.168L.132 9.21l8.2-1.192L12 .587z';

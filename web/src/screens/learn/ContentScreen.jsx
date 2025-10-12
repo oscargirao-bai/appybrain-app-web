@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
 
-import Header from '../../components/General/Header';
-import { useThemeColors } from '../../services/Theme';
+import Header from '../../components/General/Header.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { useSearch } from '../../services/SearchContext';
-import DataManager from '../../services/DataManager';
-import ApiManager from '../../services/ApiManager';
+import DataManager from '../../services/DataManager.jsx';
+import ApiManager from '../../services/ApiManager.js';
 import ContentList from '../../components/CategoryContent/ContentList';
 import SearchBox from '../../components/CategoryContent/SearchBox';
 

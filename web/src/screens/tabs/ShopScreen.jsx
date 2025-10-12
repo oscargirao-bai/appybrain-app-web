@@ -1,15 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import DataManager from '../../services/DataManager';
-import Header from '../../components/General/Header';
-import NotificationBadge from '../../components/General/NotificationBadge';
-import Coins from '../../components/Shop/Coins';
-import Options from '../../components/Shop/Options';
-import List from '../../components/Shop/List';
-import NotificationsModal from '../../components/Learn/NotificationsModal';
-import SvgIcon from '../../components/General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import Coins from '../../components/Shop/Coins.jsx';
+import Options from '../../components/Shop/Options.jsx';
+import List from '../../components/Shop/List.jsx';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 export default function ShopScreen(props) {
 	const colors = useThemeColors();

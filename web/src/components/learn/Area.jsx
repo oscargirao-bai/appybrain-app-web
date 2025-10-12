@@ -1,8 +1,8 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
-import SvgIcon from '../General/SvgIcon';
-import DataManager from '../../services/DataManager';
+import SvgIcon from '../General/SvgIcon.jsx';
+import DataManager from '../../services/DataManager.jsx';
 
 export default function DisciplineCircle({ 
   title, 

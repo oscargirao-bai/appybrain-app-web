@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
-import SvgIcon from './SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from './SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 export default function UserList({

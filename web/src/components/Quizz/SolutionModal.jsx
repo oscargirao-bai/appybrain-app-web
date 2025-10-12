@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 import { family } from '../../constants/font';
-import ApiManager from '../../services/ApiManager';
-import MessageModal from '../General/MessageModal';
+import ApiManager from '../../services/ApiManager.js';
+import MessageModal from '../General/MessageModal.jsx';
 
 export default function SolutionModal({
   visible,

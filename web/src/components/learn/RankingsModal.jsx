@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 import UserList from '../General/UserList';
 import { family } from '../../constants/font';
 

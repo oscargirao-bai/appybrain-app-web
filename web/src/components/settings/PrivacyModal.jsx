@@ -1,6 +1,6 @@
 import React from 'react';
 // Modal converted to div
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 const PRIVACY_TEXT = `Esta Política de Privacidade explica como a AppyBrain recolhe, utiliza e protege as suas informações.

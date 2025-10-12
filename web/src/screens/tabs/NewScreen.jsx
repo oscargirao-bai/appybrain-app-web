@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import DataManager from '../../services/DataManager';
-import Header from '../../components/General/Header';
-import NotificationBadge from '../../components/General/NotificationBadge';
-import SvgIcon from '../../components/General/SvgIcon';
-import NotificationsModal from '../../components/Learn/NotificationsModal';
-import NewsList from '../../components/News/NewsList';
+import { useThemeColors } from '../../services/Theme.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import NewsList from '../../components/News/NewsList.jsx';
 
 export default function NewScreen() {
 	const colors = useThemeColors();

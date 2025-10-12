@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 export default function ResultScreen2() {
 	const colors = useThemeColors();

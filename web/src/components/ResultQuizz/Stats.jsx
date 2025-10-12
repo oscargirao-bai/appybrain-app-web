@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
  * Stats component for quiz results

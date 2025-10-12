@@ -1,7 +1,7 @@
 import React from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
  * Button2 – square icon button.

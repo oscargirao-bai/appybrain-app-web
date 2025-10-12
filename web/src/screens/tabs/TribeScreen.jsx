@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
-import DataManager from '../../services/DataManager';
-import ApiManager from '../../services/ApiManager';
-import TribesHeader from '../../components/Tribes/Header';
-import TribeInfo from '../../components/Tribes/Info';
-import Header from '../../components/General/Header';
-import NotificationBadge from '../../components/General/NotificationBadge';
-import NotificationsModal from '../../components/Learn/NotificationsModal';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import ApiManager from '../../services/ApiManager.js';
+import TribesHeader from '../../components/Tribes/Header.jsx';
+import TribeInfo from '../../components/Tribes/Info.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 
 // Mock useNavigation for web
 const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import ChallengeCard from './ChallengeCard';
 
 // items: [{ id, title, description, coins, expiresAt }]

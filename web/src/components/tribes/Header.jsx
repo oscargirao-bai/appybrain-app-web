@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font';
 
 export default function TribesHeader({ 

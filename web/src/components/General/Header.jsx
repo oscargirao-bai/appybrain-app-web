@@ -1,8 +1,8 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font';
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 export default function Header({
 	title = '',

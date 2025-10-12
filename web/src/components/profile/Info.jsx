@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 /**
  * Profile Info (refactored): similar to Learn Info but:

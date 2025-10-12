@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 // Modal converted to div
-import SvgIcon from '../General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
+import SvgIcon from '../General/SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font';
 
 const DEFAULT_OPTIONS = [

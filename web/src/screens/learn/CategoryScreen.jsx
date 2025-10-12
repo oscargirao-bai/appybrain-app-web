@@ -1,11 +1,11 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { useSearch } from '../../services/SearchContext';
-import DataManager from '../../services/DataManager';
-import Header from '../../components/General/Header';
-import ContentList from '../../components/CategoryContent/List';
+import DataManager from '../../services/DataManager.jsx';
+import Header from '../../components/General/Header.jsx';
+import ContentList from '../../components/CategoryContent/List.jsx';
 import SearchBox from '../../components/CategoryContent/SearchBox';
 
 export default function CategoryScreen() {

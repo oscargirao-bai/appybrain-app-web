@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import SvgIcon from './SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from './SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
  * Custom bottom NavBar (tab bar) used in MainTabs.

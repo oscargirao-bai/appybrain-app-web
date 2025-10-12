@@ -1,19 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
 // Linking removed - use window.open
 
-import Header from '../components/General/Header';
-import { useThemeColors } from '../services/Theme';
-import { useTranslate } from '../services/Translate';
+import Header from '../components/General/Header.jsx';
+import { useThemeColors } from '../services/Theme.jsx';
+import { useTranslate } from '../services/Translate.jsx';
 import { family } from '../constants/font';
-import apiManagerInstance from '../services/ApiManager';
-import DataManager from '../services/DataManager';
-import Button3 from '../components/General/Button3';
+import apiManagerInstance from '../services/ApiManager.js';
+import DataManager from '../services/DataManager.jsx';
+import Button3 from '../components/General/Button3.jsx';
 import ButtonLightDark from '../components/Settings/ButtonLightDark';
 import ButtonLanguage from '../components/Settings/ButtonLanguage';
 import Button4 from '../components/General/Button4.jsx';
 import PrivacyModal from '../components/Settings/PrivacyModal';
 import ChangeNameModal from '../components/Settings/ChangeNameModal';
-import MessageModal from '../components/General/MessageModal';
+import MessageModal from '../components/General/MessageModal.jsx';
 
 export default function SettingsScreen({ navigation }) {
 	const colors = useThemeColors();

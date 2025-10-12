@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 // Easing removed
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font';
 
 /**

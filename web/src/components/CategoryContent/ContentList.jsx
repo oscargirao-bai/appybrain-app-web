@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { useThemeColors } from '../../services/Theme';
-import ConfirmModal from '../General/ConfirmModal';
+import { useThemeColors } from '../../services/Theme.jsx';
+import ConfirmModal from '../General/ConfirmModal.jsx';
 import { family } from '../../constants/font';
-import SvgIcon from '../General/SvgIcon';
+import SvgIcon from '../General/SvgIcon.jsx';
 
 function containsMathMarkers(str) {
 	if (!str) return false;

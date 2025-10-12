@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 // Easing removed
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
-import SvgIcon from '../../components/General/SvgIcon';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 /**
  * Subject card (circular) with icon + label underneath.

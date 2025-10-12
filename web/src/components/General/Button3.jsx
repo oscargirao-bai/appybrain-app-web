@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import SvgIcon from '../../components/General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 /**

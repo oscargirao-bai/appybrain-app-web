@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useThemeColors } from './Theme';
+import { useThemeColors } from './Theme.jsx';
 import { WebView } from 'react-native-webview';
 
 /**

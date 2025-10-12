@@ -1,6 +1,6 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 
 export default function Button1({ label, color, onPress, style }) {
 	const themeColors = useThemeColors();

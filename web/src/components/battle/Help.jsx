@@ -1,7 +1,7 @@
 import React from 'react';
 
-import SvgIcon from '../../components/General/SvgIcon';
-import { useThemeColors } from '../../services/Theme';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 /**
  * Battle Help bar — three icon-only buttons:

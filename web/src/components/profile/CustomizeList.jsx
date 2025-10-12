@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 const RARITY_MAP = {

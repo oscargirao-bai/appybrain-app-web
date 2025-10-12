@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import SvgIcon from '../../components/General/SvgIcon';
-import SvgIcon from '../General/SvgIcon';
+import { useThemeColors } from '../../services/Theme.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
+import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font';
 
 // Card showing tribe high-level info

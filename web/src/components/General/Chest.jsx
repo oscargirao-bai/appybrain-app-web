@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 
 function getImageForTier(tier) {
 	switch (tier?.toLowerCase()) {

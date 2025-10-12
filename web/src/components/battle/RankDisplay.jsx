@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { useThemeColors } from '../../services/Theme';
-import { useTranslate } from '../../services/Translate';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import RankModal from './RankModal';
 
 export default function RankDisplay({ trophies = 0, size = 170, style }) {

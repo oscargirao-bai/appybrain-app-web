@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import MathJaxRenderer from '../General/MathJaxRenderer';
 
 /**

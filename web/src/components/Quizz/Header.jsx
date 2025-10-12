@@ -1,7 +1,7 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
-import Button2 from '../General/Button2';
+import Button2 from '../General/Button2.jsx';
 
 export default function QuizzHeader({ 
 	title = 'Title', 

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useThemeColors } from '../services/Theme';
-import { useTranslate } from '../services/Translate';
-import ApiManager from '../services/ApiManager';
-import DataManager from '../services/DataManager';
+import { useThemeColors } from '../services/Theme.jsx';
+import { useTranslate } from '../services/Translate.jsx';
+import ApiManager from '../services/ApiManager.js';
+import DataManager from '../services/DataManager.jsx';
 import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef';
 import { executeNotificationNavigation } from '../services/Notifications';
 

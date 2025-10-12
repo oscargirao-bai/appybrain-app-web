@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useThemeColors } from '../../services/Theme';
+import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font';
 
 // Simple pill button (full-width) used for secondary actions in Settings (e.g. Privacy Policy, Logout)
