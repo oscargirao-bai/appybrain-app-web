@@ -36,66 +36,133 @@ export default function Stars({
 
   const getResponsiveSize = () => {
     if (!responsive) return size;
-    if (windowWidth < 350) return Math.floor(size * 0.7);
-    if (windowWidth < 400) return Math.floor(size * 0.85);
-    return size;
+    
+    const baseWidth = 375;
+    const scaleFactor = windowWidth / baseWidth;
+    
+    let clampedScale;
+    if (windowWidth <= 320) {
+      clampedScale = Math.max(0.6, Math.min(0.8, scaleFactor));
+    } else if (windowWidth <= 375) {
+      clampedScale = Math.max(0.7, Math.min(1.0, scaleFactor));
+    } else {
+      clampedScale = Math.max(0.8, Math.min(1.3, scaleFactor));
+    }
+    
+    return Math.round(size * clampedScale);
   };
 
-  const effectiveSize = getResponsiveSize();
+  const responsiveSize = getResponsiveSize();
+
+  const computeFilled = (earnedStars, maxStars) => {
+    if (!maxStars || maxStars <= 0) return 0;
+    const ratio = earnedStars / maxStars;
+    return Math.round(ratio * 3);
+  };
+
+  const loadFromDataManager = () => {
+    try {
+      if (contentId) {
+        const content = DataManager.getContentStars(contentId) || {};
+        let e = 0;
+        if (typeof content.totalStars === 'number') {
+          e = content.totalStars;
+        } else if (content.stars && typeof content.stars === 'object') {
+          const easy = Number(content.stars.easy || 0);
+          const hard = Number(content.stars.hard || 0);
+          const genius = Number(content.stars.genius || 0);
+          e = easy + hard + genius;
+        }
+        const m = typeof content.maxStars === 'number' ? content.maxStars : 3;
+        setEarned(e);
+        setMax(m);
+        return;
+      }
+
+      if (categoryId) {
+        const cat = DataManager.getCategoryStars(categoryId) || { earnedStars: 0, maxStars: 0 };
+        setEarned(cat.earnedStars || 0);
+        setMax(cat.maxStars || 0);
+        return;
+      }
+
+      if (areaId) {
+        const area = DataManager.getAreaStars(areaId) || { earnedStars: 0, maxStars: 0 };
+        setEarned(area.earnedStars || 0);
+        setMax(area.maxStars || 0);
+        return;
+      }
+
+      const totals = DataManager.getTotalStars() || { earnedStars: 0, maxStars: 0 };
+      setEarned(totals.earnedStars || 0);
+      setMax(totals.maxStars || 0);
+    } catch (e) {
+      // ignore
+    }
+  };
 
   useEffect(() => {
-    const fetchStars = async () => {
-      try {
-        const starData = await DataManager.getUserStarsScoped({ areaId, categoryId, contentId });
-        if (starData && typeof starData.earned !== 'undefined') {
-          setEarned(starData.earned);
-          setMax(starData.max || 3);
-          if (editable) setLocalRating(starData.earned);
-        }
-      } catch (err) {
-        console.error('Error fetching stars:', err);
-      }
-    };
-    fetchStars();
-  }, [areaId, categoryId, contentId, editable]);
+    loadFromDataManager();
+    const unsubscribe = DataManager.subscribe(() => {
+      loadFromDataManager();
+    });
+    return unsubscribe;
+  }, [areaId, categoryId, contentId]);
 
-  const handleStarPress = (index) => {
+  const rating = editable ? localRating : computeFilled(earned, max);
+
+  const computeStarFraction = (index) => {
+    if (!max || max <= 0) return 0;
+    
+    const totalFillRatio = earned / max;
+    const totalVisualStars = totalFillRatio * 3;
+    
+    if (totalVisualStars >= index) {
+      return 1;
+    } else if (totalVisualStars >= (index - 1)) {
+      return totalVisualStars - (index - 1);
+    } else {
+      return 0;
+    }
+  };
+
+  const handlePress = (i) => {
     if (!editable) return;
-    const newVal = index + 1;
-    setLocalRating(newVal);
-    onChange(newVal);
+    setLocalRating(i);
+    try { onChange(i); } catch (e) {}
   };
 
-  const getStarFill = (index) => {
-    const val = editable ? localRating : earned;
-    if (val >= index + 1) return 1;
-    if (val > index) return val - index;
-    return 0;
-  };
+  const starMargin = Math.round(responsiveSize * 0.1);
+  const centerStarOffset = Math.round(responsiveSize * 0.2);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', gap: 4, ...style }}>
-      {[0, 1, 2].map((index) => (
-        <button
-          key={index}
-          onClick={() => handleStarPress(index)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: editable ? 'pointer' : 'default',
-          }}
-          disabled={!editable}
-          aria-label={`Star ${index + 1}`}
-        >
-          <Star
-            fillFraction={getStarFill(index)}
-            size={effectiveSize}
-            filledColor="#FFC107"
-            strokeColor="#E0E0E0"
-          />
-        </button>
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', ...style }}>
+      {[1, 2, 3].map((i) => {
+        const frac = editable ? (i <= rating ? 1 : 0) : computeStarFraction(i);
+        
+        const marginTop = i === 2 ? -centerStarOffset : Math.round(centerStarOffset * 2.0);
+        const marginRight = i < 3 ? starMargin : 0;
+        
+        return (
+          <button
+            key={i}
+            onClick={() => handlePress(i)}
+            disabled={!editable}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: editable ? 'pointer' : 'default',
+              opacity: editable ? 1 : 1,
+              marginRight,
+              marginTop,
+            }}
+            aria-label={editable ? `Set ${i} star${i > 1 ? 's' : ''}` : `Stars: ${earned}/${max}`}
+          >
+            <Star size={responsiveSize} fillFraction={frac} />
+          </button>
+        );
+      })}
     </div>
   );
 }
