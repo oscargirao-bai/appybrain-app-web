@@ -1,16 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-// Easing removed
+import React, { useState } from 'react';
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 
-// Horizontal selectable options bar for Shop categories
-// Only three icon options: avatar, background, frames
 export default function Options({
   value,
   onChange,
   style,
-  height = 44, // button height
-  minWidth = 72, // base width for rectangle
+  height = 44,
+  minWidth = 72,
   iconSize = 22,
   radius = 18,
   gap = 12,
@@ -24,62 +21,43 @@ export default function Options({
   const [internal, setInternal] = useState('avatar');
   const current = value ?? internal;
 
-  // Animation state (positions for sliding highlight)
-  const animX = useRef(new Animated.Value(0)).current;
-  const animW = useRef(new Animated.Value(minWidth)).current;
-  const layoutsRef = useRef({};
-
-  // Trigger slide when current changes and layout known
-  useEffect(() => {
-    const lay = layoutsRef.current[current];
-    if (lay) {
-      // Both animations run on JS thread (width isn't supported by native driver; keep translateX consistent to avoid hybrid warning)
-      Animated.parallel([
-        Animated.timing(animX, { toValue: lay.x, duration: 260, easing: Easing.out(Easing.cubic), useNativeDriver: false }),
-        Animated.timing(animW, { toValue: lay.w, duration: 260, easing: Easing.out(Easing.cubic), useNativeDriver: false }),
-      ]).start();
-    }
-  }, [current, animX, animW]);
-
   function select(k) {
     if (value == null) setInternal(k);
     onChange && onChange(k);
   }
 
+  const containerStyle = {
+    ...styles.container,
+    borderColor: colors.primary + '22',
+    ...(style || {})
+  };
+
   return (
-    <div style={{...styles.container, ...{ borderColor: colors.primary + '22'}}>
+    <div style={containerStyle}>
       <div style={styles.row}>
-        {/* Sliding highlight */}
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.highlight, {
-            height,
-            borderRadius: radius,
-            backgroundColor: colors.primary,
-            transform: [{ translateX: animX }],
-            width: animW,
-          }]}
-        />
         {options.map(opt => {
-          const active = opt.key === current;
+          const selected = current === opt.key;
+          const btnStyle = {
+            ...styles.option,
+            height,
+            minWidth,
+            borderRadius: radius,
+            backgroundColor: selected ? colors.primary + '33' : 'transparent',
+            borderColor: selected ? colors.primary : colors.text + '20',
+          };
+          const txtStyle = {
+            ...styles.labelText,
+            color: selected ? colors.primary : colors.text + '88',
+          };
           return (
-            <button               key={opt.key}
-              
-              aria-label={`Selecionar ${opt.label}`}
-              onLayout={e => {
-                const { x, width: w } = e.nativeEvent.layout;
-                layoutsRef.current[opt.key] = { x, w };
-                // If first render matches current ensure highlight in place
-                if (opt.key === current && animW._value === minWidth && animX._value === 0) {
-                  animX.setValue(x);
-                  animW.setValue(w);
-                }
-              }}
+            <button
+              key={opt.key}
+              style={btnStyle}
               onClick={() => select(opt.key)}
-              style={{...styles.iconBtn, ...{
-                minWidth}}
+              aria-label={opt.label}
             >
-              <SvgIcon name={opt.icon} size={iconSize} color={active ? colors.background : colors.primary} />
+              <SvgIcon name={opt.icon} size={iconSize} color={selected ? colors.primary : colors.text + '88'} />
+              <span style={txtStyle}>{opt.label}</span>
             </button>
           );
         })}
@@ -89,9 +67,37 @@ export default function Options({
 }
 
 const styles = {
-  container: { marginTop: 12, alignSelf: 'center', borderWidth: 2, borderRadius: 28, paddingVertical: 8, paddingHorizontal: 14 },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  iconBtn: { marginRight: 12, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' },
-  highlight: { position: 'absolute', left: 0, top: 0 },
+  container: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 20,
+    paddingLeft: 6,
+    paddingRight: 6,
+    paddingTop: 6,
+    paddingBottom: 6,
+    display: 'flex',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  option: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingLeft: 12,
+    paddingRight: 12,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    cursor: 'pointer',
+    transition: 'all 0.26s ease-out',
+    background: 'transparent',
+  },
+  labelText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
 };
-
