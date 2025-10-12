@@ -242,13 +242,19 @@ const styles = {
 	chestPressable: {
 		alignSelf: 'flex-start',
 		marginTop: 6,
+		border: 'none',
+		background: 'transparent',
+		padding: 0,
+		cursor: 'pointer',
 	},
 	starsWrap: {
 		alignSelf: 'center',
-		marginHorizontal: 8,
+		marginLeft: 8,
+		marginRight: 8,
 	},
 	fullBleed: {
-		marginHorizontal: -10,
+		marginLeft: -10,
+		marginRight: -10,
 		width: 'auto',
 	},
 	learnButtonWrap: {
@@ -263,11 +269,13 @@ const styles = {
 	},
 	subjectsRow: {
 		width: '100%',
+		display: 'flex',
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		alignItems: 'center',
 		justifyContent: 'space-around',
-		paddingHorizontal: 20,
+		paddingLeft: 20,
+		paddingRight: 20,
 	},
 	bannerSection: {
 		width: '100%',
@@ -285,10 +293,12 @@ const styles = {
 	},
 	chestLine: {
 		width: '100%',
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
 	},
 	trophySection: {
 		width: '100%',
