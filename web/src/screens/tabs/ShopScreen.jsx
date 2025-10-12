@@ -88,7 +88,7 @@ export default function ShopScreen({ navigation }) {
 							aria-label={translate('options.notification')}
 							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingHorizontal: 4 }}
+							style={{ paddingLeft: 4, paddingRight: 4 }}
 						>
 							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
@@ -100,7 +100,7 @@ export default function ShopScreen({ navigation }) {
 						aria-label={translate('settings.settings')}
 						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingHorizontal: 4 }}
+						style={{ paddingLeft: 4, paddingRight: 4 }}
 					>
 						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
@@ -134,7 +134,7 @@ export default function ShopScreen({ navigation }) {
 
 const styles = {
 	container: { flex: 1 },
-	topBar: { paddingHorizontal: 16, paddingTop: 16 },
+	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16 },
 	scrollContent: { },
 };
 

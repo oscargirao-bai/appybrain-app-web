@@ -62,10 +62,10 @@ const styles = {
   panel: { width: '100%', maxWidth: 520, borderRadius: 16, padding: 16, borderWidth: 1 },
   title: { fontSize: 18, fontFamily: family.bold, textAlign: 'center', marginBottom: 12 },
   list: { paddingBottom: 12 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, borderBottomWidth: 1 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 8, paddingBottom: 8, borderBottomWidth: 1 },
   rowText: { flex: 1 },
   rankTitle: { fontSize: 16, fontFamily: family.bold },
   rankSubtitle: { fontSize: 13, fontFamily: family.regular, marginTop: 2 },
-  closeBtn: { marginTop: 12, paddingVertical: 10, borderWidth: 1, borderRadius: 10, alignItems: 'center' },
+  closeBtn: { marginTop: 12, paddingTop: 10, paddingBottom: 10, borderWidth: 1, borderRadius: 10, alignItems: 'center' },
   closeText: { fontSize: 15, fontFamily: family.bold },
 };

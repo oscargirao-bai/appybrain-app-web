@@ -40,7 +40,7 @@ export default function Answer({
 						item={item}
 						optionHeight={optionHeight}
 						colors={colors}
-						onPress={() => onSelect && onSelect(item.id)}
+						onClick={() => onSelect && onSelect(item.id)}
 						evalOutcome={evalOutcome}
 					/>
 				</React.Fragment>

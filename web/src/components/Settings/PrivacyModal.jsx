@@ -72,7 +72,7 @@ const styles = {
 		maxHeight: '100%',
 		borderTopLeftRadius: 28,
 		borderTopRightRadius: 28,
-		paddingHorizontal: 20,
+		paddingLeft: 20, paddingRight: 20,
 		paddingTop: 18,
 		paddingBottom: 24,
 		borderWidth: 1,
@@ -81,6 +81,6 @@ const styles = {
 	title: { fontSize: 18, fontWeight: '700', fontFamily: family.bold },
 	scrollContent: { paddingBottom: 32 },
 	body: { fontSize: 14, lineHeight: 20, fontWeight: '500', fontFamily: family.medium, whiteSpace: 'pre-wrap' },
-	closeBtn: { marginTop: 28, borderWidth: 1, borderRadius: 18, paddingVertical: 12, alignItems: 'center' },
+	closeBtn: { marginTop: 28, borderWidth: 1, borderRadius: 18, paddingTop: 12, paddingBottom: 12, alignItems: 'center' },
 	closeLabel: { fontSize: 15, fontWeight: '700', fontFamily: family.bold },
 };

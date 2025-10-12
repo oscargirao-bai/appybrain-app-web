@@ -213,7 +213,7 @@ export default function BattleScreen({ navigation, route }) {
                       aria-label={translate('options.notification')}
                       onClick={() => setNotificationsOpen(true)}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                      style={{ paddingHorizontal: 4 }}
+                      style={{ paddingLeft: 4, paddingRight: 4 }}
                     >
                       <LucideIcon name="bell" size={22} color={colors.text} />
                     </button>
@@ -225,7 +225,7 @@ export default function BattleScreen({ navigation, route }) {
             aria-label={translate('settings.settings')}
             onClick={() => navigation.navigate('Settings')}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            style={{ paddingHorizontal: 4 }}
+            style={{ paddingLeft: 4, paddingRight: 4 }}
           >
             <LucideIcon name="settings" size={22} color={colors.text} />
           </button>
@@ -364,9 +364,13 @@ const styles = {
   chestPressable: {
     alignSelf: 'flex-start',
     marginTop: 6,
-  },
+		border: 'none',
+		background: 'transparent',
+		padding: 0,
+		cursor: 'pointer',
+	},
   fullBleed: {
-    marginHorizontal: -10,
+    marginLeft: -10, marginRight: -10,
     width: 'auto',
   },
   battleButtonWrap: {
@@ -388,7 +392,7 @@ const styles = {
     alignItems: 'center',
     marginTop: 0,
     marginBottom: 0,
-    paddingVertical: 0,
+    paddingTop: 0, paddingBottom: 0,
   },
   infoSection: {
     width: '100%',
@@ -400,7 +404,7 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingLeft: 10, paddingRight: 10,
   },
   trophySection: {
     width: '100%',
@@ -420,7 +424,7 @@ const styles = {
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: 20,
+    paddingLeft: 20, paddingRight: 20,
   },
   buttonSection: {
     width: '100%',

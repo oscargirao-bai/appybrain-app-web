@@ -37,7 +37,7 @@ export default function NewScreen({ navigation }) {
 							aria-label="Notificações"
 							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingHorizontal: 4 }}
+							style={{ paddingLeft: 4, paddingRight: 4 }}
 						>
 							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
@@ -49,7 +49,7 @@ export default function NewScreen({ navigation }) {
 						aria-label="Abrir definições"
 						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingHorizontal: 4 }}
+						style={{ paddingLeft: 4, paddingRight: 4 }}
 					>
 						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
@@ -65,7 +65,7 @@ export default function NewScreen({ navigation }) {
 
 const styles = {
 	container: { flex: 1 },
-	body: { flex: 1, paddingHorizontal: 0, paddingTop: 20 },
+	body: { flex: 1, paddingLeft: 0, paddingRight: 0, paddingTop: 20 },
 	title: { fontSize: 22, fontWeight: '800', marginBottom: 8 },
 	subtitle: { fontSize: 16, fontWeight: '500' },
 };

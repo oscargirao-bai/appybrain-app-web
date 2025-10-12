@@ -136,5 +136,5 @@ export default function ContentScreen() {
 
 const styles = {
 	safe: { flex: 1 },
-	listWrapper: { flex: 1, paddingHorizontal: 16},
+	listWrapper: { flex: 1, paddingLeft: 16, paddingRight: 16},
 };

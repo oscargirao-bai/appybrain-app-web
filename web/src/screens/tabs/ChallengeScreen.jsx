@@ -59,7 +59,7 @@ export default function ChallengeScreen({ navigation }) {
 							aria-label="Notificações"
 							onClick={() => setNotificationsOpen(true)}
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingHorizontal: 4 }}
+							style={{ paddingLeft: 4, paddingRight: 4 }}
 						>
 							<LucideIcon name="bell" size={22} color={colors.text} />
 						</button>
@@ -71,7 +71,7 @@ export default function ChallengeScreen({ navigation }) {
 						aria-label="Abrir definições"
 						onClick={() => navigation.navigate('Settings')}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingHorizontal: 4 }}
+						style={{ paddingLeft: 4, paddingRight: 4 }}
 					>
 						<LucideIcon name="settings" size={22} color={colors.text} />
 					</button>
@@ -141,12 +141,12 @@ export default function ChallengeScreen({ navigation }) {
 
 const styles = {
 	safe: { flex: 1 },
-	content: { flex: 1, paddingHorizontal: 10 },
+	content: { flex: 1, paddingLeft: 10, paddingRight: 10 },
 	headerSection: {
 		width: '100%',
 		marginBottom: 8,
 	},
-	sectionTitleWrap: { paddingHorizontal: 6 },
+	sectionTitleWrap: { paddingLeft: 6, paddingRight: 6 },
 	sectionTitleRow: { flexDirection: 'column' },
 	inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' },
 	sectionTitle: { fontSize: 20, fontWeight: '900', letterSpacing: 1.2, color: '#F05454' },
@@ -175,7 +175,7 @@ const styles = {
 		marginLeft: 12,
 	},
 	fullBleed: {
-		marginHorizontal: -10,
+		marginLeft: -10, marginRight: -10,
 		width: 'auto',
 	},
 	// chestPressable removed

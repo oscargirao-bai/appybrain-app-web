@@ -188,7 +188,7 @@ const styles = {
 	cardTitle: { fontSize: 16, fontWeight: '700', fontFamily: family.bold, marginBottom: 4 },
 	cardDesc: { fontSize: 13, fontWeight: '500', fontFamily: family.medium, lineHeight: 18 },
 	instagramRow: { padding: 16, marginTop: 8, alignItems: 'center', justifyContent: 'center' },
-	instagramBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 6 },
+	instagramBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 6, paddingBottom: 6 },
 	instagramImg: { width: 28, height: 28, resizeMode: 'contain', marginRight: 10 },
 	instagramText: { fontSize: 16, fontWeight: '700', fontFamily: family.bold, textAlign: 'center' },
 };

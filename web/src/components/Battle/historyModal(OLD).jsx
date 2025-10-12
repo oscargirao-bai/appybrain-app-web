@@ -284,14 +284,14 @@ const styles = {
   item: {
     borderRadius: 14,
     borderWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingTop: 10, paddingBottom: 10,
+    paddingLeft: 12, paddingRight: 12,
     position: 'relative',
   },
   itemRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   itemName: { flex: 1, color: colors.text.primary, fontSize: 16, fontWeight: '800' },
-  vs: { color: colors.text.primary, fontSize: 18, fontWeight: '900', marginHorizontal: 12 },
-  vsCenter: { marginHorizontal: 0 },
+  vs: { color: colors.text.primary, fontSize: 18, fontWeight: '900', marginLeft: 12, marginRight: 12 },
+  vsCenter: { marginLeft: 0, marginRight: 0 },
   vsOverlay: {
     position: 'absolute',
     left: 0,

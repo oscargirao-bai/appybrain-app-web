@@ -40,7 +40,7 @@ function ChestStarsRow({ onMedals, onOpenChest }) {
         <Chest size={78} dataSource="stars" />
       </button>
       <div className="stars"><Stars size={48} /></div>
-      <Button2 icon="medal" onPress={onMedals} size={40} />
+      <Button2 icon="medal" onClick={onMedals} size={40} />
     </div>
   );
 }
@@ -51,7 +51,7 @@ function SubjectsGrid({ disciplines = [], onOpen }) {
     <div style={{ width:'100%', display:'flex', flexWrap:'wrap', justifyContent:'space-around', padding:'0 20px' }}>
       {disciplines.map(d => (
         <div key={d.id} style={{ margin:8 }}>
-          <Area title={d.title} svgIcon={d.icon} color={d.color} iconColor={d.iconColor} onPress={() => onOpen(d.id)} />
+          <Area title={d.title} svgIcon={d.icon} color={d.color} iconColor={d.iconColor} onClick={() => onOpen(d.id)} />
         </div>
       ))}
     </div>
@@ -123,7 +123,7 @@ export default function Learn({ onNavigate, openNotifications }){
         </div>
         <div style={{ width:'100%', display:'flex', justifyContent:'center', alignItems:'center', paddingBottom:8, paddingTop:2, flex:0.3 }}>
           <div style={{ paddingBottom:0, marginBottom:-20, marginTop:-2 }}>
-            <Button1 onPress={() => { if (disciplines.length > 0) openDiscipline(disciplines[0].id); }}>{t('titles.learn')}</Button1>
+            <Button1 onClick={() => { if (disciplines.length > 0) openDiscipline(disciplines[0].id); }}>{t('titles.learn')}</Button1>
           </div>
         </div>
       </div>

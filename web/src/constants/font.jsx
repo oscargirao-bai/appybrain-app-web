@@ -1,18 +1,17 @@
 
 
-// Work Sans font family keys
-// Make sure App.js loads these fonts via @expo-google-fonts/work-sans
-export const WORK_SANS_REGULAR = 'WorkSans_400Regular';
-export const WORK_SANS_MEDIUM = 'WorkSans_500Medium';
-export const WORK_SANS_SEMIBOLD = 'WorkSans_600SemiBold';
-export const WORK_SANS_BOLD = 'WorkSans_700Bold';
+// Work Sans font family for web
+export const WORK_SANS_REGULAR = 'Work Sans';
+export const WORK_SANS_MEDIUM = 'Work Sans';
+export const WORK_SANS_SEMIBOLD = 'Work Sans';
+export const WORK_SANS_BOLD = 'Work Sans';
 
 export const family = {
   regular: WORK_SANS_REGULAR,
   medium: WORK_SANS_MEDIUM,
   semibold: WORK_SANS_SEMIBOLD,
   bold: WORK_SANS_BOLD,
-  mono: 'monospace', // Web usa monospace direto
+  mono: 'monospace',
 };
 
 // Keep weights for building the font styles

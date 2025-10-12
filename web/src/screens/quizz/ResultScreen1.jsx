@@ -134,7 +134,7 @@ export default function ResultScreen1() {
 const styles = {
   safe: { flex: 1 },
   header: {
-    paddingHorizontal: 12,
+    paddingLeft: 12, paddingRight: 12,
     paddingTop: 12,
     minHeight: 70,
     alignItems: 'center',
@@ -146,9 +146,9 @@ const styles = {
     letterSpacing: 0.5,
     textAlign: 'center',
   },
-  bannerWrap: { paddingHorizontal: 12, paddingTop: 16 },
-  infoWrap: { paddingHorizontal: 12, marginTop: 0 },
-  rewardWrap: { paddingHorizontal: 12, marginTop: -10 },
+  bannerWrap: { paddingLeft: 12, paddingRight: 12, paddingTop: 16 },
+  infoWrap: { paddingLeft: 12, paddingRight: 12, marginTop: 0 },
+  rewardWrap: { paddingLeft: 12, paddingRight: 12, marginTop: -10 },
   spacer: { 
     flex: 1, 
     justifyContent: 'center',
@@ -158,7 +158,7 @@ const styles = {
   content: { flex: 1 },
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingLeft: 16, paddingRight: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -176,7 +176,7 @@ const styles = {
     width: '100%',
     alignItems: 'center',
     marginTop: 8,
-    paddingHorizontal: 12,
+    paddingLeft: 12, paddingRight: 12,
     paddingBottom: 12,
   },
   bottomGlow: {
@@ -188,8 +188,8 @@ const styles = {
   },
   primaryBtn: {
     minWidth: 160,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
+    paddingTop: 12, paddingBottom: 12,
+    paddingLeft: 18, paddingRight: 18,
     borderRadius: 12,
   },
   primaryText: {

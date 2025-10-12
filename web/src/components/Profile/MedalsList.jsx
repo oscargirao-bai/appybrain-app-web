@@ -141,7 +141,7 @@ const styles = {
   grid: { },
   column: { alignItems: 'center', justifyContent: 'center' },
   cell: {
-    paddingVertical: 10,
+    paddingTop: 10, paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

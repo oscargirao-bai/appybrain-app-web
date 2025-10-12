@@ -121,7 +121,7 @@ export default function CustomizeScreen({ navigation }) {
 
       <div style={styles.content}> 
         {/* Banner header */}
-        <div style={{ marginHorizontal: 0, marginTop: 0 }}>
+        <div style={{ marginLeft: 0, marginRight: 0, marginTop: 0 }}>
             <Banner
               avatarSource={previewAvatar ? { uri: previewAvatar } : null}
               bannerImageSource={previewBackground ? { uri: previewBackground } : null}
@@ -177,14 +177,14 @@ export default function CustomizeScreen({ navigation }) {
 const styles = {
   container: { flex: 1 },
   content: { flex: 1 },
-  divider: { height: 2, marginTop: 14, opacity: 0.6, marginHorizontal: 0 },
+  divider: { height: 2, marginTop: 14, opacity: 0.6, marginLeft: 0, marginRight: 0 },
   fabContainer: { position: 'absolute', zIndex: 10 },
   buyBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingLeft: 16, paddingRight: 16,
+    paddingTop: 14, paddingBottom: 14,
     borderRadius: 24,
     borderWidth: 1,
     minWidth: 150,
@@ -193,7 +193,7 @@ const styles = {
   buyLabel: { fontSize: 16, fontWeight: '800', fontStyle: 'italic', letterSpacing: 0.5 },
   footer: {
     borderTopWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 16,
+    paddingLeft: 16, paddingRight: 16,
     paddingTop: 8,
     paddingBottom: 10,
   },
@@ -201,8 +201,8 @@ const styles = {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 40,
+    paddingLeft: 32, paddingRight: 32,
+    paddingTop: 40, paddingBottom: 40,
   },
   emptyIconContainer: {
     width: 80,
@@ -226,8 +226,8 @@ const styles = {
     marginBottom: 32,
   },
   shopButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingLeft: 24, paddingRight: 24,
+    paddingTop: 16, paddingBottom: 16,
     borderRadius: 25,
     minWidth: 200,
     alignItems: 'center',

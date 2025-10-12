@@ -631,7 +631,7 @@ export default function QuizzScreen() {
 
 const styles = {
 	safe: { flex: 1 },
-	body: { flex: 1, paddingHorizontal: 16 },
+	body: { flex: 1, paddingLeft: 16, paddingRight: 16 },
 		answersWrap: { paddingBottom: 8, position: 'relative' },
 		touchBlocker: {
 			position: 'absolute',
@@ -645,7 +645,7 @@ const styles = {
 			flex: 1,
 			justifyContent: 'center',
 			alignItems: 'center',
-			paddingHorizontal: 16,
+			paddingLeft: 16, paddingRight: 16,
 		},
 		loadingText: {
 			marginTop: 16,

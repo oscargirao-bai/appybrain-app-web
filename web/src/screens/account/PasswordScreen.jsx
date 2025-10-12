@@ -157,8 +157,8 @@ export default function PasswordScreen({ navigation, route }) {
 const styles = {
   safe: { flex: 1 },
   flex: { flex: 1 },
-  topBar: { paddingHorizontal: 12, paddingTop: 8, zIndex: 10, elevation: 10 },
-  staticContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 24 },
+  topBar: { paddingLeft: 12, paddingRight: 12, paddingTop: 8, zIndex: 10, elevation: 10 },
+  staticContainer: { flex: 1, alignItems: 'center', paddingLeft: 24, paddingRight: 24 },
   inner: { width: '100%', alignItems: 'center', flexGrow: 1 },
   welcome: { fontSize: 42, fontWeight: '700', letterSpacing: -1, textAlign: 'center' },
   form: { width: '100%', alignItems: 'center', marginTop: 8 },
