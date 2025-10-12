@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
-
-
 import { useThemeColors } from '../../services/Theme.jsx';
-import ChallengeCard from './ChallengeCard';
+import ChallengeCard from './ChallengeCard.jsx';
+
+// Web mock
+const useSafeAreaInsets = () => ({ top: 0, bottom: 0, left: 0, right: 0 });
 
 // items: [{ id, title, description, coins, expiresAt }]
 export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressItem, showHeader = true }) {

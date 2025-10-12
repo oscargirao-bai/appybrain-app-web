@@ -20,16 +20,11 @@ const AsyncStorage = {
 	}
 };
 
-// Import DataManager at the top to avoid dynamic imports
+// Import DataManager at the top
 // Note: This creates a circular dependency, but it's safe because we only use
 // DataManager.setUserConfig() which doesn't depend on ApiManager
-let DataManager = null;
-const getDataManager = () => {
-    if (!DataManager) {
-        DataManager = require('./DataManager').default;
-    }
-    return DataManager;
-};
+import DataManager from './DataManager.jsx';
+const getDataManager = () => DataManager;
 
 // Token storage keys
 const TOKENS = {

@@ -7,7 +7,8 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 
-const logoSource = require('../../../assets/logo.png');
+// Logo from public folder
+const logoSource = '/assets/logo.png';
 
 export default function ForgotScreen({ navigation }) {
 	const colors = useThemeColors();

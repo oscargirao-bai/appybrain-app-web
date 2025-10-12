@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ThemeProvider } from './services/Theme.jsx';
 import { TranslationProvider } from './services/Translate.jsx';
-import { SearchProvider } from './services/SearchContext';
+import { SearchProvider } from './services/SearchContext.jsx';
 import ApiManager from './services/ApiManager.jsx';
-import AppRouter from './AppRouter';
+import AppRouter from './AppRouter.jsx';
 
 export default function App() {
   useEffect(() => {

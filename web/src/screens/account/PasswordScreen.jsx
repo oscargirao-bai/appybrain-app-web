@@ -9,8 +9,11 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 
-// Local require for logo
-const logoSource = require('../../../assets/logo.png');
+// Logo from public folder
+const logoSource = '/assets/logo.png';
+
+// Web mock for safe area
+const useSafeAreaInsets = () => ({ top: 0, bottom: 0, left: 0, right: 0 });
 
 export default function PasswordScreen({ navigation, route }) {
   const colors = useThemeColors();
