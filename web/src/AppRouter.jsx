@@ -175,11 +175,13 @@ export default function AppRouter() {
 	const { resolvedTheme, colors } = useTheme();
 	const [currentScreen, setCurrentScreen] = useState('Loading');
 	const [screenParams, setScreenParams] = useState({});
+	const [navigationHistory, setNavigationHistory] = useState(['Loading']);
 	const navigationRef = useRef(null);
 
 	// Navigation object (mimics RN navigation)
 	const navigation = {
 		navigate: (screenName, params = {}) => {
+			setNavigationHistory(prev => [...prev, screenName]);
 			setCurrentScreen(screenName);
 			setScreenParams(params);
 		},
@@ -188,13 +190,25 @@ export default function AppRouter() {
 			setScreenParams(params);
 		},
 		goBack: () => {
-			// Simple back - could track history if needed
-			setCurrentScreen('MainTabs');
+			setNavigationHistory(prev => {
+				if (prev.length <= 1) {
+					// Se não há histórico, vai para MainTabs
+					setCurrentScreen('MainTabs');
+					return ['MainTabs'];
+				} else {
+					// Voltar ao screen anterior
+					const newHistory = prev.slice(0, -1);
+					const previousScreen = newHistory[newHistory.length - 1];
+					setCurrentScreen(previousScreen);
+					return newHistory;
+				}
+			});
 		},
 		reset: ({ routes }) => {
 			if (routes && routes.length > 0) {
 				setCurrentScreen(routes[0].name);
 				setScreenParams(routes[0].params || {});
+				setNavigationHistory([routes[0].name]);
 			}
 		}
 	};
