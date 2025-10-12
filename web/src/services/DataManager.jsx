@@ -1010,27 +1010,6 @@ class DataManagerClass {
     }
 
     getNotifications() {
-        return this.data.notifications;
-    }
-
-    getTribes() {
-        return this.data.tribes;
-    }
-
-    getShop() {
-        return this.data.shop;
-    }
-
-    getChests() {
-        return this.data.chests;
-    }
-
-    getBadges() {
-        return this.data.badges;
-    }
-
-    // Notification management methods
-    getNotifications() {
         return this.data.notifications || [];
     }
 
@@ -1160,15 +1139,6 @@ class DataManagerClass {
         return this.data.cosmetics || [];
     }
 
-    // Challenges management methods
-    getChallenges() {
-        return this.data.challenges || [];
-    }
-
-    // Get challenge by ID
-    getChallengeById(challengeId) {
-        return this.data.challenges?.find(challenge => challenge.id === challengeId) || null;
-    }
 
     // Get available challenges (published and within date range)
     getAvailableChallenges() {
@@ -1613,24 +1583,8 @@ class DataManagerClass {
             return false;
         }
     }
-
-    // User configuration methods
-    setUserConfig(config) {
-        this.userConfig = {
-            randomPosition: config.randomPosition ?? this.userConfig.randomPosition,
-            fullAccess: config.fullAccess ?? this.userConfig.fullAccess
-        };
-        //console.log('DataManager: User config set:', this.userConfig);
-    }
-
-    getUserConfig() {
-        return this.userConfig;
-    }
-
-    shouldRandomizeAnswers() {
-        return this.userConfig.randomPosition === 1;
-    }
 }
+
 
 // Create singleton instance
 const DataManager = new DataManagerClass();
