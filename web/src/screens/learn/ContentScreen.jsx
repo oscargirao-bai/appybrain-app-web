@@ -1,5 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
+// Mock React Native navigation hooks for web
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useRoute = () => ({ params: {} });
 
 import Header from '../../components/General/Header.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';

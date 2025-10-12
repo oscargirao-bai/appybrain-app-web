@@ -103,13 +103,19 @@ class DataManagerClass {
             const localPath = `${"/"}session_cache/${filename}`;
 
             // Download image (no need to check if exists since we start fresh each session)
-            const downloadResult = await Promise.resolve({ uri: url });
-
-            if (downloadResult.status === 200) {
-                this.imageCache.set(url, localPath);
-                return localPath;
-            } else {
-                console.warn(`Failed to download image: ${url}`);
+            // Na versão web, simplesmente verificamos se a URL é acessível
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.ok) {
+                    // Imagem acessível, usar URL original (sem cache local no web)
+                    this.imageCache.set(url, url);
+                    return url;
+                } else {
+                    console.warn(`Failed to download image: ${url} (status: ${response.status})`);
+                    return url; // Return original URL as fallback
+                }
+            } catch (fetchError) {
+                console.warn(`Failed to fetch image: ${url}`, fetchError.message);
                 return url; // Return original URL as fallback
             }
         } catch (error) {

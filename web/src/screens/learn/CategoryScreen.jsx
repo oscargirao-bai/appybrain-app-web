@@ -1,5 +1,8 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 
+// Mock React Native navigation hooks for web
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useRoute = () => ({ params: {} });
 
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useSearch } from '../../services/SearchContext.jsx';

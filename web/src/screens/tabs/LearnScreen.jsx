@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
+// Mock React Native hooks for web
+const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
