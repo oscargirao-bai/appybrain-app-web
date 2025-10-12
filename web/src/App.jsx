@@ -10,7 +10,7 @@ export default function App() {
   useEffect(() => {
     // Initialize ApiManager on app startup
     ApiManager.init({
-      baseUrl: 'https://appybrain.skillade.com/'
+      baseUrl: 'https://appybrain.skillade.com/api/'
     });
   }, []);
 

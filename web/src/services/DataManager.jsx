@@ -275,27 +275,26 @@ class DataManagerClass {
             };
             
             try {
-                // Load all ranking types in parallel
-                const [pointsRankings, starsRankings, xpRankings] = await Promise.all([
-                    this.apiManager.getRankings('points').catch(error => {
-                        console.warn('DataManager: Failed to load points rankings:', error);
-                        return null;
-                    }),
-                    this.apiManager.getRankings('stars').catch(error => {
-                        console.warn('DataManager: Failed to load stars rankings:', error);
-                        return null;
-                    }),
-                    this.apiManager.getRankings('xp').catch(error => {
-                        console.warn('DataManager: Failed to load xp rankings:', error);
-                        return null;
-                    })
-                ]);
-                
+                // Load all ranking types sequentially (no parallel API calls)
+                const pointsRankings = await this.apiManager.getRankings('points').catch(error => {
+                    console.warn('DataManager: Failed to load points rankings:', error);
+                    return null;
+                });
                 rankingsData.points = pointsRankings;
+
+                const starsRankings = await this.apiManager.getRankings('stars').catch(error => {
+                    console.warn('DataManager: Failed to load stars rankings:', error);
+                    return null;
+                });
                 rankingsData.stars = starsRankings;
+
+                const xpRankings = await this.apiManager.getRankings('xp').catch(error => {
+                    console.warn('DataManager: Failed to load xp rankings:', error);
+                    return null;
+                });
                 rankingsData.xp = xpRankings;
-                
-                //console.log('DataManager: Successfully preloaded all ranking types');
+
+                //console.log('DataManager: Successfully preloaded all ranking types sequentially');
             } catch (error) {
                 console.warn('DataManager: Error during rankings preload:', error);
             }
@@ -316,7 +315,7 @@ class DataManagerClass {
 
             // Load quotes separately
             //console.log('DataManager: Loading quotes...');
-            const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('/api/gamification/quotes').catch(error => {
+            const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('gamification/quotes').catch(error => {
                 console.warn('DataManager: Failed to load quotes:', error);
                 return { items: [] };
             });
@@ -392,15 +391,15 @@ class DataManagerClass {
 
         // Map sections to API endpoints
         const endpoints = {
-            userInfo: '/api/app/gamification_user_badges',
-            disciplines: '/api/app/learn_content_list',
-            userStars: '/api/app/gamification_user_stars',
-            notifications: '/api/app/user_notifications',
-            tribes: '/api/app/tribes_list',
-            shop: '/api/app/cosmetics_list',
-            chests: '/api/app/gamification_user_chests',
-            challenges: '/api/app/challenges_list',
-            battles: '/api/app/battle_list'
+            userInfo: 'app/gamification_user_badges',
+            disciplines: 'app/learn_content_list',
+            userStars: 'app/gamification_user_stars',
+            notifications: 'app/user_notifications',
+            tribes: 'app/tribes_list',
+            shop: 'app/cosmetics_list',
+            chests: 'app/gamification_user_chests',
+            challenges: 'app/challenges_list',
+            battles: 'app/battle_list'
         };
 
         if (!endpoints[section]) {

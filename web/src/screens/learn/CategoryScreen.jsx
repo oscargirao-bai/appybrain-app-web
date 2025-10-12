@@ -1,9 +1,5 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 
-// Mock React Native navigation hooks for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
-
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useSearch } from '../../services/SearchContext.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -11,10 +7,8 @@ import Header from '../../components/General/Header.jsx';
 import ContentList from '../../components/CategoryContent/List.jsx';
 import SearchBox from '../../components/CategoryContent/SearchBox.jsx';
 
-export default function CategoryScreen() {
+export default function CategoryScreen({ navigation, route }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
-	const route = useRoute();
 	const { disciplineId } = route.params || {};
 	const { searchText, setSearchText } = useSearch();
 	const [discipline, setDiscipline] = useState(null);

@@ -1,9 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
-// Mock React Native navigation hooks for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
-
 import Header from '../../components/General/Header.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useSearch } from '../../services/SearchContext.jsx';
@@ -15,10 +11,8 @@ import SearchBox from '../../components/CategoryContent/SearchBox.jsx';
 // Ecrã simples de Conteúdo: mostra apenas o Header com o nome da categoria recebida via params
 // Params esperados: { categoryTitle: string }
 
-export default function ContentScreen() {
+export default function ContentScreen({ navigation, route }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
-	const route = useRoute();
 	const { categoryTitle, categoryId, categoryColor, categoryIconColor } = route.params || {};
 	const { searchText, setSearchText } = useSearch();
 	const [category, setCategory] = useState(null);
@@ -126,8 +120,7 @@ export default function ContentScreen() {
 				<SearchBox value={searchText} onChange={setSearchText} />
 				<ContentList 
 					data={filteredContents} 
-					onPressStudy={handleStudyPress} 
-					starsByDifficulty={starsByDifficulty}
+					onStudy={handleStudyPress}
 				/>
 			</div>
 		</div>

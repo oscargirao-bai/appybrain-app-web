@@ -1,9 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-// Mock React Native navigation hooks for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
-
 import { useThemeColors } from '../services/Theme.jsx';
 import DataManager from '../services/DataManager.jsx';
 import Header from '../components/General/Header.jsx';
@@ -17,10 +13,8 @@ import MedalModal from '../components/Profile/MedalModal.jsx';
 // Corrigido caminho relativo para imagem moldura
 //import moldura from '../../../testing/moldura.png';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation, route }) {
 	const colors = useThemeColors();
-	const navigation = useNavigation();
-	const route = useRoute();
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedMedal, setSelectedMedal] = useState(null);
 	const [userInfo, setUserInfo] = useState(null);

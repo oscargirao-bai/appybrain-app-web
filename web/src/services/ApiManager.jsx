@@ -200,7 +200,7 @@ class ApiManager {
     // Login method
     async login(email, password) {
         try {
-            const response = await fetch(`${this.baseUrl}api/auth/login`, {
+            const response = await fetch(`${this.baseUrl}auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -255,7 +255,7 @@ class ApiManager {
     // Forgot password method
     async forgotPassword(email) {
         try {
-            const response = await fetch(`${this.baseUrl}api/auth/forgot-password`, {
+            const response = await fetch(`${this.baseUrl}auth/forgot-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -336,7 +336,11 @@ class ApiManager {
             }
 
             try {
-                const url = path.startsWith('http') ? path : `${this.baseUrl}${path}`;
+                // Normalize path: ensure no leading slash and no 'api/' prefix since baseUrl already ends with /api/
+                let normalizedPath = path;
+                if (normalizedPath.startsWith('/')) normalizedPath = normalizedPath.slice(1);
+                if (normalizedPath.startsWith('api/')) normalizedPath = normalizedPath.slice(4);
+                const url = path.startsWith('http') ? path : `${this.baseUrl}${normalizedPath}`;
 
                 const response = await fetch(url, {
                     method: 'POST', // Default to POST as specified

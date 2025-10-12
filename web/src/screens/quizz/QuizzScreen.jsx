@@ -11,14 +11,10 @@ import ConfirmModal from '../../components/General/ConfirmModal.jsx';
 import SolutionModal from '../../components/Quizz/SolutionModal.jsx';
 import BattleHelp from '../../components/Battle/Help.jsx';
 
-// Web stubs for RN hooks
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
+// Recebe navigation/route via props do AppRouter
 
-export default function QuizzScreen() {
+export default function QuizzScreen({ navigation, route }) {
 		const colors = useThemeColors();
-		const navigation = useNavigation();
-		const route = useRoute();
 		const { quiz, challengeId, battleMode } = route.params || {};
 
 		// Determine quiz type and parameters based on navigation
@@ -217,19 +213,15 @@ export default function QuizzScreen() {
 				//console.log('Refreshing user data after quiz completion...');
 				
 				if (isChallenge) {
-					// For challenge quizzes, only refresh userInfo and challenges
-					await Promise.all([
-						DataManager.refreshSection('userInfo'),
-						DataManager.refreshSection('challenges')
-					]);
+					// For challenge quizzes, only refresh userInfo and challenges (sequential)
+					await DataManager.refreshSection('userInfo');
+					await DataManager.refreshSection('challenges');
 				} else {
-					// For learn quizzes, refresh user info, disciplines, userStars, and chest progression
-					await Promise.all([
-						DataManager.refreshSection('userInfo'),
-						DataManager.refreshSection('disciplines'),
-						DataManager.refreshSection('userStars'),
-						DataManager.refreshSection('chests')
-					]);
+					// For learn quizzes, refresh sections sequentially
+					await DataManager.refreshSection('userInfo');
+					await DataManager.refreshSection('disciplines');
+					await DataManager.refreshSection('userStars');
+					await DataManager.refreshSection('chests');
 				}
 				
 				//console.log('User data refreshed successfully');
@@ -601,15 +593,11 @@ export default function QuizzScreen() {
 												// Refresh user data and related sections based on quiz type
 												try {
 													await DataManager.refreshSection('userInfo');
-													//console.log('User info refreshed after quiz quit');
-													
-													// Refresh quiz-type specific data
+													// Refresh quiz-type specific data sequentially
 													if (quizType === 'learn') {
 														await DataManager.refreshSection('userStars');
-														//console.log('User stars refreshed after learn quiz quit');
 													} else if (quizType === 'challenge') {
 														await DataManager.refreshSection('challenges');
-														//console.log('Challenges refreshed after challenge quiz quit');
 													}
 												} catch (refreshError) {
 													console.warn('Failed to refresh data after quit:', refreshError);

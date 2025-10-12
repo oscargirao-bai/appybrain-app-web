@@ -6,9 +6,7 @@ import ApiManager from '../services/ApiManager.jsx';
 import Header from '../components/General/Header.jsx';
 import MathJaxRenderer from '../components/General/MathJaxRenderer.jsx';
 
-// Mock navigation hooks for web
-const useNavigation = () => ({ goBack: () => window.history.back(), navigate: () => {} });
-const useRoute = () => ({ params: {} });
+// Recebe navigation/route via props do AppRouter
 
 /**
  * HtmlScreen - Displays HTML content with MathJax support for mathematical notation
@@ -18,9 +16,7 @@ const useRoute = () => ({ params: {} });
  *  - uri: string (optional remote URL - if provided, loads URL instead of HTML)
  *  - newsId: number (optional news ID - if provided, loads news content from API)
  */
-export default function HtmlScreen() {
-  const navigation = useNavigation();
-  const route = useRoute();
+export default function HtmlScreen({ navigation, route }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
   const title = route?.params?.title || 'Detalhe';

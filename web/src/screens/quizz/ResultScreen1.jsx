@@ -10,14 +10,10 @@ import Button1 from '../../components/General/Button1.jsx';
 import Reward from '../../components/ResultQuizz/Reward.jsx';
 import Quote from '../../components/ResultQuizz/Quote.jsx';
 
-// Mock navigation hooks for web
-const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
-const useRoute = () => ({ params: {} });
+// Recebe navigation/route via props do AppRouter
 
-export default function ResultScreen1() {
+export default function ResultScreen1({ navigation, route }) {
   const colors = useThemeColors();
-  const navigation = useNavigation();
-  const route = useRoute();
   const { 
     correct = null, 
     total = null, 
@@ -32,10 +28,8 @@ export default function ResultScreen1() {
     const refreshUserData = async () => {
       try {
         // Refresh both user info and stars to get latest values
-        await Promise.all([
-          DataManager.refreshSection('userInfo'),
-          DataManager.refreshSection('userStars')
-        ]);
+        await DataManager.refreshSection('userInfo');
+        await DataManager.refreshSection('userStars');
         //console.log('ResultScreen1: User data and stars refreshed successfully');
       } catch (error) {
         console.error('ResultScreen1: Failed to refresh user data:', error);
