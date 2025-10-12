@@ -73,7 +73,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 const createStyles = (colors) => ({
 	container: {
 		width: '100%',
-		borderWidth: 1,
+		borderWidth: '0.5px',
 		borderStyle: 'solid',
 		borderColor: colors.text + '30',
 		borderTopLeftRadius: 0,
@@ -125,15 +125,16 @@ const createStyles = (colors) => ({
 	pillWrap: {
 		display: 'flex',
 		alignItems: 'center',
+		borderWidth: 0,
 	},
 	pillGap: {
-		marginRight: 8,
+		marginRight: 6,
 	},
 	pill: {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		borderWidth: 1,
+		borderWidth: '0.5px',
 		borderStyle: 'solid',
 		borderColor: colors.text + '35',
 		paddingLeft: 10,
