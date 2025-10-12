@@ -117,6 +117,22 @@ export default function ProfileScreen() {
 		}
 	}, [isExternalProfile, externalUser, externalBadges]);
 
+	const handleMedalPress = useCallback((medal) => {
+		// Example mapping for progress (placeholder). In real case, progress should come from medal object.
+		setSelectedMedal({
+			id: medal.id,
+			icon: medal.icon,
+			title: medal.title,
+			description: medal.description,
+			level: medal.level,
+			current: medal.current,
+			target: medal.target,
+			unlocked: medal.unlocked,
+			hideLevel: medal.hideLevel,
+		});
+		setModalVisible(true);
+	}, []);
+
 	// Handle opening badge modal from navigation params
 	useEffect(() => {
 		// Only process if we have a new timestamp (avoid processing the same navigation twice)
@@ -141,22 +157,6 @@ export default function ProfileScreen() {
 			}, 800); // 800ms delay to wait for screen transition to complete
 		}
 	}, [openBadgeModal, badges, handleMedalPress, timestamp, lastProcessedTimestamp, navigation]);
-
-	const handleMedalPress = useCallback((medal) => {
-		// Example mapping for progress (placeholder). In real case, progress should come from medal object.
-		setSelectedMedal({
-			id: medal.id,
-			icon: medal.icon,
-			title: medal.title,
-			description: medal.description,
-			level: medal.level,
-			current: medal.current,
-			target: medal.target,
-			unlocked: medal.unlocked,
-			hideLevel: medal.hideLevel,
-		});
-		setModalVisible(true);
-	}, []);
 
 	return (
 		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
