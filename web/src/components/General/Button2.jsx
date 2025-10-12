@@ -15,23 +15,20 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
   const colors = useThemeColors();
   const radius = 14;
   const iconSize = Math.round(size * 0.46);
+  
   return (
-    <button       onClick={onPress}
-      
+    <button
+      onClick={onPress}
       aria-label={iconName || 'button'}
-      style={({ pressed }) => [
-        styles.base,
-        {
-          width: size,
-          height: size,
-          borderRadius: radius,
-          backgroundColor: colors.background + 'F0',
-          borderColor: colors.text + '22',
-          opacity: pressed ? 0.85 : 1,
-        },
-        style,
-      ]}
-      hitSlop={8}
+      style={{
+        ...styles.base,
+        width: size,
+        height: size,
+        borderRadius: radius,
+        backgroundColor: colors.background + 'F0',
+        borderColor: colors.text + '22',
+        ...style,
+      }}
     >
       <div style={styles.inner}>
         {iconName ? <SvgIcon name={iconName} size={iconSize} color={colors.text} /> : null}
@@ -42,11 +39,14 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
 
 const styles = {
   base: {
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: StyleSheet.hairlineWidth,
+    border: '1px solid',
+    cursor: 'pointer',
   },
   inner: {
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
