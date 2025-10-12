@@ -103,21 +103,10 @@ class DataManagerClass {
             const localPath = `${"/"}session_cache/${filename}`;
 
             // Download image (no need to check if exists since we start fresh each session)
-            // Na versão web, simplesmente verificamos se a URL é acessível
-            try {
-                const response = await fetch(url, { method: 'HEAD' });
-                if (response.ok) {
-                    // Imagem acessível, usar URL original (sem cache local no web)
-                    this.imageCache.set(url, url);
-                    return url;
-                } else {
-                    console.warn(`Failed to download image: ${url} (status: ${response.status})`);
-                    return url; // Return original URL as fallback
-                }
-            } catch (fetchError) {
-                console.warn(`Failed to fetch image: ${url}`, fetchError.message);
-                return url; // Return original URL as fallback
-            }
+            // Na versão web, não há cache local de ficheiros e CORS impede verificação HEAD
+            // Simplesmente retornamos a URL original e deixamos o browser carregar quando necessário
+            this.imageCache.set(url, url);
+            return url;
         } catch (error) {
             console.error(`Error caching image ${url}:`, error);
             return url; // Return original URL as fallback
