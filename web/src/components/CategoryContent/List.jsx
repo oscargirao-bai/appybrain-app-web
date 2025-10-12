@@ -1,5 +1,6 @@
 import React from 'react';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
@@ -69,15 +70,15 @@ export default function ContentList({ data, onPressItem }) {
 							<div style={progressFillStyle} />
 							<div style={{ flex: 1 - pct }} />
 							<div style={styles.rowContent}>
-								{item.icon ? (
-									<div style={leftIconStyle}>
-										<SvgIcon svgString={item.icon} size={45} color={iconColor} />
-									</div>
-								) : (
-									<div style={leftIconStyle}>
-										<SvgIcon name="book" size={45} color={iconColor} />
-									</div>
-								)}
+							{item.icon ? (
+								<div style={leftIconStyle}>
+									<SvgIcon svgString={item.icon} size={45} color={iconColor} />
+								</div>
+							) : (
+								<div style={leftIconStyle}>
+									<LucideIcon name="book" size={45} color={iconColor} />
+								</div>
+							)}
 								<div style={styles.textBlock}>
 									<span style={styles.title}>{item.title}</span>
 								</div>

@@ -2,6 +2,7 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 // Easing removed
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
 /**
@@ -234,7 +235,7 @@ function MedalButton({ item, colors, onPress }) {
 								color={item.unlocked ? iconColor : colors.text + '55'} 
 							/>
 						) : (
-							<SvgIcon
+							<LucideIcon
 								name={item.icon}
 								size={34}
 								color={item.unlocked ? iconColor : colors.text + '55'}

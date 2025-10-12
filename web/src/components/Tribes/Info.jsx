@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
 // Card showing tribe high-level info
@@ -53,7 +54,7 @@ export default function TribeInfo({
 								cursor: (!joined && disabledJoin) ? 'not-allowed' : 'pointer',
 							}}
 						>
-							<SvgIcon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
+							<LucideIcon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
 							<span style={styles.joinTextSmall}>{joinLabel}</span>
 						</button>
 					</div>
@@ -63,8 +64,8 @@ export default function TribeInfo({
 							backgroundColor: colors.text + '08',
 							borderColor: colors.text + '22'
 						}}>
-							<SvgIcon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
-							<span style={{...styles.statValueInline, color: colors.text}}>{members}</span>
+						<LucideIcon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
+						<span style={{...styles.statValueInline, color: colors.text}}>{members}</span>
 						</div>
 					</div>
 					<span style={{

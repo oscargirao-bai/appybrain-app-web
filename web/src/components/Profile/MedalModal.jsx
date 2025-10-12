@@ -1,5 +1,6 @@
 import React from 'react';
 import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -42,7 +43,7 @@ export default function MedalModal({ visible, onClose, medal }) {
 									</div>
 								) : (
 									<div style={styles.iconWrap}>
-										<SvgIcon name="medal" size={38} color={colors.text} />
+										<LucideIcon name="medal" size={38} color={colors.text} />
 									</div>
 								)}
 							</div>
