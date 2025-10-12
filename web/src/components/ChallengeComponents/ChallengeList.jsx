@@ -37,7 +37,7 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
         showsVerticalScrollIndicator={false}
         // Ensure the last item can be scrolled above the bottom tab bar / safe area
         // Use a larger buffer to account for the NavBar visible height and curved top
-        contentContainerStyle={{ paddingBottom: Math.max(120, (insets.bottom || 0) + 140) }}
+        style={{ paddingBottom: Math.max(120, (insets.bottom || 0) + 140) }}
         // Also add an explicit footer spacer to guarantee the final item is reachable
         ListFooterComponent={() => <div style={{ height: Math.max(120, (insets.bottom || 0) + 140) }} />}
       />

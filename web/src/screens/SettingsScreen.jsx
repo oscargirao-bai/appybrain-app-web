@@ -114,7 +114,7 @@ export default function SettingsScreen({ navigation }) {
 				showBack
 				onBack={() => navigation.goBack()}
 			/>
-			<div contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+			<div style={styles.content} showsVerticalScrollIndicator={false}>
 				<span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('profile.overviewTitle')}</span>
 				<Button4
 					label={translate('profile.customize')}

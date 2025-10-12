@@ -126,7 +126,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
   const completedToRender = completedList || [];
 
   return (
-    <div style={{display: !!visible} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: !!visible} onRequestClose={onClose}>
       <div style={styles.backdrop}>
         {/* Click outside to close */}
         <button style={styles.backdropHit} onClick={onClose} />
@@ -148,7 +148,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
                   <span style={styles.emptyText}>{translate('battle.history.empty') || translate('battle.noRecent') || 'No battles available'}</span>
                 </div>
               ) : (
-                <div contentContainerStyle={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
+                <div style={{ paddingBottom: 64 }} showsVerticalScrollIndicator nestedScrollEnabled>
                   {/* Pending */}
                   <span style={styles.sectionTitle}>{translate('battle.history.pending') || 'Pending'}</span>
                   <div style={styles.sectionBox}>
@@ -230,8 +230,9 @@ function HistoryItem({ left, right, leftStats, rightStats, status = 'pending', b
   );
 }
 
-// Responsive sizing for the modal card and scroll area (fixed height)
-const { width: W, height: H } = Dimensions.get('window');
+// Responsive sizing for the modal card and scroll area (fixed height) - Web version
+const W = window.innerWidth;
+const H = window.innerHeight;
 const CARD_W = Math.min(640, Math.round(W * 0.94));
 const CARD_BASE_H = Math.min(760, Math.round(H * 0.86));
 // Increase current (50% base) height by 25% => 62.5% of base

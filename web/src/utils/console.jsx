@@ -1,13 +1,25 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-// Modal converted to div
 import { header, small, normal } from '../constants/font.jsx';
-
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useTheme, useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import { navigate } from '../services/navigationRef.jsx';
 
-import * as SecureStore from 'expo-secure-store';
+// Web mocks
+const useSafeAreaInsets = () => ({ top: 0, bottom: 0, left: 0, right: 0 });
+const SecureStore = {
+	getItemAsync: (key) => Promise.resolve(localStorage.getItem(key)),
+	setItemAsync: (key, value) => Promise.resolve(localStorage.setItem(key, value)),
+	deleteItemAsync: (key) => Promise.resolve(localStorage.removeItem(key)),
+};
+const StyleSheet = {
+	create: (styles) => styles,
+	hairlineWidth: 1,
+	absoluteFill: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+};
+const AsyncStorage = {
+	clear: () => Promise.resolve(localStorage.clear()),
+};
 
 // Simple developer console overlay with a floating action button (FAB).
 // For now, it exposes just a light/dark toggle.
@@ -119,21 +131,19 @@ export default function DevConsoleOverlay() {
   })();
 
 	return (
-		<>
-			{/* Floating toggle button (tap opens console, hold cycles corners) */}
-			{!open && (
-				<button 					
-					aria-label="Open dev console"
-					onPressIn={handlePressIn}
-					onPressOut={handlePressOut}
-					style={{...styles.fab, ...cornerStyle}}
-				>
-					<SvgIcon name="wrench" color={colors.background} size={22} />
-				</button>
-			)}
-
-			{/* Console modal */}
-			<div style={{display: open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+		<div>
+		{/* Floating toggle button (tap opens console, hold cycles corners) */}
+		{!open && (
+			<button 					
+				aria-label="Open dev console"
+				onClick={() => setOpen(true)}
+				style={{...styles.fab, ...cornerStyle}}
+			>
+				<SvgIcon name="wrench" color={colors.background} size={22} />
+			</button>
+		)}		{/* Console modal */}
+		{open && (
+			<div style={styles.modalOverlay}>
 				<button style={styles.backdrop} onClick={() => setOpen(false)} />
 				<div style={styles.sheet}>
 					<div style={styles.sheetHeader}>
@@ -204,20 +214,19 @@ export default function DevConsoleOverlay() {
 					{/* Clear All Storage */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<SvgIcon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
-							<span style={styles.optionLabel}>Clear All Storage</span>
-						</div>
-						<button style={{...styles.optionBtn, ...{ backgroundColor: colors.destructive || '#ff4444' }}} onClick={clearAllStorage}>
-							<span style={{...styles.optionBtnText, ...{ color: '#ffffff' }}}>Clear</span>
-						</button>
+						<SvgIcon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
+						<span style={styles.optionLabel}>Clear All Storage</span>
 					</div>
+					<button style={{...styles.optionBtn, ...{ backgroundColor: colors.destructive || '#ff4444' }}} onClick={clearAllStorage}>
+						<span style={{...styles.optionBtnText, ...{ color: '#ffffff' }}}>Clear</span>
+					</button>
 				</div>
 			</div>
-		</>
+		</div>
+		)}
+	</div>
 	);
-}
-
-const makeStyles = (c, insets) =>
+}const makeStyles = (c, insets) =>
 	StyleSheet.create({
 		fab: {
 			position: 'absolute',
@@ -240,7 +249,7 @@ const makeStyles = (c, insets) =>
 			left: 0,
 			right: 0,
 			bottom: 0,
-			// Removed dimming; keep transparent to allow outside tap closing without visual overlay
+			// Removed dimming; keep to allow outside tap closing without visual overlay
 			backgroundColor: 'transparent',
 		},
 		sheet: {

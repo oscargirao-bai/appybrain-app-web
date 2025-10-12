@@ -116,7 +116,7 @@ export default function ShopScreen(props) {
 				ref={scrollRef}
 				showsHorizontalScrollIndicator={false}
 				onMomentumScrollEnd={handleMomentumEnd}
-				contentContainerStyle={{}}
+				style={{}}
 			>
 				<div style={{ width }}>
 					<List data={avatars} scrollEnabled={true} userCoins={userCoins} onPurchase={handlePurchase} />

@@ -172,7 +172,7 @@ export default function ProfileScreen() {
 					</button>
 				) : null}
 			/>
-			<div contentContainerStyle={[styles.scrollContent, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
+			<div style={[styles.scrollContent, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
 				<Banner 
 					topFlat={true}
 					avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}

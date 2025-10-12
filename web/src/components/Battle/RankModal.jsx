@@ -1,7 +1,11 @@
 import React from 'react';
-// Modal converted to div
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
+
+// Web mock
+const StyleSheet = {
+	absoluteFill: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+};
 
 
 
@@ -26,12 +30,12 @@ export default function RankModal({ visible, onClose }) {
   const panelWidth = Math.min(520, width - 32);
 
   return (
-    <div style={{display: visible ? "flex" : "none"}} transparent animationType="fade" onRequestClose={onClose}>
+    <div style={{display: visible ? "flex" : "none"}} onRequestClose={onClose}>
       <div style={{...styles.backdrop, ...{ backgroundColor: colors.backdrop + 'AA' }}}> 
         <button style={StyleSheet.absoluteFill} onClick={onClose} />
         <div style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22', maxHeight: panelMaxHeight, width: panelWidth }] }>
           <span style={{...styles.title, ...{ color: colors.text }}}>Níveis</span>
-          <div contentContainerStyle={styles.list} style={{ maxHeight: panelMaxHeight - 120 }}>
+          <div style={styles.list} style={{ maxHeight: panelMaxHeight - 120 }}>
             {shields.map((ShieldComp, idx) => (
               <div key={idx} style={{...styles.row, ...{ borderColor: colors.text + '12' }}}>
                 <ShieldComp width={64} height={64} />
