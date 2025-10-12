@@ -1,37 +1,35 @@
-import React, { useMemo } from 'react';
-
-import SvgIcon from '../../components/General/SvgIcon';
+import React from 'react';
 import SvgIcon from '../General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import { family } from '../../constants/font';
 
-// Expected item shape:
-// { id: string, title: string, icon: string (SVG), color: string (hex), stars: number, maxStars: number }
-// For MVP we assume maxStars = 3 (★ levels) per conteúdo.
-
-// Numeric star badge replacing individual star icons
 function StarCount({ stars, max, iconColor }) {
 	const colors = useThemeColors();
 	const pct = (stars / max) || 0;
 	const full = pct >= 1;
+	const badgeStyle = {
+		...styles.countBadge,
+		borderColor: iconColor || colors.text
+	};
+	const textStyle = {
+		...styles.countText,
+		color: iconColor || colors.text
+	};
 	return (
-		<div 			style={{...styles.countBadge, ...{ borderColor: iconColor || colors.text }}}
-			aria-label={`${stars} estrelas`}
-		>
+		<div style={badgeStyle} aria-label={`${stars} estrelas`}>
 			<SvgIcon name="star" size={14} color={iconColor || colors.text} style={{ marginRight: 4 }} />
-			<span style={{...styles.countText, ...{ color: iconColor || colors.text }}}>{stars}</span>
+			<span style={textStyle}>{stars}</span>
 		</div>
 	);
 }
 
-// Utilitário simples para aplicar alpha a uma cor hex (fallback para retornar se já rgb/rgba)
 function addAlpha(hex, alpha) {
-  if (!hex || hex.startsWith('rgb')) return hex;
-  let h = hex.replace('#','');
-  if (h.length === 3) h = h.split('').map(c=>c+c).join('');
-  const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
-  return `rgba(${r},${g},${b},${alpha})`;
+	if (!hex || hex.startsWith('rgb')) return hex;
+	let h = hex.replace('#','');
+	if (h.length === 3) h = h.split('').map(c=>c+c).join('');
+	const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+	return `rgba(${r},${g},${b},${alpha})`;
 }
 
 export default function ContentList({ data, onPressItem }) {
@@ -39,61 +37,133 @@ export default function ContentList({ data, onPressItem }) {
 	const { translate } = useTranslate();
 
 	return (
-		<div 			data={data}
-			keyExtractor={(item) => item.id}
-			showsVerticalScrollIndicator={false}
-			contentContainerStyle={styles.listContent}
-				renderItem={({ item, index }) => {
+		<div style={styles.listContent}>
+			{data.map((item, index) => {
 				const pct = (item.stars / item.maxStars) || 0;
-				// Usa a cor recebida em item.color; fallback para primary se ausente
 				const baseColor = item.color || colors.primary;
 				const iconColor = item.iconColor || colors.primary;
 				const fillColor = addAlpha(baseColor, 0.8);
 				const containerBg = addAlpha(baseColor, 0.5);
+
+				const progressContainerStyle = {
+					...styles.progressContainer,
+					backgroundColor: baseColor
+				};
+				const progressFillStyle = {
+					...styles.progressFillFull,
+					backgroundColor: fillColor
+				};
+				const leftIconStyle = {
+					...styles.leftIcon,
+					width: 45
+				};
+
 				return (
-					<button 						style={({ pressed }) => [styles.rowOuter, pressed && { opacity: 0.9 }]}
+					<button
+						key={item.id}
+						style={styles.rowOuter}
 						onClick={() => onPressItem && onPressItem(item)}
-						
 						aria-label={`${translate('learn.openContent')}: ${item.title}. ${item.stars} / ${item.maxStars} ${translate('quizResult.stars')}.`}
 					>
-						<div style={{...styles.progressContainer, ...{ backgroundColor: baseColor}}> 
-							<div style={{...styles.progressFillFull, ...{ backgroundColor: fillColor}} />
+						<div style={progressContainerStyle}>
+							<div style={progressFillStyle} />
 							<div style={{ flex: 1 - pct }} />
-							<div style={styles.rowContent} pointerEvents="none"> 
+							<div style={styles.rowContent}>
 								{item.icon ? (
-									<div style={{...styles.leftIcon, ...{ width: 45}}>
-										<SvgIcon 
-											svgString={item.icon} 
-											size={45} 
-											color={iconColor} 
-										/>
+									<div style={leftIconStyle}>
+										<SvgIcon svgString={item.icon} size={45} color={iconColor} />
 									</div>
 								) : (
-									<SvgIcon name="book-open" size={40} color={baseColor} style={styles.leftIcon} />
+									<div style={leftIconStyle}>
+										<SvgIcon name="book" size={45} color={iconColor} />
+									</div>
 								)}
-								<span style={{...styles.itemTitle, ...{ color: iconColor }}} numberOfLines={2}>{item.title}</span>
+								<div style={styles.textBlock}>
+									<span style={styles.title}>{item.title}</span>
+								</div>
 								<StarCount stars={item.stars} max={item.maxStars} iconColor={iconColor} />
 							</div>
 						</div>
 					</button>
 				);
-			}}
-			ItemSeparatorComponent={() => <div style={styles.separator} />}
-			ListEmptyComponent={<span style={{ textAlign: 'center', color: colors.muted, paddingVertical: 24 }}>{translate('learn.noContents')}</span>}
-		/>
+			})}
+		</div>
 	);
 }
 
 const styles = {
-	listContent: { paddingHorizontal: 0, paddingBottom: 400, marginTop: 8 },
-	rowOuter: { marginVertical: 8 },
-	progressContainer: { flexDirection: 'row', borderWidth: 2, borderRadius: 16, minHeight: 86, overflow: 'hidden' },
-	progressFillFull: { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-	rowContent: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
-	leftIcon: { marginRight: 10 },
-	itemTitle: { flex: 1, fontSize: 20, fontFamily: family.bold },
-	countBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 30, borderWidth: 2 },
-	countText: { fontSize: 12, fontFamily: family.bold },
-	separator: { height: 0 },
+	listContent: {
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 16,
+	},
+	rowOuter: {
+		width: '100%',
+		borderRadius: 16,
+		overflow: 'hidden',
+		border: 'none',
+		padding: 0,
+		background: 'transparent',
+		cursor: 'pointer',
+		transition: 'opacity 0.2s',
+	},
+	progressContainer: {
+		position: 'relative',
+		display: 'flex',
+		flexDirection: 'row',
+		minHeight: 64,
+	},
+	progressFillFull: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		bottom: 0,
+		width: '100%',
+	},
+	rowContent: {
+		position: 'relative',
+		zIndex: 1,
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingLeft: 12,
+		paddingRight: 12,
+		gap: 12,
+	},
+	leftIcon: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	textBlock: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+	},
+	title: {
+		fontFamily: family.bold,
+		fontSize: 16,
+		fontWeight: '700',
+		color: '#FFFFFF',
+	},
+	countBadge: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingLeft: 8,
+		paddingRight: 8,
+		paddingTop: 4,
+		paddingBottom: 4,
+		borderRadius: 12,
+		borderWidth: 2,
+		borderStyle: 'solid',
+		backgroundColor: 'rgba(255,255,255,0.2)',
+	},
+	countText: {
+		fontFamily: family.semibold,
+		fontSize: 14,
+		fontWeight: '600',
+	},
 };
-

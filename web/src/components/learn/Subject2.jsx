@@ -1,69 +1,49 @@
-import React, { useRef } from 'react';
-// Easing removed
+import React, { useState } from 'react';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 
-/**
- * Subject2 – horizontal pill card with:
- *  | Icon + label stacked (left) | Centered Subject Name |
- * Full width, rounded border, press scale feedback.
- * Props:
- *  - title: string (subject name)
- *  - iconName: lucide icon name (default 'book-open') - used when svgIcon is not provided
- *  - svgIcon: string (SVG markup from API) - takes priority over iconName
- *  - color: string (hex color from API) - used for background and icon color
- *  - onPress: function
- *  - height: optional (default 70)
- *  - style: external style override
- */
 export default function Subject2({ title, iconName = 'book-open', svgIcon, color, onPress, height = 70, style }) {
 	const colors = useThemeColors();
-	const scale = useRef(new Animated.Value(0)).current;
+	const [pressed, setPressed] = useState(false);
 
-	const handlePressIn = () => Animated.timing(scale, { toValue: 1, duration: 110, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	const handlePressOut = () => Animated.timing(scale, { toValue: 0, duration: 150, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
-	const pressScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 0.97] });
-
-	// Use API color for background, or fallback to theme background
-	const backgroundColor = color; 
+	const backgroundColor = color;
 	const borderColor = addAlpha(color, 0.7);
 	const iconColor = color || colors.text;
+	const textColor = style?.textColor || '#FFFFFF';
+
+	const containerStyle = {
+		...styles.container,
+		backgroundColor,
+		borderColor,
+		height,
+		transform: pressed ? 'scale(0.97)' : 'scale(1)',
+		opacity: pressed ? 0.9 : 1,
+	};
 
 	return (
-		<Animated.View style={[styles.outer, { transform: [{ scale: pressScale }] }, style]}>
-			<button 				
+		<div style={{ ...styles.outer, ...(style || {}) }}>
+			<button
 				aria-label={title}
 				onClick={onPress}
-				onPressIn={handlePressIn}
-				onPressOut={handlePressOut}
-				style={({ pressed }) => [
-					styles.container,
-					{
-						backgroundColor,
-						borderColor,
-						height,
-					},
-					pressed && { opacity: 0.9 },
-				]}
+				onMouseDown={() => setPressed(true)}
+				onMouseUp={() => setPressed(false)}
+				onMouseLeave={() => setPressed(false)}
+				style={containerStyle}
 			>
-				{/* Left icon */}
-				<div style={styles.side} pointerEvents="none">
+				<div style={styles.side}>
 					{svgIcon ? (
-						<SvgIcon svgString={svgIcon} size={28} color={style.textColor} />
+						<SvgIcon svgString={svgIcon} size={28} color={textColor} />
 					) : (
 						<SvgIcon name={iconName} size={28} color={iconColor} />
 					)}
 				</div>
-				{/* Center title (flex) */}
-				<div style={styles.titleWrapper} pointerEvents="none">
-					<span style={{...styles.title, ...{ color: style.textColor }}}>{title}</span>
+				<div style={styles.titleWrapper}>
+					<span style={{ ...styles.title, color: textColor }}>{title}</span>
 				</div>
-				{/* Right spacer to balance layout */}
-				<div style={styles.side} pointerEvents="none" />
+				<div style={styles.side} />
 			</button>
-		</Animated.View>
+		</div>
 	);
 }
 
@@ -72,14 +52,14 @@ function addAlpha(hexOrRgba, alpha) {
 	if (hexOrRgba.startsWith('rgba') || hexOrRgba.startsWith('rgb')) {
 		return hexOrRgba.replace(/rgba?\(([^)]+)\)/, (m, inner) => {
 			const parts = inner.split(',').map(p => p.trim());
-			const [r,g,b] = parts;
+			const [r, g, b] = parts;
 			return `rgba(${r},${g},${b},${alpha})`;
-		};
+		});
 	}
-	let h = hexOrRgba.replace('#','');
-	if (h.length === 3) h = h.split('').map(c => c+c).join('');
-	const int = parseInt(h,16);
-	const r = (int>>16)&255, g=(int>>8)&255, b=int&255;
+	let h = hexOrRgba.replace('#', '');
+	if (h.length === 3) h = h.split('').map(c => c + c).join('');
+	const int = parseInt(h, 16);
+	const r = (int >> 16) & 255, g = (int >> 8) & 255, b = int & 255;
 	return `rgba(${r},${g},${b},${alpha})`;
 }
 
@@ -89,34 +69,34 @@ const styles = {
 	},
 	container: {
 		width: '100%',
-		borderWidth: 2,
-		borderRadius: 22,
-		paddingHorizontal: 16,
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
+		borderWidth: 2,
+		borderStyle: 'solid',
+		borderRadius: 20,
+		paddingLeft: 14,
+		paddingRight: 14,
+		transition: 'transform 0.15s ease, opacity 0.15s ease',
+		cursor: 'pointer',
+		background: 'transparent',
 	},
 	side: {
-		width: 48,
+		width: 40,
+		display: 'flex',
+		alignItems: 'center',
 		justifyContent: 'center',
-		alignItems: 'flex-start',
 	},
 	titleWrapper: {
 		flex: 1,
+		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	title: {
+		fontFamily: family.bold,
 		fontSize: 18,
 		fontWeight: '700',
-		fontFamily: family.bold,
-		letterSpacing: 0.5,
 		textAlign: 'center',
-	},
-	smallLabel: {
-		marginTop: 6,
-		fontSize: 12,
-		fontFamily: family.medium,
-		lineHeight: 14,
-		fontWeight: '500',
 	},
 };

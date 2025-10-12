@@ -197,7 +197,6 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 				<div style={{ flexDirection: 'row', alignItems: 'flex-start', flex: 1 }}>
 					<span 
 						style={{...styles.titleText, ...{ color: item.iconColor }}} 
-						numberOfLines={showFullTitle ? undefined : 3}
 					>
 						{item.title}
 					</span>

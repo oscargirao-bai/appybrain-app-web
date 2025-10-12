@@ -1,46 +1,26 @@
 import React, { useState } from 'react';
 
 import { useThemeColors } from '../../services/Theme';
-import { LinearGradient } from 'expo-linear-gradient';
-import SvgIcon from '../../components/General/SvgIcon';
+import LinearGradient from '../General/LinearGradient';
+import SvgIcon from '../General/SvgIcon';
 
-/**
- * Profile Banner (minimal variant) with support for avatar frames.
- * Layout:
- *  - Solid background (theme primary) + optional banner image
- *  - Centered circular avatar
- *  - Optional frame overlay (PNG com transparência) envolvendo TODO o banner (não apenas o avatar)
- *
- * Props:
- *  - avatarSource: {uri: string} | require('path')
- *  - bannerImageSource: optional background image
- *  - frameSource: optional overlay frame (transparent PNG). Example:
- *      import moldura from '../../../assets/moldura.png';
- *      <Banner frameSource={moldura} />
- *  - frameSizeScale: tweak size ratio of frame vs avatar (default 1.08)
- */
 export default function Banner({
 	avatarSource,
-	bannerImageSource, // optional background
-	frameSource, // overlay frame image that wraps the whole banner container
-	frameScale = 1, // scale for frame relative to banner size
-	bottomFlat = true, // when true, bottom corners are square
-	topFlat = false, // NEW: when true, top corners are square
-	aspectRatio = 560 / 260, // NEW: width / height (keeps previous 140 height at ~360 width)
-    onPress, // optional custom press handler; defaults to navigate to Profile tab
-    style, // optional style override for outer wrapper (width/alignment)
+	bannerImageSource,
+	frameSource,
+	frameScale = 1,
+	bottomFlat = true,
+	topFlat = false,
+	aspectRatio = 560 / 260,
+	onPress,
+	style,
 }) {
 	const colors = useThemeColors();
-    const navigation = useNavigation();
-	// Default: yellow linear gradient for banner, Lucide user icon for avatar
-	const defaultBanner = null; // handled below
-	// bannerImg e avatarImg definidos abaixo para evitar duplicação
-
-	const bannerImg = bannerImageSource || null; // null triggers gradient
-	const avatarImg = avatarSource || null; // null triggers icon
+	
+	const bannerImg = bannerImageSource || null;
+	const avatarImg = avatarSource || null;
 	const hasBannerImg = !!bannerImg;
 
-	// Cores para avatar default
 	const avatarBgLightBlue = '#E3F0FF';
 	const avatarIconBlue = '#1856A6';
 
@@ -48,7 +28,6 @@ export default function Banner({
 	const [avatarLoaded, setAvatarLoaded] = useState(false);
 	const [frameLoaded, setFrameLoaded] = useState(false);
 
-	// Simplify: remove fade animations (instant render) to avoid transient black/empty artifacts on fast tab switches
 	const bannerOpacity = 1;
 	const avatarOpacity = 1;
 	const frameOpacity = 1;
@@ -57,7 +36,6 @@ export default function Banner({
 	function onAvatarLoad() { setAvatarLoaded(true); }
 	function onFrameLoad() { setFrameLoaded(true); }
 
-	// dynamic border radius handling
 	const topRadius = topFlat ? 0 : 22;
 	const bottomRadius = bottomFlat ? 0 : 22;
 	const containerRadiusStyle = {
@@ -67,87 +45,113 @@ export default function Banner({
 		borderBottomRightRadius: bottomRadius,
 	};
 
-	// Apply same radius to wrapper to ensure background color matches rounded corners
 	const wrapperRadiusStyle = containerRadiusStyle;
 
-    const handlePress = React.useCallback(() => {
-        if (typeof onPress === 'function') {
-            onPress();
-            return;
-        }
-		// Default behavior: navigate to standalone Profile screen (not in tabs)
-		try {
-			navigation.navigate('Profile');
-        } catch (e) {
-            // no-op if navigation not available
-        }
-    }, [navigation, onPress]);
+	const handlePress = React.useCallback(() => {
+		if (typeof onPress === 'function') {
+			onPress();
+			return;
+		}
+		// Web: could navigate but for now no-op
+	}, [onPress]);
 
 	return (
-	<button             activeOpacity={0.8}
-            onClick={handlePress}
-            
-            aria-label="Ir para Perfil"
-			style={{...styles.wrapper, ...wrapperRadiusStyle}}
-        > 
-		<div style={styles.bannerShadowWrapper}>
-			<div style={{...styles.bannerContainer, ...{ backgroundColor: hasBannerImg ? 'transparent' : colors.primary}}>          
-				{/* Banner background: image or default yellow gradient */}
-				{bannerImg ? (
-					<img 						source={bannerImg}
-						style={{objectFit: "cover"}}
-						onLoad={onBannerLoad}
-						style={{...StyleSheet.absoluteFill, ...{ opacity: bannerOpacity }}}
-					/>
-				) : (
-					<LinearGradient
-						colors={["#FFE259", "#FFD000"]}
-						start={{ x: 0, y: 0 }}
-						end={{ x: 1, y: 1 }}
-						style={{...StyleSheet.absoluteFill, ...containerRadiusStyle}}
-					/>
-				)}
-				{/* Só mostra moldura se frameSource for passado */}
-				{frameSource && (
-					<Animated.Image
-						source={frameSource}
-						style={{objectFit: "stretch"}}
-						onLoad={onFrameLoad}
-						style={[
-							styles.bannerFrameOverlay,
-							{ opacity: frameOpacity, transform: [{ scale: frameScale }] },
-						]}
-						pointerEvents="none"
-					/>
-				)}
-				{/* Avatar (centered) */}
-				<div style={styles.avatarOuter}>            
-					<div style={{...styles.avatarCircle, ...{ borderColor: colors.background}}>              
-						{avatarImg ? (
-							<img 								source={avatarImg}
-								style={{objectFit: "cover"}}
-								onLoad={onAvatarLoad}
-								style={{...styles.avatarImg, ...{ opacity: avatarOpacity }}} />
-						) : (
-							<div style={{...styles.avatarImg, ...{ justifyContent: 'center'}}> 
-								<SvgIcon name="user" size={64} color={avatarIconBlue} />
-							</div>
-						)}
-						{/* Não mostra placeholder se for avatar default */}
-						{!avatarLoaded && avatarImg && (
-							<div style={{...styles.avatarPlaceholder, ...{ backgroundColor: colors.background}} />
-						)}
+		<button
+			onClick={handlePress}
+			aria-label="Ir para Perfil"
+			style={{
+				...styles.wrapper,
+				...wrapperRadiusStyle,
+				backgroundColor: hasBannerImg ? 'transparent' : colors.primary,
+				...style,
+			}}
+		>
+			<div style={styles.bannerShadowWrapper}>
+				<div style={{
+					...styles.bannerContainer,
+					backgroundColor: hasBannerImg ? 'transparent' : colors.primary,
+					aspectRatio,
+					...containerRadiusStyle,
+				}}>
+					{bannerImg ? (
+						<img
+							src={bannerImg}
+							onLoad={onBannerLoad}
+							style={{
+								...styles.absoluteFill,
+								objectFit: 'cover',
+								opacity: bannerOpacity,
+							}}
+							alt="Banner"
+						/>
+					) : (
+						<LinearGradient
+							colors={["#FFE259", "#FFD000"]}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 1, y: 1 }}
+							style={{...styles.absoluteFill, ...containerRadiusStyle}}
+						/>
+					)}
+					{frameSource && (
+						<img
+							src={frameSource}
+							onLoad={onFrameLoad}
+							style={{
+								...styles.bannerFrameOverlay,
+								objectFit: 'stretch',
+								opacity: frameOpacity,
+								pointerEvents: 'none',
+							}}
+							alt="Frame"
+						/>
+					)}
+					<div style={styles.avatarOuter}>
+						<div style={{
+							...styles.avatarCircle,
+							borderColor: colors.background,
+						}}>
+							{avatarImg ? (
+								<img
+									src={avatarImg}
+									onLoad={onAvatarLoad}
+									style={{
+										...styles.avatarImg,
+										objectFit: 'cover',
+										opacity: avatarOpacity,
+									}}
+									alt="Avatar"
+								/>
+							) : (
+								<div style={{
+									...styles.avatarImg,
+									display: 'flex',
+									justifyContent: 'center',
+									alignItems: 'center',
+									backgroundColor: avatarBgLightBlue,
+								}}>
+									<SvgIcon name="user" size={64} color={avatarIconBlue} />
+								</div>
+							)}
+							{!avatarLoaded && avatarImg && (
+								<div style={{
+									...styles.avatarPlaceholder,
+									backgroundColor: colors.background,
+								}} />
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</button>
-  );
+		</button>
+	);
 }
 
 const styles = {
 	wrapper: {
 		width: '100%',
+		border: 'none',
+		padding: 0,
+		cursor: 'pointer',
 	},
 	bannerShadowWrapper: {
 		borderRadius: 22,
@@ -155,32 +159,58 @@ const styles = {
 	},
 	bannerContainer: {
 		overflow: 'hidden',
-		justifyContent: 'center',
-		alignItems: 'center', // allow centering avatar horizontally
-	},
-	avatarOuter: {
-		width: 108, // reduced 10%
-		height: 108,
+		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
+		position: 'relative',
+	},
+	absoluteFill: {
+		position: 'absolute',
+		left: 0,
+		top: 0,
+		right: 0,
+		bottom: 0,
+		width: '100%',
+		height: '100%',
+	},
+	avatarOuter: {
+		width: 108,
+		height: 108,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'relative',
+		zIndex: 1,
 	},
 	avatarCircle: {
 		width: 108,
 		height: 108,
 		borderRadius: 54,
 		borderWidth: 4,
+		borderStyle: 'solid',
 		overflow: 'hidden',
 		backgroundColor: '#00000011',
+		position: 'relative',
 	},
-	avatarImg: { width: '100%', height: '100%' },
-	avatarPlaceholder: { flex: 1 },
+	avatarImg: { 
+		width: '100%', 
+		height: '100%',
+	},
+	avatarPlaceholder: { 
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		width: '100%',
+		height: '100%',
+	},
 	bannerFrameOverlay: {
 		position: 'absolute',
 		left: 0,
 		top: 0,
 		width: '100%',
 		height: '100%',
+		zIndex: 2,
 	},
-  // Removed info box styles
 };
-

@@ -1,16 +1,8 @@
 import React from 'react';
-
 import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
-/**
- * Info component replicating the sketch: Username (bold) + coin pill to the right, tribe below.
- * Props:
- *  - username: string
- *  - tribe: string
- *  - coins: number
- */
 export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins, stars, trophies }) {
 	const colors = useThemeColors();
 	const styles = React.useMemo(() => createStyles(colors), [colors]);
@@ -22,7 +14,8 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	const metrics = [];
 	if (showStars) metrics.push({ key: 'stars' });
 	if (showTrophies) metrics.push({ key: 'trophies' });
-	if (showCoins) metrics.push({ key: 'coins' }); // Coins always last (rightmost)
+	if (showCoins) metrics.push({ key: 'coins' });
+
 	return (
 		<div style={styles.container}>
 			<div style={styles.row}>
@@ -35,9 +28,11 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 						<div style={styles.metricsRow}>
 							{metrics.map((m, idx) => {
 								const isLast = idx === metrics.length - 1;
+								const pillStyle = isLast ? styles.pillWrap : {...styles.pillWrap, ...styles.pillGap};
+								
 								if (m.key === 'stars') {
 									return (
-										<div key="stars" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Estrelas: ${stars}`}>
+										<div key="stars" style={pillStyle} aria-label={`Estrelas: ${stars}`}>
 											<div style={styles.pill}>
 												<SvgIcon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{stars}</span>
@@ -47,7 +42,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 								}
 								if (m.key === 'coins') {
 									return (
-										<div key="coins" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Moedas: ${coins}`}>
+										<div key="coins" style={pillStyle} aria-label={`Moedas: ${coins}`}>
 											<div style={styles.pill}>
 												<SvgIcon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{coins}</span>
@@ -57,7 +52,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 								}
 								if (m.key === 'trophies') {
 									return (
-										<div key="trophies" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Troféus: ${trophies}`}>
+										<div key="trophies" style={pillStyle} aria-label={`Troféus: ${trophies}`}>
 											<div style={styles.pill}>
 												<SvgIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{trophies}</span>
@@ -75,27 +70,32 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	);
 }
 
-const createStyles = (colors) => StyleSheet.create({
+const createStyles = (colors) => ({
 	container: {
 		width: '100%',
-		borderWidth: StyleSheet.hairlineWidth,
+		borderWidth: 1,
+		borderStyle: 'solid',
 		borderColor: colors.text + '30',
 		borderTopLeftRadius: 0,
 		borderTopRightRadius: 0,
 		borderBottomLeftRadius: 18,
 		borderBottomRightRadius: 18,
-		paddingHorizontal: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
 		paddingTop: 8,
 		paddingBottom: 8,
 		backgroundColor: colors.background,
 	},
 	row: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'stretch',
 	},
 	leftBlock: {
 		flex: 1,
 		paddingRight: 6,
+		display: 'flex',
+		flexDirection: 'column',
 		justifyContent: 'center',
 	},
 	username: {
@@ -103,36 +103,7 @@ const createStyles = (colors) => StyleSheet.create({
 		fontWeight: '700',
 		fontFamily: family.bold,
 		color: colors.text,
-		flexShrink: 1,
-		flexGrow: 0,
-	},
-	metricsColumn: {
-		justifyContent: 'center',
-		alignItems: 'flex-end',
-	},
-	metricsRow: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	pillWrap: {
-		borderWidth: 0,
-	},
-	pillGap: { marginRight: 6 },
-	pill: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.text + '35',
-		paddingHorizontal: 10,
-		paddingVertical: 6,
-		borderRadius: 12,
-		backgroundColor: colors.background + '40',
-	},
-	pillText: {
-		fontSize: 14,
-		fontWeight: '600',
-		fontFamily: family.semibold,
-		color: colors.text,
+		lineHeight: 1.2,
 	},
 	tribe: {
 		marginTop: 2,
@@ -141,5 +112,38 @@ const createStyles = (colors) => StyleSheet.create({
 		fontFamily: family.regular,
 		color: colors.text + 'AA',
 	},
-};
-
+	metricsColumn: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'flex-end',
+	},
+	metricsRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	pillWrap: {
+		display: 'flex',
+		alignItems: 'center',
+	},
+	pillGap: {
+		marginRight: 8,
+	},
+	pill: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingLeft: 8,
+		paddingRight: 10,
+		paddingTop: 4,
+		paddingBottom: 4,
+		borderRadius: 12,
+		backgroundColor: colors.background2,
+	},
+	pillText: {
+		fontSize: 14,
+		fontWeight: '600',
+		fontFamily: family.semibold,
+		color: colors.text,
+	},
+});

@@ -1,55 +1,56 @@
 import React from 'react';
-
 import { useThemeColors } from '../../services/Theme';
 
-/**
- * NotificationBadge - A red circular badge that displays unread notification count
- * Props:
- *  count: number - The number of unread notifications
- *  size: number - Optional size of the badge (default: 16)
- *  style: object - Optional additional styles
- */
 export default function NotificationBadge({ count = 0, size = 16, style }) {
-  const colors = useThemeColors();
+	const colors = useThemeColors();
 
-  // Don't render if count is 0 or negative
-  if (count <= 0) {
-    return null;
-  }
+	if (count <= 0) {
+		return null;
+	}
 
-  // For counts > 99, show "99+"
-  const displayCount = count > 99 ? '99+' : count.toString();
+	const displayCount = count > 99 ? '99+' : count.toString();
+	const badgeSize = size;
+	const fontSize = size * 0.6;
 
-  const badgeSize = size;
-  const fontSize = size * 0.6; // Font size relative to badge size
+	const badgeStyle = {
+		...styles.badge,
+		backgroundColor: colors.error,
+		minWidth: badgeSize,
+		minHeight: badgeSize,
+		borderRadius: badgeSize / 2,
+		...(style || {})
+	};
 
-  return (
-    <div       style={{...styles.badge, ...{
-          backgroundColor: colors.error}}
-    >
-      <span         style={{...styles.badgeText, ...{
-            fontSize: fontSize}}
-        numberOfLines={1}
-        adjustsFontSizeToFit
-      >
-        {displayCount}
-      </span>
-    </div>
-  );
+	const textStyle = {
+		...styles.badgeText,
+		fontSize: fontSize,
+		color: '#FFFFFF'
+	};
+
+	return (
+		<div style={badgeStyle}>
+			<span style={textStyle}>{displayCount}</span>
+		</div>
+	);
 }
 
 const styles = {
-  badge: {
-    position: 'absolute',
-    top: -6,
-    right: -6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
-  badgeText: {
-    fontWeight: '700',
-    textAlign: 'center',
-  },
+	badge: {
+		position: 'absolute',
+		top: -6,
+		right: -6,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderWidth: 1,
+		borderStyle: 'solid',
+		borderColor: '#FFFFFF',
+		paddingLeft: 4,
+		paddingRight: 4,
+	},
+	badgeText: {
+		fontWeight: '700',
+		textAlign: 'center',
+		lineHeight: 1,
+	},
 };
