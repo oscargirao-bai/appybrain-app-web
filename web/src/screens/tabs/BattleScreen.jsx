@@ -103,16 +103,6 @@ export default function BattleScreen({ navigation, route }) {
     return unsubscribe;
   }, []);
 
-  // Refresh battle data when screen comes into focus
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // Refresh battle data when screen is focused
-      DataManager.refreshSection('battles');
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
   // Handle opening battle result from navigation params (e.g., from notifications)
   useEffect(() => {
     /*
