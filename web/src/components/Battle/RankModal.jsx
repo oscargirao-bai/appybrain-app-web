@@ -35,7 +35,7 @@ export default function RankModal({ visible, onClose }) {
         <button style={StyleSheet.absoluteFill} onClick={onClose} />
         <div style={[styles.panel, { backgroundColor: colors.card, borderColor: colors.text + '22', maxHeight: panelMaxHeight, width: panelWidth }] }>
           <span style={{...styles.title, ...{ color: colors.text }}}>Níveis</span>
-          <div style={styles.list} style={{ maxHeight: panelMaxHeight - 120 }}>
+          <div style={{...styles.list, maxHeight: panelMaxHeight - 120 }}>
             {shields.map((ShieldComp, idx) => (
               <div key={idx} style={{...styles.row, ...{ borderColor: colors.text + '12' }}}>
                 <ShieldComp width={64} height={64} />
