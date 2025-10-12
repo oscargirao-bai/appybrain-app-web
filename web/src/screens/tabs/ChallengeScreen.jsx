@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 
-import { useThemeColors } from '../../services/Theme';
-import DataManager from '../../services/DataManager';
-import ApiManager from '../../services/ApiManager';
-import Banner from '../../components/Profile/Banner';
-import Info from '../../components/Learn/Info';
-import ChallengeList from '../../components/ChallengeComponents/ChallengeList';
-import Button2 from '../../components/General/Button2';
+import { useThemeColors } from '../../services/Theme.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import ApiManager from '../../services/ApiManager.js';
+import Banner from '../../components/Profile/Banner.jsx';
+import Info from '../../components/Learn/Info.jsx';
+import ChallengeList from '../../components/ChallengeComponents/ChallengeList.jsx';
+import Button2 from '../../components/General/Button2.jsx';
 // Removed Learn button and Subjects list
 // Chest removed from Challenge screen
-import NotificationsModal from '../../components/Learn/NotificationsModal';
-import RankingsModal from '../../components/Learn/RankingsModal';
-import ConfirmModal from '../../components/General/ConfirmModal';
-import Header from '../../components/General/Header';
-import NotificationBadge from '../../components/General/NotificationBadge';
-import SvgIcon from '../../components/General/SvgIcon';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import RankingsModal from '../../components/Learn/RankingsModal.jsx';
+import ConfirmModal from '../../components/General/ConfirmModal.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import SvgIcon from '../../components/General/SvgIcon.jsx';
 // import ChestRewardModal removed
 // (Content list removido ao retirar multi-part)
+
+// Web stubs for RN hooks
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useWindowDimensions = () => ({ width: window.innerWidth, height: window.innerHeight });
 
 // TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Corrigido caminho relativo: de '../../testing' (inexistente em src/) para '../../../testing'
