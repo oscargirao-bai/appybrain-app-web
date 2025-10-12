@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 
 import { useThemeColors } from '../../services/Theme.jsx';
-import apiManagerInstance from '../../services/ApiManager.js';
+import apiManagerInstance from '../../services/ApiManager.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import QuizzHeader from '../../components/Quizz/Header.jsx';
 import Question from '../../components/Quizz/Question.jsx';

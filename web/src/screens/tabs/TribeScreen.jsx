@@ -3,7 +3,7 @@ import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import ApiManager from '../../services/ApiManager.js';
+import ApiManager from '../../services/ApiManager.jsx';
 import TribesHeader from '../../components/Tribes/Header.jsx';
 import TribeInfo from '../../components/Tribes/Info.jsx';
 import Header from '../../components/General/Header.jsx';

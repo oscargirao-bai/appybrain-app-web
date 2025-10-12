@@ -8,7 +8,7 @@ import SvgIcon from '../components/General/SvgIcon.jsx';
 import Banner from '../components/Profile/Banner.jsx';
 import Info from '../components/Profile/Info.jsx';
 import MedalsList from '../components/Profile/MedalsList.jsx';
-import MedalModal from '../components/Profile/MedalModal';
+import MedalModal from '../components/Profile/MedalModal.jsx';
 
 // TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Corrigido caminho relativo para imagem moldura

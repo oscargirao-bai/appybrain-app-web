@@ -1,7 +1,7 @@
 import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 export default function Header({

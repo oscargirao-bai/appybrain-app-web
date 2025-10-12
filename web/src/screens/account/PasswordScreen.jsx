@@ -7,7 +7,7 @@ import MessageModal from '../../components/General/MessageModal.jsx';
 import Button2 from '../../components/General/Button2.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import ApiManager from '../../services/ApiManager.js';
+import ApiManager from '../../services/ApiManager.jsx';
 
 // Local require for logo
 const logoSource = require('../../../assets/logo.png');

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
 
 export default function Subject2({ title, iconName = 'book-open', svgIcon, color, onPress, height = 70, style }) {

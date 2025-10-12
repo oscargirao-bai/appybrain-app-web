@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useThemeColors } from '../../services/Theme.jsx';
-import MathJaxRenderer from '../General/MathJaxRenderer';
+import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
 
 /**
  * Question card styled like a chalkboard frame with a light border.

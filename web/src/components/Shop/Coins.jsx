@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 import DataManager from '../../services/DataManager.jsx';
 
 // Simple coins pill that displays current user coins from DataManager

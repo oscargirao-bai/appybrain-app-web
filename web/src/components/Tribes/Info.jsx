@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 // Card showing tribe high-level info
 export default function TribeInfo({

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import SvgIcon from '../General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function ChallengeCard({ 
   title, 

@@ -5,7 +5,7 @@
  *
  * Example usage:
  * ```javascript
- * import { createSvgDataUrl } from '../utils/svgUtils';
+ * import { createSvgDataUrl } from '../utils/svgUtils.jsx';
  * 
  * const svgString = '<svg><path d="M10 10 L20 20"/></svg>';
  * const dataUrl = createSvgDataUrl(svgString, '#FF0000');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...' }) {
 	const colors = useThemeColors();

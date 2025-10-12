@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import { navigationRef } from '../../services/navigationRef';
-import { family } from '../../constants/font';
+import { navigationRef } from '../../services/navigationRef.jsx';
+import { family } from '../../constants/font.jsx';
 
 export default function NotificationsModal({ visible, onClose, onUpdate }) {
 	const colors = useThemeColors();

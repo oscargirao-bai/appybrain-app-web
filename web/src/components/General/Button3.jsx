@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 /**
  * Button3 – Card estilo linha com ícone + título em negrito itálico + switch à direita.

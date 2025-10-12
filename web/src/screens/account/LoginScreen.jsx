@@ -3,7 +3,7 @@ import TextInputField from '../../components/LoginComponents/TextInput.jsx';
 import PrimaryButton from '../../components/LoginComponents/PrimaryButton.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import ApiManager from '../../services/ApiManager.js';
+import ApiManager from '../../services/ApiManager.jsx';
 import DataManager from '../../services/DataManager.jsx';
 
 // Local require for logo (as per instruction uses assets/logo.png)

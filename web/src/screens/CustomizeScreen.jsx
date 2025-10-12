@@ -9,7 +9,7 @@ import Button1 from '../components/General/Button1.jsx';
 import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import DataManager from '../services/DataManager.jsx';
-import ApiManager from '../services/ApiManager.js';
+import ApiManager from '../services/ApiManager.jsx';
 import SvgIcon from '../components/General/SvgIcon.jsx';
 
 // Simple, responsive Customize screen based on wireframe

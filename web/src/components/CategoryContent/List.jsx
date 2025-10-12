@@ -2,7 +2,7 @@ import React from 'react';
 import SvgIcon from '../General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 function StarCount({ stars, max, iconColor }) {
 	const colors = useThemeColors();

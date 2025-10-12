@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
-import UserList from '../General/UserList';
-import { family } from '../../constants/font';
+import UserList from '../General/UserList.jsx';
+import { family } from '../../constants/font.jsx';
 
 export default function RankingsModal({ visible, onClose, onFetchRankings }) {
 	const colors = useThemeColors();

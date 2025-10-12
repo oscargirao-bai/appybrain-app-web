@@ -14,7 +14,7 @@ const Appearance = {
 		return { remove: () => mediaQuery.removeEventListener('change', handler) };
 	}
 };
-import { colorsDark, colorsLight, getColorsForTheme } from '../constants/color';
+import { colorsDark, colorsLight, getColorsForTheme } from '../constants/color.jsx';
 
 // Types: theme can be 'light' | 'dark' | 'system'
 const THEME_STORAGE_KEY = 'laddermath.theme';

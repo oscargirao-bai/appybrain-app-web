@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
-import ApiManager from '../services/ApiManager.js';
+import ApiManager from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
-import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef';
-import { executeNotificationNavigation } from '../services/Notifications';
+import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef.jsx';
+import { executeNotificationNavigation } from '../services/Notifications.jsx';
 
 // Assets
 const logo = '/assets/logo.png';

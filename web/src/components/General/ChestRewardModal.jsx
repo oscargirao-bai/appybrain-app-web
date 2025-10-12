@@ -2,7 +2,7 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from './SvgIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 function getOpenedChestImage(chestType) {
 	const map = {

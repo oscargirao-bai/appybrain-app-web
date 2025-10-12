@@ -1,7 +1,7 @@
 import React from 'react';
 import SvgIcon from '../General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function Reward({ type = 'stars', amount = 0, style }) {
 	const colors = useThemeColors();

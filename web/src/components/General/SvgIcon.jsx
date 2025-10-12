@@ -1,5 +1,5 @@
 import React from 'react';
-import { normalizeSvg } from '../../utils/svgUtils';
+import { normalizeSvg } from '../../utils/svgUtils.jsx';
 
 // SvgIcon supports three common input shapes for svg assets:
 // 1) Raw SVG XML string (xml containing <svg ...>...)

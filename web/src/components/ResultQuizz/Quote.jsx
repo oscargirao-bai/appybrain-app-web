@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 import DataManager from '../../services/DataManager.jsx';
 
 /**

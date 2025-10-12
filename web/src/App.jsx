@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ThemeProvider } from './services/Theme.jsx';
 import { TranslationProvider } from './services/Translate.jsx';
 import { SearchProvider } from './services/SearchContext';
-import ApiManager from './services/ApiManager.js';
+import ApiManager from './services/ApiManager.jsx';
 import AppRouter from './AppRouter';
 
 export default function App() {

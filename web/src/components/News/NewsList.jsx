@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function NewsList({ style, limit, onPressItem }) {
 	const colors = useThemeColors();

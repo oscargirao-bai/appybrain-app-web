@@ -5,10 +5,10 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import Banner from '../../components/Profile/Banner.jsx';
 import Info from '../../components/Learn/Info.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import Stats from '../../components/ResultQuizz/Stats';
+import Stats from '../../components/ResultQuizz/Stats.jsx';
 import Button1 from '../../components/General/Button1.jsx';
-import Reward from '../../components/ResultQuizz/Reward';
-import Quote from '../../components/ResultQuizz/Quote';
+import Reward from '../../components/ResultQuizz/Reward.jsx';
+import Quote from '../../components/ResultQuizz/Quote.jsx';
 
 // Mock navigation hooks for web
 const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });

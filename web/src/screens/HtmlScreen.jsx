@@ -2,9 +2,9 @@ import React, { useMemo, useState, useEffect } from 'react';
 
 import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
-import ApiManager from '../services/ApiManager.js';
+import ApiManager from '../services/ApiManager.jsx';
 import Header from '../components/General/Header.jsx';
-import MathJaxRenderer from '../components/General/MathJaxRenderer';
+import MathJaxRenderer from '../components/General/MathJaxRenderer.jsx';
 
 // Mock navigation hooks for web
 const useNavigation = () => ({ goBack: () => window.history.back(), navigate: () => {} });

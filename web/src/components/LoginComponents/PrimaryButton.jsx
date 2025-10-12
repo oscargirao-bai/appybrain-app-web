@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function PrimaryButton({ title, onPress, disabled, loading = false }) {
   const colors = useThemeColors();

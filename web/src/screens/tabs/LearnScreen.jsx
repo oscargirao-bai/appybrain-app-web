@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import ApiManager from '../../services/ApiManager.js';
+import ApiManager from '../../services/ApiManager.jsx';
 import Banner from '../../components/Profile/Banner.jsx';
 import Info from '../../components/Learn/Info.jsx';
 import Button2 from '../../components/General/Button2.jsx';

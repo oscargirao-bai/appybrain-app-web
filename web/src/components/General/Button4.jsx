@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 // Simple pill button (full-width) used for secondary actions in Settings (e.g. Privacy Policy, Logout)
 // Props: label (string), onPress (fn), danger (bool) to color text with secondary/danger tone later if needed

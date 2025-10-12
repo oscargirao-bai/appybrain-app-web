@@ -3,11 +3,11 @@ import React, { useMemo, useState, useEffect } from 'react';
 
 import Header from '../../components/General/Header.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { useSearch } from '../../services/SearchContext';
+import { useSearch } from '../../services/SearchContext.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import ApiManager from '../../services/ApiManager.js';
-import ContentList from '../../components/CategoryContent/ContentList';
-import SearchBox from '../../components/CategoryContent/SearchBox';
+import ApiManager from '../../services/ApiManager.jsx';
+import ContentList from '../../components/CategoryContent/ContentList.jsx';
+import SearchBox from '../../components/CategoryContent/SearchBox.jsx';
 
 // Ecrã simples de Conteúdo: mostra apenas o Header com o nome da categoria recebida via params
 // Params esperados: { categoryTitle: string }

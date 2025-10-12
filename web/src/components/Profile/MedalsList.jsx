@@ -2,7 +2,7 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 // Easing removed
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 /**
  * MedalsList: paginated grid of medal icons (placeholder logic) with active/inactive styling & page dots.

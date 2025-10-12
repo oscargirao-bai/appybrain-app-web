@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 // Easing removed
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 
 /**

@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 // Modal converted to div
-import { colors } from '../../constants/color';
+import { colors } from '../../constants/color.jsx';
 import IconCircleButton from './IconCircleButton';
-import { post } from '../../services/serviceApi';
-import { useAuth } from '../../services/serviceAuth';
-import { useTranslate } from '../../hooks/useTranslate';
+import { post } from '../../services/serviceApi.jsx';
+import { useAuth } from '../../services/serviceAuth.jsx';
+import { useTranslate } from '../../hooks/useTranslate.js';
 
 /**
  * HistoryModal

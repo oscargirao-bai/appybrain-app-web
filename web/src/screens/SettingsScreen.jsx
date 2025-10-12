@@ -4,15 +4,15 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Header from '../components/General/Header.jsx';
 import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
-import { family } from '../constants/font';
-import apiManagerInstance from '../services/ApiManager.js';
+import { family } from '../constants/font.jsx';
+import apiManagerInstance from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
 import Button3 from '../components/General/Button3.jsx';
-import ButtonLightDark from '../components/Settings/ButtonLightDark';
-import ButtonLanguage from '../components/Settings/ButtonLanguage';
+import ButtonLightDark from '../components/Settings/ButtonLightDark.jsx';
+import ButtonLanguage from '../components/Settings/ButtonLanguage.jsx';
 import Button4 from '../components/General/Button4.jsx';
-import PrivacyModal from '../components/Settings/PrivacyModal';
-import ChangeNameModal from '../components/Settings/ChangeNameModal';
+import PrivacyModal from '../components/Settings/PrivacyModal.jsx';
+import ChangeNameModal from '../components/Settings/ChangeNameModal.jsx';
 import MessageModal from '../components/General/MessageModal.jsx';
 
 export default function SettingsScreen({ navigation }) {

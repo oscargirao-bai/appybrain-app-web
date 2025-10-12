@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
-import { small, normal } from '../../constants/font';
+import { small, normal } from '../../constants/font.jsx';
 
 export default function TextInput({
 	value,

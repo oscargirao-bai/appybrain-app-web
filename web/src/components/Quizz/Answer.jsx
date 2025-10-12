@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
-import MathJaxRenderer from '../General/MathJaxRenderer';
+import { family } from '../../constants/font.jsx';
+import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
 
 const SUCCESS = '#2ecc71';
 const DANGER = '#e74c3c';

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 const RARITY_MAP = {
 	1: 'common',

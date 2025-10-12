@@ -1,7 +1,7 @@
 import React from 'react';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins, stars, trophies }) {
 	const colors = useThemeColors();

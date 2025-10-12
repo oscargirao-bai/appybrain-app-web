@@ -1,7 +1,7 @@
 import React from 'react';
 // Modal converted to div
 import { useThemeColors } from '../../services/Theme.jsx';
-import { family } from '../../constants/font';
+import { family } from '../../constants/font.jsx';
 
 
 
