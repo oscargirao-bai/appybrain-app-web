@@ -820,35 +820,6 @@ class ApiManager {
         }
     }
 
-    // Get challenges list
-    async getChallenges() {
-        try {
-            const response = await this.makeAuthenticatedJSONRequest('api/app/challenges_list');
-
-            // Return the challenges array from the response
-            return response?.challenges || [];
-        } catch (error) {
-            console.error('Failed to load challenges:', error);
-            throw error;
-        }
-    }
-
-    // Start a challenge
-    async startChallenge(challengeId) {
-        try {
-            const payload = { challengeId: challengeId };
-            const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_start', {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
-
-            return response;
-        } catch (error) {
-            console.error('Failed to start challenge:', error);
-            throw error;
-        }
-    }
-
     // Submit challenge answer
     async submitChallengeAnswer(challengeId, questionId, answerId) {
         try {

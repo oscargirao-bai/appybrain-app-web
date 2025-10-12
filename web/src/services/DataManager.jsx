@@ -1630,10 +1630,6 @@ class DataManagerClass {
     shouldRandomizeAnswers() {
         return this.userConfig.randomPosition === 1;
     }
-
-    hasFullAccess() {
-        return this.userConfig.fullAccess === 1;
-    }
 }
 
 // Create singleton instance

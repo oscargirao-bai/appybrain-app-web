@@ -8,27 +8,25 @@ export default function PrimaryButton({ title, onPress, disabled, loading = fals
   const isDisabled = disabled || loading;
   
   return (
-    <button       onClick={onPress}
+    <button
+      onClick={onPress}
       disabled={isDisabled}
-      style={({ pressed }) => [
-        styles.base,
-        {
-          backgroundColor: isDisabled ? colors.text + '33' : colors.primary,
-          opacity: pressed && !isDisabled ? 0.85 : 1,
-        },
-      ]}
+      style={{
+        ...styles.base,
+        backgroundColor: isDisabled ? colors.text + '33' : colors.primary,
+        border: 'none',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+      }}
       
     >
       <div style={styles.content}>
         {loading && (
-          <div 
-            size="small" 
-            color="#101010" 
-            style={styles.loader}
-          />
+          <div style={styles.loader}>
+            {/* Loading spinner poderia ir aqui */}
+          </div>
         )}
-        <span style={{...styles.label, ...{ color: '#101010'}}>
-          {loading ? (title + '...') : title}
+        <span style={{...styles.label, color: '#101010'}}>
+          {loading ? title + '...' : title}
         </span>
       </div>
     </button>
@@ -39,11 +37,16 @@ const styles = {
   base: {
     width: '100%',
     borderRadius: 28,
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 16,
+    paddingRight: 16,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   content: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

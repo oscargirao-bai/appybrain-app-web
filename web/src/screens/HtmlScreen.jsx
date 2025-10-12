@@ -1,12 +1,14 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
-
-import { WebView } from 'react-native-webview';
 import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import ApiManager from '../services/ApiManager';
 import Header from '../components/General/Header';
 import MathJaxRenderer from '../components/General/MathJaxRenderer';
+
+// Mock navigation hooks for web
+const useNavigation = () => ({ goBack: () => window.history.back(), navigate: () => {} });
+const useRoute = () => ({ params: {} });
 
 /**
  * HtmlScreen - Displays HTML content with MathJax support for mathematical notation
@@ -120,15 +122,15 @@ export default function HtmlScreen() {
           {/* News Image */}
           {newsData.imageUrl && (
             <img 
-              source={{ uri: newsData.imageUrl }} 
-              style={styles.newsImage}
-              style={{objectFit: "cover"}}
+              src={newsData.imageUrl}
+              alt={newsData.title}
+              style={{...styles.newsImage, objectFit: "cover"}}
             />
           )}
           
           {/* News Info */}
           <div style={styles.newsInfo}>
-            <span style={{...styles.newsTitle, ...{ color: colors.text }}}> 
+            <span style={{...styles.newsTitle, color: colors.text}}> 
               {newsData.title}
             </span>
             
@@ -158,15 +160,19 @@ export default function HtmlScreen() {
       
       {/* Content rendering */}
       {uri ? (
-        // For external URLs, keep using WebView
-        <WebView source={{ uri }} style={{...styles.webview, ...{ backgroundColor: colors.background }}} originWhitelist={["*"]} />
+        // For external URLs, use iframe
+        <iframe 
+          src={uri} 
+          style={{...styles.webview, backgroundColor: colors.background}}
+          title={headerTitle}
+        />
       ) : (
         // For HTML content (especially study content), use MathJaxRenderer for math support
         <MathJaxRenderer
           content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
           enabled={true}
           scrollEnabled={true}
-          style={{...styles.webview, ...{ backgroundColor: isStudyContent ? '#ffffff' : colors.background }}}
+          style={{...styles.webview, backgroundColor: isStudyContent ? '#ffffff' : colors.background}}
           baseFontSize={16}
           backgroundColor={isStudyContent ? '#ffffff' : undefined}
           textColor={isStudyContent ? '#000000' : undefined}

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { LinearGradient } from 'expo-linear-gradient';
-
+import LinearGradient from '../../components/General/LinearGradient';
 import { useThemeColors } from '../../services/Theme';
 import Banner from '../../components/Profile/Banner';
 import Info from '../../components/Learn/Info';
@@ -10,6 +9,10 @@ import Stats from '../../components/ResultQuizz/Stats';
 import Button1 from '../../components/General/Button1';
 import Reward from '../../components/ResultQuizz/Reward';
 import Quote from '../../components/ResultQuizz/Quote';
+
+// Mock navigation hooks for web
+const useNavigation = () => ({ navigate: () => {}, goBack: () => {}, replace: () => {} });
+const useRoute = () => ({ params: {} });
 
 export default function ResultScreen1() {
   const colors = useThemeColors();
@@ -55,7 +58,7 @@ export default function ResultScreen1() {
   //console.log('ResultScreen1 received sessionResult:', sessionResult);
 
   return (
-    <div style={{...styles.safe, ...{ backgroundColor: colors.background }}}> 
+    <div style={{...styles.safe, backgroundColor: colors.background}}> 
       {(() => {
         if (!hasStats) return null;
         const glowColors = success
@@ -63,18 +66,17 @@ export default function ResultScreen1() {
           : ['rgba(239,68,68,0.0)', 'rgba(239,68,68,0.12)', 'rgba(239,68,68,0.24)']; // red
         return (
           <LinearGradient
-            pointerEvents="none"
             colors={glowColors}
             start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}
-            style={styles.bottomGlow}
+            style={{...styles.bottomGlow, pointerEvents: 'none'}}
           />
         );
       })()}
       <div style={styles.content}>
         <div style={styles.header}>
           {!!quizTitle && (
-            <span style={{...styles.quizTitle, ...{ color: colors.text }}} numberOfLines={3}>
+            <span style={{...styles.quizTitle, color: colors.text}}>
               {quizTitle}
             </span>
           )}

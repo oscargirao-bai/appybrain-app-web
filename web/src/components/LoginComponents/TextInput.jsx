@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-// TextInput converted to input
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../../components/General/SvgIcon';
 import { small, normal } from '../../constants/font';
@@ -13,12 +12,12 @@ export default function TextInput({
 	autoCapitalize = 'none',
 	autoCorrect = false,
 	label,
-	icon, // 'email' | 'password' optional hint for label icon
+	icon,
 	style,
 	containerStyle,
 	placeholderTextColor,
 }) {
-	const width = window.innerWidth; const height = window.innerHeight;
+	const width = window.innerWidth;
 	const colorTokens = useThemeColors();
 	const isTablet = width >= 768;
 	const [hidden, setHidden] = useState(!!secureTextEntry);
@@ -26,6 +25,8 @@ export default function TextInput({
 
 	const LabelIconName = icon === 'password' ? 'lock' : icon === 'email' ? 'mail' : null;
 	const placeholderColor = placeholderTextColor ?? colorTokens.secondary;
+
+	const inputType = secureTextEntry && hidden ? 'password' : keyboardType === 'email' ? 'email' : 'text';
 
 	return (
 		<div style={{...styles.container, ...containerStyle}}>
@@ -37,20 +38,23 @@ export default function TextInput({
 			)}
 			{secureTextEntry ? (
 				<div style={styles.inputBase}>
-					<RNTextInput
+					<input
+						type={inputType}
 						value={value}
-						onChangeText={onChangeText}
+						onChange={(e) => onChangeText?.(e.target.value)}
 						placeholder={placeholder}
-						placeholderTextColor={placeholderColor}
-						secureTextEntry={hidden}
-						keyboardType={keyboardType}
 						autoCapitalize={autoCapitalize}
-						autoCorrect={autoCorrect}
-						style={{...styles.inputField, ...// reserve space for the trailing icon so text doesn't overlap
-							{ paddingRight: 48 }}}
+						autoCorrect={autoCorrect ? 'on' : 'off'}
+						style={{
+							...styles.inputField,
+							...(isTablet ? styles.inputFieldLg : {}),
+							paddingRight: 48,
+							color: colorTokens.text,
+						}}
 					/>
-					<button 						onClick={() => setHidden(!hidden)}
-						
+					<button
+						type="button"
+						onClick={() => setHidden(!hidden)}
 						aria-label={hidden ? 'Show password' : 'Hide password'}
 						style={styles.trailingIcon}
 					>
@@ -59,16 +63,18 @@ export default function TextInput({
 				</div>
 			) : (
 				<div style={styles.inputBase}>
-					<RNTextInput
+					<input
+						type={inputType}
 						value={value}
-						onChangeText={onChangeText}
+						onChange={(e) => onChangeText?.(e.target.value)}
 						placeholder={placeholder}
-						placeholderTextColor={placeholderColor}
-						secureTextEntry={false}
-						keyboardType={keyboardType}
 						autoCapitalize={autoCapitalize}
-						autoCorrect={autoCorrect}
-						style={{...styles.inputField, ...isTablet && styles.inputFieldLg}}
+						autoCorrect={autoCorrect ? 'on' : 'off'}
+						style={{
+							...styles.inputField,
+							...(isTablet ? styles.inputFieldLg : {}),
+							color: colorTokens.text,
+						}}
 					/>
 				</div>
 			)}
@@ -76,51 +82,64 @@ export default function TextInput({
 	);
 }
 
-const createStyles = (colorTokens) =>
-	StyleSheet.create({
-		container: {
-			width: '100%',
-			maxWidth: 420,
-			marginBottom: 16,
-		},
-		labelRow: {
-			flexDirection: 'row',
-			alignItems: 'center',
-			marginBottom: 6,
-		},
-		labelText: {
-			...small,
-			color: colorTokens.secondary,
-			marginLeft: 6,
-		},
-		inputBase: {
-			width: '100%',
-			backgroundColor: colorTokens.background,
-			borderWidth: StyleSheet.hairlineWidth,
-			borderColor: colorTokens.secondary,
-			borderRadius: 12,
-			flexDirection: 'row',
-			alignItems: 'center',
-			position: 'relative',
-		},
-		inputField: {
-			flex: 1,
-			...normal,
-			color: colorTokens.text,
-			paddingHorizontal: 14,
-			paddingVertical: 12,
-		},
-		inputFieldLg: {
-			paddingHorizontal: 16,
-			paddingVertical: 14,
-		},
-		trailingIcon: {
-			position: 'absolute',
-			right: 8,
-			top: 0,
-			bottom: 0,
-			paddingHorizontal: 12,
-			justifyContent: 'center',
-			alignItems: 'center',
-		},
-	};
+const createStyles = (colorTokens) => ({
+	container: {
+		width: '100%',
+		maxWidth: 420,
+		marginBottom: 16,
+	},
+	labelRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 6,
+	},
+	labelText: {
+		...small,
+		color: colorTokens.secondary,
+		marginLeft: 6,
+	},
+	inputBase: {
+		width: '100%',
+		backgroundColor: colorTokens.background,
+		borderWidth: 1,
+		borderStyle: 'solid',
+		borderColor: colorTokens.secondary,
+		borderRadius: 12,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		position: 'relative',
+	},
+	inputField: {
+		flex: 1,
+		...normal,
+		border: 'none',
+		outline: 'none',
+		backgroundColor: 'transparent',
+		paddingLeft: 14,
+		paddingRight: 14,
+		paddingTop: 12,
+		paddingBottom: 12,
+	},
+	inputFieldLg: {
+		paddingLeft: 16,
+		paddingRight: 16,
+		paddingTop: 14,
+		paddingBottom: 14,
+	},
+	trailingIcon: {
+		position: 'absolute',
+		right: 8,
+		top: 0,
+		bottom: 0,
+		paddingLeft: 12,
+		paddingRight: 12,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'transparent',
+		border: 'none',
+		cursor: 'pointer',
+	},
+});
