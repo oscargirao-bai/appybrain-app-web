@@ -20,7 +20,7 @@ export default function RankDisplay({ trophies = 0, size = 170, style }) {
         aria-label="Ver níveis do brasão"
       >
         <img 
-          src={`/assets/ranks/shield${rankIndex}.png`}
+          src={`/assets/ranks/shield${rankIndex}.svg`}
           alt={title}
           style={{ width: size, height: size }}
         />
