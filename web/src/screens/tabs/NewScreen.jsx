@@ -4,8 +4,7 @@ import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import Header from '../../components/General/Header';
 import NotificationBadge from '../../components/General/NotificationBadge';
-import Icon from '@react-native-vector-icons/lucide';
-import { useNavigation } from '@react-navigation/native';
+import SvgIcon from '../../components/General/SvgIcon';
 import NotificationsModal from '../../components/Learn/NotificationsModal';
 import NewsList from '../../components/News/NewsList';
 
@@ -19,7 +18,7 @@ export default function NewScreen() {
 		const updateData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		});
+		};
 
 		// Initial load
 		updateData();
@@ -42,7 +41,7 @@ export default function NewScreen() {
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<Icon name="bell" size={22} color={colors.text} />
+							<SvgIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -54,7 +53,7 @@ export default function NewScreen() {
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<Icon name="settings" size={22} color={colors.text} />
+						<SvgIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

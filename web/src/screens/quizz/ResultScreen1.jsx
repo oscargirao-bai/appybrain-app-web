@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import Banner from '../../components/Profile/Banner';
 import Info from '../../components/Learn/Info';
@@ -204,7 +203,7 @@ function getUserProfile() {
 }
 
 function getStats() {
-  return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 });
+  return DataManager.getUserStats?.() || { points: 0, stars: 0, coins: 0 };
 }
 
 function getTribeName() {
@@ -220,7 +219,7 @@ function getUsername() {
 
 function safeImageSource(url) {
   if (!url || typeof url !== 'string') return null;
-  return { uri: url });
+  return { uri: url };
 }
 
 function getAvatarSource() {

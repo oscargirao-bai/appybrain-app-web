@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
 import ApiManager from '../../services/ApiManager';
@@ -15,7 +14,7 @@ import RankingsModal from '../../components/Learn/RankingsModal';
 import ConfirmModal from '../../components/General/ConfirmModal';
 import Header from '../../components/General/Header';
 import NotificationBadge from '../../components/General/NotificationBadge';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 // import ChestRewardModal removed
 // (Content list removido ao retirar multi-part)
 
@@ -47,7 +46,7 @@ export default function ChallengeScreen(props) {
 
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		});
+		};
 
 		// Initial load
 		updateData();
@@ -72,7 +71,7 @@ export default function ChallengeScreen(props) {
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<Icon name="bell" size={22} color={colors.text} />
+							<SvgIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -84,7 +83,7 @@ export default function ChallengeScreen(props) {
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<Icon name="settings" size={22} color={colors.text} />
+						<SvgIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

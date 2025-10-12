@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 import { family } from '../../constants/font';
 

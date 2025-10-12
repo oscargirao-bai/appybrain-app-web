@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 import DataManager from '../../services/DataManager';
@@ -14,7 +14,7 @@ export default function Coins({ style }) {
 		const updateCoins = () => {
 			const userData = DataManager.getUser();
 			setCoins(userData?.coins || 0);
-		});
+		};
 
 		// Initial load
 		updateCoins();
@@ -28,7 +28,7 @@ export default function Coins({ style }) {
 
 	return (
 		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }}}>
-			<Icon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
+			<SvgIcon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
 			<span style={{...styles.value, ...{ color: colors.primary }}}>{coins}</span>
 		</div>
 	);

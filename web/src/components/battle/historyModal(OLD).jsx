@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Modal} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../constants/color';
 import IconCircleButton from './IconCircleButton';
-import { Lucide } from '@react-native-vector-icons/lucide';
 import { post } from '../../services/serviceApi';
 import { useAuth } from '../../services/serviceAuth';
 import { useTranslate } from '../../hooks/useTranslate';

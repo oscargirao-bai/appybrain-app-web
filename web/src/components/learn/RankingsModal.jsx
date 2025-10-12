@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {Modal} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import UserList from '../General/UserList';
 import DataManager from '../../services/DataManager';
 import ApiManager from '../../services/ApiManager';
@@ -109,7 +108,7 @@ export default function RankingsModal({ visible, onClose }) {
 		const getMetricValue = (user) => {
 			// The API now returns consistent points data regardless of metric type
 			return user.points ?? 0;
-		});
+		};
 
 		// Transform API data to match UserList component format
 		const transformRanking = (rankings) => {
@@ -131,7 +130,7 @@ export default function RankingsModal({ visible, onClose }) {
 					backgroundUrl: user.backgroundUrl,
 					frameUrl: user.frameUrl
 				});
-			};
+			})
 		};
 
 		switch (tab) {
@@ -165,7 +164,7 @@ export default function RankingsModal({ visible, onClose }) {
 				aria-label={`Métrica ${label}`}
 			>
 				{icon ? (
-					<Icon name={icon} size={16} color={active ? colors.primary : colors.text} />
+					<SvgIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
 				) : (
 					<span style={{...styles.tabLabel, ...{ color: active ? colors.primary : colors.text }}}>XP</span>
 				)}
@@ -181,7 +180,7 @@ export default function RankingsModal({ visible, onClose }) {
 				
 				aria-label={`Ranking ${label}`}
 			>
-				<Icon name={icon} size={16} color={active ? colors.primary : colors.text} />
+				<SvgIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
 				<span style={{...styles.tabLabel, ...{ color: active ? colors.primary : colors.text }}}>{label}</span>
 			</button>
 		);

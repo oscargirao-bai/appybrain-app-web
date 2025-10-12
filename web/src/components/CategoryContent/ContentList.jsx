@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import {LayoutAnimation, UIManager} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import ConfirmModal from '../General/ConfirmModal';
 import Svg, { Path } from 'react-native-svg';
@@ -133,7 +132,7 @@ function DifficultySelector({ value, onChange, stars, starsByDifficulty, onConfi
 							<div style={{ flexDirection: 'row', alignItems: 'center' }}>
 								<span style={{...styles.diffText, ...{ color: '#fff' }}}>{d.label}</span>
 								{!unlocked && (
-									<Icon name="lock" size={14} color="#fff" style={{ marginLeft: 4 }} />
+									<SvgIcon name="lock" size={14} color="#fff" style={{ marginLeft: 4 }} />
 								)}
 							</div>
 						</button>
@@ -149,7 +148,7 @@ function StarBadge({ stars, max, color }) {
 
 	return (
 		<div style={{...styles.starBadge, ...{ borderColor: color }}}> 
-			<Icon name="star" size={14} color={color || colors.primary} style={{ marginRight: 4 }} />
+			<SvgIcon name="star" size={14} color={color || colors.primary} style={{ marginRight: 4 }} />
 			<span style={{...styles.starBadgeText, ...{ color: colors.iconColor }}}>{stars}/{max}</span>
 		</div>
 	);
@@ -163,7 +162,7 @@ function StudyButton({ onPress }) {
 			
 			aria-label="Estudar conteúdo"
 		>
-			<Icon name="book-open" size={18} color={colors.onAccent} style={{ marginRight: 8 }} />
+			<SvgIcon name="book-open" size={18} color={colors.onAccent} style={{ marginRight: 8 }} />
 			<span style={{...styles.studyText, ...{ color: colors.onAccent }}}>Estudar Conteúdo</span>
 		</button>
 	);
@@ -204,7 +203,7 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 					</span>
 					<StarBadge stars={item.stars} max={item.maxStars} color={item.iconColor} />
 				</div>
-				<Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={item.iconColor} />
+				<SvgIcon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={item.iconColor} />
 			</button>
 			{expanded && (
 				<div style={styles.expandedBody}>

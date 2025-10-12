@@ -4,7 +4,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Header from '../../components/General/Header';
 import { useThemeColors } from '../../services/Theme';
 import { useSearch } from '../../services/SearchContext';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import DataManager from '../../services/DataManager';
 import ApiManager from '../../services/ApiManager';
 import ContentList from '../../components/CategoryContent/ContentList';
@@ -54,7 +53,7 @@ export default function ContentScreen() {
 						iconColor: categoryIconColor || foundCategory?.iconColor, // Pass category iconColor to content items
 						color: categoryColor || foundCategory?.color, // Pass category color to content items
 					};
-				};
+				});
 				
 				//console.log('ContentScreen: Setting transformedContents =', transformedContents); // Debug log
 				setContents(transformedContents);
@@ -85,13 +84,13 @@ export default function ContentScreen() {
 
 	// Create starsByDifficulty object for ContentList
 	const starsByDifficulty = useMemo(() => {
-		const result = {});
+		const result = {};
 		// Use filteredContents which already has updated star data
 		filteredContents.forEach(content => {
 			const contentStars = DataManager.getContentStars(content.id);
 			//console.log(`ContentScreen: starsByDifficulty for ${content.title}:`, contentStars.stars); // Debug log
 			result[content.id] = contentStars.stars; // stars object with easy/hard/genius keys
-		};
+		});
 		//console.log('ContentScreen: Final starsByDifficulty:', result); // Debug log
 		return result;
 	}, [filteredContents]); // Use filteredContents instead of contents

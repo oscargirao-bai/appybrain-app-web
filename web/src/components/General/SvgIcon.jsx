@@ -78,7 +78,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
               const prev = classMap.get(clsName) || '';
               classMap.set(clsName, (prev ? prev + ';' : '') + declText);
             }
-          };
+          })
         }
 
         if (classMap.size > 0) {

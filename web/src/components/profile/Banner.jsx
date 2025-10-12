@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 
 import { useThemeColors } from '../../services/Theme';
 import { LinearGradient } from 'expo-linear-gradient';
-import Icon from '@react-native-vector-icons/lucide';
-import { useNavigation } from '@react-navigation/native';
+import SvgIcon from '../../components/General/SvgIcon';
 
 /**
  * Profile Banner (minimal variant) with support for avatar frames.
@@ -131,7 +130,7 @@ export default function Banner({
 								style={{...styles.avatarImg, ...{ opacity: avatarOpacity }}} />
 						) : (
 							<div style={{...styles.avatarImg, ...{ justifyContent: 'center'}}> 
-								<Icon name="user" size={64} color={avatarIconBlue} />
+								<SvgIcon name="user" size={64} color={avatarIconBlue} />
 							</div>
 						)}
 						{/* Não mostra placeholder se for avatar default */}

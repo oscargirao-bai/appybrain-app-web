@@ -50,7 +50,7 @@ export default function TribesHeader({
       if (!scaleMap.current[t.id]) {
         scaleMap.current[t.id] = new Animated.Value(t.id === active ? 1 : 0.94);
       }
-    };
+    })
   }, [sortedTribes, active]);
 
   // Update animations when active tribe changes

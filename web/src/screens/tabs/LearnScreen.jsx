@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import DataManager from '../../services/DataManager';
@@ -19,7 +18,7 @@ import ChestRewardModal from '../../components/General/ChestRewardModal';
 import ChestBrowserModal from '../../components/General/ChestBrowserModal';
 import Header from '../../components/General/Header';
 import NotificationBadge from '../../components/General/NotificationBadge';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 // (Content list removido ao retirar multi-part)
 
 // TESTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -57,7 +56,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 			setDisciplines(disciplinesData);
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		});
+		};
 
 		// Initial load
 		updateData();
@@ -73,7 +72,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 	const handleChestOpen = async () => {
 		setChestBrowserOpen(true);
 		setReopenBrowserAfterReward(false); // fresh open
-	});
+	};
 
 	const handleChestOpenedFromBrowser = (rewards, chestType) => {
 		setChestRewards(rewards || []);
@@ -116,7 +115,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<Icon name="bell" size={22} color={colors.text} />
+							<SvgIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -128,7 +127,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications }) 
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<Icon name="settings" size={22} color={colors.text} />
+						<SvgIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>

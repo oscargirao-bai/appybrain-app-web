@@ -77,7 +77,7 @@ export const normalizeSvg = (svgString, options = {}) => {
     if (!v) return undefined;
     const num = parseFloat(v);
     return Number.isFinite(num) ? num : undefined;
-  });
+  };
   const w = parseSize(widthMatch?.[1]);
   const h = parseSize(heightMatch?.[1]);
 

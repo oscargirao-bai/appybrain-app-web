@@ -5,7 +5,6 @@ import { useThemeColors } from '../../services/Theme';
 import { useSearch } from '../../services/SearchContext';
 import DataManager from '../../services/DataManager';
 import Header from '../../components/General/Header';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import ContentList from '../../components/CategoryContent/List';
 import SearchBox from '../../components/CategoryContent/SearchBox';
 
@@ -41,7 +40,7 @@ export default function CategoryScreen() {
 						stars: categoryStars.earnedStars,
 						maxStars: categoryStars.maxStars
 					};
-				};
+				});
 				//console.log('CategoryScreen: Setting transformedCategories =', transformedCategories); // Debug log
 				setCategories(transformedCategories);
 			} else {

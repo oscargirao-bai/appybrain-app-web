@@ -61,7 +61,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 		const updateNotificationsData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		});
+		};
 
 		// Initial load
 		updateNotificationsData();

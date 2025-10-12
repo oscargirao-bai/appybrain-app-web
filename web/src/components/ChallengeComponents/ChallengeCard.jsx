@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 
 // ChallengeCard
@@ -70,16 +70,16 @@ export default function ChallengeCard({
             style={{objectFit: "contain"}}
           />
         ) : (
-          <Icon name="file-text" size={26} color={isAvailable ? colors.secondary : colors.muted} />
+          <SvgIcon name="file-text" size={26} color={isAvailable ? colors.secondary : colors.muted} />
         )}
         {isCompleted && (
           <div style={{...styles.statusBadge, ...{ backgroundColor: colors.success }}}>
-            <Icon name="check" size={12} color="white" />
+            <SvgIcon name="check" size={12} color="white" />
           </div>
         )}
         {isExpired && !isCompleted && (
           <div style={{...styles.statusBadge, ...{ backgroundColor: colors.danger || '#FF6B6B' }}}>
-            <Icon name="x" size={12} color="white" />
+            <SvgIcon name="x" size={12} color="white" />
           </div>
         )}
       </div>
@@ -94,7 +94,7 @@ export default function ChallengeCard({
         ) : null}
         <div style={styles.metaRow}>
           <div style={styles.metaGroup}>
-            <Icon name="coins" size={18} color={isAvailable ? colors.primary : colors.muted} />
+            <SvgIcon name="coins" size={18} color={isAvailable ? colors.primary : colors.muted} />
             <span style={{...styles.metaText, ...{ 
                 color: isAvailable ? colors.primary : colors.muted}}>
               {coins}
@@ -102,7 +102,7 @@ export default function ChallengeCard({
           </div>
           {timeLeftLabel ? (
             <div style={{...styles.metaGroup, ...{ marginLeft: 14 }}}>
-              <Icon name="clock" size={18} color={colors.muted} />
+              <SvgIcon name="clock" size={18} color={colors.muted} />
               <span style={{...styles.metaText, ...{ color: colors.muted}}>
                 {timeLeftLabel}
               </span>

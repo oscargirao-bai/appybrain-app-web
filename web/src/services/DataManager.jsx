@@ -1,5 +1,4 @@
 import apiManagerInstance from './ApiManager';
-import * as FileSystem from 'expo-file-system/legacy';
 
 class DataManagerClass {
     constructor() {
@@ -51,8 +50,8 @@ class DataManagerClass {
             await this.clearImageCache();
 
             // Create fresh cache directory for this session
-            const cacheDir = `${FileSystem.documentDirectory}session_cache/`;
-            await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true });
+            const cacheDir = `${"/"}session_cache/`;
+            await Promise.resolve();
 
             // Reset cache tracking
             this.imageCache.clear();
@@ -101,10 +100,10 @@ class DataManagerClass {
             this.downloadingImages.add(url);
 
             const filename = this._getCacheFilename(url);
-            const localPath = `${FileSystem.documentDirectory}session_cache/${filename}`;
+            const localPath = `${"/"}session_cache/${filename}`;
 
             // Download image (no need to check if exists since we start fresh each session)
-            const downloadResult = await FileSystem.downloadAsync(url, localPath);
+            const downloadResult = await Promise.resolve({ uri: url });
 
             if (downloadResult.status === 200) {
                 this.imageCache.set(url, localPath);
@@ -239,7 +238,7 @@ class DataManagerClass {
             } catch (err) {
                 console.error('Error in data subscriber:', err);
             }
-        };
+        });
     }
 
     // Get current data
@@ -248,7 +247,7 @@ class DataManagerClass {
             data: this.data,
             loading: this.loading,
             error: this.error
-        });
+        };
     }
 
     // Load all app data from API
@@ -278,7 +277,7 @@ class DataManagerClass {
                 points: null,
                 stars: null,
                 xp: null
-            });
+            };
             
             try {
                 // Load all ranking types in parallel
@@ -324,8 +323,8 @@ class DataManagerClass {
             //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('/api/gamification/quotes').catch(error => {
                 console.warn('DataManager: Failed to load quotes:', error);
-                return { items: [] });
-            };
+                return { items: [] };
+            });
 
             // Process and cache cosmetic images
             //console.log('DataManager: Processing and caching cosmetic images...');
@@ -349,17 +348,17 @@ class DataManagerClass {
                 if (notification.readAt && notification.id) {
                     localReadStatuses.set(notification.id, notification.readAt);
                 }
-            };
+            });
             
             // Merge fresh API data with preserved local read statuses
             const mergedNotifications = notificationsData.map(notification => {
                 const localReadAt = localReadStatuses.get(notification.id);
                 if (localReadAt && !notification.readAt) {
                     // Preserve local read status if API hasn't caught up yet
-                    return { ...notification, readAt: localReadAt });
+                    return { ...notification, readAt: localReadAt };
                 }
                 return notification;
-            };
+            });
 
             this.data = {
                 userInfo: processedData.userInfo,
@@ -407,7 +406,7 @@ class DataManagerClass {
             chests: '/api/app/gamification_user_chests',
             challenges: '/api/app/challenges_list',
             battles: '/api/app/battle_list'
-        });
+        };
 
         if (!endpoints[section]) {
             throw new Error(`Unknown section: ${section}`);
@@ -473,7 +472,7 @@ class DataManagerClass {
             badges: [],
             battles: [],
             lastUpdated: null
-        });
+        };
         this.loading = false;
         this.error = null;
         this.imageCache.clear();
@@ -488,19 +487,19 @@ class DataManagerClass {
             if (!this.downloadingImages) this.downloadingImages = new Set();
 
             // Clear both old persistent cache and session cache directories
-            const oldCacheDir = `${FileSystem.documentDirectory}image_cache/`;
-            const sessionCacheDir = `${FileSystem.documentDirectory}session_cache/`;
+            const oldCacheDir = `${"/"}image_cache/`;
+            const sessionCacheDir = `${"/"}session_cache/`;
 
             // Remove old cache directory if it exists
-            const oldDirInfo = await FileSystem.getInfoAsync(oldCacheDir);
+            const oldDirInfo = await Promise.resolve({ exists: false });
             if (oldDirInfo.exists) {
-                await FileSystem.deleteAsync(oldCacheDir);
+                await Promise.resolve();
             }
 
             // Remove session cache directory if it exists
-            const sessionDirInfo = await FileSystem.getInfoAsync(sessionCacheDir);
+            const sessionDirInfo = await Promise.resolve({ exists: false });
             if (sessionDirInfo.exists) {
-                await FileSystem.deleteAsync(sessionCacheDir);
+                await Promise.resolve();
             }
 
             this.imageCache.clear();
@@ -586,7 +585,7 @@ class DataManagerClass {
                     name: user.organizationName || '',
                     logoUrl: user.organizationUrl || '',
                     id: user.organizationId || null,
-                });
+                };
 
                 // Cache the organization logo if URL exists
                 if (this.data.organizationInfo.logoUrl) {
@@ -650,7 +649,7 @@ class DataManagerClass {
             organization: user.organizationName || '',
             groups: user.groups || [],
             tribes: user.tribes || []
-        });
+        };
     }
 
     // Get user profile display info
@@ -672,7 +671,7 @@ class DataManagerClass {
             status: user.status || 'active',
             lastLogin: user.lastLogin || null,
             createdAt: user.createdAt || null
-        });
+        };
     }
 
     // Get all quotes
@@ -858,17 +857,17 @@ class DataManagerClass {
 
     // Get total stars for user
     getTotalStars() {
-        return this.data.userStars?.totals || { earnedStars: 0, maxStars: 0 });
+        return this.data.userStars?.totals || { earnedStars: 0, maxStars: 0 };
     }
 
     // Get stars for specific area/discipline
     getAreaStars(areaId) {
-        return this.data.userStars?.byArea?.find(area => area.areaId === areaId) || { earnedStars: 0, maxStars: 0 });
+        return this.data.userStars?.byArea?.find(area => area.areaId === areaId) || { earnedStars: 0, maxStars: 0 };
     }
 
     // Get stars for specific category
     getCategoryStars(categoryId) {
-        return this.data.userStars?.byCategory?.find(category => category.categoryId === categoryId) || { earnedStars: 0, maxStars: 0 });
+        return this.data.userStars?.byCategory?.find(category => category.categoryId === categoryId) || { earnedStars: 0, maxStars: 0 };
     }
 
     // Get stars for specific content
@@ -1004,7 +1003,7 @@ class DataManagerClass {
                             categoryColor: category.color
                         })));
                     }
-                };
+                });
             }
             return allContents;
         }, []);
@@ -1065,7 +1064,7 @@ class DataManagerClass {
 
             if (!hasChanges) {
                 //console.log('DataManager: No changes in notifications, skipping update');
-                return { hasChanges: false, newItems: [] });
+                return { hasChanges: false, newItems: [] };
             }
 
             // Find new items that weren't in previous notifications
@@ -1079,7 +1078,7 @@ class DataManagerClass {
             // Notify subscribers
             this._notifySubscribers();
 
-            return { hasChanges: true, newItems: newItemIds });
+            return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
             console.error('DataManager: Failed to load notifications:', error);
             throw error;
@@ -1094,7 +1093,8 @@ class DataManagerClass {
             if (isMarkAll) {
                 // Optimistically mark all unread as read
                 this.data.notifications = this.data.notifications.map(n =>
-                    n.readAt ? n : { ...n, readAt: currentTime });
+                    n.readAt ? n : { ...n, readAt: currentTime }
+                );
             } else {
                 // Optimistically mark a single notification
                 this.data.notifications = this.data.notifications.map(n =>
@@ -1134,7 +1134,7 @@ class DataManagerClass {
 
             if (!hasChanges) {
                 //console.log('DataManager: No changes in news, skipping update');
-                return { hasChanges: false, newItems: [] });
+                return { hasChanges: false, newItems: [] };
             }
 
             // Find new items that weren't in previous news
@@ -1148,7 +1148,7 @@ class DataManagerClass {
             // Notify subscribers
             this._notifySubscribers();
 
-            return { hasChanges: true, newItems: newItemIds });
+            return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
             console.error('DataManager: Failed to load news:', error);
             throw error;
@@ -1190,7 +1190,7 @@ class DataManagerClass {
                 if (endTime && now > endTime) return 'expired'; // Priority 3
                 if (startTime && now < startTime) return 'not-started'; // Priority 2
                 return 'available'; // Priority 1
-            });
+            };
 
             const stateA = getChallengeState(a);
             const stateB = getChallengeState(b);
@@ -1201,14 +1201,14 @@ class DataManagerClass {
                 'not-started': 2,
                 'expired': 3,
                 'completed': 3
-            });
+            };
             
             const priorityDiff = priorityOrder[stateA] - priorityOrder[stateB];
             if (priorityDiff !== 0) return priorityDiff;
             
             // Within same priority, sort by ID (newest first)
             return b.id - a.id;
-        };
+        });
     }
 
     getCosmeticsByType(cosmeticTypeId) {
@@ -1263,7 +1263,7 @@ class DataManagerClass {
                 this.data.cosmetics[cosmeticsIndex] = {
                     ...this.data.cosmetics[cosmeticsIndex],
                     acquired: 1
-                });
+                };
             }
 
             // Update user coins
@@ -1287,7 +1287,7 @@ class DataManagerClass {
                     this.data.cosmetics[cosmeticsIndex] = {
                         ...this.data.cosmetics[cosmeticsIndex],
                         acquired: 0
-                    });
+                    };
                 }
 
                 // Revert user coins
@@ -1300,13 +1300,13 @@ class DataManagerClass {
 
                 // Optionally show error to user here or let component handle it
                 throw error;
-            };
+            });
 
             return {
                 success: true,
                 newCoins,
                 cosmetic: this.data.cosmetics[cosmeticsIndex]
-            });
+            };
 
         } catch (error) {
             console.error('Purchase failed:', error);
@@ -1330,7 +1330,7 @@ class DataManagerClass {
         const currentUser = this.getUser();
         
         if (!battles || !currentUser) {
-            return { pending: [], completed: [] });
+            return { pending: [], completed: [] };
         }
 
         const pending = [];
@@ -1373,7 +1373,7 @@ class DataManagerClass {
                 const correct = results.filter(r => r.correct === 1).length;
                 const total = results.length;
                 const timeSec = results.reduce((sum, r) => sum + (r.timeMs || 0), 0) / 1000;
-                return { correct, total, timeSec });
+                return { correct, total, timeSec };
             };
 
             const userStats = calculateStats(userResults);
@@ -1401,14 +1401,14 @@ class DataManagerClass {
             } else {
                 completed.push(historyItem);
             }
-        };
+        });
 
         // Sort by date (most recent first)
         const sortByDate = (a, b) => {
             const dateA = new Date(a.startedAt || 0);
             const dateB = new Date(b.startedAt || 0);
             return dateB - dateA;
-        });
+        };
 
         return {
             pending: pending.sort(sortByDate),
@@ -1484,7 +1484,7 @@ class DataManagerClass {
             minutesSinceUpdate: this.data.lastUpdated
                 ? Math.round((Date.now() - new Date(this.data.lastUpdated)) / 60000)
                 : null
-        });
+        };
 
         if (isDataStale && autoReload) {
             //console.log('Auto-reloading stale data');
@@ -1509,7 +1509,7 @@ class DataManagerClass {
             loading: this.loading,
             error: this.error,
             freshness: freshnessCheck
-        });
+        };
     }
 
     // Update user stats from quiz quit response
@@ -1570,7 +1570,7 @@ class DataManagerClass {
             const cosmetics = this.data.cosmetics || [];
 
             // Create a new user object to ensure React detects the change
-            const updatedUser = { ...user });
+            const updatedUser = { ...user };
             //console.log('DataManager.equipCosmetics: Original user:', user.avatarUrl);
 
             const applyEquip = (id, typeId, userField) => {
@@ -1619,7 +1619,7 @@ class DataManagerClass {
         this.userConfig = {
             randomPosition: config.randomPosition ?? this.userConfig.randomPosition,
             fullAccess: config.fullAccess ?? this.userConfig.fullAccess
-        });
+        };
         //console.log('DataManager: User config set:', this.userConfig);
     }
 

@@ -35,16 +35,12 @@ export default function PasswordScreen({ navigation, route }) {
   // Keyboard handling to shift content so inputs remain visible
   const [keyboardShift, setKeyboardShift] = useState(0);
   useEffect(() => {
-    const showEvent = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
-    const hideEvent = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
-    const showSub = Keyboard.addListener(showEvent, (e) => {
-      const kbHeight = e?.endCoordinates?.height || 0;
-      const desired = Math.max(0, kbHeight - insets.bottom - 40);
-      setKeyboardShift(desired > 260 ? 260 : desired);
-    });
-    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardShift(0));
-    return () => { showSub.remove(); hideSub.remove(); });
-  }, [insets.bottom]);
+    const showEvent = false ? 'keyboardDidShow' : 'keyboardWillShow';
+    const hideEvent = false ? 'keyboardDidHide' : 'keyboardWillHide';
+    const showSub = { remove: () => {} };
+    const hideSub = { remove: () => {} };
+    return () => { showSub.remove(); hideSub.remove(); };
+  }, []);
 
   async function onSubmit() {
     // Basic validations
@@ -115,9 +111,9 @@ export default function PasswordScreen({ navigation, route }) {
         <div style={styles.staticContainer}> 
           <div style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
             {/* Brand Logo */}
-            <img               source={logoSource}
-              style={{ width: logoWidth, aspectRatio: 1, marginTop: 24 }}
-              style={{objectFit: "contain"}}
+            <img               
+              src={logoSource}
+              style={{ width: logoWidth, aspectRatio: 1, marginTop: 24, objectFit: "contain" }}
               
               aria-label="App logo"
             />

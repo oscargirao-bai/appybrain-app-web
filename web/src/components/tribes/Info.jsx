@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 import { family } from '../../constants/font';
 
@@ -42,13 +42,13 @@ export default function TribeInfo({
 							aria-label={`${joined ? 'Sair da' : 'Entrar na'} tribo ${name}`}
 							accessibilityState={{ disabled: !joined && disabledJoin }}
 						>
-							<Icon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
+							<SvgIcon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
 							<span style={styles.joinTextSmall}>{joinLabel}</span>
 						</button>
 					</div>
 					<div style={styles.statsBelowNameRow}>
 						<div style={{...styles.statInlineCompact, ...{ backgroundColor: colors.text + '08'}}> 
-							<Icon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
+							<SvgIcon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
 							<span style={{...styles.statValueInline, ...{ color: colors.text }}}>{members}</span>
 						</div>
 					</div>

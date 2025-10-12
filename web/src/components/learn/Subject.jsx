@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 /**
  * Subject card (circular) with icon + label underneath.
@@ -46,7 +46,7 @@ export default function Subject({ title, iconName = 'book-open', onPress, size =
 					transform: [{ scale: pressScale }],
 				}]}
 				>
-					<Icon name={iconName} size={size * 0.36} color={addAlpha(colors.text, 0.9)} />
+					<SvgIcon name={iconName} size={size * 0.36} color={addAlpha(colors.text, 0.9)} />
 				</Animated.View>
 			</button>
 			<span style={{...styles.label, ...{ color: colors.accent }}}>{(title || '').toUpperCase()}</span>

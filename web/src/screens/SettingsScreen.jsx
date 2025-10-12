@@ -29,7 +29,7 @@ export default function SettingsScreen({ navigation }) {
 		const updateData = () => {
 			const userData = DataManager.getUser();
 			setCurrentUserName(userData?.nickname || userData?.firstName || '');
-		});
+		};
 		
 		// Initial load
 		updateData();

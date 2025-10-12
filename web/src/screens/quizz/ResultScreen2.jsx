@@ -2,10 +2,9 @@ import React, { useMemo, useEffect, useState } from 'react';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import Banner from '../../components/Profile/Banner';
 import Info from '../../components/Learn/Info';
 import DataManager from '../../services/DataManager';
@@ -155,7 +154,7 @@ export default function ResultScreen2() {
 			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
 				<div style={{...styles.content, ...{ justifyContent: 'center'}}>
 					<div style={styles.loadingContainer}>
-						<Icon name="loader" size={32} color={colors.primary} style={{ marginBottom: 16 }} />
+						<SvgIcon name="loader" size={32} color={colors.primary} style={{ marginBottom: 16 }} />
 						<span style={{...styles.loadingText, ...{ color: colors.text }}}>A carregar resultado...</span>
 					</div>
 				</div>
@@ -199,7 +198,7 @@ export default function ResultScreen2() {
 									if (!isFinal) {
 										return (
 											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
-											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
+											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
 											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
 										</div>
 									);
@@ -216,7 +215,7 @@ export default function ResultScreen2() {
 									return (
 										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
 											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
-											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
+											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
 											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
 										</div>
 									);
@@ -245,12 +244,12 @@ export default function ResultScreen2() {
 							<ResultsDots sequence={oppSeq} colors={colors} dotSize={isShort ? 24 : 30} />
 							<div style={styles.timeHelpRow}>
 								<div style={styles.timeSection}>
-									<Icon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
+									<SvgIcon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
 									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
 									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{isFinal ? formatSeconds(oppTotalSec) : '...'}</span>
 								</div>
 								<div style={styles.helpSection}>
-									<Icon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
+									<SvgIcon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
 									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
 									<HelpIcons helpsData={oppHelps} colors={colors} />
 								</div>
@@ -265,12 +264,12 @@ export default function ResultScreen2() {
 							<ResultsDots sequence={mySeq} colors={colors} dotSize={isShort ? 24 : 30} />
 							<div style={styles.timeHelpRow}>
 								<div style={styles.timeSection}>
-									<Icon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
+									<SvgIcon name="clock" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
 									<span style={{...styles.timeLabel, ...{ color: colors.text + '99' }}}>Tempo Total</span>
 									<span style={{...styles.timeValue, ...{ color: colors.text }}}>{formatSeconds(myTotalSec)}</span>
 								</div>
 								<div style={styles.helpSection}>
-									<Icon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
+									<SvgIcon name="lightbulb" size={14} color={colors.text + '99'} style={{ marginRight: 6 }} />
 									<span style={{...styles.helpLabel, ...{ color: colors.text + '99' }}}>Ajuda</span>
 									<HelpIcons helpsData={myHelps} colors={colors} />
 								</div>
@@ -295,7 +294,7 @@ export default function ResultScreen2() {
 									if (!isFinal) {
 										return (
 											<div style={styles.trophyRow} aria-label={'Variação de troféus: pendente'}>
-											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
+											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
 											<span style={{...styles.trophyValue, ...{ color: colors.text }}}>...</span>
 										</div>
 									);
@@ -311,7 +310,7 @@ export default function ResultScreen2() {
 									return (
 										<div style={styles.trophyRow} aria-label={`Variação de troféus: ${sign}${value}`}>
 											{sign ? (<span style={{...styles.trophySign, ...{ color: tone }}}>{sign}</span>) : null}
-											<Icon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
+											<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginRight: 4 }} />
 											<span style={{...styles.trophyValue, ...{ color: tone }}}>{value}</span>
 										</div>
 									);
@@ -670,7 +669,7 @@ function HelpIcons({ helpsData, colors }) {
 				{helpsData.heroes.slice(0, 4).map((heroId, index) => {
 					const iconName = getHeroIcon(heroId);
 					return iconName ? (
-						<Icon 
+						<SvgIcon 
 							key={`${heroId}-${index}`} 
 							name={iconName} 
 							size={14} 
@@ -741,7 +740,7 @@ function ResultsDots({ sequence = [], colors, dotSize = 30 }) {
 				const radius = Math.round(size / 2);
 				return (
 					<div key={idx} style={{...styles.dot, ...{ width: size}}> 
-						<Icon name={iconName} size={12} color={iconColor} />
+						<SvgIcon name={iconName} size={12} color={iconColor} />
 					</div>
 				);
 			})}

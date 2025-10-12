@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
@@ -19,7 +19,7 @@ function StarCount({ stars, max, iconColor }) {
 		<div 			style={{...styles.countBadge, ...{ borderColor: iconColor || colors.text }}}
 			aria-label={`${stars} estrelas`}
 		>
-			<Icon name="star" size={14} color={iconColor || colors.text} style={{ marginRight: 4 }} />
+			<SvgIcon name="star" size={14} color={iconColor || colors.text} style={{ marginRight: 4 }} />
 			<span style={{...styles.countText, ...{ color: iconColor || colors.text }}}>{stars}</span>
 		</div>
 	);
@@ -69,7 +69,7 @@ export default function ContentList({ data, onPressItem }) {
 										/>
 									</div>
 								) : (
-									<Icon name="book-open" size={40} color={baseColor} style={styles.leftIcon} />
+									<SvgIcon name="book-open" size={40} color={baseColor} style={styles.leftIcon} />
 								)}
 								<span style={{...styles.itemTitle, ...{ color: iconColor }}} numberOfLines={2}>{item.title}</span>
 								<StarCount stars={item.stars} max={item.maxStars} iconColor={iconColor} />

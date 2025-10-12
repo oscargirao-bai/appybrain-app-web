@@ -3,7 +3,7 @@ import React from 'react';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 /**
  * Basic reusable header.
@@ -41,7 +41,7 @@ export default function Header({
 						style={styles.iconBtn}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<Icon name="arrow-left" size={24} color={colors.text} />
+						<SvgIcon name="arrow-left" size={24} color={colors.text} />
 					</button>
 				)}
 				{left}

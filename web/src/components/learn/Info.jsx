@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -39,7 +39,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 									return (
 										<div key="stars" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Estrelas: ${stars}`}>
 											<div style={styles.pill}>
-												<Icon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
+												<SvgIcon name="star" size={18} color={colors.primary} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{stars}</span>
 											</div>
 										</div>
@@ -49,7 +49,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 									return (
 										<div key="coins" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Moedas: ${coins}`}>
 											<div style={styles.pill}>
-												<Icon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
+												<SvgIcon name="coins" size={18} color={colors.accent} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{coins}</span>
 											</div>
 										</div>
@@ -59,7 +59,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 									return (
 										<div key="trophies" style={{...styles.pillWrap, ...!isLast && styles.pillGap}} aria-label={`Troféus: ${trophies}`}>
 											<div style={styles.pill}>
-												<Icon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
+												<SvgIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
 												<span style={styles.pillText}>{trophies}</span>
 											</div>
 										</div>

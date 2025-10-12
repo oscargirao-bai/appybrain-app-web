@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -34,7 +34,7 @@ export default function UserList({
 			if (metric === 'points') return u.trophies || 0;
 			if (metric === 'xp') return u.xp || 0;
 			return u.stars || 0;
-		});
+		};
 		return [...users].sort((a, b) => getValue(b) - getValue(a));
 	}, [users, metric]);
 
@@ -91,14 +91,14 @@ export default function UserList({
 			>
 				<div style={styles.rankCol}>
 					{topMedal ? (
-						<Icon name={medalIcon} size={22} color={medalColor} />
+						<SvgIcon name={medalIcon} size={22} color={medalColor} />
 					) : (
 						<span style={{...styles.rankText, ...{ color: colors.text + 'AA' }}}>{item.rank}</span>
 					)}
 				</div>
 				<div style={{...styles.avatar, ...{ borderColor: colors.primary + '66' }}}> 
 					{item.avatarIcon ? (
-						<Icon name={item.avatarIcon} size={20} color={colors.primary} />
+						<SvgIcon name={item.avatarIcon} size={20} color={colors.primary} />
 					) : (
 						<span style={{...styles.avatarLetter, ...{ color: colors.primary }}}>{(item.name || '?').charAt(0).toUpperCase()}</span>
 					)}
@@ -114,11 +114,11 @@ export default function UserList({
 				</div>
 				<div style={styles.starsCol}>
 					{metric === 'points' ? (
-						<Icon name="trophy" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
+						<SvgIcon name="trophy" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
 					) : metric === 'xp' ? (
 						<span style={{...styles.valuePrefix, ...{ color: colors.primary}}>XP</span>
 					) : (
-						<Icon name="star" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
+						<SvgIcon name="star" size={16} color={colors.primary} style={{ marginLeft: 8, marginRight: 4}} />
 					)}
 					<span style={{...styles.starsText, ...{ color: colors.text }}}>{currentValue}</span>
 				</div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import {Modal, Easing} from 'react-native';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import SvgIcon from '../General/SvgIcon';
 import { family } from '../../constants/font';
@@ -66,7 +66,7 @@ export default function MedalModal({ visible, onClose, medal }) {
 									</div>
 								) : (
 									<div style={{ transform: [{ scale: 1.2 }], alignItems: 'center', justifyContent: 'center' }}>
-										<Icon 
+										<SvgIcon 
 											name="medal" 
 											size={38} 
 											color={medal.unlocked ? (medal.iconColor || colors.text) : colors.placeholder} 

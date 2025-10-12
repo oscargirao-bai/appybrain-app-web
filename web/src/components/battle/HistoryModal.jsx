@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { family } from '../../constants/font';
 
 /**
@@ -49,7 +49,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
           <Animated.View style={[styles.card, { opacity, transform: [{ scale }] }]}> 
             {/* Close button */}
             <button onClick={onClose} style={styles.closeWrap}  aria-label={translate('common.close')}>
-              <Icon name="x" size={22} color={colors.text} />
+              <SvgIcon name="x" size={22} color={colors.text} />
             </button>
 
             <span style={{...styles.title, ...{ color: colors.text }}}>

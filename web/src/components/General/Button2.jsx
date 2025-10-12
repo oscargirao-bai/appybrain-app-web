@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 
 /**
@@ -34,7 +34,7 @@ export default function Button2({ onPress, size = 56, iconName = 'menu', style }
       hitSlop={8}
     >
       <div style={styles.inner}>
-        {iconName ? <Icon name={iconName} size={iconSize} color={colors.text} /> : null}
+        {iconName ? <SvgIcon name={iconName} size={iconSize} color={colors.text} /> : null}
       </div>
     </button>
   );

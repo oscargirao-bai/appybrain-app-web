@@ -45,7 +45,7 @@ const secureSet = async (key, value) => {
 
 const secureGet = async (key) => {
     return AsyncStorage.getItem(key);
-});
+};
 
 const secureDelete = async (key) => {
     await AsyncStorage.removeItem(key);
@@ -99,14 +99,14 @@ class ApiManager {
                 accessToken: this.accessToken,
                 refreshToken: this.refreshToken,
                 expiresAt: this.expiresAt
-            });
+            };
         } catch (error) {
             console.error('Failed to load session:', error);
             return {
                 accessToken: null,
                 refreshToken: null,
                 expiresAt: null
-            });
+            };
         }
     }
 
@@ -188,7 +188,7 @@ class ApiManager {
                 newAccessToken,
                 newRefreshToken,
                 newExpiresIn
-            });
+            };
         } catch (error) {
             console.error('Failed to update rotated tokens:', error);
         }
@@ -276,7 +276,7 @@ class ApiManager {
                 message: data.message || 'No message provided',
                 status: response.status,
                 ...data
-            });
+            };
         } catch (error) {
             console.error('Forgot password error:', error);
             throw error;
@@ -351,7 +351,7 @@ class ApiManager {
                         'Content-Type': 'application/json',
                         ...(options.headers || {})
                     }
-                };
+                });
 
                 // Update tokens if rotation headers are present
                 await this.updateRotatedTokens(response.headers);
@@ -378,7 +378,7 @@ class ApiManager {
                 }
                 throw error;
             }
-        };
+        });
     }
 
     // Convenience method for JSON responses
@@ -537,7 +537,7 @@ class ApiManager {
     // Get tribe members for a specific tribe
     async getTribeMembers(tribeId) {
         try {
-            const payload = { tribeId: tribeId });
+            const payload = { tribeId: tribeId };
             const response = await this.makeAuthenticatedJSONRequest('api/organization/tribe_members', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -553,7 +553,7 @@ class ApiManager {
     // Join a tribe
     async joinTribe(tribeId) {
         try {
-            const payload = { tribeId: tribeId });
+            const payload = { tribeId: tribeId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_join', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -609,7 +609,7 @@ class ApiManager {
     // Mark notification as read
     async markNotificationAsRead(notificationId) {
         try {
-            const payload = { notificationId: notificationId });
+            const payload = { notificationId: notificationId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/user_notification_read', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -641,7 +641,7 @@ class ApiManager {
     // Get user badges and profile info for a specific user
     async getUserBadges(userId) {
         try {
-            const payload = { userId: userId });
+            const payload = { userId: userId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -677,7 +677,7 @@ class ApiManager {
                 payload = {
                     quizType: 'challenge',
                     challengeId: idParam
-                });
+                };
             } else if (quizType === 'battle') {
                 // For battle quizzes, use simple battle payload
                 payload = {
@@ -713,7 +713,7 @@ class ApiManager {
                 correct: correct,
                 timeMs: timeMs,
                 heroUsedId: heroUsedId
-            });
+            };
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/answer_result', {
                 method: 'POST',
@@ -747,7 +747,7 @@ class ApiManager {
         try {
             const payload = {
                 nickname: nickname
-            });
+            };
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/nickname_update', {
                 method: 'POST',
@@ -836,7 +836,7 @@ class ApiManager {
     // Start a challenge
     async startChallenge(challengeId) {
         try {
-            const payload = { challengeId: challengeId });
+            const payload = { challengeId: challengeId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_start', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -856,7 +856,7 @@ class ApiManager {
                 challengeId: challengeId,
                 questionId: questionId,
                 answerId: answerId
-            });
+            };
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_answer', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -872,7 +872,7 @@ class ApiManager {
     // Complete a challenge
     async completeChallenge(challengeId) {
         try {
-            const payload = { challengeId: challengeId });
+            const payload = { challengeId: challengeId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_complete', {
                 method: 'POST',
                 body: JSON.stringify(payload)
@@ -921,7 +921,7 @@ class ApiManager {
             const payload = {
                 sessionId: sessionId,
                 quizIds: remainingQuizIds
-            });
+            };
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_quit', {
                 method: 'POST',

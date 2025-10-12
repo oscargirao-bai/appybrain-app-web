@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useEffect, useCallback } from 'react';
 
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { family } from '../../constants/font';
 
 // Rarity mapping from API rarityTypeId to color names
@@ -163,7 +163,7 @@ export default function List({ data = [], numColumns = 3, style, scrollEnabled =
 									</span>
 								) : (
 									<div style={{ flexDirection: 'row', alignItems: 'center' }}>
-										<Icon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
+										<SvgIcon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
 										<span 											style={{...styles.priceText, ...{ color: colors.background }}}
 											numberOfLines={1}
 											ellipsizeMode="tail"

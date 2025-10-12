@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {Modal, Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import DataManager from '../../services/DataManager';
 import { family } from '../../constants/font';
 
@@ -73,7 +73,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 		if (item.type === 'coins') {
 			return (
 				<div style={{...styles.rewardCard, ...{ borderColor: colors.text + '22'}}> 
-					<Icon name="coins" size={28} color={colors.secondary} />
+					<SvgIcon name="coins" size={28} color={colors.secondary} />
 					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>{item.amount}</span>
 					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Coins</span>
 				</div>
@@ -92,7 +92,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 							style={{objectFit: "contain"}}
 						/>
 					) : (
-						<Icon name="image" size={28} color={colors.secondary} />
+						<SvgIcon name="image" size={28} color={colors.secondary} />
 					)}
 					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>+1</span>
 					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Cosmético</span>
@@ -102,7 +102,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 			// Default case (tips, etc.)
 			return (
 				<div style={{...styles.rewardCard, ...{ borderColor: colors.text + '22'}}> 
-					<Icon name="lightbulb" size={28} color={colors.secondary} />
+					<SvgIcon name="lightbulb" size={28} color={colors.secondary} />
 					<span style={{...styles.rewardAmount, ...{ color: colors.text }}}>{item.amount}</span>
 					<span style={{...styles.rewardLabel, ...{ color: colors.text + 'AA' }}}>Dicas</span>
 				</div>

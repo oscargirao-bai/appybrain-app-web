@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import {Switch} from 'react-native';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -46,7 +46,7 @@ export default function Button3({
 			aria-label={accessibilityLabel || label}
 		>
 			<div style={styles.leftRow}>
-				<Icon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
+				<SvgIcon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
 				<span style={{...styles.label, ...{ color: colors.text }}}>{label}</span>
 			</div>
 			<Switch

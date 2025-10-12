@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 /**
  * Profile Info (refactored): similar to Learn Info but:
@@ -38,7 +38,7 @@ export default function Info({
       </div>
       {typeof stars === 'number' && (
         <div style={styles.starsPill} aria-label={`Estrelas: ${stars}`}>
-          <Icon name="star" size={22} color={colors.primary} style={{ marginRight: 8 }} />
+          <SvgIcon name="star" size={22} color={colors.primary} style={{ marginRight: 8 }} />
           <span style={styles.starsText}>{stars}</span>
         </div>
       )}

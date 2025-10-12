@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../services/Theme';
 import DataManager from '../services/DataManager';
 import Header from '../components/General/Header';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import Banner from '../components/Profile/Banner';
 import Info from '../components/Profile/Info';
 import MedalsList from '../components/Profile/MedalsList';
@@ -169,7 +168,7 @@ export default function ProfileScreen() {
 						style={styles.iconBtn}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<Icon name="settings" size={24} color={colors.text} />
+						<SvgIcon name="settings" size={24} color={colors.text} />
 					</button>
 				) : null}
 			/>

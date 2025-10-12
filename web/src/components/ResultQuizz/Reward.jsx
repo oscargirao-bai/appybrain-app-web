@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -24,7 +24,7 @@ export default function Reward({ type = 'stars', amount = 0, style }) {
 				aria-label={`Recompensa: ${config.label} +${amount}`}>
 				<span style={{...styles.plus, ...{ color: colors.text }}}>+</span>
 				<div style={styles.space} />
-				<Icon name={config.icon} size={22} color={config.tint} />
+				<SvgIcon name={config.icon} size={22} color={config.tint} />
 				<div style={styles.space} />
 				<span style={{...styles.value, ...{ color: colors.text }}}>{amount}</span>
 			</div>

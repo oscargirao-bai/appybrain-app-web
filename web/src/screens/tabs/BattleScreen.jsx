@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import DataManager from '../../services/DataManager';
@@ -19,7 +18,7 @@ import RankDisplay from '../../components/Battle/RankDisplay';
 import HistoryModal from '../../components/Battle/HistoryModal';
 import Header from '../../components/General/Header';
 import NotificationBadge from '../../components/General/NotificationBadge';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 // Helper function to transform battle data for ResultScreen2
 function transformBattleDataForResult(battleData) {
@@ -42,7 +41,7 @@ function transformBattleDataForResult(battleData) {
     opponentAnswers: battleData.opponentAnswers || battleData.rivalAnswers,
     // Add any other relevant fields from the battle data
     ...battleData
-  });
+  };
 
   return {
     correct: battleData.myScore || battleData.score || 0,
@@ -95,7 +94,7 @@ export default function BattleScreen(props) {
 
       const unreadCount = DataManager.getUnreadNotificationsCount();
       setUnreadNotificationsCount(unreadCount);
-    });
+    };
 
     // Initial load
     updateData();
@@ -193,7 +192,7 @@ export default function BattleScreen(props) {
     setChestType(chestType || 'bronze');
     setChestRewardOpen(true);
     setReopenBrowserAfterReward(true);
-  });
+  };
 
   // Proportions (relative to full screen height)
   const HEADER_PCT = 0.10; // header handled by Header component
@@ -229,7 +228,7 @@ export default function BattleScreen(props) {
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       style={{ paddingHorizontal: 4 }}
                     >
-                      <Icon name="bell" size={22} color={colors.text} />
+                      <SvgIcon name="bell" size={22} color={colors.text} />
                     </button>
                     <NotificationBadge count={unreadNotificationsCount} />
                   </div>
@@ -241,7 +240,7 @@ export default function BattleScreen(props) {
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             style={{ paddingHorizontal: 4 }}
           >
-            <Icon name="settings" size={22} color={colors.text} />
+            <SvgIcon name="settings" size={22} color={colors.text} />
           </button>
         )}
       />

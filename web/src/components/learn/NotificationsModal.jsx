@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import {Modal} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import DataManager from '../../services/DataManager';
 import { navigationRef } from '../../services/navigationRef';
 import { family } from '../../constants/font';
@@ -19,7 +19,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			const notificationData = DataManager.getSortedNotifications();
 			setNotifications(notificationData);
 			// Don't create animations here - let loadNotifications() handle them when modal opens
-		});
+		};
 
 		// Initial load
 		updateData();
@@ -241,7 +241,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 					aria-label={`Notificação: ${item.title}`}
 				>
 					<div style={{...styles.itemIconWrap, ...unread && { backgroundColor: colors.secondary + '33' }}}>
-						<Icon name={iconForType(item.type)} size={22} color={unread ? colors.secondary : colors.text} />
+						<SvgIcon name={iconForType(item.type)} size={22} color={unread ? colors.secondary : colors.text} />
 					</div>
 					<div style={styles.textContainer}>
 						<span style={{...styles.itemTitle, ...{ color: colors.text}} numberOfLines={1}>{item.title}</span>

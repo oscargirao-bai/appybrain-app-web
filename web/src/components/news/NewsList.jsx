@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {ImageBackground} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import DataManager from '../../services/DataManager';
-import { useNavigation } from '@react-navigation/native';
 import { family } from '../../constants/font';
 
 // Inline News List (view-based, no modal)
@@ -24,7 +23,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 			const currentNews = DataManager.getNews();
 			setNews(currentNews);
 			// Don't create animations here - let loadNews() handle them when modal opens
-		});
+		};
 
 		DataManager.subscribe(handleDataUpdate);
 		
@@ -130,7 +129,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 			.replace(/>/g, '&gt;')
 			.replace(/"/g, '&quot;')
 			.replace(/'/g, '&#39;');
-	});
+	};
 
 	const openNews = (item) => {
 		if (typeof onPressItem === 'function') return onPressItem(item);

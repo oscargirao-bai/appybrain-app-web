@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {Modal} from 'react-native';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { useTranslate } from '../../services/Translate';
 import { family } from '../../constants/font';
@@ -64,12 +64,12 @@ export default function ButtonLanguage({
 				aria-label={`${translate('settings.language')}: ${current.label}.`}
 			>
 				<div style={styles.leftRow}>
-					<Icon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
+					<SvgIcon name="languages" size={20} color={colors.text} style={{ marginRight: 10 }} />
 					<span style={{...styles.label, ...{ color: colors.text }}}>{translate('settings.language')}</span>
 				</div>
 				<div style={{...styles.pill, ...{ borderColor: colors.text + '33'}}> 
 					<span style={{...styles.pillText, ...{ color: colors.text }}} numberOfLines={1}>{current.label}</span>
-					<Icon name="chevron-down" size={16} color={colors.text + 'AA'} />
+					<SvgIcon name="chevron-down" size={16} color={colors.text + 'AA'} />
 				</div>
 			</button>
 
@@ -93,7 +93,7 @@ export default function ButtonLanguage({
 									accessibilityState={{ selected: active }}
 								>
 									<span style={{...styles.optionText, ...{ color: colors.text}}>{item.label}</span>
-									{active && <Icon name="check" size={18} color={colors.secondary} />}
+									{active && <SvgIcon name="check" size={18} color={colors.secondary} />}
 								</button>
 							);
 						}}

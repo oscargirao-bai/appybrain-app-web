@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 import DataManager from '../../services/DataManager';
 import Svg, { Defs, ClipPath, Rect, Polygon } from 'react-native-svg';
@@ -59,7 +59,7 @@ export default function DisciplineCircle({
                 color={finalIconColor} 
               />
             ) : (
-              <Icon 
+              <SvgIcon 
                 name={iconName} 
                 size={32} 
                 color={finalIconColor} 

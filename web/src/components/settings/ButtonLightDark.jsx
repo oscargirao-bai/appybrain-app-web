@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useTheme } from '../../services/Theme';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
@@ -60,7 +60,7 @@ function Segment({ label, icon, active, onPress, colors, position }) {
 			accessibilityState={{ selected: active }}
 			aria-label={label}
 		>
-			<Icon name={icon} size={18} color={active ? '#fff' : colors.text} style={{ marginRight: 8 }} />
+			<SvgIcon name={icon} size={18} color={active ? '#fff' : colors.text} style={{ marginRight: 8 }} />
 			<span style={{...styles.label, ...{ color: active ? '#fff' : colors.text }}} numberOfLines={1}>{label}</span>
 		</button>
 	);

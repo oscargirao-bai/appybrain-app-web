@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 // Horizontal selectable options bar for Shop categories
 // Only three icon options: avatar, background, frames
@@ -79,7 +79,7 @@ export default function Options({
               style={{...styles.iconBtn, ...{
                 minWidth}}
             >
-              <Icon name={opt.icon} size={iconSize} color={active ? colors.background : colors.primary} />
+              <SvgIcon name={opt.icon} size={iconSize} color={active ? colors.background : colors.primary} />
             </button>
           );
         })}

@@ -2,7 +2,7 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 import {Modal} from 'react-native';
 import { header, small, normal } from '../constants/font';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useTheme, useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import { navigate } from '../services/navigationRef';
@@ -78,7 +78,7 @@ export default function DevConsoleOverlay() {
   const nextCorner = () => {
     setCornerIndex(prev => (prev + 1) % corners.length);
     didCycleRef.current = true;
-  });
+  };
 
   const clearTimers = () => {
     if (longPressTimeoutRef.current) { clearTimeout(longPressTimeoutRef.current); longPressTimeoutRef.current = null; }
@@ -103,7 +103,7 @@ export default function DevConsoleOverlay() {
     const shouldOpen = !didCycleRef.current; // tap (no cycling) => open
     setPressing(false);
     if (shouldOpen) setOpen(true);
-  });
+  };
 
   const cornerStyle = (() => {
     const m = 16;
@@ -128,7 +128,7 @@ export default function DevConsoleOverlay() {
 					onPressOut={handlePressOut}
 					style={{...styles.fab, ...cornerStyle}}
 				>
-					<Icon name="wrench" color={colors.background} size={22} />
+					<SvgIcon name="wrench" color={colors.background} size={22} />
 				</button>
 			)}
 
@@ -139,14 +139,14 @@ export default function DevConsoleOverlay() {
 					<div style={styles.sheetHeader}>
 						<span style={styles.sheetTitle}>Dev Console</span>
 						<button onClick={() => setOpen(false)} aria-label="Close dev console">
-							<Icon name="x" size={22} color={colors.secondary} />
+							<SvgIcon name="x" size={22} color={colors.secondary} />
 						</button>
 					</div>
 
 					{/* Options */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<Icon name={isLight ? 'sun' : 'moon'} size={18} color={colors.secondary} />
+							<SvgIcon name={isLight ? 'sun' : 'moon'} size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>
 								{isLight ? 'Theme: Light' : 'Theme: Dark'}
 							</span>
@@ -160,7 +160,7 @@ export default function DevConsoleOverlay() {
 					{/* Language switch */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<Icon name="globe" size={18} color={colors.secondary} />
+							<SvgIcon name="globe" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>
 								{translate('settings.language')}: {currentLanguage === 'pt' ? translate('settings.portuguese') : translate('settings.english')}
 							</span>
@@ -182,7 +182,7 @@ export default function DevConsoleOverlay() {
 					{/* Navigate to Start screen */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<Icon name="undo" size={18} color={colors.secondary} />
+							<SvgIcon name="undo" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>Go to Start</span>
 						</div>
 						<button style={styles.optionBtn} onClick={() => navigate('Login')}>
@@ -193,7 +193,7 @@ export default function DevConsoleOverlay() {
 					{/* Navigate to Home screen */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<Icon name="home" size={18} color={colors.secondary} />
+							<SvgIcon name="home" size={18} color={colors.secondary} />
 							<span style={styles.optionLabel}>Go to Tabs</span>
 						</div>
 						<button style={styles.optionBtn} onClick={() => { setOpen(false); navigate('MainTabs', { initialTab: 0 }); }}>
@@ -204,7 +204,7 @@ export default function DevConsoleOverlay() {
 					{/* Clear All Storage */}
 					<div style={styles.optionRow}>
 						<div style={styles.optionLabelWrap}>
-							<Icon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
+							<SvgIcon name="trash-2" size={18} color={colors.destructive || '#ff4444'} />
 							<span style={styles.optionLabel}>Clear All Storage</span>
 						</div>
 						<button style={{...styles.optionBtn, ...{ backgroundColor: colors.destructive || '#ff4444' }}} onClick={clearAllStorage}>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 
 /**
@@ -49,7 +49,7 @@ function IconButton({ icon, label, onPress, disabled, colors }) {
           borderColor: colors.text + '22'}}
       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
     >
-      <Icon name={icon} size={20} color={colors.text} />
+      <SvgIcon name={icon} size={20} color={colors.text} />
     </button>
   );
 }

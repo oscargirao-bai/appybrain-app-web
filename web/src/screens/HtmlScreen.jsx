@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 
 
 import { WebView } from 'react-native-webview';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import ApiManager from '../services/ApiManager';

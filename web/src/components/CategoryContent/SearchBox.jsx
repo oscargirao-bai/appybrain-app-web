@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
 
@@ -17,13 +17,13 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 	const handleChange = (t) => {
 		setText(t);
 		onChange && onChange(t);
-	});
+	};
 
 	const clear = () => handleChange('');
 
 	return (
 		<div style={{...styles.container, ...{ backgroundColor: colors.surface}}>      
-			<Icon name="search" size={18} color={colors.muted} style={{ marginRight: 8 }} />
+			<SvgIcon name="search" size={18} color={colors.muted} style={{ marginRight: 8 }} />
 			<input 				style={{...styles.input, ...{ color: colors.text }}}
 				placeholder={placeholder}
 				placeholderTextColor={colors.muted}
@@ -36,7 +36,7 @@ export default function SearchBox({ value, onChange, placeholder = 'Pesquisar...
 			/>
 			{text.length > 0 && (
 				<button onClick={clear} hitSlop={10} aria-label="Limpar pesquisa">
-					<Icon name="x" size={18} color={colors.muted} />
+					<SvgIcon name="x" size={18} color={colors.muted} />
 				</button>
 			)}
 		</div>

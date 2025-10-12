@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import {Easing} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
 import { family } from '../../constants/font';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import SvgIcon from '../General/SvgIcon';
 
 /**
@@ -53,7 +53,7 @@ export default function Subject2({ title, iconName = 'book-open', svgIcon, color
 					{svgIcon ? (
 						<SvgIcon svgString={svgIcon} size={28} color={style.textColor} />
 					) : (
-						<Icon name={iconName} size={28} color={iconColor} />
+						<SvgIcon name={iconName} size={28} color={iconColor} />
 					)}
 				</div>
 				{/* Center title (flex) */}

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {TextInput as RNTextInput} from 'react-native';
 import { useThemeColors } from '../../services/Theme';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 import { small, normal } from '../../constants/font';
 
 export default function TextInput({
@@ -31,7 +31,7 @@ export default function TextInput({
 		<div style={{...styles.container, ...containerStyle}}>
 			{(label || LabelIconName) && (
 				<div style={styles.labelRow}>
-					{LabelIconName ? <Icon name={LabelIconName} size={16} color={colorTokens.secondary} /> : null}
+					{LabelIconName ? <SvgIcon name={LabelIconName} size={16} color={colorTokens.secondary} /> : null}
 					{label ? <span style={styles.labelText}>{label}</span> : null}
 				</div>
 			)}
@@ -54,7 +54,7 @@ export default function TextInput({
 						aria-label={hidden ? 'Show password' : 'Hide password'}
 						style={styles.trailingIcon}
 					>
-						<Icon name={hidden ? 'eye-off' : 'eye'} size={20} color={colorTokens.secondary} />
+						<SvgIcon name={hidden ? 'eye-off' : 'eye'} size={20} color={colorTokens.secondary} />
 					</button>
 				</div>
 			) : (

@@ -79,7 +79,7 @@ export default function Stars({ areaId = null, categoryId = null, contentId = nu
     if (!maxStars || maxStars <= 0) return 0;
     const ratio = earnedStars / maxStars;
     return Math.round(ratio * 3);
-  });
+  };
 
   // Load initial data from DataManager based on provided scope
   const loadFromDataManager = () => {

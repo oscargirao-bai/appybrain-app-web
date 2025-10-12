@@ -10,7 +10,7 @@ import { useThemeColors } from '../services/Theme';
 import { useTranslate } from '../services/Translate';
 import DataManager from '../services/DataManager';
 import ApiManager from '../services/ApiManager';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 // Simple, responsive Customize screen based on wireframe
 // Sections: avatar header, divider, segmented control, 3x3 grid, "Buy More" CTA
@@ -50,7 +50,7 @@ export default function CustomizeScreen({ navigation }) {
       setBackgrounds(backgroundItems);
       setFrames(frameItems);
       setUserProfile(DataManager.getUserProfile());
-    });
+    };
     updateData();
     const unsub = DataManager.subscribe(updateData);
     return unsub;
@@ -138,7 +138,7 @@ export default function CustomizeScreen({ navigation }) {
         {listData.length === 0 ? (
           <div style={styles.emptyContainer}>
             <div style={{...styles.emptyIconContainer, ...{ backgroundColor: colors.card }}}>
-              <Icon name="shopping-bag" size={48} color={colors.muted} />
+              <SvgIcon name="shopping-bag" size={48} color={colors.muted} />
             </div>
             <span style={{...styles.emptyTitle, ...{ color: colors.text }}}>
               {translate('customize.empty.title')}

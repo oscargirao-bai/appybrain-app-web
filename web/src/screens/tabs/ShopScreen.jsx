@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { useThemeColors } from '../../services/Theme';
-import { useNavigation } from '@react-navigation/native';
 import { useTranslate } from '../../services/Translate';
 import DataManager from '../../services/DataManager';
 import Header from '../../components/General/Header';
@@ -10,7 +9,7 @@ import Coins from '../../components/Shop/Coins';
 import Options from '../../components/Shop/Options';
 import List from '../../components/Shop/List';
 import NotificationsModal from '../../components/Learn/NotificationsModal';
-import Icon from '@react-native-vector-icons/lucide';
+import SvgIcon from '../../components/General/SvgIcon';
 
 export default function ShopScreen(props) {
 	const colors = useThemeColors();
@@ -44,7 +43,7 @@ export default function ShopScreen(props) {
 
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
-		});
+		};
 
 		// Initial load
 		updateData();
@@ -92,7 +91,7 @@ export default function ShopScreen(props) {
 							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 							style={{ paddingHorizontal: 4 }}
 						>
-							<Icon name="bell" size={22} color={colors.text} />
+							<SvgIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
@@ -104,7 +103,7 @@ export default function ShopScreen(props) {
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 						style={{ paddingHorizontal: 4 }}
 					>
-						<Icon name="settings" size={22} color={colors.text} />
+						<SvgIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>
