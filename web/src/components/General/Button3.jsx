@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -43,21 +43,34 @@ export default function Button3({
 			aria-checked={value}
 		>
 			<div style={styles.leftRow}>
-				<SvgIcon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
+				<LucideIcon name={icon} size={22} color={colors.text} style={{ marginRight: 10 }} />
 				<span style={{...styles.label, ...{ color: colors.text }}}>{label}</span>
 			</div>
-			<input
-				type="checkbox"
-				checked={value}
-				onChange={handleToggle}
-				disabled={disabled}
+			<div
 				style={{
-					width: 48,
-					height: 28,
+					width: 51,
+					height: 31,
+					borderRadius: 15.5,
+					backgroundColor: value ? (colors.secondary + '66') : (colors.text + '33'),
+					position: 'relative',
+					transition: 'background-color 0.2s',
 					cursor: disabled ? 'not-allowed' : 'pointer',
 				}}
-				aria-label={accessibilityLabel || label}
-			/>
+			>
+				<div
+					style={{
+						width: 27,
+						height: 27,
+						borderRadius: 13.5,
+						backgroundColor: value ? colors.secondary : colors.text,
+						position: 'absolute',
+						top: 2,
+						left: value ? 22 : 2,
+						transition: 'left 0.2s, background-color 0.2s',
+						boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+					}}
+				/>
+			</div>
 		</button>
 	);
 }

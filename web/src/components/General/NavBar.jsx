@@ -59,7 +59,7 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 									transform: isActive ? 'scale(1.15)' : 'scale(1)'}}
 							onClick={() => handleTabPress?.(i)}
 						>
-							<SvgIcon
+							<LucideIcon
 								name={icon}
 								size={24}
 								color={isActive ? activeColor(i) : colors.text + '80'}
