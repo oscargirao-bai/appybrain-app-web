@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
@@ -25,7 +24,6 @@ export default function TribeScreen({ sourceId, timestamp }) {
 	const [tribeMembers, setTribeMembers] = useState([]);
 	const [loadingMembers, setLoadingMembers] = useState(false);
 	const [joiningTribe, setJoiningTribe] = useState(false);
-	const [memberAnimations, setMemberAnimations] = useState([]);
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
@@ -78,19 +76,17 @@ export default function TribeScreen({ sourceId, timestamp }) {
 	const handleSelect = (tribe) => {
 		// Update selected tribe when user selects from header
 		setSelectedTribe(tribe);
-		//console.log('TribeScreen: Selected tribe =', tribe);
 		
 		// Fetch members for the selected tribe
 		fetchTribeMembers(tribe.id);
-	});
+	};
 
 	const fetchTribeMembers = async (tribeId) => {
 		if (!tribeId) return;
 		
 		try {
-			// Clear previous tribe members and animations immediately
+			// Clear previous tribe members immediately
 			setTribeMembers([]);
-			setMemberAnimations([]);
 			setLoadingMembers(true);
 			
 			const response = await ApiManager.getTribeMembers(tribeId);
@@ -105,41 +101,11 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				return nameA.localeCompare(nameB);
 			});
 			
-			//console.log('TribeScreen: Fetched members for tribe', tribeId, ':', sortedMembers);
-			
-			// Create animation values for each member
-			const animations = sortedMembers.map(() => ({
-				translateY: new Animated.Value(30),
-				opacity: new Animated.Value(0)
-			}));
-			
 			setTribeMembers(sortedMembers);
-			setMemberAnimations(animations);
-			
-			// Animate members in sequence
-			setTimeout(() => {
-				animations.forEach((anim, index) => {
-					setTimeout(() => {
-						Animated.parallel([
-							Animated.timing(anim.translateY, {
-								toValue: 0,
-								duration: 400,
-								useNativeDriver: true,
-							}),
-							Animated.timing(anim.opacity, {
-								toValue: 1,
-								duration: 400,
-								useNativeDriver: true,
-							})
-						]).start();
-					}, index * 100); // 100ms delay between each member
-				};
-			}, 50); // Small delay before starting animations
 			
 		} catch (error) {
 			console.error('Failed to fetch tribe members:', error);
 			setTribeMembers([]); // Clear members on error
-			setMemberAnimations([]);
 		} finally {
 			setLoadingMembers(false);
 		}
@@ -150,10 +116,8 @@ export default function TribeScreen({ sourceId, timestamp }) {
 
 		try {
 			setJoiningTribe(true);
-			//console.log('TribeScreen: Joining tribe', selectedTribe.id);
 			
 			const response = await ApiManager.joinTribe(selectedTribe.id);
-			//console.log('TribeScreen: Join response', response);
 			
 			// Update DataManager with new tribe membership
 			DataManager.updateUserTribeMembership(selectedTribe.id, true);
@@ -166,8 +130,7 @@ export default function TribeScreen({ sourceId, timestamp }) {
 			await fetchTribeMembers(selectedTribe.id);
 			
 		} catch (error) {
-			//console.error('Failed to join tribe:', error);
-			// You could show an error message to the user here
+			console.error('Failed to join tribe:', error);
 		} finally {
 			setJoiningTribe(false);
 		}
@@ -178,10 +141,8 @@ export default function TribeScreen({ sourceId, timestamp }) {
 
 		try {
 			setJoiningTribe(true);
-			//console.log('TribeScreen: Leaving tribe', selectedTribe.id);
 			
 			const response = await ApiManager.leaveTribe();
-			//console.log('TribeScreen: Leave response', response);
 			
 			// Update DataManager with removed tribe membership
 			DataManager.updateUserTribeMembership(selectedTribe.id, false);
@@ -200,8 +161,8 @@ export default function TribeScreen({ sourceId, timestamp }) {
 		}
 	};
 
-	// Custom animated member list component
-	const AnimatedMemberList = ({ members, animations, currentUserId }) => {
+	// Custom member list component (web version without animations)
+	const MemberList = ({ members, currentUserId }) => {
 		const colors = useThemeColors();
 
 		const ranked = useMemo(() => {
@@ -223,58 +184,16 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				lastStars = s;
 				lastRank = rank;
 				return { ...u, rank };
-			};
+			});
 		}, [members]);
-
-		const renderMember = useCallback(({ item, index }) => {
-			const isSelf = item.id === currentUserId;
-			const topMedal = item.rank <= 3;
-			const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
-			const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
-			const animation = animations[index];
-
-			if (!animation) return null;
-
-			return (
-				<Animated.View
-					style={[
-						memberListStyles.row,
-						{ 
-							backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08',
-							borderColor: colors.text + '15',
-							transform: [{ translateY: animation.translateY }],
-							opacity: animation.opacity
-						}
-					]}
-				>
-					<div style={memberListStyles.rankCol}>
-						{topMedal ? (
-							<Icon name={medalIcon} size={22} color={medalColor} />
-						) : (
-							<span style={{...memberListStyles.rankText, ...{ color: colors.text + 'AA' }}}>{item.rank}</span>
-						)}
-					</div>
-					<div style={{...memberListStyles.avatar, ...{ borderColor: colors.primary + '66' }}}> 
-						{item.avatarIcon ? (
-							<Icon name={item.avatarIcon} size={20} color={colors.primary} />
-						) : (
-							<span style={{...memberListStyles.avatarLetter, ...{ color: colors.primary }}}>
-								{(item.name || '?').charAt(0).toUpperCase()}
-							</span>
-						)}
-					</div>
-					<div style={memberListStyles.mainCol}>
-						<span style={{...memberListStyles.name, ...{ color: colors.text }}} numberOfLines={1}>
-							{item.name}
-						</span>
-					</div>
-				</Animated.View>
-			);
-		}, [colors, currentUserId, animations]);
 
 		if (ranked.length === 0) {
 			return (
-				<div style={{...memberListStyles.emptyWrapper, ...{ borderColor: colors.text + '22'}}> 
+				<div style={{
+					...memberListStyles.emptyWrapper,
+					borderColor: colors.text + '22',
+					backgroundColor: colors.text + '05'
+				}}>
 					<span style={{ color: colors.text + '99', fontSize: 14 }}>
 						{loadingMembers ? "" : "Sem membros nesta tribo"}
 					</span>
@@ -283,41 +202,93 @@ export default function TribeScreen({ sourceId, timestamp }) {
 		}
 
 		return (
-			<div 				data={ranked}
-				keyExtractor={(item, idx) => `user-${item.id || idx}-${item.email || ''}-${idx}`}
-				renderItem={renderMember}
-				style={memberListStyles.list}
-				contentContainerStyle={memberListStyles.contentContainer}
-				showsVerticalScrollIndicator={false}
-			/>
+			<div style={memberListStyles.list}>
+				<div style={memberListStyles.contentContainer}>
+					{ranked.map((item, index) => {
+						const isSelf = item.id === currentUserId;
+						const topMedal = item.rank <= 3;
+						const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
+						const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
+
+						return (
+							<div
+								key={`user-${item.id || index}-${item.email || ''}-${index}`}
+								style={{
+									...memberListStyles.row,
+									backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08',
+									borderColor: colors.text + '15',
+								}}
+							>
+								<div style={memberListStyles.rankCol}>
+									{topMedal ? (
+										<SvgIcon name={medalIcon} size={22} color={medalColor} />
+									) : (
+										<span style={{...memberListStyles.rankText, color: colors.text + 'AA'}}>{item.rank}</span>
+									)}
+								</div>
+								<div style={{
+									...memberListStyles.avatar,
+									borderColor: colors.primary + '66'
+								}}>
+									{item.avatarIcon ? (
+										<SvgIcon name={item.avatarIcon} size={20} color={colors.primary} />
+									) : (
+										<span style={{...memberListStyles.avatarLetter, color: colors.primary}}>
+											{(item.name || '?').charAt(0).toUpperCase()}
+										</span>
+									)}
+								</div>
+								<div style={memberListStyles.mainCol}>
+									<span style={{
+										...memberListStyles.name,
+										color: colors.text,
+										display: '-webkit-box',
+										WebkitLineClamp: 1,
+										WebkitBoxOrient: 'vertical',
+										overflow: 'hidden',
+									}}>
+										{item.name}
+									</span>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
 		);
 	};
 
 	return (
-		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
+		<div style={{...styles.container, backgroundColor: colors.background}}>
 			<Header
 				title={translate('titles.tribes')}
 				right={(
 					<div style={{ position: 'relative' }}>
-						<button 							
-							aria-label={translate('options.notification')}
+						<button
 							onClick={() => setNotificationsOpen(true)}
-							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingHorizontal: 4 }}
+							style={{
+								padding: 4,
+								background: 'transparent',
+								border: 'none',
+								cursor: 'pointer',
+							}}
 						>
-							<Icon name="bell" size={22} color={colors.text} />
+							<SvgIcon name="bell" size={22} color={colors.text} />
 						</button>
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
 				)}
 				extraRight={(
-					<button 						
-						aria-label={translate('settings.settings')}
+					<button
 						onClick={() => navigation.navigate('Settings')}
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingHorizontal: 4 }}
+						style={{
+							padding: 4,
+							background: 'transparent',
+							border: 'none',
+							cursor: 'pointer',
+						}}
 					>
-						<Icon name="settings" size={22} color={colors.text} />
+						<SvgIcon name="settings" size={22} color={colors.text} />
 					</button>
 				)}
 			/>
@@ -335,14 +306,13 @@ export default function TribeScreen({ sourceId, timestamp }) {
 				accentColor={selectedTribe?.color}
 				iconColor={selectedTribe?.iconColor}
 				icon={selectedTribe?.icon}
-				tribeIconName="users" // fallback since API uses SVG icons
+				tribeIconName="users"
 				onJoin={handleJoinTribe}
 				onLeave={handleLeaveTribe}
 				disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
 			/>
-			<AnimatedMemberList
+			<MemberList
 				members={tribeMembers}
-				animations={memberAnimations}
 				currentUserId={DataManager.getUser()?.id}
 			/>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
@@ -351,29 +321,43 @@ export default function TribeScreen({ sourceId, timestamp }) {
 }
 
 const styles = {
-	container: { flex: 1 },
+	container: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+	},
 };
 
-const memberListStyles = StyleSheet.create({
+const memberListStyles = {
 	list: {
 		flexGrow: 0,
+		overflowY: 'auto',
 	},
 	contentContainer: {
-		paddingHorizontal: 8,
+		paddingLeft: 8,
+		paddingRight: 8,
 		paddingBottom: 24,
 	},
 	row: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingVertical: 10,
-		paddingHorizontal: 10,
-		borderWidth: 1,
+		paddingTop: 10,
+		paddingBottom: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		borderWidth: '1px',
+		borderStyle: 'solid',
 		borderRadius: 14,
 		marginTop: 10,
 	},
 	rankCol: {
 		width: 34,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	rankText: {
 		fontSize: 16,
@@ -383,7 +367,9 @@ const memberListStyles = StyleSheet.create({
 		width: 40,
 		height: 40,
 		borderRadius: 12,
-		borderWidth: 2,
+		borderWidth: '2px',
+		borderStyle: 'solid',
+		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginRight: 12,
@@ -394,6 +380,8 @@ const memberListStyles = StyleSheet.create({
 	},
 	mainCol: {
 		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
 		justifyContent: 'center',
 		marginRight: 10,
 	},
@@ -403,11 +391,14 @@ const memberListStyles = StyleSheet.create({
 	},
 	emptyWrapper: {
 		marginTop: 16,
-		marginHorizontal: 16,
-		borderWidth: 1,
+		marginLeft: 16,
+		marginRight: 16,
+		borderWidth: '1px',
+		borderStyle: 'solid',
 		borderRadius: 16,
 		padding: 24,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 };
-

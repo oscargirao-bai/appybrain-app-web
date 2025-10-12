@@ -2,26 +2,26 @@ import React, { useState, useRef } from 'react';
 import { useTheme, useThemeColors } from './services/Theme.jsx';
 import DataManager from './services/DataManager.jsx';
 // Screens
-import LoginScreen from './screens/account/LoginScreen';
-import PasswordScreen from './screens/account/PasswordScreen';
-import ForgotScreen from './screens/account/ForgotScreen';
-import LoadingScreen from './screens/LoadingScreen';
-import LearnScreen from './screens/tabs/LearnScreen';
-import BattleScreen from './screens/tabs/BattleScreen';
-import CategoryScreen from './screens/Learn/CategoryScreen';
-import ContentScreen from './screens/Learn/ContentScreen';
-// import TribeScreen from './screens/tabs/TribeScreen';
-import ChallengeScreen from './screens/tabs/ChallengeScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import NewScreen from './screens/tabs/NewScreen';
-import ShopScreen from './screens/tabs/ShopScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import HtmlScreen from './screens/HtmlScreen';
-import CustomizeScreen from './screens/CustomizeScreen';
-import QuizzScreen from './screens/quizz/QuizzScreen';
-import ResultScreen1 from './screens/quizz/ResultScreen1';
-import ResultScreen2 from './screens/quizz/ResultScreen2';
-import NavBar from './components/General/NavBar';
+import LoginScreen from './screens/account/LoginScreen.jsx';
+import PasswordScreen from './screens/account/PasswordScreen.jsx';
+import ForgotScreen from './screens/account/ForgotScreen.jsx';
+import LoadingScreen from './screens/LoadingScreen.jsx';
+import LearnScreen from './screens/tabs/LearnScreen.jsx';
+import BattleScreen from './screens/tabs/BattleScreen.jsx';
+import CategoryScreen from './screens/learn/CategoryScreen.jsx';
+import ContentScreen from './screens/learn/ContentScreen.jsx';
+// import TribeScreen from './screens/tabs/TribeScreen.jsx';
+import ChallengeScreen from './screens/tabs/ChallengeScreen.jsx';
+import ProfileScreen from './screens/ProfileScreen.jsx';
+import NewScreen from './screens/tabs/NewScreen.jsx';
+import ShopScreen from './screens/tabs/ShopScreen.jsx';
+import SettingsScreen from './screens/SettingsScreen.jsx';
+import HtmlScreen from './screens/HtmlScreen.jsx';
+import CustomizeScreen from './screens/CustomizeScreen.jsx';
+import QuizzScreen from './screens/quizz/QuizzScreen.jsx';
+import ResultScreen1 from './screens/quizz/ResultScreen1.jsx';
+import ResultScreen2 from './screens/quizz/ResultScreen2.jsx';
+import NavBar from './components/General/NavBar.jsx';
 
 // MainTabs component (equivalent to RN MainTabs)
 function MainTabs({ route, navigation }) {
