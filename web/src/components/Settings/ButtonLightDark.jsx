@@ -31,6 +31,7 @@ export default function ButtonLightDark({ style, onChange }) {
 				onClick={() => handleSelect('light')}
 				colors={colors}
 				position="left"
+				resolvedTheme={resolvedTheme}
 			/>
 			<Segment
 				label="Modo Escuro"
@@ -39,12 +40,13 @@ export default function ButtonLightDark({ style, onChange }) {
 				onClick={() => handleSelect('dark')}
 				colors={colors}
 				position="right"
+				resolvedTheme={resolvedTheme}
 			/>
 		</div>
 	);
 }
 
-function Segment({ label, icon, active, onClick, colors, position }) {
+function Segment({ label, icon, active, onClick, colors, position, resolvedTheme }) {
 	const activeStyles = active ? {
 		backgroundColor: colors.secondary,
 		boxShadow: '0 2px 8px ' + colors.secondary + '55'
@@ -53,9 +55,14 @@ function Segment({ label, icon, active, onClick, colors, position }) {
 	const positionStyles = position === 'left' ? styles.segmentLeft : 
 	                        position === 'right' ? styles.segmentRight : {};
 
-	// In dark mode: when light segment is not active, use black text so it stays readable over light bg
+	// Always ensure the Light segment (sun) is light background with black text when app is in dark mode
 	const isLightSegment = icon === 'sun';
-	const computedTextColor = active ? '#fff' : (isLightSegment ? '#000' : colors.text);
+	let computedTextColor = active ? '#fff' : colors.text;
+	let forcedStyles = {};
+	if (resolvedTheme === 'dark' && isLightSegment) {
+		computedTextColor = '#000';
+		forcedStyles = { backgroundColor: '#ffffff' };
+	}
 
 	return (
 		<button
@@ -63,7 +70,8 @@ function Segment({ label, icon, active, onClick, colors, position }) {
 			style={{
 				...styles.segment,
 				...positionStyles,
-				...activeStyles
+				...activeStyles,
+				...forcedStyles
 			}}
 		>
 			<LucideIcon 
