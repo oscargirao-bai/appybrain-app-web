@@ -5,6 +5,7 @@ import DataManager from '../../services/DataManager.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import Banner from '../../components/Profile/Banner.jsx';
 import Info from '../../components/Learn/Info.jsx';
+import Button2 from '../../components/General/Button2.jsx';
 import Button1 from '../../components/General/Button1.jsx';
 import Subject2 from '../../components/Learn/Subject2.jsx';
 import Chest from '../../components/General/Chest.jsx';
