@@ -117,16 +117,48 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
 						‹
 					</button>
-					<div ref={windowRef} style={{ ...styles.windowWrap, marginLeft: ARROW_ZONE, marginRight: ARROW_ZONE, overflow: 'visible' }}>
+					<div ref={windowRef} style={{ 
+						width: windowWidth, 
+						height: ROWS * CELL_HEIGHT,
+						marginLeft: ARROW_ZONE, 
+						marginRight: ARROW_ZONE,
+						overflow: 'hidden',
+						position: 'relative'
+					}}>
 						<div
 							ref={scrollerRef}
 							onScroll={handleScroll}
-							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', overflow: 'visible' }}
+							style={{ 
+								display: 'flex',
+								width: '100%',
+								height: '100%',
+								overflowX: 'auto', 
+								overflowY: 'hidden', 
+								scrollBehavior: 'smooth',
+								scrollSnapType: 'x mandatory'
+							}}
 						>
 							{pageData.map((pageCols, pageIndex) => (
-								<div key={'page-' + pageIndex} style={{ ...styles.page, width: windowWidth, scrollSnapAlign: 'start' }}>
+								<div key={'page-' + pageIndex} style={{ 
+									display: 'flex', 
+									flexDirection: 'row', 
+									justifyContent: 'center', 
+									alignItems: 'center', 
+									width: windowWidth, 
+									height: ROWS * CELL_HEIGHT,
+									flexShrink: 0,
+									scrollSnapAlign: 'start'
+								}}>
 									{pageCols.map((col, colIndex) => (
-										<div key={'col-' + colIndex} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT }}>
+										<div key={'col-' + colIndex} style={{ 
+											display: 'flex', 
+											alignItems: 'center', 
+											justifyContent: 'center', 
+											flexDirection: 'column',
+											width: cellWidth, 
+											height: ROWS * CELL_HEIGHT,
+											overflow: 'visible'
+										}}>
 											{col.map((it, idx) => (
 												<MedalButton
 													key={it.id + '-' + pageIndex + '-' + colIndex + '-' + idx}
