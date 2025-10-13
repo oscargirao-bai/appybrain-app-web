@@ -114,11 +114,13 @@ const styles = {
 		maxHeight: '95%',
 		pointerEvents: 'auto',
 		position: 'relative',
+		overflow: 'visible',
 	},
 	scrollContent: {
 		display: 'flex',
 		flexDirection: 'column',
 		gap: 16,
+		overflow: 'visible',
 	},
 	rowTop: {
 		display: 'flex',
@@ -133,6 +135,8 @@ const styles = {
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
+		position: 'relative',
+		overflow: 'visible',
 	},
 	iconWrap: {
 		transform: 'scale(1.2)',

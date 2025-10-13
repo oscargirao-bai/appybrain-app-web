@@ -47,7 +47,7 @@ export default function MedalButton({ item, onClick }) {
             {isNew && <div style={{ ...styles.newDot, borderColor: '#222' }} />}
           </div>
           </div>
-          {item.level ? (
+          {item.level && item.level > 1 ? (
             <div style={{
               ...styles.levelBubble,
               backgroundColor: '#FFE247',
@@ -69,6 +69,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+    overflow: 'visible',
   },
   medalButton: {
     background: 'none',

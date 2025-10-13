@@ -43,9 +43,9 @@ const FALLBACK_MEDALS = [
 
 const ROWS = 3;
 const CELL_HEIGHT = 92; // 58 circle + paddings/gap
-const ARROW_ZONE = 56; // physical margins so badges never go under arrows
+const ARROW_ZONE = 50; // physical margins so badges never go under arrows
 const COLUMNS_PER_PAGE = 5;
-const FIXED_CELL_WIDTH = 70; // fixed width per badge column to guarantee exactly 5 visible
+const FIXED_CELL_WIDTH = 80; // fixed width per badge column with more spacing
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
@@ -117,11 +117,11 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
 						‹
 					</button>
-					<div ref={windowRef} style={{ ...styles.windowWrap, marginLeft: ARROW_ZONE, marginRight: ARROW_ZONE }}>
+					<div ref={windowRef} style={{ ...styles.windowWrap, marginLeft: ARROW_ZONE, marginRight: ARROW_ZONE, overflow: 'visible' }}>
 						<div
 							ref={scrollerRef}
 							onScroll={handleScroll}
-							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory' }}
+							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', overflow: 'visible' }}
 						>
 							{pageData.map((pageCols, pageIndex) => (
 								<div key={'page-' + pageIndex} style={{ ...styles.page, width: windowWidth, scrollSnapAlign: 'start' }}>
@@ -160,7 +160,7 @@ const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
 	title: { fontSize: 18, fontFamily: family.bold, fontWeight: '700', marginBottom: 14, marginLeft: 16 },
 	page: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexShrink: 0 },
-	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
+	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', overflow: 'visible' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
 	windowWrap: { maxWidth: COLUMNS_PER_PAGE * FIXED_CELL_WIDTH, margin: '0 auto', boxSizing: 'border-box' },
 	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },
