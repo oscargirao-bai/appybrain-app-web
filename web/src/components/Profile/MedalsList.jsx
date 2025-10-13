@@ -113,15 +113,13 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 		return (
 			<div style={{ ...styles.wrapper, ...(style || {}) }}>
 				<span style={{ ...styles.title, color: colors.text }}>{title}</span>
-					<div style={{ ...styles.carouselWrap, height: ROWS * CELL_HEIGHT }}>
+					<div style={{ ...styles.carouselWrap, height: ROWS * CELL_HEIGHT, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
 					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
 						‹
 					</button>
 					<div ref={windowRef} style={{ 
 						width: windowWidth, 
 						height: ROWS * CELL_HEIGHT,
-						marginLeft: ARROW_ZONE, 
-						marginRight: ARROW_ZONE,
 						overflow: 'hidden',
 						position: 'relative'
 					}}>
