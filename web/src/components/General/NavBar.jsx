@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 
@@ -12,15 +12,52 @@ import { useThemeColors } from '../../services/Theme.jsx';
 export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) {
 	const colors = useThemeColors();
 	const containersRef = useRef([]);
+	const containerWrapRef = useRef(null);
+	const [indicatorLeft, setIndicatorLeft] = useState(0);
+	const [indicatorReady, setIndicatorReady] = useState(false);
 
 	const activeColor = () => colors.primary;
 	const barBg = colors.card || colors.background;
 	const barBorder = colors.border || (colors.text + '25');
 
+	const indicatorWidth = 40;
 	const innerPadding = 18;
 
+	// Measure and position the indicator under the active tab
+	const updateIndicator = () => {
+		const item = containersRef.current[currentPage];
+		if (!item) return false;
+		const { x, w } = item;
+		const left = x + Math.max(0, (w - indicatorWidth) / 2);
+		setIndicatorLeft(left);
+		setIndicatorReady(true);
+		return true;
+	};
+
+	useEffect(() => {
+		// Try on next frame to ensure refs are laid out
+		let raf = requestAnimationFrame(() => {
+			if (!updateIndicator()) {
+				// Try again shortly if layout not ready
+				raf = requestAnimationFrame(updateIndicator);
+			}
+		});
+		return () => cancelAnimationFrame(raf);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentPage, icons.length]);
+
+	useEffect(() => {
+		// Recalculate on resize to keep indicator centered
+		const onResize = () => {
+			updateIndicator();
+		};
+		window.addEventListener('resize', onResize);
+		return () => window.removeEventListener('resize', onResize);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
-		<div style={{ 
+		<div ref={containerWrapRef} style={{ 
 			position: 'relative',
 			backgroundColor: barBg,
 			width: '100%',
@@ -34,12 +71,17 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 					paddingBottom: innerPadding,
 					boxSizing: 'border-box',
 					minHeight: 64}}}>        
-				{/* Dot/underline indicator */}
+				{/* Underline indicator (always visible under active tab) */}
 				{icons.length > 0 && (
 					<div
-						style={{...styles.indicator, 
-								backgroundColor: activeColor(currentPage),
-								pointerEvents: 'none'}}
+						style={{
+							...styles.indicator,
+							backgroundColor: activeColor(currentPage),
+							width: indicatorWidth,
+							left: indicatorLeft,
+							opacity: indicatorReady ? 1 : 0,
+							pointerEvents: 'none'
+						}}
 					/>
 				)}
 				{icons.map((icon, i) => {
@@ -98,9 +140,9 @@ const styles = {
 	},
 	indicator: {
 		position: 'absolute',
-		bottom: 22,
+		bottom: 18,
 		height: 6,
-		width: 40,
 		borderRadius: 4,
+		transition: 'left 180ms ease, opacity 120ms ease',
 	},
 };
