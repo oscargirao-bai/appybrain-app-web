@@ -57,14 +57,6 @@ export default function ShopScreen({ navigation }) {
 
 	function onSelect(key) {
 		setTab(key);
-		const index = key === 'avatar' ? 0 : key === 'background' ? 1 : 2;
-		scrollRef.current?.scrollTo({ x: index * width, animated: true });
-	}
-
-	function handleMomentumEnd(e) {
-		const idx = Math.round(e.nativeEvent.contentOffset.x / width);
-		const key = idx === 0 ? 'avatar' : idx === 1 ? 'background' : 'frames';
-		if (key !== tab) setTab(key);
 	}
 
 	// Handle cosmetic purchase
@@ -96,22 +88,16 @@ export default function ShopScreen({ navigation }) {
 				<Coins />
 			</div>
 			<Options value={tab} onChange={onSelect} />
-			<div 				horizontal
-				pagingEnabled
-				ref={scrollRef}
-				showsHorizontalScrollIndicator={false}
-				onMomentumScrollEnd={handleMomentumEnd}
-				style={{}}
-			>
-				<div style={{ width }}>
-					<List data={avatars} scrollEnabled={true} userCoins={userCoins} onPurchase={handlePurchase} />
-				</div>
-				<div style={{ width }}>
-					<List data={backgrounds} scrollEnabled={true} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				</div>
-				<div style={{ width }}>
-					<List data={frames} scrollEnabled={true} userCoins={userCoins} onPurchase={handlePurchase} />
-				</div>
+			<div style={styles.contentArea}>
+				{tab === 'avatar' && (
+					<List data={avatars} userCoins={userCoins} numColumns={3} onPurchase={handlePurchase} />
+				)}
+				{tab === 'background' && (
+					<List data={backgrounds} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
+				)}
+				{tab === 'frames' && (
+					<List data={frames} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
+				)}
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
@@ -119,8 +105,9 @@ export default function ShopScreen({ navigation }) {
 }
 
 const styles = {
-	container: { flex: 1 },
-	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16 },
+	container: { flex: 1, display: 'flex', flexDirection: 'column' },
+	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16, display: 'flex', justifyContent: 'center' },
+	contentArea: { flex: 1, overflowY: 'auto' },
 	scrollContent: { },
 };
 

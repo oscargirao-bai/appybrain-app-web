@@ -201,21 +201,23 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 	}
 
 const styles = {
-	safe: { flex: 1 },
-			content: { flex: 1, justifyContent: 'flex-start' },
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
+			content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20 },
 	headerSection: {
 		width: '100%',
 	},
 	bottomSection: {
 				flex: 1,
-				justifyContent: 'flex-start', // manual spacing for equal distances
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-between', // ensure button sits above navbar
 	},
 	buttonsRow: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 		marginTop: 8,
-		marginBottom: 4,
+		marginBottom: 8,
 	},
 	actionRow: {
 		flexDirection: 'row',
@@ -239,8 +241,8 @@ const styles = {
 		alignSelf: 'center',
 		marginLeft: 8,
 		marginRight: 8,
-		marginTop: 6, // baixa ligeiramente as estrelas
-		marginBottom: 0, // equilíbrio controlado pela secção seguinte
+		marginTop: 10, // baixa ligeiramente as estrelas
+		marginBottom: 16, // mais espaço antes de "Matemática"/botão
 	},
 	fullBleed: {
 		marginLeft: -10,
@@ -248,7 +250,7 @@ const styles = {
 		width: 'auto',
 	},
 	learnButtonWrap: {
-		paddingBottom: 0,
+		paddingBottom: 16, // evita cortar a sombra do botão
 		margin: 0,
 		display: 'flex',
 		alignItems: 'center',
@@ -313,8 +315,8 @@ const styles = {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingTop: 0,
-		paddingBottom: 12, // botão fica um pouco acima do menu
+		paddingTop: 4,
+		paddingBottom: 24, // botão fica um pouco acima do menu e não corta a sombra
 		flex: 0,
 	},
 };

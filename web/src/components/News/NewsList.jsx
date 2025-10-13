@@ -150,7 +150,7 @@ const styles = {
 		fontSize: 12,
 	},
 	empty: {
-		padding: 32,
+			padding: 32,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
