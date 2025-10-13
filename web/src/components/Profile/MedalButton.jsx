@@ -4,7 +4,7 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 
 // Visual sizes
-const CIRCLE_SIZE = 66;
+const CIRCLE_SIZE = 58; // slightly smaller
 
 export default function MedalButton({ item, onClick }) {
   const colors = useThemeColors();
@@ -53,8 +53,8 @@ export default function MedalButton({ item, onClick }) {
 
 const styles = {
   cell: {
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 10,
+    paddingBottom: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

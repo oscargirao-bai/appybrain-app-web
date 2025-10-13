@@ -170,7 +170,16 @@ export default function ProfileScreen({ navigation, route }) {
 			<Header
 				title={isExternalProfile ? userInfo?.nickname || 'Perfil' : 'Perfil'}
 				showBack
-				onBack={() => navigation.goBack()}
+				onBack={() => {
+					// If we came from Learn tab, force return to Learn
+					const cameFromLearn = window?.__lastMainTab === 0;
+					if (cameFromLearn) {
+						navigation.replace('MainTabs', { initialTab: 0 });
+					} else {
+						navigation.goBack();
+					}
+				}}
+					style={{ paddingRight: 10 }}
 				right={!isExternalProfile ? (
 					<div style={{ position: 'relative' }}>
 						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
@@ -215,7 +224,7 @@ export default function ProfileScreen({ navigation, route }) {
 const styles = {
 	container: { flex: 1 },
 	scrollContent: { paddingBottom: 40 },
-	infoWrapper: { paddingLeft: 16, paddingRight: 16, paddingTop: 18 },
+	infoWrapper: { paddingLeft: 0, paddingRight: 0, paddingTop: 0 },
 	section: { paddingLeft: 16, paddingRight: 16, paddingTop: 24 },
 	sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 14 },
 	statsRow: { flexDirection: 'row', justifyContent: 'space-between' , gap: 12 },

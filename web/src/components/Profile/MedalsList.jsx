@@ -42,7 +42,7 @@ const FALLBACK_MEDALS = [
 ];
 
 const ROWS = 3;
-const CELL_HEIGHT = 86; // approx: 66 circle + vertical paddings
+const CELL_HEIGHT = 92; // 58 circle + paddings/gap
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
@@ -121,10 +121,10 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					<div
 						ref={scrollerRef}
 						onScroll={handleScroll}
-							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: 44, paddingRight: 44 }}
+							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: 48, paddingRight: 48 }}
 					>
 							{columnData.map((col, index) => (
-								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start' }}>
+								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start', paddingLeft: 6, paddingRight: 6 }}>
 								{col.map((it, idx) => (
 									<MedalButton
 										key={it.id + '-' + index + '-' + idx}
@@ -157,11 +157,11 @@ const styles = {
 	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
 	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },
-	dotsRow: { flexDirection: 'row', justifyContent: 'center', marginTop: 14, gap: 10 },
+	dotsRow: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 12, gap: 10 },
 	dot: {
 		width: 10,
 		height: 10,
-		borderRadius: 5,
+		borderRadius: 10,
 		backgroundColor: '#ffffff33',
 	},
 	arrowBtn: {
@@ -169,11 +169,11 @@ const styles = {
 		top: '50%',
 		transform: 'translateY(-50%)',
 		zIndex: 1,
-		width: 32,
-		height: 32,
-		borderRadius: 16,
+		width: 36,
+		height: 36,
+		borderRadius: 18,
 		border: 'none',
-		backgroundColor: '#00000044',
+		backgroundColor: '#00000066',
 		color: '#fff',
 		cursor: 'pointer',
 	},
