@@ -93,7 +93,8 @@ export default function SettingsScreen({ navigation }) {
 				onBack={() => navigation.goBack()}
 			/>
 			<div style={styles.scrollContent}>
-				<div style={styles.content}>
+				<div style={{ ...styles.centerWrap }}>
+					<div style={styles.content}>
 					<div style={{ ...styles.sectionTitle, color: colors.text }}>{translate('profile.overviewTitle')}</div>
 					<Button4
 						label={translate('profile.customize')}
@@ -128,6 +129,7 @@ export default function SettingsScreen({ navigation }) {
 						danger
 						aria-label={translate('settings.logout')}
 					/>
+					</div>
 				</div>
 			</div>
 
@@ -173,8 +175,17 @@ const styles = {
 		overflowY: 'auto',
 		overflowX: 'hidden',
 	},
+	centerWrap: {
+		display: 'flex',
+		justifyContent: 'center',
+		width: '100%',
+	},
 	content: {
 		padding: 16,
+		width: '50%',
+		maxWidth: 560,
+		minWidth: 340,
+		margin: '0 auto',
 		paddingBottom: 40,
 	},
 	sectionTitle: {

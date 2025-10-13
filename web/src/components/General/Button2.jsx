@@ -19,13 +19,22 @@ export default function Button2({ iconName, size = 56, iconSize, onPress, onClic
   // Support both onPress (RN) and onClick (web)
   const handleClick = onClick || onPress;
   
-  const container = {
+  // Default: show subtle border like mobile
+  const baseContainer = {
     ...styles.base,
     width: size,
     height: size,
     borderRadius: radius,
     backgroundColor: colors.background + 'F0',
-    ...(style || {})
+    borderColor: (colors.text || '#fff') + '22',
+  };
+
+  // Remove border only for notifications/settings icons (requested)
+  const isBorderless = iconName === 'bell' || iconName === 'settings';
+  const container = {
+    ...baseContainer,
+    ...(isBorderless ? { border: 'none' } : {}),
+    ...(style || {}),
   };
   
   return (
@@ -49,9 +58,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderStyle: 'solid',
     cursor: 'pointer',
     padding: 0,
-    border: 'none',
   },
   inner: {
     display: 'flex',

@@ -9,7 +9,7 @@ export default function Button4({ label, onPress, onClick, danger, style, access
 	const colors = useThemeColors();
 	const handleClick = onClick || onPress;
 	return (
-		<button
+			<button
 			onClick={handleClick}
 			style={{
 				...styles.root,
@@ -19,7 +19,7 @@ export default function Button4({ label, onPress, onClick, danger, style, access
 			}}
 			aria-label={accessibilityLabel || label}
 		>
-			<div style={styles.inner}>
+				<div style={styles.inner}>
 				<span style={{...styles.label, ...{ color: danger ? colors.error || '#ff4d50' : colors.text }}}>{label}</span>
 			</div>
 		</button>
@@ -27,20 +27,20 @@ export default function Button4({ label, onPress, onClick, danger, style, access
 }
 
 const styles = {
-	root: {
-		border: '1px solid',
-		borderRadius: 22,
-		paddingLeft: 20,
-		paddingRight: 20,
-		paddingTop: 14,
-		paddingBottom: 14,
-		marginBottom: 12,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		cursor: 'pointer',
-	},
-	inner: { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 },
+		root: {
+			border: '1px solid',
+			borderRadius: 22,
+			paddingLeft: 20,
+			paddingRight: 20,
+			paddingTop: 14,
+			paddingBottom: 14,
+			marginBottom: 12,
+			display: 'inline-flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+			cursor: 'pointer',
+		},
+		inner: { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 	label: { fontSize: 15, fontWeight: '700', fontFamily: family.bold, letterSpacing: 0.2 },
 };
