@@ -202,13 +202,13 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 
 const styles = {
 	safe: { flex: 1 },
-	content: { flex: 1, justifyContent: 'flex-start' },
+			content: { flex: 1, justifyContent: 'flex-start' },
 	headerSection: {
 		width: '100%',
 	},
 	bottomSection: {
-		flex: 1,
-		justifyContent: 'space-between',
+				flex: 1,
+				justifyContent: 'flex-start', // manual spacing for equal distances
 	},
 	buttonsRow: {
 		flexDirection: 'row',
@@ -239,7 +239,8 @@ const styles = {
 		alignSelf: 'center',
 		marginLeft: 8,
 		marginRight: 8,
-		marginBottom: 8, // espaço acima do assunto
+		marginTop: 6, // baixa ligeiramente as estrelas
+		marginBottom: 0, // equilíbrio controlado pela secção seguinte
 	},
 	fullBleed: {
 		marginLeft: -10,
@@ -296,24 +297,25 @@ const styles = {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: 4,
+		height: 0, // elimina espaço para facilitar equidistância
 	},
 	subjectsSection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		flex: 0.7,
-		paddingTop: 8, // baixa o bloco do assunto
-		paddingBottom: 8,
+		flex: 0,
+		paddingTop: 0,
+		paddingBottom: 0,
+		marginTop: 14, // distância igual acima
+		marginBottom: 14, // e abaixo
 	},
 	buttonSection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingTop: 8,
-		paddingBottom: 22, // desce o botão em relação ao menu
-		flex: 0.3,
-		// paddingTop removido em favor do valor acima
+		paddingTop: 0,
+		paddingBottom: 12, // botão fica um pouco acima do menu
+		flex: 0,
 	},
 };
 
