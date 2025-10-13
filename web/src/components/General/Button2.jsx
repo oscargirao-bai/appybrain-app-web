@@ -25,7 +25,6 @@ export default function Button2({ iconName, size = 56, iconSize, onPress, onClic
     height: size,
     borderRadius: radius,
     backgroundColor: colors.background + 'F0',
-    borderColor: (colors.text || '#fff') + '22',
     ...(style || {})
   };
   
@@ -50,10 +49,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
     cursor: 'pointer',
     padding: 0,
+    border: 'none',
   },
   inner: {
     display: 'flex',

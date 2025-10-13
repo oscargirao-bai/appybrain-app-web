@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-// Linking removed - use window.open
 
 import Header from '../components/General/Header.jsx';
 import { useThemeColors } from '../services/Theme.jsx';
@@ -9,7 +8,6 @@ import apiManagerInstance from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
 import Button3 from '../components/General/Button3.jsx';
 import ButtonLightDark from '../components/Settings/ButtonLightDark.jsx';
-import ButtonLanguage from '../components/Settings/ButtonLanguage.jsx';
 import Button4 from '../components/General/Button4.jsx';
 import PrivacyModal from '../components/Settings/PrivacyModal.jsx';
 import ChangeNameModal from '../components/Settings/ChangeNameModal.jsx';
@@ -18,87 +16,67 @@ import MessageModal from '../components/General/MessageModal.jsx';
 export default function SettingsScreen({ navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const [vibration, setVibration] = useState(true); // placeholder state
+	const [vibration, setVibration] = useState(true);
 	const [privacyOpen, setPrivacyOpen] = useState(false);
 	const [changeNameOpen, setChangeNameOpen] = useState(false);
 	const [currentUserName, setCurrentUserName] = useState('');
 	const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
 
-	// Load current user name
 	useEffect(() => {
 		const updateData = () => {
 			const userData = DataManager.getUser();
 			setCurrentUserName(userData?.nickname || userData?.firstName || '');
 		};
-		
-		// Initial load
 		updateData();
-		
-		// Subscribe to DataManager changes
 		const unsubscribe = DataManager.subscribe(updateData);
-		
 		return unsubscribe;
 	}, []);
 
 	const handleVibrationChange = useCallback((val) => {
 		setVibration(val);
-		// Futuro: persistir em AsyncStorage ou contexto global
 	}, []);
 
-    const handleChangeName = async (newNickname) => {
-        setChangeNameOpen(false);
-        try {
-            await apiManagerInstance.updateNickname(newNickname);
-            // Success - refresh user data and update current name
-            await DataManager.refreshSection('userInfo');
-            setCurrentUserName(newNickname);
-        } catch (error) {
-            console.error('Error updating nickname:', error);
-            if (error.status === 409) {
-                setMessageModal({
-                    title: translate('error'),
-                    message: translate('settings.nick_in_use'),
-                    visible: true,
-                });
-            } else {
-                setMessageModal({
-                    title: translate('error'),
-                    message: translate('settings.nick_error'),
-                    visible: true,
-                });
-            }
-        }
-    };
+	const handleChangeName = async (newNickname) => {
+		setChangeNameOpen(false);
+		try {
+			await apiManagerInstance.updateNickname(newNickname);
+			await DataManager.refreshSection('userInfo');
+			setCurrentUserName(newNickname);
+		} catch (error) {
+			console.error('Error updating nickname:', error);
+			if (error.status === 409) {
+				setMessageModal({
+					title: translate('error'),
+					message: translate('settings.nick_in_use'),
+					visible: true,
+				});
+			} else {
+				setMessageModal({
+					title: translate('error'),
+					message: translate('settings.nick_error'),
+					visible: true,
+				});
+			}
+		}
+	};
 
-    const handleLogout = useCallback(() => {
-		window.alert('Tem a certeza de que deseja terminar a sessão?',
-			[
-				{
-					text: 'Cancelar',
-					style: 'cancel'
-				},
-				{
-					text: 'Sim, sair',
-					style: 'destructive',
-					onPress: async () => {
-						try {
-							await apiManagerInstance.logout();
-							// Navigate to login screen
-							navigation.replace('Login');
-						} catch (error) {
-							console.error('Logout error:', error);
-							// Still navigate to login even if logout fails
-							navigation.replace('Login');
-						}
-					}
+	const handleLogout = useCallback(() => {
+		const confirmed = window.confirm('Tem a certeza de que deseja terminar a sessão?');
+		if (confirmed) {
+			(async () => {
+				try {
+					await apiManagerInstance.logout();
+					navigation.replace('Login');
+				} catch (error) {
+					console.error('Logout error:', error);
+					navigation.replace('Login');
 				}
-			]
-		);
+			})();
+		}
 	}, [navigation]);
 
-	// Open Instagram link (Web: usar window.open)
 	const INSTAGRAM_URL = 'https://www.instagram.com/appy_brain/';
-	const handleOpenInstagram = useCallback(async () => {
+	const handleOpenInstagram = useCallback(() => {
 		try {
 			window.open(INSTAGRAM_URL, '_blank');
 		} catch (err) {
@@ -108,61 +86,64 @@ export default function SettingsScreen({ navigation }) {
 	}, []);
 
 	return (
-		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>
+		<div style={{ ...styles.container, backgroundColor: colors.background }}>
 			<Header
 				title={translate('settings.settings')}
 				showBack
 				onBack={() => navigation.goBack()}
 			/>
-			<div style={styles.content} showsVerticalScrollIndicator={false}>
-				<span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('profile.overviewTitle')}</span>
-				<Button4
-					label={translate('profile.customize')}
-					onClick={() => navigation.navigate('Customize')}
-					aria-label={translate('profile.customize')}
-				/>
-				<Button4
-					label={translate('settings.customizeProfile')}
-					onClick={() => setChangeNameOpen(true)}
-					aria-label={translate('settings.customizeProfile')}
-				/>
+			<div style={styles.scrollContent}>
+				<div style={styles.content}>
+					<div style={{ ...styles.sectionTitle, color: colors.text }}>{translate('profile.overviewTitle')}</div>
+					<Button4
+						label={translate('profile.customize')}
+						onClick={() => navigation.navigate('Customize')}
+						aria-label={translate('profile.customize')}
+					/>
+					<Button4
+						label={translate('settings.customizeProfile')}
+						onClick={() => setChangeNameOpen(true)}
+						aria-label={translate('settings.customizeProfile')}
+					/>
 
-				<span style={{...styles.sectionTitle, ...{ color: colors.text }}}>{translate('settings.general')}</span>
-				<Button3
-					icon={vibration ? 'vibrate' : 'vibrate'}
-					label={translate('settings.vibrations')}
-					value={vibration}
-					onValueChange={handleVibrationChange}
-					aria-label={translate('settings.vibrations')}
-				/>
-			<ButtonLightDark />
-			{/* <ButtonLanguage /> */}
+					<div style={{ ...styles.sectionTitle, color: colors.text }}>{translate('settings.general')}</div>
+					<Button3
+						icon="vibrate"
+						label={translate('settings.vibrations')}
+						value={vibration}
+						onValueChange={handleVibrationChange}
+						accessibilityLabel={translate('settings.vibrations')}
+					/>
+					<ButtonLightDark />
 
-			<span style={{...styles.sectionTitle, color: colors.text}}>{translate('settings.account')}</span>
-				<Button4
-					label={translate('settings.privacyPolicy')}
-					onClick={() => setPrivacyOpen(true)}
-					aria-label={translate('settings.privacyPolicy')}
-				/>
-				<Button4
-					label={translate('settings.logout')}
-					onClick={handleLogout}
-					danger
-					aria-label={translate('settings.logout')}
-				/>
+					<div style={{ ...styles.sectionTitle, color: colors.text, marginTop: 24 }}>{translate('settings.account')}</div>
+					<Button4
+						label={translate('settings.privacyPolicy')}
+						onClick={() => setPrivacyOpen(true)}
+						aria-label={translate('settings.privacyPolicy')}
+					/>
+					<Button4
+						label={translate('settings.logout')}
+						onClick={handleLogout}
+						danger
+						aria-label={translate('settings.logout')}
+					/>
+				</div>
 			</div>
 
-			{/* Instagram link button - bottom */}
 			<div style={styles.instagramRow}>
-				<button 					style={{...styles.instagramBtn}}
+				<button
+					style={styles.instagramBtn}
 					onClick={handleOpenInstagram}
-					
+					onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
+					onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
 					aria-label="Abrir Instagram do Appy Brain"
 				>
-					<img src="/assets/Instagram_Glyph_Gradient.png" style={styles.instagramImg} />
-					<span style={{...styles.instagramText, ...{ color: colors.text }}}>appy_brain</span>
+					<img src="/assets/Instagram_Glyph_Gradient.png" style={styles.instagramImg} alt="Instagram" />
+					<span style={{ ...styles.instagramText, color: colors.text }}>appy_brain</span>
 				</button>
 			</div>
+
 			<ChangeNameModal
 				visible={changeNameOpen}
 				currentName={currentUserName}
@@ -181,15 +162,57 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = {
-	container: { flex: 1 },
-	content: { padding: 16, paddingBottom: 40 },
-	sectionTitle: { fontSize: 18, fontWeight: '700', fontFamily: family.bold, marginBottom: 12 },
-	card: { borderWidth: 1, borderRadius: 16, padding: 16, marginBottom: 16 },
-	cardTitle: { fontSize: 16, fontWeight: '700', fontFamily: family.bold, marginBottom: 4 },
-	cardDesc: { fontSize: 13, fontWeight: '500', fontFamily: family.medium, lineHeight: 18 },
-	instagramRow: { padding: 16, marginTop: 8, alignItems: 'center', justifyContent: 'center' },
-	instagramBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 6, paddingBottom: 6 },
-	instagramImg: { width: 28, height: 28, resizeMode: 'contain', marginRight: 10 },
-	instagramText: { fontSize: 16, fontWeight: '700', fontFamily: family.bold, textAlign: 'center' },
+	container: {
+		display: 'flex',
+		flexDirection: 'column',
+		height: '100vh',
+		width: '100%',
+	},
+	scrollContent: {
+		flex: 1,
+		overflowY: 'auto',
+		overflowX: 'hidden',
+	},
+	content: {
+		padding: 16,
+		paddingBottom: 40,
+	},
+	sectionTitle: {
+		fontSize: 18,
+		fontWeight: '700',
+		fontFamily: family.bold,
+		marginBottom: 12,
+	},
+	instagramRow: {
+		padding: 16,
+		marginTop: 8,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	instagramBtn: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingTop: 6,
+		paddingBottom: 6,
+		background: 'transparent',
+		border: 'none',
+		cursor: 'pointer',
+		transition: 'opacity 0.2s',
+	},
+	instagramImg: {
+		width: 28,
+		height: 28,
+		objectFit: 'contain',
+		marginRight: 10,
+	},
+	instagramText: {
+		fontSize: 16,
+		fontWeight: '700',
+		fontFamily: family.bold,
+		textAlign: 'center',
+	},
 };
 
