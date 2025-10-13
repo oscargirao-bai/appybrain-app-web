@@ -113,7 +113,8 @@ export default function LoadingScreen({ navigation }) {
 	const baseLogoWidth = Math.min(width * (isSmallScreen ? 0.40 : 0.48), 380);
 	const logoWidth = Math.min(baseLogoWidth * 1.5, width * 0.95);
 	const baseOrgLogoWidth = Math.min(width * (isSmallScreen ? 0.30 : 0.34), 200);
-	const orgLogoWidth = baseOrgLogoWidth * 2;
+	// Reduce school logo window to 80% of previous size
+	const orgLogoWidth = baseOrgLogoWidth * 2 * 0.8;
 
 	// Handler for when organization logo loads
 	const handleOrgLogoLoad = () => {
@@ -139,20 +140,22 @@ export default function LoadingScreen({ navigation }) {
 		loopAnim();
 	}, [width]);
 
-	const skaterWidth = 80;
+	// Reduce skater to 75% of previous size
+	const skaterWidth = 80 * 0.75;
 	const skaterHeight = skaterWidth * (336/241);
 
 	return (
 		<div style={{ minHeight: '100vh', backgroundColor: '#FDD92B', position: 'relative', overflow: 'hidden' }}>
-			{/* Top Appybrain logo */}
+			{/* Top Appybrain logo pinned to very top */}
 			<div style={{ 
 				position: 'absolute', 
 				top: 0, 
 				left: 0, 
 				right: 0, 
 				display: 'flex', 
-				alignItems: 'center', 
+				alignItems: 'flex-start', 
 				justifyContent: 'center',
+				paddingTop: 4,
 				opacity: logoOpacity, 
 				transition: 'opacity 650ms' 
 			}}>
