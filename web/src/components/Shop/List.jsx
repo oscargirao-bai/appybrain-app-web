@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
@@ -39,22 +39,53 @@ export default function List({
 }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const width = window.innerWidth;
+	const containerRef = useRef(null);
+	const [containerWidth, setContainerWidth] = useState(() => {
+		if (typeof window === 'undefined') return 0;
+		return Math.min(window.innerWidth, 620);
+	});
 
-	const itemSize = useMemo(() => {
-		const horizontalPadding = 16 * 2;
-		const gap = 12;
-		const totalGap = gap * (numColumns - 1);
-		return Math.floor((width - horizontalPadding - totalGap) / numColumns);
-	}, [width, numColumns]);
+	useEffect(() => {
+		const node = containerRef.current;
+		if (!node) return;
+
+		const update = () => {
+			const rect = node.getBoundingClientRect();
+			setContainerWidth(rect.width);
+		};
+
+		update();
+
+		if (typeof ResizeObserver !== 'undefined') {
+			const observer = new ResizeObserver((entries) => {
+				const entry = entries[0];
+				if (entry) {
+					setContainerWidth(entry.contentRect.width);
+				}
+			});
+			observer.observe(node);
+			return () => observer.disconnect();
+		}
+
+		if (typeof window !== 'undefined') {
+			window.addEventListener('resize', update);
+			return () => window.removeEventListener('resize', update);
+		}
+
+		return undefined;
+	}, []);
 
 	const priceFontSize = useMemo(() => {
-		if (itemSize <= 84) return 11;
-		if (itemSize <= 96) return 12;
+		const horizontalPadding = 16 * 2;
+		const gap = 12;
+		const effectiveWidth = containerWidth || (typeof window !== 'undefined' ? window.innerWidth * 0.5 : 0);
+		const available = (effectiveWidth - horizontalPadding - gap * (numColumns - 1)) / Math.max(numColumns, 1);
+		if (available <= 84) return 11;
+		if (available <= 96) return 12;
 		return 14;
-	}, [itemSize]);
+	}, [containerWidth, numColumns]);
 
-	const styles = useMemo(() => createStyles(colors, priceFontSize), [colors, priceFontSize]);
+	const styles = useMemo(() => createStyles(colors, priceFontSize, numColumns), [colors, priceFontSize, numColumns]);
 
 	const handlePurchase = async (item) => {
 		if (item.acquired === 1) return;
@@ -68,8 +99,13 @@ export default function List({
 	};
 
 	return (
-		<div style={{ ...styles.container, ...style }}>
-			<div style={styles.grid}>
+		<div ref={containerRef} style={{ ...styles.container, ...style }}>
+			<div
+				style={{
+					...styles.grid,
+					gridTemplateColumns: `repeat(${numColumns}, minmax(0, 1fr))`,
+				}}
+			>
 				{data.map((item) => {
 					const rarity = RARITY_MAP[item.rarityTypeId] || 'common';
 					const rarityColor = RARITY_COLORS[rarity] || colors.primary;
@@ -78,12 +114,11 @@ export default function List({
 					const highlight = !owned && ((price === 0) || (typeof price === 'number' && price > 0 && price <= userCoins));
 					
 					return (
-						<div key={item.id} style={{ ...styles.cardWrap, width: itemSize }}>
+						<div key={item.id} style={styles.cardWrap}>
 							<button
 								type="button"
 								style={{
 									...styles.card,
-									width: itemSize,
 									borderColor: rarityColor,
 									boxShadow: highlight ? `0 8px 22px ${addAlpha(rarityColor, 0.25)}` : 'none',
 									transform: highlight ? 'translateY(-3px)' : 'translateY(0)',
@@ -107,7 +142,7 @@ export default function List({
 											style={{
 												...styles.pricePill,
 												backgroundColor: rarityColor,
-												maxWidth: itemSize - 12,
+												maxWidth: 'calc(100% - 12px)',
 												boxShadow: highlight ? `0 0 0 6px ${addAlpha(rarityColor, 0.18)}` : 'none',
 											}}
 										>
@@ -129,14 +164,14 @@ export default function List({
 											)}
 										</div>
 									</div>
-								)}
+								);
 							</button>
 							</div>
 							);
 				})}
 			</div>
 		</div>
-	);
+			function createStyles(colors, priceFontSize, numColumns) {
 }
 
 function createStyles(colors, priceFontSize) {
@@ -146,16 +181,15 @@ function createStyles(colors, priceFontSize) {
 			flexDirection: 'column',
 			overflowY: 'auto',
 			paddingBottom: 60,
-			paddingTop: 20,
-		},
-		grid: {
+						display: 'grid',
+						gap: 12,
 			display: 'flex',
 			flexWrap: 'wrap',
 			gap: 12,
 			paddingLeft: 16,
-			paddingRight: 16,
-		},
-		cardWrap: { 
+						display: 'flex',
+						alignItems: 'center', 
+						justifyContent: 'center',
 			display: 'flex',
 			alignItems: 'center', 
 			justifyContent: 'flex-start' 
@@ -166,14 +200,15 @@ function createStyles(colors, priceFontSize) {
 			borderStyle: 'solid',
 			borderRadius: 12,
 			alignItems: 'center',
-			justifyContent: 'center',
+						width: '100%',
+						aspectRatio: '1 / 1',
 			backgroundColor: colors.background,
 			position: 'relative',
 			aspectRatio: 1,
 			cursor: 'pointer',
 			padding: 0,
-			transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-		},
+						width: numColumns >= 3 ? '68%' : '72%',
+						height: numColumns >= 3 ? '68%' : '72%',
 		itemImage: {
 			width: '80%',
 			height: '80%',
@@ -189,8 +224,9 @@ function createStyles(colors, priceFontSize) {
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingLeft: 10,
-			paddingRight: 10,
+			gap: 6,
+			paddingLeft: 12,
+			paddingRight: 12,
 			paddingTop: 4,
 			paddingBottom: 4,
 			borderRadius: 12,

@@ -31,7 +31,14 @@ export default function Coins({ style }) {
 	}, []);
 
 	return (
-		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }, ...(style || {}) }}>
+		<div
+			style={{
+				...styles.wrap,
+				borderColor: colors.primary + 'AA',
+				backgroundColor: colors.primary + '15',
+				...(style || {}),
+			}}
+		>
 			<LucideIcon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
 			<span style={{...styles.value, ...{ color: colors.primary }}}>{coins}</span>
 		</div>
