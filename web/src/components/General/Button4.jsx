@@ -27,20 +27,21 @@ export default function Button4({ label, onPress, onClick, danger, style, access
 }
 
 const styles = {
-		root: {
-			border: '1px solid',
-			borderRadius: 22,
-			paddingLeft: 20,
-			paddingRight: 20,
-			paddingTop: 14,
-			paddingBottom: 14,
-			marginBottom: 12,
-			display: 'inline-flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'center',
-			cursor: 'pointer',
-		},
-		inner: { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+			root: {
+				border: '1px solid',
+				borderRadius: 22,
+				paddingLeft: 20,
+				paddingRight: 20,
+				paddingTop: 14,
+				paddingBottom: 14,
+				marginBottom: 16,
+				display: 'flex',
+				width: '100%',
+				flexDirection: 'row',
+				alignItems: 'center',
+				justifyContent: 'center',
+				cursor: 'pointer',
+			},
+			inner: { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 },
 	label: { fontSize: 15, fontWeight: '700', fontFamily: family.bold, letterSpacing: 0.2 },
 };

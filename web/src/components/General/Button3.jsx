@@ -29,7 +29,7 @@ export default function Button3({
 	}, [onValueChange, value, disabled]);
 
 	return (
-		<button
+			<button
 			onClick={handleToggle}
 			disabled={disabled}
 			style={{
@@ -76,7 +76,7 @@ export default function Button3({
 }
 
 const styles = {
-	card: {
+		card: {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -86,8 +86,8 @@ const styles = {
 		paddingTop: 14,
 		paddingBottom: 14,
 		border: '1px solid',
-		borderRadius: 24,
-		marginBottom: 16,
+			borderRadius: 26,
+			marginBottom: 18,
 		background: 'transparent',
 	},
 	leftRow: {

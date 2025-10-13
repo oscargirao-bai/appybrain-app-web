@@ -179,6 +179,7 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'center',
 		width: '100%',
+		paddingTop: 8,
 	},
 	content: {
 		padding: 16,
@@ -189,10 +190,10 @@ const styles = {
 		paddingBottom: 40,
 	},
 	sectionTitle: {
-		fontSize: 18,
+		fontSize: 20,
 		fontWeight: '700',
 		fontFamily: family.bold,
-		marginBottom: 12,
+		marginBottom: 14,
 	},
 	instagramRow: {
 		padding: 16,
