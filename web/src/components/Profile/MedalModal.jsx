@@ -36,29 +36,31 @@ export default function MedalModal({ visible, onClose, medal }) {
 				<div style={panelStyle}>
 					<div style={styles.scrollContent}>
 						<div style={styles.rowTop}>
-							<div style={iconCircleStyle}>
-								{medal.icon ? (
-									<div style={styles.iconWrap}>
-										<SvgIcon svgString={medal.icon} size={34} />
+							<div style={{ position: 'relative' }}>
+								<div style={iconCircleStyle}>
+									{medal.icon ? (
+										<div style={styles.iconWrap}>
+											<SvgIcon svgString={medal.icon} size={34} />
+										</div>
+									) : (
+										<div style={styles.iconWrap}>
+											<LucideIcon name="medal" size={38} color={colors.text} />
+										</div>
+									)}
+								</div>
+								{!medal.hideLevel && medal.level ? (
+									<div style={styles.levelBubble}>
+										<span style={styles.levelBubbleText}>{medal.level}</span>
 									</div>
-								) : (
-									<div style={styles.iconWrap}>
-										<LucideIcon name="medal" size={38} color={colors.text} />
-									</div>
-								)}
+								) : null}
 							</div>
 							<div style={styles.rightCol}>
 								<span style={{...styles.titleText, color: colors.text}}>{medal.title}</span>
-								{!medal.hideLevel && medal.level && (
-									<div style={{...styles.levelBadge, backgroundColor: medal.color || colors.primary}}>
-										<span style={styles.levelText}>Nível {medal.level}</span>
-									</div>
-								)}
+								<span style={{...styles.descriptionText, color: colors.text + 'CC'}}>
+									{medal.description || 'Sem descrição'}
+								</span>
 							</div>
 						</div>
-						<span style={{...styles.descriptionText, color: colors.text + 'CC'}}>
-							{medal.description || 'Sem descrição'}
-						</span>
 						{medal.target && (
 							<div style={styles.progressSection}>
 								<div style={styles.progressBar}>
@@ -69,13 +71,7 @@ export default function MedalModal({ visible, onClose, medal }) {
 								</span>
 							</div>
 						)}
-						<button
-							style={{...styles.closeBtn, backgroundColor: colors.primary}}
-							onClick={onClose}
-							aria-label="Fechar"
-						>
-							<span style={styles.closeBtnText}>Fechar</span>
-						</button>
+						{/* Close button removed; click outside closes modal */}
 					</div>
 				</div>
 			</div>
@@ -148,25 +144,33 @@ const styles = {
 		flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
-		gap: 4,
+		gap: 8,
 	},
 	titleText: {
 		fontSize: 18,
 		fontFamily: family.bold,
 		fontWeight: '700',
 	},
-	levelBadge: {
-		alignSelf: 'flex-start',
-		paddingLeft: 10,
-		paddingRight: 10,
-		paddingTop: 4,
-		paddingBottom: 4,
-		borderRadius: 12,
+	levelBubble: {
+		position: 'absolute',
+		top: -8,
+		left: -10,
+		minWidth: 22,
+		height: 22,
+		paddingLeft: 6,
+		paddingRight: 6,
+		borderRadius: 11,
+		backgroundColor: '#FFE247',
+		border: '2px solid #222',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		boxShadow: '0 0 6px rgba(0,0,0,0.25)'
 	},
-	levelText: {
+	levelBubbleText: {
 		fontSize: 12,
 		fontFamily: family.semibold,
-		color: '#FFFFFF',
+		color: '#111',
 	},
 	descriptionText: {
 		fontSize: 14,
@@ -195,21 +199,5 @@ const styles = {
 		fontFamily: family.medium,
 		textAlign: 'right',
 	},
-	closeBtn: {
-		paddingTop: 12,
-		paddingBottom: 12,
-		borderRadius: 12,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-		border: 'none',
-		cursor: 'pointer',
-		marginTop: 8,
-	},
-	closeBtnText: {
-		fontSize: 16,
-		fontFamily: family.bold,
-		fontWeight: '700',
-		color: '#FFFFFF',
-	},
+	// close button removed
 };

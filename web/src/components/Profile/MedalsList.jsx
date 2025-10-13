@@ -43,6 +43,7 @@ const FALLBACK_MEDALS = [
 
 const ROWS = 3;
 const CELL_HEIGHT = 92; // 58 circle + paddings/gap
+const SIDE_PADDING = 56; // ensure badges never sit under arrows
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
@@ -52,7 +53,8 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 	// Use provided medals or fallback static list
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
 
-	const columnsPerScreen = width >= 768 ? 5 : 4; // how many columns fully visible per viewport
+	// Always show 5 columns per page and keep them centered within the window
+	const columnsPerScreen = 5;
 	const rows = ROWS; // requested: 3 rows on web
 	const [page, setPage] = useState(0); // virtual page (for dots)
 
@@ -81,10 +83,13 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 	const pages = Math.ceil(totalColumns / columnsPerScreen);
 
 	const scrollerRef = useRef(null);
-	const cellWidth = Math.floor(viewportWidth / columnsPerScreen);
+	// Compute content width excluding side paddings reserved for arrows
+	const contentWidth = Math.max(0, viewportWidth - SIDE_PADDING * 2);
+	const cellWidth = Math.floor(contentWidth / columnsPerScreen);
 
 	useEffect(() => {
 		function measure() {
+			// clientWidth includes paddings; we want the full viewport width for page stepping
 			const vw = scrollerRef.current?.clientWidth || Math.min(550, window.innerWidth);
 			setViewportWidth(vw);
 		}
@@ -121,7 +126,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					<div
 						ref={scrollerRef}
 						onScroll={handleScroll}
-							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: 48, paddingRight: 48 }}
+							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: SIDE_PADDING, paddingRight: SIDE_PADDING, boxSizing: 'border-box' }}
 					>
 							{columnData.map((col, index) => (
 								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start', paddingLeft: 6, paddingRight: 6 }}>
@@ -153,7 +158,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 
 const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
-	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14 },
+	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14, marginLeft: 16 },
 	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
 	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },

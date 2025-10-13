@@ -22,14 +22,15 @@ export default function MedalButton({ item, onClick }) {
         }}
         aria-label={`Medalha ${item.id}${item.unlocked ? ' desbloqueada' : ' bloqueada'}`}
       >
-        <div style={{
-          ...styles.medalOuter,
-          borderColor: isNew ? badgeColor : badgeColor + '55',
-        }}>
+        <div style={{ position: 'relative' }}>
           <div style={{
-            ...styles.medalInner,
-            backgroundColor: item.unlocked ? badgeColor : '#00000022',
+            ...styles.medalOuter,
+            borderColor: isNew ? badgeColor : badgeColor + '55',
           }}>
+            <div style={{
+              ...styles.medalInner,
+              backgroundColor: item.unlocked ? badgeColor : '#00000022',
+            }}>
             {item.icon && item.icon.includes('<svg') ? (
               <SvgIcon
                 svgString={item.icon}
@@ -45,6 +46,16 @@ export default function MedalButton({ item, onClick }) {
             )}
             {isNew && <div style={{ ...styles.newDot, borderColor: '#222' }} />}
           </div>
+          </div>
+          {item.level ? (
+            <div style={{
+              ...styles.levelBubble,
+              backgroundColor: '#FFE247',
+              color: '#111',
+            }}>
+              <span style={styles.levelText}>{item.level}</span>
+            </div>
+          ) : null}
         </div>
       </button>
     </div>
@@ -91,5 +102,25 @@ const styles = {
     borderWidth: 2,
     borderStyle: 'solid',
     boxShadow: '0 0 8px #FFE247',
+  },
+  levelBubble: {
+    position: 'absolute',
+    top: -4,
+    left: -6,
+    minWidth: 20,
+    height: 20,
+    paddingLeft: 6,
+    paddingRight: 6,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '2px solid #222',
+    boxShadow: '0 0 6px rgba(0,0,0,0.25)'
+  },
+  levelText: {
+    fontSize: 12,
+    lineHeight: '12px',
+    fontWeight: 700,
   },
 };
