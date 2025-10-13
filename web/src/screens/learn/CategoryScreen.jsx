@@ -84,10 +84,12 @@ export default function CategoryScreen({ navigation, route }) {
 	}, [navigation]);
 
 	return (
-		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
+		<div style={{...styles.safe, backgroundColor: colors.background}}>      
 			<Header title={discipline?.title || 'Carregando...'} showBack onBack={() => navigation.navigate('MainTabs', { initialTab: 0 })} />
-			<div style={styles.body}>
+			<div style={styles.searchWrapper}>
 				<SearchBox value={searchText} onChange={setSearchText} />
+			</div>
+			<div style={styles.listWrapper}>
 				<ContentList data={filteredCategories} onPressItem={handlePressItem} />
 			</div>
 		</div>
@@ -95,6 +97,7 @@ export default function CategoryScreen({ navigation, route }) {
 }
 
 const styles = {
-	safe: { flex: 1 },
-	body: { flex: 1, paddingLeft: 16, paddingRight: 16 },
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' },
+	searchWrapper: { paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8 },
+	listWrapper: { flex: 1, overflow: 'auto', paddingLeft: 16, paddingRight: 16 },
 };

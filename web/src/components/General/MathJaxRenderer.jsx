@@ -5,7 +5,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
  * MathJaxRenderer for Web
  * Renders HTML content with MathJax support using dangerouslySetInnerHTML
  * 
- * For production: Load MathJax script in index.html
+ * MathJax script must be loaded globally in index.html
  */
 const MathJaxRenderer = ({ 
   content = '', 
@@ -26,6 +26,7 @@ const MathJaxRenderer = ({
   const colors = useThemeColors();
   const containerRef = useRef(null);
   const [processedContent, setProcessedContent] = useState('');
+  const [isTypesetting, setIsTypesetting] = useState(false);
 
   useEffect(() => {
     if (!enabled || !content) {
@@ -36,11 +37,12 @@ const MathJaxRenderer = ({
     // Process content for MathJax
     let processed = String(content);
     
-    // Convert inline math delimiters if needed
-    processed = processed.replace(/\\\(/g, '\\(');
-    processed = processed.replace(/\\\)/g, '\\)');
-    processed = processed.replace(/\\\[/g, '\\[');
-    processed = processed.replace(/\\\]/g, '\\]');
+    // Normalize double backslashes in LaTeX (API often sends \\frac instead of \frac)
+    processed = processed.replace(/\\\\\\\\/g, '\\\\');
+    processed = processed.replace(/\\\\\(/g, '\\(');
+    processed = processed.replace(/\\\\\)/g, '\\)');
+    processed = processed.replace(/\\\\\[/g, '\\[');
+    processed = processed.replace(/\\\\\]/g, '\\]');
 
     if (inlineDisplay) {
       // Force display math to render inline
@@ -50,18 +52,29 @@ const MathJaxRenderer = ({
 
     setProcessedContent(processed);
 
-    // Trigger MathJax to process the content
-    if (typeof window !== 'undefined' && window.MathJax) {
-      setTimeout(() => {
-        window.MathJax.typesetPromise?.([containerRef.current])
-          .then(() => {
-            // Notify height change if callback provided
-            if (onHeightChange && containerRef.current) {
-              onHeightChange(containerRef.current.scrollHeight);
-            }
-          })
-          .catch((err) => console.error('MathJax processing error:', err));
-      }, 100);
+    // Trigger MathJax to process the content after DOM update
+    if (typeof window !== 'undefined' && window.MathJax && containerRef.current) {
+      setIsTypesetting(true);
+      
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        if (window.MathJax.typesetPromise && containerRef.current) {
+          window.MathJax.typesetPromise([containerRef.current])
+            .then(() => {
+              setIsTypesetting(false);
+              // Notify height change if callback provided
+              if (onHeightChange && containerRef.current) {
+                onHeightChange(containerRef.current.scrollHeight);
+              }
+            })
+            .catch((err) => {
+              console.error('MathJax processing error:', err);
+              setIsTypesetting(false);
+            });
+        } else {
+          setIsTypesetting(false);
+        }
+      });
     }
   }, [content, enabled, inlineDisplay, onHeightChange]);
 
@@ -73,6 +86,10 @@ const MathJaxRenderer = ({
     padding,
     margin: compact ? 0 : undefined,
     overflowY: scrollEnabled ? 'auto' : 'hidden',
+    overflowX: 'hidden',
+    lineHeight: 1.5,
+    opacity: isTypesetting ? 0.7 : 1,
+    transition: 'opacity 0.2s',
     ...style,
   };
 

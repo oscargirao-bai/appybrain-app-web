@@ -114,10 +114,12 @@ export default function ContentScreen({ navigation, route }) {
 	};
 
 	return (
-		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
+		<div style={{...styles.safe, backgroundColor: colors.background}}>      
 			<Header title={categoryTitle || 'Conteúdo'} showBack onBack={() => navigation.goBack()} />
-			<div style={styles.listWrapper}> 
+			<div style={styles.searchWrapper}>
 				<SearchBox value={searchText} onChange={setSearchText} />
+			</div>
+			<div style={styles.listWrapper}> 
 				<ContentList 
 					data={filteredContents} 
 					onStudy={handleStudyPress}
@@ -130,6 +132,7 @@ export default function ContentScreen({ navigation, route }) {
 }
 
 const styles = {
-	safe: { flex: 1 },
-	listWrapper: { flex: 1, paddingLeft: 16, paddingRight: 16},
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' },
+	searchWrapper: { paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8 },
+	listWrapper: { flex: 1, overflow: 'auto', paddingLeft: 16, paddingRight: 16 },
 };

@@ -58,39 +58,6 @@ export default function HtmlScreen({ navigation, route }) {
   // Determine header title based on content type
   const headerTitle = newsId ? translate('news.title') : translate('study.title');
 
-  // Wrap provided HTML in a minimal template with appropriate colors based on content type
-  const wrappedHtml = useMemo(() => {
-    const body = contentHtml || '<p style="text-align:center">(sem conteúdo)</p>';
-    
-    // For study content: always use white background with black text for readability
-    // For news content: use theme colors to match the app's appearance
-    const isStudyContent = !newsId && !newsData;
-    const textColor = isStudyContent ? '#000000' : colors.text;
-    const backgroundColor = isStudyContent ? '#ffffff' : colors.background;
-    const codeBackgroundOpacity = isStudyContent ? 'rgba(127,127,127,0.12)' : colors.text + '20';
-    
-    return `<!doctype html>
-      <html lang="pt">
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <style>
-          :root {
-            --text: ${textColor});
-            --bg: ${backgroundColor};
-            --link: ${colors.primary || '#0a7'};
-          }
-          html, body { margin:0; padding: 16px 24px 24px 24px; background: var(--bg); color: var(--text); font-family: -apple-system, Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; }
-          img, video { max-width: 100%; height: auto; }
-          a { color: var(--link); }
-          h1,h2,h3 { margin-top: 1.2em; }
-          pre, code { background: ${codeBackgroundOpacity}; padding: 2px 4px; border-radius: 4px; }
-        </style>
-      </head>
-      <body>${body}</body>
-      </html>`;
-  }, [contentHtml, colors, newsId, newsData]);
-
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -155,33 +122,36 @@ export default function HtmlScreen({ navigation, route }) {
       )}
       
       {/* Content rendering */}
-      {uri ? (
-        // For external URLs, use iframe
-        <iframe 
-          src={uri} 
-          style={{...styles.webview, backgroundColor: colors.background}}
-          title={headerTitle}
-        />
-      ) : (
-        // For HTML content (especially study content), use MathJaxRenderer for math support
-        <MathJaxRenderer
-          content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
-          enabled={true}
-          scrollEnabled={true}
-          style={{...styles.webview, backgroundColor: isStudyContent ? '#ffffff' : colors.background}}
-          baseFontSize={16}
-          backgroundColor={isStudyContent ? '#ffffff' : undefined}
-          textColor={isStudyContent ? '#000000' : undefined}
-          padding={10}
-        />
-      )}
+      <div style={styles.contentWrapper}>
+        {uri ? (
+          // For external URLs, use iframe
+          <iframe 
+            src={uri} 
+            style={{...styles.webview, backgroundColor: colors.background}}
+            title={headerTitle}
+          />
+        ) : (
+          // For HTML content (especially study content), use MathJaxRenderer for math support
+          <MathJaxRenderer
+            content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
+            enabled={true}
+            scrollEnabled={true}
+            style={{...styles.webview, backgroundColor: isStudyContent ? '#ffffff' : colors.background}}
+            baseFontSize={16}
+            backgroundColor={isStudyContent ? '#ffffff' : colors.background}
+            textColor={isStudyContent ? '#000000' : colors.text}
+            padding={16}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
 const styles = {
-  container: { flex: 1 },
-  webview: { flex: 1 },
+  container: { flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' },
+  contentWrapper: { flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' },
+  webview: { flex: 1, width: '100%', border: 'none' },
   metadataContainer: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(127,127,127,0.2)',
