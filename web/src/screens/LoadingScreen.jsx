@@ -141,8 +141,8 @@ export default function LoadingScreen({ navigation }) {
 		loopAnim();
 	}, [width]);
 
-	// Reduce skater to 75% of previous size
-	const skaterWidth = 80 * 0.75;
+	// Reduce skater to 90% of current size (67.5% of original)
+	const skaterWidth = 80 * 0.75 * 0.9;
 	const skaterHeight = skaterWidth * (336/241);
 
 	return (
@@ -170,7 +170,7 @@ export default function LoadingScreen({ navigation }) {
 				flexDirection: 'column',
 				justifyContent: 'flex-start', 
 				alignItems: 'center', 
-				paddingTop: 60,
+				paddingTop: 40,
 				paddingLeft: 24, 
 				paddingRight: 24
 			}}>
