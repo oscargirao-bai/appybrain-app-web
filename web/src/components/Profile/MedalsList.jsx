@@ -43,12 +43,13 @@ const FALLBACK_MEDALS = [
 
 const ROWS = 3;
 const CELL_HEIGHT = 92; // 58 circle + paddings/gap
-const SIDE_PADDING = 56; // ensure badges never sit under arrows
+const ARROW_ZONE = 56; // physical margins so badges never go under arrows
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
 	const width = window.innerWidth;
-	const [viewportWidth, setViewportWidth] = useState(Math.min(550, width));
+	// Visible window width (excludes the left/right arrow zones)
+	const [windowWidth, setWindowWidth] = useState(Math.min(550, width) - ARROW_ZONE * 2);
 
 	// Use provided medals or fallback static list
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
@@ -83,15 +84,14 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 	const pages = Math.ceil(totalColumns / columnsPerScreen);
 
 	const scrollerRef = useRef(null);
-	// Compute content width excluding side paddings reserved for arrows
-	const contentWidth = Math.max(0, viewportWidth - SIDE_PADDING * 2);
-	const cellWidth = Math.floor(contentWidth / columnsPerScreen);
+	const windowRef = useRef(null);
+	// Each column takes a fixed width so that exactly 5 columns fit the visible area
+	const cellWidth = Math.floor(windowWidth / columnsPerScreen);
 
 	useEffect(() => {
 		function measure() {
-			// clientWidth includes paddings; we want the full viewport width for page stepping
-			const vw = scrollerRef.current?.clientWidth || Math.min(550, window.innerWidth);
-			setViewportWidth(vw);
+			const ww = windowRef.current?.clientWidth || (Math.min(550, window.innerWidth) - ARROW_ZONE * 2);
+			setWindowWidth(ww);
 		}
 		measure();
 		window.addEventListener('resize', measure);
@@ -100,19 +100,19 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 
 	function handleScroll(e) {
 		const offsetX = e.currentTarget.scrollLeft;
-		const virtual = Math.round(offsetX / viewportWidth);
+		const virtual = Math.round(offsetX / windowWidth);
 		if (virtual !== page) setPage(virtual);
 	}
 
 	function goToPage(i) {
 		if (!scrollerRef.current) return;
-		scrollerRef.current.scrollTo({ left: i * viewportWidth, behavior: 'smooth' });
+		scrollerRef.current.scrollTo({ left: i * windowWidth, behavior: 'smooth' });
 	}
 
 	function goStep(dir) {
 		if (!scrollerRef.current) return;
 		const left = scrollerRef.current.scrollLeft;
-		const next = Math.max(0, Math.min((pages - 1) * viewportWidth, left + dir * viewportWidth));
+		const next = Math.max(0, Math.min((pages - 1) * windowWidth, left + dir * windowWidth));
 		scrollerRef.current.scrollTo({ left: next, behavior: 'smooth' });
 	}
 
@@ -123,11 +123,12 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
 						‹
 					</button>
-					<div
-						ref={scrollerRef}
-						onScroll={handleScroll}
-							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: SIDE_PADDING, paddingRight: SIDE_PADDING, boxSizing: 'border-box' }}
-					>
+					<div ref={windowRef} style={{ ...styles.windowWrap, marginLeft: ARROW_ZONE, marginRight: ARROW_ZONE }}>
+						<div
+							ref={scrollerRef}
+							onScroll={handleScroll}
+							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory' }}
+						>
 							{columnData.map((col, index) => (
 								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start', paddingLeft: 6, paddingRight: 6 }}>
 								{col.map((it, idx) => (
@@ -142,6 +143,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 								))}
 							</div>
 						))}
+						</div>
 					</div>
 					<button aria-label="next" onClick={() => goStep(1)} style={{ ...styles.arrowBtn, right: 0 }}>
 						›
@@ -158,9 +160,10 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 
 const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
-	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14, marginLeft: 16 },
+	title: { fontSize: 18, fontFamily: family.bold, fontWeight: '700', marginBottom: 14, marginLeft: 16 },
 	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
+	windowWrap: { width: '100%', boxSizing: 'border-box' },
 	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },
 	dotsRow: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 12, gap: 10 },
 	dot: {

@@ -105,18 +105,16 @@ const styles = {
   },
   levelBubble: {
     position: 'absolute',
-    top: -4,
-    left: -6,
-    minWidth: 20,
-    height: 20,
-    paddingLeft: 6,
-    paddingRight: 6,
-    borderRadius: 10,
+    top: -6,
+    right: -8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     border: '2px solid #222',
-    boxShadow: '0 0 6px rgba(0,0,0,0.25)'
+    boxShadow: '0 2px 6px rgba(0,0,0,0.35)'
   },
   levelText: {
     fontSize: 12,
