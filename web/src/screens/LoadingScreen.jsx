@@ -156,13 +156,11 @@ export default function LoadingScreen({ navigation }) {
 				opacity: logoOpacity, 
 				transition: 'opacity 650ms' 
 			}}>
-				<div style={{ width: logoWidth, aspectRatio: 1, overflow: 'hidden' }}>
-					<img
-						src={logo}
-						alt="Appybrain logo"
-						style={{ position: 'absolute', width: '100%', height: '125%', top: '-10%', objectFit: 'contain' }}
-					/>
-				</div>
+				<img
+					src={logo}
+					alt="Appybrain logo"
+					style={{ width: logoWidth, height: 'auto', objectFit: 'contain' }}
+				/>
 			</div>
 
 			{/* Center block with school logo */}
