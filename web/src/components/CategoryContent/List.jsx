@@ -7,11 +7,12 @@ import { family } from '../../constants/font.jsx';
 
 function StarCount({ stars, max, iconColor }) {
 	const colors = useThemeColors();
-	const pct = (stars / max) || 0;
-	const full = pct >= 1;
 	const badgeStyle = {
 		...styles.countBadge,
-		borderColor: iconColor || colors.text
+		borderColor: iconColor || colors.text,
+	};
+	const iconStyle = {
+		marginRight: 4
 	};
 	const textStyle = {
 		...styles.countText,
@@ -19,7 +20,7 @@ function StarCount({ stars, max, iconColor }) {
 	};
 	return (
 		<div style={badgeStyle} aria-label={`${stars} estrelas`}>
-			<SvgIcon name="star" size={14} color={iconColor || colors.text} style={{ marginRight: 4 }} />
+			<LucideIcon name="star" size={14} color={iconColor || colors.text} style={iconStyle} />
 			<span style={textStyle}>{stars}</span>
 		</div>
 	);
@@ -39,7 +40,7 @@ export default function ContentList({ data, onPressItem }) {
 
 	return (
 		<div style={styles.listContent}>
-			{data.map((item, index) => {
+			{data.map((item) => {
 				const pct = (item.stars / item.maxStars) || 0;
 				const baseColor = item.color || colors.primary;
 				const iconColor = item.iconColor || colors.primary;
@@ -48,15 +49,16 @@ export default function ContentList({ data, onPressItem }) {
 
 				const progressContainerStyle = {
 					...styles.progressContainer,
-					backgroundColor: baseColor
+					backgroundColor: baseColor,
+					borderColor: containerBg
 				};
 				const progressFillStyle = {
 					...styles.progressFillFull,
-					backgroundColor: fillColor
+					backgroundColor: fillColor,
+					flex: pct
 				};
-				const leftIconStyle = {
-					...styles.leftIcon,
-					width: 45
+				const emptyFillStyle = {
+					flex: 1 - pct
 				};
 
 				return (
@@ -65,23 +67,23 @@ export default function ContentList({ data, onPressItem }) {
 						style={styles.rowOuter}
 						onClick={() => onPressItem && onPressItem(item)}
 						aria-label={`${translate('learn.openContent')}: ${item.title}. ${item.stars} / ${item.maxStars} ${translate('quizResult.stars')}.`}
+						onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+						onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
 					>
 						<div style={progressContainerStyle}>
 							<div style={progressFillStyle} />
-							<div style={{ flex: 1 - pct }} />
+							<div style={emptyFillStyle} />
 							<div style={styles.rowContent}>
-							{item.icon ? (
-								<div style={leftIconStyle}>
-									<SvgIcon svgString={item.icon} size={45} color={iconColor} />
-								</div>
-							) : (
-								<div style={leftIconStyle}>
-									<LucideIcon name="book" size={45} color={iconColor} />
-								</div>
-							)}
-								<div style={styles.textBlock}>
-									<span style={styles.title}>{item.title}</span>
-								</div>
+								{item.icon ? (
+									<div style={styles.leftIcon}>
+										<SvgIcon svgString={item.icon} size={45} color={iconColor} />
+									</div>
+								) : (
+									<div style={styles.leftIcon}>
+										<LucideIcon name="book-open" size={40} color={baseColor} />
+									</div>
+								)}
+								<span style={{ ...styles.itemTitle, color: iconColor }}>{item.title}</span>
 								<StarCount stars={item.stars} max={item.maxStars} iconColor={iconColor} />
 							</div>
 						</div>
@@ -96,75 +98,81 @@ const styles = {
 	listContent: {
 		display: 'flex',
 		flexDirection: 'column',
-		gap: 16,
+		gap: 8,
+		paddingBottom: 400,
+		marginTop: 8,
 	},
 	rowOuter: {
 		width: '100%',
-		borderRadius: 16,
-		overflow: 'hidden',
 		border: 'none',
 		padding: 0,
 		background: 'transparent',
 		cursor: 'pointer',
 		transition: 'opacity 0.2s',
+		marginTop: 8,
+		marginBottom: 8,
 	},
 	progressContainer: {
-		position: 'relative',
 		display: 'flex',
 		flexDirection: 'row',
-		minHeight: 64,
+		borderWidth: 2,
+		borderStyle: 'solid',
+		borderRadius: 16,
+		minHeight: 86,
+		overflow: 'hidden',
+		position: 'relative',
 	},
 	progressFillFull: {
 		position: 'absolute',
 		top: 0,
 		left: 0,
 		bottom: 0,
-		width: '100%',
+		borderTopLeftRadius: 0,
+		borderBottomLeftRadius: 0,
 	},
 	rowContent: {
-		position: 'relative',
-		zIndex: 1,
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingLeft: 12,
-		paddingRight: 12,
-		gap: 12,
-	},
-	leftIcon: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	textBlock: {
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'center',
-	},
-	title: {
-		fontFamily: family.bold,
-		fontSize: 16,
-		fontWeight: '700',
-		color: '#FFFFFF',
-	},
-	countBadge: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		paddingLeft: 8,
 		paddingRight: 8,
-		paddingTop: 4,
-		paddingBottom: 4,
-		borderRadius: 12,
+		pointerEvents: 'none',
+	},
+	leftIcon: {
+		marginRight: 10,
+		width: 45,
+		height: 45,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	itemTitle: {
+		flex: 1,
+		fontSize: 20,
+		fontFamily: family.bold,
+		fontWeight: '700',
+		textAlign: 'left',
+	},
+	countBadge: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingLeft: 10,
+		paddingRight: 10,
+		paddingTop: 6,
+		paddingBottom: 6,
+		borderRadius: 30,
 		borderWidth: 2,
 		borderStyle: 'solid',
-		backgroundColor: 'rgba(255,255,255,0.2)',
 	},
 	countText: {
-		fontFamily: family.semibold,
-		fontSize: 14,
-		fontWeight: '600',
+		fontSize: 12,
+		fontFamily: family.bold,
+		fontWeight: '700',
 	},
 };

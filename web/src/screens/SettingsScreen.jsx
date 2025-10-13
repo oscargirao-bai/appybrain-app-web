@@ -89,7 +89,10 @@ export default function SettingsScreen({ navigation }) {
 			<Header
 				title={translate('settings.settings')}
 				showBack
-				onBack={() => navigation.goBack()}
+				onBack={() => {
+					// Always go back to previous page (Learn, Profile, etc.)
+					navigation.goBack();
+				}}
 			/>
 			<div style={styles.scrollContent}>
 				<div style={{ ...styles.centerWrap }}>
