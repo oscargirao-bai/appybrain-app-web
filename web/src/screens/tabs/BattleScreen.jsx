@@ -318,16 +318,14 @@ export default function BattleScreen({ navigation, route }) {
 }
 
 const styles = {
-  safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
-  content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20 },
+  safe: { flex: 1 },
+  content: { flex: 1, justifyContent: 'flex-start' },
   headerSection: {
     width: '100%',
     marginBottom: 0,
   },
   bottomSection: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'space-between',
   },
   buttonsRow: {
@@ -360,9 +358,9 @@ const styles = {
     width: 'auto',
   },
   battleButtonWrap: {
-    paddingBottom: 16, // evita cortar a sombra do botão
-    marginBottom: 0,
-    marginTop: 0,
+    paddingBottom: 0,
+    marginBottom: -20,
+    marginTop: -2,
     alignItems: 'center',
   },
   subjectsRow: {
@@ -414,10 +412,10 @@ const styles = {
   },
   buttonSection: {
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingBottom: 24,
-    flex: 0,
-    paddingTop: 4,
+    paddingBottom: 8,
+    flex: 0.3,
+    paddingTop: 2,
   },
 };

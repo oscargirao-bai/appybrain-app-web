@@ -124,8 +124,8 @@ export default function ChallengeScreen({ navigation }) {
 }
 
 const styles = {
-	safe: { flex: 1, display: 'flex', flexDirection: 'column' },
-	content: { flex: 1, display: 'flex', flexDirection: 'column' },
+	safe: { flex: 1 },
+	content: { flex: 1, paddingLeft: 10, paddingRight: 10 },
 	headerSection: {
 		width: '100%',
 		marginBottom: 8,
@@ -146,9 +146,7 @@ const styles = {
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 		marginTop: 8,
-		marginBottom: 8,
-		paddingLeft: 10,
-		paddingRight: 10,
+		marginBottom: 4,
 	},
 	actionRow: {
 		flexDirection: 'row',
