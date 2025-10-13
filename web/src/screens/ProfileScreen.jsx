@@ -3,7 +3,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeColors } from '../services/Theme.jsx';
 import DataManager from '../services/DataManager.jsx';
 import Header from '../components/General/Header.jsx';
+import Button2 from '../components/General/Button2.jsx';
+import NotificationBadge from '../components/General/NotificationBadge.jsx';
 import LucideIcon from '../components/General/LucideIcon.jsx';
+import NotificationsModal from '../components/Learn/NotificationsModal.jsx';
 import Banner from '../components/Profile/Banner.jsx';
 import Info from '../components/Profile/Info.jsx';
 import MedalsList from '../components/Profile/MedalsList.jsx';
@@ -20,6 +23,8 @@ export default function ProfileScreen({ navigation, route }) {
 	const [userInfo, setUserInfo] = useState(null);
 	const [badges, setBadges] = useState([]);
 	const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
+	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+	const [notificationsOpen, setNotificationsOpen] = useState(false);
 
 	// Check if we're viewing an external user's profile
 	const externalUser = route?.params?.externalUser;
@@ -28,6 +33,14 @@ export default function ProfileScreen({ navigation, route }) {
 
 	// Get navigation params for badge modal opening
 	const { openBadgeModal, highlightChests, timestamp } = route?.params || {};
+
+	useEffect(() => {
+		// keep unread notifications count in sync
+		const updateUnread = () => setUnreadNotificationsCount(DataManager.getUnreadNotificationsCount());
+		updateUnread();
+		const unsub = DataManager.subscribe(updateUnread);
+		return unsub;
+	}, []);
 
 	useEffect(() => {
 		if (isExternalProfile) {
@@ -158,17 +171,17 @@ export default function ProfileScreen({ navigation, route }) {
 				title={isExternalProfile ? userInfo?.nickname || 'Perfil' : 'Perfil'}
 				showBack
 				onBack={() => navigation.goBack()}
+				right={!isExternalProfile ? (
+					<div style={{ position: 'relative' }}>
+						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
+						<NotificationBadge count={unreadNotificationsCount} />
+					</div>
+				) : null}
 				extraRight={!isExternalProfile ? (
-					<button 						
-						aria-label="Abrir definições"
-						onClick={() => navigation.navigate('Settings')}
-						style={styles.iconBtn}
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-					>
-						<LucideIcon name="settings" size={24} color={colors.text} />
-					</button>
+					<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />
 				) : null}
 			/>
+			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 			<div style={{...styles.scrollContent, backgroundColor: colors.background }} showsVerticalScrollIndicator={false}>
 				<Banner 
 					topFlat={true}

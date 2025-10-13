@@ -1,9 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-// Easing removed
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from '../General/SvgIcon.jsx';
-import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
+import MedalButton from './MedalButton.jsx';
 
 /**
  * MedalsList: paginated grid of medal icons (placeholder logic) with active/inactive styling & page dots.
@@ -43,20 +41,16 @@ const FALLBACK_MEDALS = [
 	{ id: 'gem2', icon: 'gem', unlocked: false, new: true, ...COMMON_META },
 ];
 
-export default function MedalsList({
-	medals: medalsProp,
-	style,
-	title = 'Medalhas',
-	onMedalPress,
-}) {
+export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
-	const width = window.innerWidth; const height = window.innerHeight;
+	const width = window.innerWidth;
+	const [viewportWidth, setViewportWidth] = useState(Math.min(550, width));
 
 	// Use provided medals or fallback static list
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
 
 	const columnsPerScreen = width >= 768 ? 5 : 4; // how many columns fully visible per viewport
-	const rows = 2;
+	const rows = 3; // requested: 3 rows on web
 	const [page, setPage] = useState(0); // virtual page (for dots)
 
 	// Build columns: each column holds 'rows' medals stacked vertically so we can scroll horizontally
@@ -83,117 +77,83 @@ export default function MedalsList({
 	const totalColumns = columnData.length;
 	const pages = Math.ceil(totalColumns / columnsPerScreen);
 
-	const flatRef = useRef(null);
-	const cellWidth = width / columnsPerScreen;
+	const scrollerRef = useRef(null);
+	const cellWidth = Math.floor(viewportWidth / columnsPerScreen);
+
+	useEffect(() => {
+		function measure() {
+			const vw = scrollerRef.current?.clientWidth || Math.min(550, window.innerWidth);
+			setViewportWidth(vw);
+		}
+		measure();
+		window.addEventListener('resize', measure);
+		return () => window.removeEventListener('resize', measure);
+	}, []);
 
 	function handleScroll(e) {
-		const offsetX = e.nativeEvent.contentOffset.x;
-		const virtual = Math.round(offsetX / width);
+		const offsetX = e.currentTarget.scrollLeft;
+		const virtual = Math.round(offsetX / viewportWidth);
 		if (virtual !== page) setPage(virtual);
 	}
 
 	function goToPage(i) {
-		flatRef.current?.scrollToOffset({ offset: i * width, animated: true });
+		if (!scrollerRef.current) return;
+		scrollerRef.current.scrollTo({ left: i * viewportWidth, behavior: 'smooth' });
 	}
 
-	return (
-    <div style={{...styles.wrapper, ...style}}>
-      <span style={{...styles.title, ...{ color: colors.text }}}>{title}</span>
-      <div         ref={flatRef}
-        data={columnData}
-        horizontal
-        keyExtractor={(_, i) => 'col-' + i}
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        decelerationRate="fast"
-        renderItem={({ item: col, index }) => (
-          <div style={{...styles.column, ...{ width: cellWidth }}}> 
-						{col.map((it, idx) => (
-							<MedalButton
-								key={it.id + '-' + index + '-' + idx}
-								item={it}
-								colors={colors}
-								onClick={() => {
-									if (onMedalPress) onMedalPress(it);
-									// clear new flags locally (both aliases)
-									setInternalMedals(prev => prev.map(m => m.id === it.id ? { ...m, newMedal: false, new: false } : m));
-								}}
-							/>
-						))}
-          </div>
-        )}
-      />
-      <div style={styles.dotsRow}>
-        {Array.from({ length: pages }).map((_, i) => (
-          <button key={i} onClick={() => goToPage(i)} style={{...styles.dot, ...i === page && { backgroundColor: colors.primary }}} />
-        ))}
-      </div>
-    </div>
-	);
-}
+	function goStep(dir) {
+		if (!scrollerRef.current) return;
+		const left = scrollerRef.current.scrollLeft;
+		const next = Math.max(0, Math.min((pages - 1) * viewportWidth, left + dir * viewportWidth));
+		scrollerRef.current.scrollTo({ left: next, behavior: 'smooth' });
+	}
 
-const CIRCLE_SIZE = 66; // outer active circle approx
+		return (
+			<div style={{ ...styles.wrapper, ...(style || {}) }}>
+				<span style={{ ...styles.title, color: colors.text }}>{title}</span>
+				<div style={styles.carouselWrap}>
+					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
+						‹
+					</button>
+					<div
+						ref={scrollerRef}
+						onScroll={handleScroll}
+						style={{ ...styles.scroller, scrollSnapType: 'x mandatory' }}
+					>
+						{columnData.map((col, index) => (
+							<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, scrollSnapAlign: 'start' }}>
+								{col.map((it, idx) => (
+									<MedalButton
+										key={it.id + '-' + index + '-' + idx}
+										item={it}
+										onClick={() => {
+											if (onMedalPress) onMedalPress(it);
+											setInternalMedals(prev => prev.map(m => m.id === it.id ? { ...m, newMedal: false, new: false } : m));
+										}}
+									/>
+								))}
+							</div>
+						))}
+					</div>
+					<button aria-label="next" onClick={() => goStep(1)} style={{ ...styles.arrowBtn, right: 0 }}>
+						›
+					</button>
+				</div>
+				<div style={styles.dotsRow}>
+					{Array.from({ length: pages }).map((_, i) => (
+						<button key={i} onClick={() => goToPage(i)} style={{ ...styles.dot, ...(i === page ? { backgroundColor: colors.primary } : {}) }} />
+					))}
+				</div>
+			</div>
+		);
+}
 
 const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
 	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14 },
-  grid: { },
-  column: { alignItems: 'center', justifyContent: 'center' },
-  cell: {
-    paddingTop: 10, paddingBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-	medalButton: {
-		background: 'none',
-		border: 'none',
-		padding: 0,
-		cursor: 'pointer',
-		transition: 'transform 0.2s ease',
-	},
-	medalOuterActive: {
-		padding: 2,
-		borderRadius: CIRCLE_SIZE / 2,
-		borderWidth: 2,
-	},
-	medalInnerActive: {
-		width: CIRCLE_SIZE,
-		height: CIRCLE_SIZE,
-		borderRadius: CIRCLE_SIZE / 2,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#00000022',
-	},
-	medalOuterInactive: {
-		padding: 2,
-		borderRadius: CIRCLE_SIZE / 2,
-		borderWidth: 2,
-		borderColor: '#00000033',
-	},
-	medalInnerInactive: {
-		width: CIRCLE_SIZE,
-		height: CIRCLE_SIZE,
-		borderRadius: CIRCLE_SIZE / 2,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#00000011',
-	},
-	newDot: {
-		position: 'absolute',
-		top: 6,
-		right: 8,
-		width: 14,
-		height: 14,
-		borderRadius: 7,
-		backgroundColor: '#FFE247',
-		borderWidth: 2,
-		borderColor: '#222',
-		shadowColor: '#FFE247',
-		shadowOpacity: 0.9,
-		shadowRadius: 6,
-		shadowOffset: { width: 0, height: 0 },
-	},
+	column: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+	carouselWrap: { position: 'relative' },
+	scroller: { display: 'flex', overflowX: 'auto', scrollBehavior: 'smooth' },
 	dotsRow: { flexDirection: 'row', justifyContent: 'center', marginTop: 14, gap: 10 },
 	dot: {
 		width: 10,
@@ -201,53 +161,21 @@ const styles = {
 		borderRadius: 5,
 		backgroundColor: '#ffffff33',
 	},
+	arrowBtn: {
+		position: 'absolute',
+		top: '50%',
+		transform: 'translateY(-50%)',
+		zIndex: 1,
+		width: 32,
+		height: 32,
+		borderRadius: 16,
+		border: 'none',
+		backgroundColor: '#00000044',
+		color: '#fff',
+		cursor: 'pointer',
+	},
 };
 
-// MedalButton component (Web: simplified without React Native Animated)
-function MedalButton({ item, colors, onPress }) {
-	const isNew = !!item.justUnlocked;
 
-	const badgeColor = item.color || colors.primary;
-	const iconColor = item.iconColor || colors.text;
 
-	return (
-		<div style={styles.cell}>
-			<button
-				onClick={onPress}
-				style={{
-					...styles.medalButton,
-					opacity: item.unlocked ? 1 : 0.5,
-				}}
-				aria-label={`Medalha ${item.id}${item.unlocked ? ' desbloqueada' : ' bloqueada'}`}
-			>
-				<div style={{
-					...(item.unlocked ? styles.medalOuterActive : styles.medalOuterInactive),
-					borderColor: isNew ? badgeColor : badgeColor + '55',
-				}}>
-					<div style={{
-						...(item.unlocked ? styles.medalInnerActive : styles.medalInnerInactive),
-						backgroundColor: item.unlocked ? badgeColor : '#00000022',
-					}}>
-						{item.icon && item.icon.includes('<svg') ? (
-							<SvgIcon 
-								svgString={item.icon} 
-								size={34} 
-								color={item.unlocked ? iconColor : colors.text + '55'} 
-							/>
-						) : (
-							<LucideIcon
-								name={item.icon}
-								size={34}
-								color={item.unlocked ? iconColor : colors.text + '55'}
-							/>
-						)}
-						{isNew && (
-							<div style={styles.newDot} />
-						)}
-					</div>
-				</div>
-			</button>
-		</div>
-	);
-}
 
