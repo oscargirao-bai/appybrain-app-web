@@ -168,8 +168,9 @@ export default function LoadingScreen({ navigation }) {
 				display: 'flex', 
 				flex: 1, 
 				flexDirection: 'column',
-				justifyContent: 'center', 
+				justifyContent: 'flex-start', 
 				alignItems: 'center', 
+				paddingTop: 60,
 				paddingLeft: 24, 
 				paddingRight: 24
 			}}>
