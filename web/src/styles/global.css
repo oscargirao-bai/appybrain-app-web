@@ -1,0 +1,20 @@
+@keyframes glow-pulse {
+  0% { opacity: 0.30; filter: blur(10px); }
+  50% { opacity: 0.55; filter: blur(12px); }
+  100% { opacity: 0.30; filter: blur(10px); }
+}
+
+@keyframes bob-slow {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes chest-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* Utility classes (optional usage in inline styles via className if needed) */
+.pulse-once { animation: chest-pulse 1.4s ease-in-out infinite; }

@@ -21,15 +21,11 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 
 	return (
 		<div style={{ 
-			position: 'fixed',
+			position: 'sticky',
 			bottom: 0,
-			left: '50%',
-			transform: 'translateX(-50%)',
 			backgroundColor: barBg,
 			width: '100%',
-			minWidth: '375px',
-			maxWidth: '600px',
-			zIndex: 1000
+			zIndex: 100
 		}}>
 			<div style={{...styles.container, ...{
 					backgroundColor: barBg,

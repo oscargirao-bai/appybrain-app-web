@@ -30,7 +30,7 @@ export default function Chest({ dataSource = 'stars', size = 86, onPress, style 
 	const chestData = DataManager.getUserChests();
 	const sourceData = dataSource === 'points' ? chestData?.points : chestData?.stars;
 
-	const { imageSrc, progress } = useMemo(() => {
+	const { imageSrc, progress, hasAvailable } = useMemo(() => {
 		// Determine available chests
 		const available = sourceData?.chests?.filter(c => c.openedAt === null) || [];
 		const hasAvailable = available.length > 0;
@@ -64,7 +64,7 @@ export default function Chest({ dataSource = 'stars', size = 86, onPress, style 
 		}
 		p = Math.max(0, Math.min(1, p));
 
-		return { imageSrc, progress: p };
+		return { imageSrc, progress: p, hasAvailable };
 	}, [sourceData]);
 
 	// Ring geometry
@@ -135,7 +135,7 @@ export default function Chest({ dataSource = 'stars', size = 86, onPress, style 
 				</g>
 			</svg>
 			{/* Chest image in center */}
-			<img src={imageSrc} style={{ ...styles.image, width: size * 0.58, height: size * 0.58 }} alt="Baú" />
+			<img src={imageSrc} style={{ ...styles.image, width: size * 0.58, height: size * 0.58, animation: hasAvailable ? 'chest-pulse 1.6s ease-in-out infinite' : 'none' }} alt="Baú" />
 		</button>
 	);
 }

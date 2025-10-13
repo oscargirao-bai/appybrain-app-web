@@ -11,20 +11,35 @@ import { useThemeColors } from '../../services/Theme.jsx';
  *  - iconName (lucide icon string)
  *  - style (optional extra styles)
  */
-export default function Button2({ iconName, iconSize = 22, onPress, onClick, style = {} }) {
+export default function Button2({ iconName, size = 56, iconSize, onPress, onClick, style = {} }) {
   const colors = useThemeColors();
+  const radius = 14;
+  const finalIconSize = iconSize || Math.round(size * 0.46);
   
   // Support both onPress (RN) and onClick (web)
   const handleClick = onClick || onPress;
   
+  const container = {
+    ...styles.base,
+    width: size,
+    height: size,
+    borderRadius: radius,
+    backgroundColor: colors.background + 'F0',
+    borderColor: (colors.text || '#fff') + '22',
+    ...(style || {})
+  };
+  
   return (
     <button
       onClick={handleClick}
-      style={{...styles.container, ...style}}
-      aria-label="Button"
+      style={container}
+      aria-label={iconName || 'Button'}
+      onMouseDown={(e) => (e.currentTarget.style.opacity = '0.85')}
+      onMouseUp={(e) => (e.currentTarget.style.opacity = '1')}
+      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
     >
       <div style={styles.inner}>
-        {iconName ? <LucideIcon name={iconName} size={iconSize} color={colors.text} /> : null}
+        {iconName ? <LucideIcon name={iconName} size={finalIconSize} color={colors.text} /> : null}
       </div>
     </button>
   );
@@ -35,8 +50,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    border: '1px solid',
+    borderWidth: 1,
+    borderStyle: 'solid',
     cursor: 'pointer',
+    padding: 0,
   },
   inner: {
     display: 'flex',

@@ -105,26 +105,12 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 				title={translate('titles.learn')}
 				right={(
 					<div style={{ position: 'relative' }}>
-						<button 							
-							aria-label={translate('options.notification')}
-							onClick={() => setNotificationsOpen(true)}
-							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingLeft: 4, paddingRight: 4 }}
-						>
-							<LucideIcon name="bell" size={22} color={colors.text} />
-						</button>
+						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
 				)}
 				extraRight={(
-					<button 						
-						aria-label={translate('settings.settings')}
-						onClick={() => navigation.navigate('Settings')}
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingLeft: 4, paddingRight: 4 }}
-					>
-						<LucideIcon name="settings" size={22} color={colors.text} />
-					</button>
+					<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />
 				)}
 			/>
 			<div style={styles.content}>
