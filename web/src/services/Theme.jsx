@@ -80,6 +80,18 @@ export function ThemeProvider({ children, defaultTheme = 'system' }) {
 		return { ...base, primary: base.secondary, secondary: base.primary };
 	}, [resolvedTheme, swapGenderColors]);
 
+	// Keep page background (outside the app container) in sync with theme
+	useEffect(() => {
+		try {
+			const bg = resolvedTheme === 'dark' ? '#000000' : '#FFFFFF';
+			if (typeof document !== 'undefined') {
+				document.body.style.backgroundColor = bg;
+				// Also set html element to avoid white gaps in some browsers
+				document.documentElement.style.backgroundColor = bg;
+			}
+		} catch {}
+	}, [resolvedTheme]);
+
 	const value = useMemo(
 		() => ({ theme, setTheme, colors, resolvedTheme, swapGenderColors, setSwapGenderColors: setSwapGenderColorsPersist }),
 		[theme, setTheme, colors, resolvedTheme, swapGenderColors, setSwapGenderColorsPersist]
