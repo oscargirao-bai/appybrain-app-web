@@ -201,14 +201,16 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 	}
 
 const styles = {
-	safe: { flex: 1 },
-	content: { flex: 1, justifyContent: 'flex-start' },
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
+			content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20 },
 	headerSection: {
 		width: '100%',
 	},
 	bottomSection: {
-		flex: 1,
-		justifyContent: 'space-between',
+				flex: 1,
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-between', // ensure button sits above navbar
 	},
 	buttonsRow: {
 		flexDirection: 'row',
@@ -239,6 +241,8 @@ const styles = {
 		alignSelf: 'center',
 		marginLeft: 8,
 		marginRight: 8,
+		marginTop: 10, // baixa ligeiramente as estrelas
+		marginBottom: 16, // mais espaço antes de "Matemática"/botão
 	},
 	fullBleed: {
 		marginLeft: -10,
@@ -246,10 +250,12 @@ const styles = {
 		width: 'auto',
 	},
 	learnButtonWrap: {
-		paddingBottom: 0,
-		marginBottom: -20,
-		marginTop: -2,
+		paddingBottom: 16, // evita cortar a sombra do botão
+		margin: 0,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
+		width: '100%',
 	},
 	subjectsCenter: {
 		flex: 1,
@@ -257,6 +263,7 @@ const styles = {
 	},
 	subjectsRow: {
 		width: '100%',
+		display: 'flex',
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		alignItems: 'center',
@@ -280,31 +287,37 @@ const styles = {
 	},
 	chestLine: {
 		width: '100%',
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingLeft: 10,
 		paddingRight: 10,
+		boxSizing: 'border-box',
 	},
 	trophySection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: 0,
+		height: 0, // elimina espaço para facilitar equidistância
 	},
 	subjectsSection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		flex: 0.7,
+		flex: 0,
+		paddingTop: 0,
+		paddingBottom: 0,
+		marginTop: 14, // distância igual acima
+		marginBottom: 14, // e abaixo
 	},
 	buttonSection: {
 		width: '100%',
-		justifyContent: 'flex-start',
+		justifyContent: 'center',
 		alignItems: 'center',
-		paddingBottom: 8,
-		flex: 0.3,
-		paddingTop: 2,
+		paddingTop: 4,
+		paddingBottom: 24, // botão fica um pouco acima do menu e não corta a sombra
+		flex: 0,
 	},
 };
 

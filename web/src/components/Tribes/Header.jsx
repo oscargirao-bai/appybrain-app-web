@@ -85,26 +85,25 @@ export default function TribesHeader({
                 style={{
                   ...styles.tribeInner,
                   borderColor: tribeColor + (isActive ? '44' : '22'),
-                  position: 'relative',
-                  overflow: 'hidden',
                 }}
               >
                 {t.icon && (
-                  <div 
-                    style={styles.iconBox}
-                    dangerouslySetInnerHTML={{ __html: (function(){
-                      // Process SVG to fill the circle completely
-                      let xml = t.icon || '';
-                      xml = xml.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-                      if (!xml.includes('<svg')) xml = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${xml}</svg>`;
-                      if (!/viewBox=/i.test(xml)) xml = xml.replace(/<svg(\s|>)/i, '<svg viewBox="0 0 24 24"$1');
-                      xml = xml.replace(/<svg/i, '<svg preserveAspectRatio="xMidYMid slice"'); // slice para preencher
-                      xml = xml.replace(/\s(width|height)="[^"]+"/gi, '');
-                      // Force 100% size on svg element
-                      xml = xml.replace(/<svg/, '<svg width="100%" height="100%" style="display:block;"');
-                      return xml;
-                    })() }}
-                  />
+                  <div style={styles.iconBox}>
+                    <div
+                      style={{ width: '100%', height: '100%' }}
+                      dangerouslySetInnerHTML={{ __html: (function(){
+                        // Ensure the svg fits the circle by enforcing viewBox and preserveAspectRatio
+                        let xml = t.icon || '';
+                        xml = xml.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+                        if (!xml.includes('<svg')) xml = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${xml}</svg>`;
+                        if (!/viewBox=/i.test(xml)) xml = xml.replace(/<svg(\s|>)/i, '<svg viewBox="0 0 24 24"$1');
+                        xml = xml.replace(/<svg/i, '<svg preserveAspectRatio="xMidYMid meet"');
+                        // Remove hardcoded width/height to allow CSS sizing
+                        xml = xml.replace(/\s(width|height)="[^"]+"/gi, '');
+                        return xml;
+                      })() }}
+                    />
+                  </div>
                 )}
               </div>
               <span 
@@ -179,8 +178,8 @@ const styles = {
     overflow: 'hidden',
   },
   iconBox: {
-    width: '100%',
-    height: '100%',
+    width: 44,
+    height: 44,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

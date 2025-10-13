@@ -14,7 +14,7 @@ import LucideIcon from '../../components/General/LucideIcon.jsx';
 export default function ShopScreen({ navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const width = window.innerWidth * 0.5; // 50% for app container
+	const width = window.innerWidth;
 	const height = window.innerHeight;
 	const scrollRef = useRef(null);
 	const [tab, setTab] = useState('avatar'); // avatar | background | frames
@@ -57,17 +57,6 @@ export default function ShopScreen({ navigation }) {
 
 	function onSelect(key) {
 		setTab(key);
-		const index = key === 'avatar' ? 0 : key === 'background' ? 1 : 2;
-		if (scrollRef.current) {
-			scrollRef.current.scrollTo({ left: index * width, behavior: 'smooth' });
-		}
-	}
-
-	function handleScroll(e) {
-		const scrollLeft = e.target.scrollLeft;
-		const idx = Math.round(scrollLeft / width);
-		const key = idx === 0 ? 'avatar' : idx === 1 ? 'background' : 'frames';
-		if (key !== tab) setTab(key);
 	}
 
 	// Handle cosmetic purchase
@@ -99,20 +88,16 @@ export default function ShopScreen({ navigation }) {
 				<Coins />
 			</div>
 			<Options value={tab} onChange={onSelect} />
-			<div 
-				ref={scrollRef}
-				style={{...styles.scrollContainer, width}}
-				onScroll={handleScroll}
-			>
-				<div style={{...styles.page, width}}>
+			<div style={styles.contentArea}>
+				{tab === 'avatar' && (
 					<List data={avatars} userCoins={userCoins} numColumns={3} onPurchase={handlePurchase} />
-				</div>
-				<div style={{...styles.page, width}}>
+				)}
+				{tab === 'background' && (
 					<List data={backgrounds} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				</div>
-				<div style={{...styles.page, width}}>
+				)}
+				{tab === 'frames' && (
 					<List data={frames} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				</div>
+				)}
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
@@ -121,20 +106,8 @@ export default function ShopScreen({ navigation }) {
 
 const styles = {
 	container: { flex: 1, display: 'flex', flexDirection: 'column' },
-	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16 },
-	scrollContainer: { 
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'row',
-		overflowX: 'auto',
-		overflowY: 'hidden',
-		scrollSnapType: 'x mandatory',
-		scrollBehavior: 'smooth',
-		WebkitOverflowScrolling: 'touch',
-	},
-	page: {
-		flexShrink: 0,
-		overflowY: 'auto',
-	},
+	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16, display: 'flex', justifyContent: 'center' },
+	contentArea: { flex: 1, overflowY: 'auto' },
+	scrollContent: { },
 };
 

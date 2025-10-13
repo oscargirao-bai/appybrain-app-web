@@ -44,9 +44,14 @@ export default function NewsList({ style, limit, onPressItem }) {
 			{displayedNews.map((item, index) => {
 				const itemStyle = {
 					...styles.card,
+					backgroundColor: colors.card,
 					borderColor: colors.text + '20',
-					backgroundColor: colors.card + '22',
-					marginBottom: index < displayedNews.length - 1 ? 14 : 0,
+					marginBottom: index < displayedNews.length - 1 ? 12 : 0,
+				};
+
+				const imageStyle = {
+					...styles.imageBackground,
+					backgroundImage: item.image ? `url(${item.image})` : 'none',
 				};
 
 				return (
@@ -56,21 +61,18 @@ export default function NewsList({ style, limit, onPressItem }) {
 						onClick={() => handlePress(item)}
 						aria-label={item.title}
 					>
-						<div style={{
-							...styles.imageBackground,
-							backgroundImage: item.image ? `url(${item.image})` : 'none',
-						}}>
+						<div style={imageStyle}>
 							<div style={styles.overlay} />
 							<div style={styles.content}>
-								<span style={{ ...styles.title, color: '#fff' }}>{item.title}</span>
+								<span style={{ ...styles.title, color: '#FFFFFF' }}>{item.title}</span>
 								{item.description && (
-									<span style={{ ...styles.description, color: '#fff' }}>
+									<span style={{ ...styles.description, color: '#FFFFFFDD' }}>
 										{item.description}
 									</span>
 								)}
 								{item.date && (
-									<span style={{ ...styles.date, color: '#ffffffdd' }}>
-										{item.publishedDate || item.date}
+									<span style={{ ...styles.date, color: '#FFFFFFAA' }}>
+										{item.date}
 									</span>
 								)}
 							</div>
