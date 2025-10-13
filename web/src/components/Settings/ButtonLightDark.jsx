@@ -21,6 +21,7 @@ export default function ButtonLightDark({ style, onChange }) {
 			...styles.wrapper,
 			borderColor: colors.text + '22',
 			backgroundColor: colors.text + '06',
+			width: '100%',
 			...style
 		}}>
 			<Segment
@@ -52,6 +53,10 @@ function Segment({ label, icon, active, onClick, colors, position }) {
 	const positionStyles = position === 'left' ? styles.segmentLeft : 
 	                        position === 'right' ? styles.segmentRight : {};
 
+	// In dark mode: when light segment is not active, use black text so it stays readable over light bg
+	const isLightSegment = icon === 'sun';
+	const computedTextColor = active ? '#fff' : (isLightSegment ? '#000' : colors.text);
+
 	return (
 		<button
 			onClick={onClick}
@@ -64,12 +69,12 @@ function Segment({ label, icon, active, onClick, colors, position }) {
 			<LucideIcon 
 				name={icon} 
 				size={18} 
-				color={active ? '#fff' : colors.text} 
+				color={computedTextColor}
 				style={{ marginRight: 8 }} 
 			/>
 			<span style={{
 				...styles.label,
-				color: active ? '#fff' : colors.text
+				color: computedTextColor
 			}}>
 				{label}
 			</span>

@@ -6,7 +6,6 @@ import { useTranslate } from '../services/Translate.jsx';
 import { family } from '../constants/font.jsx';
 import apiManagerInstance from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
-import Button3 from '../components/General/Button3.jsx';
 import ButtonLightDark from '../components/Settings/ButtonLightDark.jsx';
 import Button4 from '../components/General/Button4.jsx';
 import PrivacyModal from '../components/Settings/PrivacyModal.jsx';
@@ -108,13 +107,6 @@ export default function SettingsScreen({ navigation }) {
 					/>
 
 					<div style={{ ...styles.sectionTitle, color: colors.text }}>{translate('settings.general')}</div>
-					<Button3
-						icon="vibrate"
-						label={translate('settings.vibrations')}
-						value={vibration}
-						onValueChange={handleVibrationChange}
-						accessibilityLabel={translate('settings.vibrations')}
-					/>
 					<ButtonLightDark />
 
 					<div style={{ ...styles.sectionTitle, color: colors.text, marginTop: 24 }}>{translate('settings.account')}</div>
@@ -183,9 +175,8 @@ const styles = {
 	},
 	content: {
 		padding: 16,
-		width: '50%',
-		maxWidth: 560,
-		minWidth: 340,
+		width: '60%',
+		minWidth: 420,
 		margin: '0 auto',
 		paddingBottom: 40,
 	},

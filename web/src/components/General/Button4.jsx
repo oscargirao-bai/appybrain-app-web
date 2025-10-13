@@ -36,7 +36,7 @@ const styles = {
 				paddingBottom: 14,
 				marginBottom: 16,
 				display: 'flex',
-				width: '100%',
+					width: '100%',
 				flexDirection: 'row',
 				alignItems: 'center',
 				justifyContent: 'center',
