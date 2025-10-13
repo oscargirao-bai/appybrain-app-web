@@ -15,8 +15,8 @@ export default function NotificationBadge({ count = 0, size = 16, style }) {
 	const badgeStyle = {
 		...styles.badge,
 		backgroundColor: colors.error,
-		minWidth: badgeSize,
-		minHeight: badgeSize,
+		width: badgeSize,
+		height: badgeSize,
 		borderRadius: badgeSize / 2,
 		...(style || {})
 	};
@@ -45,8 +45,7 @@ const styles = {
 		borderWidth: 1,
 		borderStyle: 'solid',
 		borderColor: '#FFFFFF',
-		paddingLeft: 4,
-		paddingRight: 4,
+		padding: 0,
 	},
 	badgeText: {
 		fontWeight: '700',

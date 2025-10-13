@@ -103,15 +103,14 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
 			<Header
 				title={translate('titles.learn')}
+				style={{ paddingRight: 10 }}
 				right={(
 					<div style={{ position: 'relative' }}>
 						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
 				)}
-				extraRight={(
-					<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />
-				)}
+				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
 			<div style={styles.content}>
 				<div style={styles.headerSection}>
@@ -240,6 +239,7 @@ const styles = {
 		alignSelf: 'center',
 		marginLeft: 8,
 		marginRight: 8,
+		marginBottom: 8, // espaço acima do assunto
 	},
 	fullBleed: {
 		marginLeft: -10,
@@ -296,21 +296,24 @@ const styles = {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: 0,
+		height: 4,
 	},
 	subjectsSection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex: 0.7,
+		paddingTop: 8, // baixa o bloco do assunto
+		paddingBottom: 8,
 	},
 	buttonSection: {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingBottom: 12,
+		paddingTop: 8,
+		paddingBottom: 22, // desce o botão em relação ao menu
 		flex: 0.3,
-		paddingTop: 2,
+		// paddingTop removido em favor do valor acima
 	},
 };
 

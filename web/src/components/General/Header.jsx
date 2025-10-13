@@ -45,7 +45,7 @@ export default function Header({
 				)}
 				{left}
 			</div>
-			<div style={styles.sideRight}>
+			<div style={{...styles.sideRight, justifyContent: 'flex-end'}}>
 				{right}
 				{extraRight && <div style={styles.extraRight}>{extraRight}</div>}
 			</div>
