@@ -41,6 +41,9 @@ const FALLBACK_MEDALS = [
 	{ id: 'gem2', icon: 'gem', unlocked: false, new: true, ...COMMON_META },
 ];
 
+const ROWS = 3;
+const CELL_HEIGHT = 86; // approx: 66 circle + vertical paddings
+
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
 	const width = window.innerWidth;
@@ -50,7 +53,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
 
 	const columnsPerScreen = width >= 768 ? 5 : 4; // how many columns fully visible per viewport
-	const rows = 3; // requested: 3 rows on web
+	const rows = ROWS; // requested: 3 rows on web
 	const [page, setPage] = useState(0); // virtual page (for dots)
 
 	// Build columns: each column holds 'rows' medals stacked vertically so we can scroll horizontally
@@ -111,17 +114,17 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 		return (
 			<div style={{ ...styles.wrapper, ...(style || {}) }}>
 				<span style={{ ...styles.title, color: colors.text }}>{title}</span>
-				<div style={styles.carouselWrap}>
+					<div style={{ ...styles.carouselWrap, height: ROWS * CELL_HEIGHT }}>
 					<button aria-label="prev" onClick={() => goStep(-1)} style={{ ...styles.arrowBtn, left: 0 }}>
 						‹
 					</button>
 					<div
 						ref={scrollerRef}
 						onScroll={handleScroll}
-						style={{ ...styles.scroller, scrollSnapType: 'x mandatory' }}
+							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory', paddingLeft: 44, paddingRight: 44 }}
 					>
-						{columnData.map((col, index) => (
-							<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, scrollSnapAlign: 'start' }}>
+							{columnData.map((col, index) => (
+								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start' }}>
 								{col.map((it, idx) => (
 									<MedalButton
 										key={it.id + '-' + index + '-' + idx}
@@ -151,9 +154,9 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
 	title: { fontSize: 18, fontFamily: family.semibold, marginBottom: 14 },
-	column: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
-	carouselWrap: { position: 'relative' },
-	scroller: { display: 'flex', overflowX: 'auto', scrollBehavior: 'smooth' },
+	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
+	carouselWrap: { position: 'relative', overflow: 'hidden' },
+	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },
 	dotsRow: { flexDirection: 'row', justifyContent: 'center', marginTop: 14, gap: 10 },
 	dot: {
 		width: 10,

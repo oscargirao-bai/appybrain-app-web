@@ -28,6 +28,10 @@ function MainTabs({ route, navigation }) {
 	const colors = useThemeColors();
 	const initialTab = route?.params?.initialTab ?? 0;
 	const [tab, setTab] = useState(initialTab);
+		// Expose current tab globally to allow back navigation to return to correct tab
+		useEffect(() => {
+			window.__lastMainTab = tab;
+		}, [tab]);
 	const [userInteracted, setUserInteracted] = useState(false);
 
 	// Get user access configuration
@@ -192,11 +196,13 @@ export default function AppRouter() {
 		goBack: () => {
 			setNavigationHistory(prev => {
 				if (prev.length <= 1) {
-					// Se não há histórico, vai para MainTabs
+					// Sem histórico: volta para MainTabs e tenta restaurar o último tab usado
+					const lastTab = typeof window !== 'undefined' && typeof window.__lastMainTab === 'number' ? window.__lastMainTab : 0;
 					setCurrentScreen('MainTabs');
+					setScreenParams({ initialTab: lastTab });
 					return ['MainTabs'];
 				} else {
-					// Voltar ao screen anterior
+					// Voltar ao ecrã anterior
 					const newHistory = prev.slice(0, -1);
 					const previousScreen = newHistory[newHistory.length - 1];
 					setCurrentScreen(previousScreen);

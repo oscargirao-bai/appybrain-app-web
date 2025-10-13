@@ -8,7 +8,7 @@ import NotificationBadge from '../components/General/NotificationBadge.jsx';
 import LucideIcon from '../components/General/LucideIcon.jsx';
 import NotificationsModal from '../components/Learn/NotificationsModal.jsx';
 import Banner from '../components/Profile/Banner.jsx';
-import Info from '../components/Profile/Info.jsx';
+import LearnInfo from '../components/Learn/Info.jsx';
 import MedalsList from '../components/Profile/MedalsList.jsx';
 import MedalModal from '../components/Profile/MedalModal.jsx';
 
@@ -190,9 +190,12 @@ export default function ProfileScreen({ navigation, route }) {
 					frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 				/>
 				<div style={styles.infoWrapper}>
-					<Info 
+					<LearnInfo 
 						username={userInfo?.nickname}
 						tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
+						stars={userInfo?.stars ?? 0}
+						trophies={userInfo?.points ?? 0}
+						coins={userInfo?.coins ?? 0}
 					/>
 					<MedalsList 
 						medals={badges}
