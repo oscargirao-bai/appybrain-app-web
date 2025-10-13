@@ -5,7 +5,6 @@ import DataManager from '../../services/DataManager.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import Banner from '../../components/Profile/Banner.jsx';
 import Info from '../../components/Learn/Info.jsx';
-import Button2 from '../../components/General/Button2.jsx';
 import Button1 from '../../components/General/Button1.jsx';
 import Subject2 from '../../components/Learn/Subject2.jsx';
 import Chest from '../../components/General/Chest.jsx';
@@ -17,7 +16,6 @@ import RankDisplay from '../../components/Battle/RankDisplay.jsx';
 import HistoryModal from '../../components/Battle/HistoryModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import LucideIcon from '../../components/General/LucideIcon.jsx';
 
 // Helper function to transform battle data for ResultScreen2
 function transformBattleDataForResult(battleData) {
@@ -207,29 +205,14 @@ export default function BattleScreen({ navigation, route }) {
     <div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
       <Header
         title={translate('titles.battle')}
+        style={{ paddingRight: 10 }}
         right={(
-                  <div style={{ position: 'relative' }}>
-                    <button                       
-                      aria-label={translate('options.notification')}
-                      onClick={() => setNotificationsOpen(true)}
-                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                      style={{ paddingLeft: 4, paddingRight: 4 }}
-                    >
-                      <LucideIcon name="bell" size={22} color={colors.text} />
-                    </button>
-                    <NotificationBadge count={unreadNotificationsCount} />
-                  </div>
-                )}
-        extraRight={(
-          <button             
-            aria-label={translate('settings.settings')}
-            onClick={() => navigation.navigate('Settings')}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            style={{ paddingLeft: 4, paddingRight: 4 }}
-          >
-            <LucideIcon name="settings" size={22} color={colors.text} />
-          </button>
+          <div style={{ position: 'relative' }}>
+            <Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
+            <NotificationBadge count={unreadNotificationsCount} />
+          </div>
         )}
+        extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
       />
       <div style={styles.content}>
         <div style={styles.headerSection}>

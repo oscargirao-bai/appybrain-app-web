@@ -9,6 +9,7 @@ import TribeInfo from '../../components/Tribes/Info.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import Button2 from '../../components/General/Button2.jsx';
 
 export default function TribeScreen({ sourceId, timestamp, navigation }) {
 	const colors = useThemeColors();
@@ -258,35 +259,14 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 		<div style={{...styles.container, backgroundColor: colors.background}}>
 			<Header
 				title={translate('titles.tribes')}
+				style={{ paddingRight: 10 }}
 				right={(
 					<div style={{ position: 'relative' }}>
-						<button
-							onClick={() => setNotificationsOpen(true)}
-							style={{
-								padding: 4,
-								background: 'transparent',
-								border: 'none',
-								cursor: 'pointer',
-							}}
-						>
-							<LucideIcon name="bell" size={22} color={colors.text} />
-						</button>
+						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
 				)}
-				extraRight={(
-					<button
-						onClick={() => navigation.navigate('Settings')}
-						style={{
-							padding: 4,
-							background: 'transparent',
-							border: 'none',
-							cursor: 'pointer',
-						}}
-					>
-						<LucideIcon name="settings" size={22} color={colors.text} />
-					</button>
-				)}
+				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
 			<TribesHeader 
 				onSelect={handleSelect} 

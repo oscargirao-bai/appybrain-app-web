@@ -3,7 +3,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import LucideIcon from '../../components/General/LucideIcon.jsx';
+import Button2 from '../../components/General/Button2.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import NewsList from '../../components/News/NewsList.jsx';
 
@@ -31,29 +31,14 @@ export default function NewScreen({ navigation }) {
 		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}> 
 			<Header 
 				title="Noticias" 
+				style={{ paddingRight: 10 }}
 				right={(
 					<div style={{ position: 'relative' }}>
-						<button 							
-							aria-label="Notificações"
-							onClick={() => setNotificationsOpen(true)}
-							hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-							style={{ paddingLeft: 4, paddingRight: 4 }}
-						>
-							<LucideIcon name="bell" size={22} color={colors.text} />
-						</button>
+						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
 						<NotificationBadge count={unreadNotificationsCount} />
 					</div>
 				)}
-				extraRight={(
-					<button 						
-						aria-label="Abrir definições"
-						onClick={() => navigation.navigate('Settings')}
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-						style={{ paddingLeft: 4, paddingRight: 4 }}
-					>
-						<LucideIcon name="settings" size={22} color={colors.text} />
-					</button>
-				)}
+				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
 			<div style={{...styles.body, ...{ backgroundColor: colors.background }}}> 
 				<NewsList />
