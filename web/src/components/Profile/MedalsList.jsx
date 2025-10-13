@@ -67,21 +67,27 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 		setInternalMedals(medals);
 	}, [medals]);
 
-	const columnData = useMemo(() => {
-		const cols = [];
-		for (let i = 0; i < internalMedals.length; i++) {
-			const colIndex = Math.floor(i / rows);
-			if (!cols[colIndex]) cols[colIndex] = [];
-			const m = internalMedals[i];
-			// Support both `newMedal` and the requested `new` flag as aliases
-			const isNew = !!(m.newMedal || m.new);
-			cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew });
+	// Build pages: each page has exactly 5 columns x 3 rows = 15 badges max
+	const pageData = useMemo(() => {
+		const pages = [];
+		const badgesPerPage = columnsPerScreen * rows; // 5 x 3 = 15
+		for (let i = 0; i < internalMedals.length; i += badgesPerPage) {
+			const pageBadges = internalMedals.slice(i, i + badgesPerPage);
+			// Convert to columns within this page
+			const cols = [];
+			for (let j = 0; j < pageBadges.length; j++) {
+				const colIndex = Math.floor(j / rows);
+				if (!cols[colIndex]) cols[colIndex] = [];
+				const m = pageBadges[j];
+				const isNew = !!(m.newMedal || m.new);
+				cols[colIndex].push({ ...m, justUnlocked: m.unlocked && isNew, _isNew: isNew });
+			}
+			pages.push(cols);
 		}
-		return cols;
+		return pages;
 	}, [internalMedals]);
 
-	const totalColumns = columnData.length;
-	const pages = Math.ceil(totalColumns / columnsPerScreen);
+	const pages = pageData.length;
 
 	const scrollerRef = useRef(null);
 	const windowRef = useRef(null);
@@ -129,20 +135,24 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 							onScroll={handleScroll}
 							style={{ ...styles.scroller, height: ROWS * CELL_HEIGHT, scrollSnapType: 'x mandatory' }}
 						>
-							{columnData.map((col, index) => (
-								<div key={'col-' + index} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT, scrollSnapAlign: 'start', paddingLeft: 6, paddingRight: 6 }}>
-								{col.map((it, idx) => (
-									<MedalButton
-										key={it.id + '-' + index + '-' + idx}
-										item={it}
-										onClick={() => {
-											if (onMedalPress) onMedalPress(it);
-											setInternalMedals(prev => prev.map(m => m.id === it.id ? { ...m, newMedal: false, new: false } : m));
-										}}
-									/>
-								))}
-							</div>
-						))}
+							{pageData.map((pageCols, pageIndex) => (
+								<div key={'page-' + pageIndex} style={{ ...styles.page, width: windowWidth, scrollSnapAlign: 'start' }}>
+									{pageCols.map((col, colIndex) => (
+										<div key={'col-' + colIndex} style={{ ...styles.column, width: cellWidth, height: ROWS * CELL_HEIGHT }}>
+											{col.map((it, idx) => (
+												<MedalButton
+													key={it.id + '-' + pageIndex + '-' + colIndex + '-' + idx}
+													item={it}
+													onClick={() => {
+														if (onMedalPress) onMedalPress(it);
+														setInternalMedals(prev => prev.map(m => m.id === it.id ? { ...m, newMedal: false, new: false } : m));
+													}}
+												/>
+											))}
+										</div>
+									))}
+								</div>
+							))}
 						</div>
 					</div>
 					<button aria-label="next" onClick={() => goStep(1)} style={{ ...styles.arrowBtn, right: 0 }}>
@@ -161,6 +171,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 const styles = {
 	wrapper: { width: '100%', marginTop: 28 },
 	title: { fontSize: 18, fontFamily: family.bold, fontWeight: '700', marginBottom: 14, marginLeft: 16 },
+	page: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexShrink: 0 },
 	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
 	windowWrap: { width: '100%', boxSizing: 'border-box' },
