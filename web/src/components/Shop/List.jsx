@@ -131,8 +131,8 @@ export default function List({
 									</div>
 								)}
 							</button>
-						</div>
-					)}
+							</div>
+							);
 				})}
 			</div>
 		</div>
