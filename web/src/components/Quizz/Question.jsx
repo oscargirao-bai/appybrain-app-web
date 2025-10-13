@@ -13,15 +13,15 @@ export default function Question({ html, height, style }) {
 	const [contentHeight, setContentHeight] = useState(height || 0);
 
 	return (
-		<div style={{...styles.wrapper, borderColor: colors.text + 'CC'}}>
-			<div style={{...styles.inner, backgroundColor: 'transparent'}}> 
+		<div style={{...styles.wrapper, borderColor: colors.text + 'CC', ...style}}>
+			<div style={{...styles.inner, backgroundColor: 'transparent', flex: 1}}> 
 				<MathJaxRenderer
 					content={html}
 					enabled={true}
 					baseFontSize={18}
 					onHeightChange={(h) => setContentHeight(h)}
-					scrollEnabled
-					style={{ flex: 1 }}
+					scrollEnabled={true}
+					style={{ flex: 1, width: '100%' }}
 				/>
 			</div>
 		</div>
@@ -34,9 +34,19 @@ const styles = {
 		borderStyle: 'solid',
 		borderRadius: 20,
 		padding: 10,
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: 0,
+		overflow: 'hidden',
 	},
 	inner: {
 		borderRadius: 16,
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: 0,
+		overflow: 'auto',
 	},
 };
 

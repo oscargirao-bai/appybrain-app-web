@@ -224,7 +224,8 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 						compact={true}
 						padding={0}
 						as="div"
-						style={{ ...styles.descText, color: iconColor }}
+						scrollEnabled={false}
+						style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}
 					/>
 					<DifficultySelector
 						value={difficulty}

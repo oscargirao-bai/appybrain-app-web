@@ -379,11 +379,12 @@ export default function QuizzScreen({ navigation, route }) {
 					remainingSec={remaining}
 					onClose={() => setShowExitConfirm(true)}
 				/>
-							    <div style={styles.body}>
-							    <Question html={current?.html} />
-								{/* Battle helps appear only in battle mode, between question and answers */}
-								{isBattle && (
-									<BattleHelp
+				<div style={styles.body}>
+					<div style={styles.questionWrapper}>
+						<Question html={current?.html} />
+						{/* Battle helps appear only in battle mode, between question and answers */}
+						{isBattle && (
+										<BattleHelp
 										disabled={helpUsed}
 										onAddTime={() => {
 											if (helpUsed) return;
@@ -475,6 +476,7 @@ export default function QuizzScreen({ navigation, route }) {
 										}}
 									/>
 								)}
+							</div>
 							<div style={styles.answersWrap}>
 																<Answer
 																	options={(current?.options || []).filter(opt => !removedAnswerIds.includes(opt.id))}
@@ -521,15 +523,15 @@ export default function QuizzScreen({ navigation, route }) {
 																			}
 																		}, 350);
 																	}}
-																/>
-								{(inputLockedRef.current || selectedAnswerId !== null || showSolution) && (
-									<div 										style={styles.touchBlocker}
-										pointerEvents="auto"
-										onStartShouldSetResponder={() => true}
-									/>
-								)}
-							</div>
-						</div>
+																			/>
+					{(inputLockedRef.current || selectedAnswerId !== null || showSolution) && (
+						<div 							style={styles.touchBlocker}
+							pointerEvents="auto"
+							onStartShouldSetResponder={() => true}
+						/>
+					)}
+				</div>
+			</div>
 									<SolutionModal
 										visible={showSolution}
 										correctOption={modalCorrectOption}
@@ -618,36 +620,39 @@ export default function QuizzScreen({ navigation, route }) {
 }
 
 const styles = {
-	safe: { flex: 1 },
-	body: { flex: 1, paddingLeft: 16, paddingRight: 16 },
-		answersWrap: { paddingBottom: 8, position: 'relative' },
-		touchBlocker: {
-			position: 'absolute',
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0,
-		},
-		placeholder: { fontSize: 16 },
-		loadingContainer: {
-			flex: 1,
-			justifyContent: 'center',
-			alignItems: 'center',
-			paddingLeft: 16, paddingRight: 16,
-		},
-		loadingText: {
-			marginTop: 16,
-			fontSize: 16,
-			textAlign: 'center',
-		},
-		errorText: {
-			fontSize: 18,
-			textAlign: 'center',
-			marginBottom: 8,
-		},
-		errorSubtext: {
-			fontSize: 14,
-			textAlign: 'center',
-		},
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' },
+	body: { flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 16, paddingRight: 16, overflow: 'hidden' },
+	questionWrapper: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'auto' },
+	answersWrap: { paddingBottom: 8, paddingTop: 8 },
+	touchBlocker: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		zIndex: 10,
+		pointerEvents: 'auto',
+	},
+	placeholder: { fontSize: 16 },
+	loadingContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 16, paddingRight: 16,
+	},
+	loadingText: {
+		marginTop: 16,
+		fontSize: 16,
+		textAlign: 'center',
+	},
+	errorText: {
+		fontSize: 18,
+		textAlign: 'center',
+		marginBottom: 8,
+	},
+	errorSubtext: {
+		fontSize: 14,
+		textAlign: 'center',
+	},
 };
 
