@@ -185,36 +185,49 @@ export default function AppRouter() {
 	// Navigation object (mimics RN navigation)
 	const navigation = {
 		navigate: (screenName, params = {}) => {
-			setNavigationHistory(prev => [...prev, screenName]);
+			// Push route with params into history and set current
+			setNavigationHistory(prev => [...prev, { name: screenName, params }]);
 			setCurrentScreen(screenName);
 			setScreenParams(params);
 		},
 		replace: (screenName, params = {}) => {
+			// Replace top of history with the new route and set current
+			setNavigationHistory(prev => {
+				if (!prev || prev.length === 0) {
+					return [{ name: screenName, params }];
+				}
+				const newHistory = [...prev];
+				newHistory[newHistory.length - 1] = { name: screenName, params };
+				return newHistory;
+			});
 			setCurrentScreen(screenName);
 			setScreenParams(params);
 		},
 		goBack: () => {
 			setNavigationHistory(prev => {
-				if (prev.length <= 1) {
+				if (!prev || prev.length <= 1) {
 					// Sem histórico: volta para MainTabs e tenta restaurar o último tab usado
 					const lastTab = typeof window !== 'undefined' && typeof window.__lastMainTab === 'number' ? window.__lastMainTab : 0;
-					setCurrentScreen('MainTabs');
-					setScreenParams({ initialTab: lastTab });
-					return ['MainTabs'];
+					const route = { name: 'MainTabs', params: { initialTab: lastTab } };
+					setCurrentScreen(route.name);
+					setScreenParams(route.params);
+					return [route];
 				} else {
-					// Voltar ao ecrã anterior
+					// Voltar ao ecrã anterior restaurando os params
 					const newHistory = prev.slice(0, -1);
-					const previousScreen = newHistory[newHistory.length - 1];
-					setCurrentScreen(previousScreen);
+					const previousRoute = newHistory[newHistory.length - 1];
+					setCurrentScreen(previousRoute.name);
+					setScreenParams(previousRoute.params || {});
 					return newHistory;
 				}
 			});
 		},
 		reset: ({ routes }) => {
 			if (routes && routes.length > 0) {
-				setCurrentScreen(routes[0].name);
-				setScreenParams(routes[0].params || {});
-				setNavigationHistory([routes[0].name]);
+				const normalized = routes.map(r => ({ name: r.name, params: r.params || {} }));
+				setCurrentScreen(normalized[0].name);
+				setScreenParams(normalized[0].params);
+				setNavigationHistory(normalized);
 			}
 		}
 	};
