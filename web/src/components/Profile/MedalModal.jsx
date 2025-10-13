@@ -153,20 +153,20 @@ const styles = {
 	},
 	levelBubble: {
 		position: 'absolute',
-		top: -8,
-		right: -10,
-		width: 22,
-		height: 22,
-		borderRadius: 11,
+		top: -10,
+		right: -6,
+		width: 26,
+		height: 26,
+		borderRadius: 13,
 		backgroundColor: '#FFE247',
-		border: '2px solid #222',
+		border: 'none',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		boxShadow: '0 2px 6px rgba(0,0,0,0.35)'
+		boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
 	},
 	levelBubbleText: {
-		fontSize: 12,
+		fontSize: 14,
 		fontFamily: family.semibold,
 		color: '#111',
 	},

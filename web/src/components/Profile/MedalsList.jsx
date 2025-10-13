@@ -44,18 +44,16 @@ const FALLBACK_MEDALS = [
 const ROWS = 3;
 const CELL_HEIGHT = 92; // 58 circle + paddings/gap
 const ARROW_ZONE = 56; // physical margins so badges never go under arrows
+const COLUMNS_PER_PAGE = 5;
+const FIXED_CELL_WIDTH = 70; // fixed width per badge column to guarantee exactly 5 visible
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
 	const colors = useThemeColors();
-	const width = window.innerWidth;
-	// Visible window width (excludes the left/right arrow zones)
-	const [windowWidth, setWindowWidth] = useState(Math.min(550, width) - ARROW_ZONE * 2);
+	// Window width is fixed: 5 columns * 70px per column = 350px content width
+	const windowWidth = COLUMNS_PER_PAGE * FIXED_CELL_WIDTH;
 
 	// Use provided medals or fallback static list
 	const medals = medalsProp && medalsProp.length ? medalsProp : FALLBACK_MEDALS;
-
-	// Always show 5 columns per page and keep them centered within the window
-	const columnsPerScreen = 5;
 	const rows = ROWS; // requested: 3 rows on web
 	const [page, setPage] = useState(0); // virtual page (for dots)
 
@@ -70,7 +68,7 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 	// Build pages: each page has exactly 5 columns x 3 rows = 15 badges max
 	const pageData = useMemo(() => {
 		const pages = [];
-		const badgesPerPage = columnsPerScreen * rows; // 5 x 3 = 15
+		const badgesPerPage = COLUMNS_PER_PAGE * rows; // 5 x 3 = 15
 		for (let i = 0; i < internalMedals.length; i += badgesPerPage) {
 			const pageBadges = internalMedals.slice(i, i + badgesPerPage);
 			// Convert to columns within this page
@@ -91,18 +89,8 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 
 	const scrollerRef = useRef(null);
 	const windowRef = useRef(null);
-	// Each column takes a fixed width so that exactly 5 columns fit the visible area
-	const cellWidth = Math.floor(windowWidth / columnsPerScreen);
-
-	useEffect(() => {
-		function measure() {
-			const ww = windowRef.current?.clientWidth || (Math.min(550, window.innerWidth) - ARROW_ZONE * 2);
-			setWindowWidth(ww);
-		}
-		measure();
-		window.addEventListener('resize', measure);
-		return () => window.removeEventListener('resize', measure);
-	}, []);
+	// Each column has fixed width
+	const cellWidth = FIXED_CELL_WIDTH;
 
 	function handleScroll(e) {
 		const offsetX = e.currentTarget.scrollLeft;
@@ -174,7 +162,7 @@ const styles = {
 	page: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexShrink: 0 },
 	column: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' },
 	carouselWrap: { position: 'relative', overflow: 'hidden' },
-	windowWrap: { width: '100%', boxSizing: 'border-box' },
+	windowWrap: { maxWidth: COLUMNS_PER_PAGE * FIXED_CELL_WIDTH, margin: '0 auto', boxSizing: 'border-box' },
 	scroller: { display: 'flex', overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' },
 	dotsRow: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 12, gap: 10 },
 	dot: {
