@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
@@ -40,7 +40,7 @@ export default function Answer({
 						item={item}
 						optionHeight={optionHeight}
 						colors={colors}
-						onClick={() => onSelect && onSelect(item.id)}
+						onPress={() => onSelect && onSelect(item.id)}
 						evalOutcome={evalOutcome}
 					/>
 				</React.Fragment>
@@ -50,7 +50,7 @@ export default function Answer({
 }
 
 function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
-	const [status, setStatus] = useState('idle');
+	const statusRef = useRef('idle'); // 'idle' | 'correct' | 'wrong'
 	
 	let fsize = 16;
 	const htmlStr = String(item.html || '');
@@ -68,36 +68,46 @@ function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 		fsize = 10;
 	}
 	
-	const handleClick = () => {
-		if (status === 'idle') {
+	const trigger = () => {
+		// Update status based on outcome (only once)
+		if (statusRef.current === 'idle') {
 			const outcome = evalOutcome ? evalOutcome(item.id) : null;
 			if (outcome === 'correct' || outcome === 'wrong') {
-				setStatus(outcome);
+				statusRef.current = outcome;
 			}
 		}
+		// ALWAYS call onPress to notify parent
 		onPress && onPress();
 	};
 
-	const bgColor = status === 'correct' 
+	const bgColor = statusRef.current === 'correct' 
 		? SUCCESS_BG 
-		: status === 'wrong' 
+		: statusRef.current === 'wrong' 
 			? DANGER_BG 
 			: 'transparent';
 			
-	const borderColor = status === 'correct' 
+	const borderColor = statusRef.current === 'correct' 
 		? SUCCESS 
-		: status === 'wrong' 
+		: statusRef.current === 'wrong' 
 			? DANGER 
 			: colors.border;
 
 	return (
 		<button 
-			onClick={handleClick}
+			onClick={trigger}
 			style={{
 				...styles.row,
 				borderColor,
 				backgroundColor: bgColor,
 				height: optionHeight,
+			}}
+			onMouseOver={(e) => {
+				if (statusRef.current === 'idle') {
+					e.currentTarget.style.opacity = '0.9';
+				}
+			}}
+			onMouseOut={(e) => {
+				e.currentTarget.style.opacity = '1';
 			}}
 		>
 			<div style={{ 
