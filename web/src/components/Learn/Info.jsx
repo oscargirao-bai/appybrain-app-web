@@ -84,6 +84,7 @@ const createStyles = (colors) => ({
 		paddingRight: 10,
 		paddingTop: 8,
 		paddingBottom: 8,
+		boxSizing: 'border-box',
 		backgroundColor: colors.background,
 	},
 	row: {

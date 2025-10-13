@@ -248,9 +248,11 @@ const styles = {
 	},
 	learnButtonWrap: {
 		paddingBottom: 0,
-		marginBottom: -20,
-		marginTop: -2,
+		margin: 0,
+		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
+		width: '100%',
 	},
 	subjectsCenter: {
 		flex: 1,
@@ -288,6 +290,7 @@ const styles = {
 		justifyContent: 'space-between',
 		paddingLeft: 10,
 		paddingRight: 10,
+		boxSizing: 'border-box',
 	},
 	trophySection: {
 		width: '100%',
@@ -303,9 +306,9 @@ const styles = {
 	},
 	buttonSection: {
 		width: '100%',
-		justifyContent: 'flex-start',
+		justifyContent: 'center',
 		alignItems: 'center',
-		paddingBottom: 8,
+		paddingBottom: 12,
 		flex: 0.3,
 		paddingTop: 2,
 	},

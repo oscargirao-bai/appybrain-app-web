@@ -21,17 +21,18 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 
 	return (
 		<div style={{ 
-			position: 'sticky',
-			bottom: 0,
+			position: 'relative',
 			backgroundColor: barBg,
 			width: '100%',
-			zIndex: 100
+			boxSizing: 'border-box',
+			zIndex: 2
 		}}>
 			<div style={{...styles.container, ...{
 					backgroundColor: barBg,
 					borderColor: barBorder,
 					width: '100%',
 					paddingBottom: innerPadding,
+					boxSizing: 'border-box',
 					minHeight: 64}}}>        
 				{/* Dot/underline indicator */}
 				{icons.length > 0 && (

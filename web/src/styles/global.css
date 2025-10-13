@@ -18,3 +18,11 @@
 
 /* Utility classes (optional usage in inline styles via className if needed) */
 .pulse-once { animation: chest-pulse 1.4s ease-in-out infinite; }
+
+/* Reset default body margin to avoid white padding at top */
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+}

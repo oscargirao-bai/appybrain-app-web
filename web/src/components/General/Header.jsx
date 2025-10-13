@@ -21,6 +21,7 @@ export default function Header({
 	const containerStyle = {
 		...styles.container,
 		paddingLeft: horizontalPadding,
+		paddingRight: horizontalPadding,
 		borderBottomColor: colors.text + '20',
 		...(style || {})
 	};
@@ -61,6 +62,7 @@ const styles = {
 		flexDirection: 'row',
 		alignItems: 'center',
 		height: 56,
+		boxSizing: 'border-box',
 		borderBottomWidth: 2,
 		borderBottomStyle: 'solid',
 		gap: 12,

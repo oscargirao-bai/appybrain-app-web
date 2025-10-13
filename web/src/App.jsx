@@ -23,7 +23,7 @@ export default function App() {
         margin: '0 auto',
         height: '100vh',
         position: 'relative',
-        overflow: 'visible',
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column'
       }}>
