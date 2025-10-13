@@ -121,6 +121,8 @@ export default function ContentScreen({ navigation, route }) {
 				<ContentList 
 					data={filteredContents} 
 					onStudy={handleStudyPress}
+					starsByDifficulty={starsByDifficulty}
+					navigation={navigation}
 				/>
 			</div>
 		</div>

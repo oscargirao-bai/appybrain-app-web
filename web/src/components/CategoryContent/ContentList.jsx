@@ -4,6 +4,7 @@ import ConfirmModal from '../General/ConfirmModal.jsx';
 import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
+import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
 
 function containsMathMarkers(str) {
 	if (!str) return false;
@@ -215,9 +216,16 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 			</button>
 			{expanded && (
 				<div style={styles.expandedBody}>
-					<span style={{ ...styles.descText, color: iconColor }}>
-						{item.description || 'Sem descrição'}
-					</span>
+					<MathJaxRenderer
+						content={item.description || 'Sem descrição'}
+						enabled={true}
+						baseFontSize={14}
+						textColor={iconColor}
+						compact={true}
+						padding={0}
+						as="div"
+						style={{ ...styles.descText, color: iconColor }}
+					/>
 					<DifficultySelector
 						value={difficulty}
 						onChange={onChangeDifficulty}
@@ -232,7 +240,7 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 	);
 }
 
-export default function ContentList({ data, onPressStudy, starsByDifficulty, navigation }) {
+export default function ContentList({ data, onPressStudy, onStudy, starsByDifficulty, navigation }) {
 	const [openId, setOpenId] = useState(null);
 	const [difficultyMap, setDifficultyMap] = useState({});
 	const [pendingQuiz, setPendingQuiz] = useState(null);
@@ -268,7 +276,10 @@ export default function ContentList({ data, onPressStudy, starsByDifficulty, nav
 							onToggle={() => toggle(item.id)}
 							difficulty={diff}
 							onChangeDifficulty={(d) => changeDifficulty(item.id, d)}
-							onPressStudy={() => onPressStudy && onPressStudy({ ...item, difficulty: diff })}
+							onPressStudy={() => {
+								const handler = onStudy || onPressStudy;
+								if (handler) handler({ ...item, difficulty: diff });
+							}}
 							onAskConfirm={(it, d) => setPendingQuiz({ item: it, difficulty: d })}
 							starsByDifficulty={itemStarsByDifficulty}
 						/>

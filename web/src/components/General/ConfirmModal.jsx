@@ -111,15 +111,10 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnText: {
-    fontSize: 15,
-    fontFamily: family.bold,
-    letterSpacing: '0.3px',
-  },
-  btnTextWhite: {
-    fontSize: 15,
-    fontFamily: family.bold,
-    letterSpacing: '0.3px',
-    color: '#FFFFFF',
-  },
+	btnText: {
+		fontSize: 15,
+		fontFamily: family.bold,
+		letterSpacing: '0.3px',
+		fontWeight: '700',
+	},
 };
