@@ -590,17 +590,26 @@ export default function QuizzScreen({ navigation, route }) {
 											// Update user stats from quit response
 											if (quitResponse && quitResponse.success) {
 												DataManager.updateStatsFromQuitResponse(quitResponse, quizType);
-												//console.log('Quiz quit successful, stats updated');
+												console.log('Quiz quit successful, stats updated');
 												
 												// Refresh user data and related sections based on quiz type
 												try {
 													await DataManager.refreshSection('userInfo');
+													console.log('User info refreshed after quiz quit');
+													
 													// Refresh quiz-type specific data sequentially
 													if (quizType === 'learn') {
+														await DataManager.refreshSection('disciplines');
+														console.log('Disciplines refreshed after learn quiz quit');
 														await DataManager.refreshSection('userStars');
+														console.log('User stars refreshed after learn quiz quit');
 													} else if (quizType === 'challenge') {
 														await DataManager.refreshSection('challenges');
+														console.log('Challenges refreshed after challenge quiz quit');
 													}
+													
+													// Small delay to ensure subscribers get notified
+													await new Promise(resolve => setTimeout(resolve, 100));
 												} catch (refreshError) {
 													console.warn('Failed to refresh data after quit:', refreshError);
 												}
