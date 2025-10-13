@@ -17,9 +17,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div style={{
-        width: '50%',
+        width: '550px',
         minWidth: '375px',
-        maxWidth: '600px',
+        maxWidth: '550px',
         margin: '0 auto',
         height: '100vh',
         position: 'relative',
