@@ -78,9 +78,9 @@ export default function TribesHeader({
                 ...styles.tribeButton,
                 backgroundColor: tribeColor,
                 borderColor: tribeColor + (isActive ? 'aa' : '66'),
-                transform: isActive ? 'scale(1)' : 'scale(0.82)',
                 boxShadow: isActive ? `0 10px 22px ${tribeColor}55` : 'none',
-                transition: 'all 0.2s ease',
+                opacity: isActive ? 1 : 0.9,
+                transition: 'box-shadow 0.2s ease, opacity 0.2s ease',
               }}
             >
               <div
@@ -98,7 +98,7 @@ export default function TribesHeader({
               <span 
                 style={{
                   ...styles.tribeLabel, 
-                  color: colors.text,
+                  color: '#000',
                   display: '-webkit-box',
                   WebkitLineClamp: 1,
                   WebkitBoxOrient: 'vertical',
@@ -147,6 +147,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 8,
     paddingTop: 10,
     paddingBottom: 14,
@@ -157,8 +158,10 @@ const styles = {
     borderStyle: 'solid',
     background: 'transparent',
     cursor: 'pointer',
-    minWidth: 90,
+    minWidth: 108,
+    minHeight: 132,
     overflow: 'visible',
+    outline: 'none',
   },
   tribeInner: {
     width: 62,

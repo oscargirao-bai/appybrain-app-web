@@ -83,19 +83,19 @@ export default function ChallengeScreen({ navigation }) {
 							size={54}
 							iconName="medal"
 							onClick={() => setRankingsOpen(true)}
-							style={styles.buttonSpacing}
 						/>
 					</div>
 				</div>
-				{/* Challenges section */}
-				<ChallengeList
-					items={challenges}
-					showHeader={false}
-					onPressItem={(item) => {
-						setSelectedChallenge(item);
-						setConfirmOpen(true);
-					}}
-				/>
+				<div style={styles.listArea}>
+					<ChallengeList
+						items={challenges}
+						showHeader={false}
+						onPressItem={(item) => {
+							setSelectedChallenge(item);
+							setConfirmOpen(true);
+						}}
+					/>
+				</div>
 			</div>
 			{/* Confirm start challenge */}
 			<ConfirmModal
@@ -124,17 +124,24 @@ export default function ChallengeScreen({ navigation }) {
 }
 
 const styles = {
-	safe: { flex: 1, display: 'flex', flexDirection: 'column' },
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
 	content: {
 		flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
 		paddingLeft: 10,
 		paddingRight: 10,
+		minHeight: 0,
+		overflow: 'hidden',
+		gap: 8,
 	},
 	headerSection: {
 		width: '100%',
 		marginBottom: 8,
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 8,
+		flexShrink: 0,
 	},
 	sectionTitleWrap: { paddingLeft: 6, paddingRight: 6 },
 	sectionTitleRow: { flexDirection: 'column' },
@@ -148,13 +155,16 @@ const styles = {
 		// removed
 	},
 	buttonsRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
-		alignItems: 'center',
-		marginTop: 8,
-		marginBottom: 4,
+		alignItems: 'flex-start',
+		gap: 12,
+		marginTop: 0,
+		marginBottom: 0,
 		paddingLeft: 10,
 		paddingRight: 10,
+		marginLeft: 'auto',
 	},
 	actionRow: {
 		flexDirection: 'row',
@@ -163,8 +173,12 @@ const styles = {
 		width: '100%',
 		marginTop: 4,
 	},
-	buttonSpacing: {
-		marginLeft: 12,
+	listArea: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: 0,
+		overflow: 'hidden',
 	},
 	fullBleed: {
 		marginLeft: -10, marginRight: -10,

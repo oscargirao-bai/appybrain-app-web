@@ -234,7 +234,7 @@ export default function BattleScreen({ navigation, route }) {
             />
           </div>
           <div style={styles.chestLine}>
-            <button               style={styles.chestPressable}
+            <button style={styles.chestPressable}
               onClick={handleChestOpen}
               
               aria-label="Baú de recompensas de batalha"
@@ -246,11 +246,14 @@ export default function BattleScreen({ navigation, route }) {
                 size={54}
                 iconName="history"
                 onClick={() => setHistoryOpen(true)}
-                style={styles.buttonSpacing}
                 
                 aria-label={translate('battle.history.title')}
               />
-              <Button2 size={54} iconName="medal" onClick={() => setRankingsOpen(true)} style={styles.buttonSpacing} />
+              <Button2
+                size={54}
+                iconName="medal"
+                onClick={() => setRankingsOpen(true)}
+              />
             </div>
           </div>
         </div>
@@ -318,7 +321,7 @@ export default function BattleScreen({ navigation, route }) {
 }
 
 const styles = {
-  safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
+  safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
   content: {
     flex: 1,
     display: 'flex',
@@ -328,6 +331,7 @@ const styles = {
     paddingBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
+    overflow: 'hidden',
   },
   headerSection: {
     width: '100%',
@@ -342,11 +346,14 @@ const styles = {
     marginTop: -12,
   },
   buttonsRow: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 4,
+    alignItems: 'flex-start',
+    gap: 12,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 'auto',
   },
   actionRow: {
     flexDirection: 'row',
@@ -355,17 +362,14 @@ const styles = {
     width: '100%',
     marginTop: 4,
   },
-  buttonSpacing: {
-    marginLeft: 12,
-  },
   chestPressable: {
     alignSelf: 'flex-start',
     marginTop: 6,
-		border: 'none',
-		background: 'transparent',
-		padding: 0,
-		cursor: 'pointer',
-	},
+    border: 'none',
+    background: 'transparent',
+    padding: 0,
+    cursor: 'pointer',
+  },
   fullBleed: {
     marginLeft: -10, marginRight: -10,
     width: 'auto',
@@ -400,10 +404,13 @@ const styles = {
   },
   chestLine: {
     width: '100%',
+    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingLeft: 10, paddingRight: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    gap: 16,
   },
   trophySection: {
     display: 'none',
@@ -417,6 +424,7 @@ const styles = {
   rankRow: {
     width: '100%',
     maxWidth: 320,
+    display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
@@ -424,7 +432,7 @@ const styles = {
     gap: 16,
     paddingLeft: 12,
     paddingRight: 12,
-    marginTop: -8,
+    marginTop: -36,
   },
   buttonSection: {
     width: '100%',

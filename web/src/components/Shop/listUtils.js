@@ -16,6 +16,7 @@ export const RARITY_COLORS = {
 
 export const DEFAULT_WIDTH = 620;
 export const GAP = 12;
+export const ROW_GAP = 20;
 export const H_PADDING = 32; // 16 left + 16 right
 
 export function addAlpha(hex, alpha) {
@@ -43,7 +44,8 @@ export function createStyles(colors, priceFontSize, numColumns, itemSize) {
 		},
 		grid: {
 			display: 'grid',
-			gap: GAP,
+			columnGap: GAP,
+			rowGap: ROW_GAP,
 			paddingLeft: 16,
 			paddingRight: 16,
 		},

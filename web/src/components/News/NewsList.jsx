@@ -100,6 +100,9 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'column',
 		width: '100%',
+		paddingLeft: 16,
+		paddingRight: 16,
+		boxSizing: 'border-box',
 	},
 	card: {
 		width: '100%',

@@ -3,13 +3,13 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import ChallengeCard from './ChallengeCard.jsx';
 
 // items: [{ id, title, description, coins, expiresAt }]
-export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressItem, showHeader = true }) {
+export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressItem, showHeader = true, style }) {
   const colors = useThemeColors();
 
   const data = useMemo(() => items || [], [items]);
 
   return (
-    <div style={styles.wrapper}>
+    <div style={{ ...styles.wrapper, ...(style || {}) }}>
       {showHeader ? (
         <div style={styles.headerWrap}>
           <span style={{...styles.header, ...{ color: '#F05454' }}}>{title}</span>
@@ -21,7 +21,8 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
         flexDirection: 'column', 
         gap: '8px',
         paddingBottom: '140px',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        flex: 1,
       }}>
         {data.map((item, idx) => (
           <ChallengeCard

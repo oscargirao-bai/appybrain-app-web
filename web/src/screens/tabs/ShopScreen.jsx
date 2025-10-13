@@ -113,7 +113,7 @@ export default function ShopScreen({ navigation }) {
 	};
 
 	return (
-		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}>      
+		<div style={{ ...styles.container, backgroundColor: colors.background }}>		
 			<Header 
 				title={translate('options.shop')}
 				style={{ paddingRight: 10 }}
@@ -152,9 +152,9 @@ export default function ShopScreen({ navigation }) {
 }
 
 const styles = {
-	container: { flex: 1, display: 'flex', flexDirection: 'column' },
-	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16, display: 'flex', justifyContent: 'center' },
-	optionsRow: { paddingLeft: 16, paddingRight: 16, marginTop: 12, display: 'flex', justifyContent: 'center' },
+	container: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
+	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16, display: 'flex', justifyContent: 'center', flexShrink: 0 },
+	optionsRow: { paddingLeft: 16, paddingRight: 16, marginTop: 12, display: 'flex', justifyContent: 'center', flexShrink: 0 },
 	pager: {
 		flex: 1,
 		display: 'flex',
@@ -162,6 +162,7 @@ const styles = {
 		overflowY: 'hidden',
 		scrollSnapType: 'x mandatory',
 		scrollBehavior: 'smooth',
+		minHeight: 0,
 	},
 	page: {
 		flex: '0 0 100%',
@@ -170,10 +171,12 @@ const styles = {
 		flexDirection: 'column',
 		maxWidth: '100%',
 		height: '100%',
+		minHeight: 0,
 	},
 	list: {
 		flex: 1,
 		display: 'flex',
+		minHeight: 0,
 	},
 };
 
