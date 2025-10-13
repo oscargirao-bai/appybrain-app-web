@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
-import SvgIcon from '../General/SvgIcon.jsx';
+import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
 const RARITY_MAP = {
@@ -16,6 +16,18 @@ const RARITY_COLORS = {
 	rare: '#F2A93B',
 	epic: '#824BFF',
 	legendary: '#E84D7A',
+};
+
+const addAlpha = (hex, alpha) => {
+	if (!hex) return `rgba(0,0,0,${alpha})`;
+	let h = hex.replace('#', '');
+	if (h.length === 3) {
+		h = h.split('').map((c) => c + c).join('');
+	}
+	const r = parseInt(h.slice(0, 2), 16);
+	const g = parseInt(h.slice(2, 4), 16);
+	const b = parseInt(h.slice(4, 6), 16);
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 export default function List({ 
@@ -63,11 +75,19 @@ export default function List({
 					const rarityColor = RARITY_COLORS[rarity] || colors.primary;
 					const owned = item.acquired === 1;
 					const price = item.coins || 0;
+					const highlight = !owned && ((price === 0) || (typeof price === 'number' && price > 0 && price <= userCoins));
 					
 					return (
 						<div key={item.id} style={{ ...styles.cardWrap, width: itemSize }}>
 							<button
-								style={{ ...styles.card, width: itemSize, borderColor: rarityColor }}
+								type="button"
+								style={{
+									...styles.card,
+									width: itemSize,
+									borderColor: rarityColor,
+									boxShadow: highlight ? `0 8px 22px ${addAlpha(rarityColor, 0.25)}` : 'none',
+									transform: highlight ? 'translateY(-3px)' : 'translateY(0)',
+								}}
 								onClick={() => handlePurchase({ ...item, price })}
 								aria-label={`Comprar ${item.name}`}
 							>
@@ -87,7 +107,8 @@ export default function List({
 											style={{
 												...styles.pricePill,
 												backgroundColor: rarityColor,
-												maxWidth: itemSize - 12
+												maxWidth: itemSize - 12,
+												boxShadow: highlight ? `0 0 0 6px ${addAlpha(rarityColor, 0.18)}` : 'none',
 											}}
 										>
 											{owned ? (
@@ -100,7 +121,7 @@ export default function List({
 												</span>
 											) : (
 												<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-													<SvgIcon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
+													<LucideIcon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
 													<span style={{ ...styles.priceText, color: colors.background }}>
 														{price}
 													</span>
@@ -111,7 +132,7 @@ export default function List({
 								)}
 							</button>
 						</div>
-					);
+					)}
 				})}
 			</div>
 		</div>
@@ -121,6 +142,8 @@ export default function List({
 function createStyles(colors, priceFontSize) {
 	return {
 		container: {
+			display: 'flex',
+			flexDirection: 'column',
 			overflowY: 'auto',
 			paddingBottom: 60,
 			paddingTop: 20,
@@ -149,6 +172,7 @@ function createStyles(colors, priceFontSize) {
 			aspectRatio: 1,
 			cursor: 'pointer',
 			padding: 0,
+			transition: 'transform 0.25s ease, box-shadow 0.25s ease',
 		},
 		itemImage: {
 			width: '80%',

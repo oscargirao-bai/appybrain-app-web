@@ -125,7 +125,13 @@ export default function ChallengeScreen({ navigation }) {
 
 const styles = {
 	safe: { flex: 1, display: 'flex', flexDirection: 'column' },
-	content: { flex: 1, display: 'flex', flexDirection: 'column' },
+	content: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		paddingLeft: 10,
+		paddingRight: 10,
+	},
 	headerSection: {
 		width: '100%',
 		marginBottom: 8,
@@ -146,7 +152,7 @@ const styles = {
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 		marginTop: 8,
-		marginBottom: 8,
+		marginBottom: 4,
 		paddingLeft: 10,
 		paddingRight: 10,
 	},

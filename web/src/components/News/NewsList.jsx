@@ -12,9 +12,13 @@ export default function NewsList({ style, limit, onPressItem }) {
 			const currentNews = DataManager.getNews();
 			setNews(currentNews);
 		};
-		DataManager.subscribe(handleDataUpdate);
+		const unsubscribe = DataManager.subscribe(handleDataUpdate);
 		handleDataUpdate();
-		return () => {};
+		return () => {
+			if (typeof unsubscribe === 'function') {
+				unsubscribe();
+			}
+		};
 	}, []);
 
 	useEffect(() => {
@@ -44,18 +48,18 @@ export default function NewsList({ style, limit, onPressItem }) {
 			{displayedNews.map((item, index) => {
 				const itemStyle = {
 					...styles.card,
-					backgroundColor: colors.card,
-					borderColor: colors.text + '20',
-					marginBottom: index < displayedNews.length - 1 ? 12 : 0,
+					borderColor: colors.text + '22',
+					marginBottom: index < displayedNews.length - 1 ? 14 : 0,
 				};
 
 				const imageStyle = {
 					...styles.imageBackground,
-					backgroundImage: item.image ? `url(${item.image})` : 'none',
+					backgroundImage: item.imageUrl ? `url(${item.imageUrl})` : 'none',
 				};
 
 				return (
 					<button
+						type="button"
 						key={item.id}
 						style={itemStyle}
 						onClick={() => handlePress(item)}
@@ -64,15 +68,15 @@ export default function NewsList({ style, limit, onPressItem }) {
 						<div style={imageStyle}>
 							<div style={styles.overlay} />
 							<div style={styles.content}>
-								<span style={{ ...styles.title, color: '#FFFFFF' }}>{item.title}</span>
+								<span style={styles.title}>{item.title}</span>
 								{item.description && (
-									<span style={{ ...styles.description, color: '#FFFFFFDD' }}>
+									<span style={styles.description}>
 										{item.description}
 									</span>
 								)}
-								{item.date && (
-									<span style={{ ...styles.date, color: '#FFFFFFAA' }}>
-										{item.date}
+								{item.publishedDate && (
+									<span style={styles.date}>
+										{item.publishedDate}
 									</span>
 								)}
 							</div>
@@ -99,14 +103,14 @@ const styles = {
 	},
 	card: {
 		width: '100%',
-		borderRadius: 16,
+		borderRadius: 22,
 		overflow: 'hidden',
 		borderWidth: 1,
 		borderStyle: 'solid',
 		cursor: 'pointer',
 		transition: 'transform 0.2s, opacity 0.2s',
 		padding: 0,
-		background: 'transparent',
+		backgroundColor: 'transparent',
 	},
 	imageBackground: {
 		minHeight: 140,
@@ -116,6 +120,7 @@ const styles = {
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
 		position: 'relative',
+		borderRadius: 22,
 	},
 	overlay: {
 		position: 'absolute',
@@ -123,12 +128,15 @@ const styles = {
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundColor: 'rgba(0,0,0,0.4)',
+		backgroundColor: 'rgba(0,0,0,0.55)',
 	},
 	content: {
 		position: 'relative',
 		zIndex: 1,
-		padding: 16,
+		paddingLeft: 14,
+		paddingRight: 14,
+		paddingTop: 12,
+		paddingBottom: 16,
 		display: 'flex',
 		flexDirection: 'column',
 		gap: 4,
@@ -138,19 +146,23 @@ const styles = {
 		fontSize: 16,
 		fontWeight: '700',
 		marginBottom: 4,
+		color: '#FFFFFF',
 	},
 	description: {
 		fontFamily: family.medium,
 		fontSize: 14,
 		lineHeight: '18px',
 		marginBottom: 4,
+		color: '#FFFFFFDD',
 	},
 	date: {
 		fontFamily: family.regular,
 		fontSize: 12,
+		marginTop: 6,
+		color: '#FFFFFFAA',
 	},
 	empty: {
-			padding: 32,
+		padding: 32,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',

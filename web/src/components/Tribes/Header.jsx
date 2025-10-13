@@ -67,42 +67,31 @@ export default function TribesHeader({
         {sortedTribes.map((t) => {
           const isActive = t.id === active;
           const tribeColor = t.color || colors.primary;
+          const tribeIconColor = t.iconColor || colors.background;
 
           return (
             <button
+              type="button"
               key={t.id}
               onClick={() => handlePress(t)}
               style={{
                 ...styles.tribeButton,
-                backgroundColor: tribeColor + (isActive ? '22' : '11'),
-                borderColor: tribeColor + (isActive ? '66' : '33'),
-                transform: isActive ? 'scale(1)' : 'scale(0.94)',
-                boxShadow: isActive ? `0 4px 12px ${tribeColor}44` : 'none',
+                backgroundColor: tribeColor,
+                borderColor: tribeColor + (isActive ? 'aa' : '66'),
+                transform: isActive ? 'scale(1)' : 'scale(0.82)',
+                boxShadow: isActive ? `0 10px 22px ${tribeColor}55` : 'none',
                 transition: 'all 0.2s ease',
               }}
             >
               <div
                 style={{
                   ...styles.tribeInner,
-                  borderColor: tribeColor + (isActive ? '44' : '22'),
+                  borderColor: tribeColor + (isActive ? '55' : '33'),
                 }}
               >
                 {t.icon && (
                   <div style={styles.iconBox}>
-                    <div
-                      style={{ width: '100%', height: '100%' }}
-                      dangerouslySetInnerHTML={{ __html: (function(){
-                        // Ensure the svg fits the circle by enforcing viewBox and preserveAspectRatio
-                        let xml = t.icon || '';
-                        xml = xml.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-                        if (!xml.includes('<svg')) xml = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${xml}</svg>`;
-                        if (!/viewBox=/i.test(xml)) xml = xml.replace(/<svg(\s|>)/i, '<svg viewBox="0 0 24 24"$1');
-                        xml = xml.replace(/<svg/i, '<svg preserveAspectRatio="xMidYMid meet"');
-                        // Remove hardcoded width/height to allow CSS sizing
-                        xml = xml.replace(/\s(width|height)="[^"]+"/gi, '');
-                        return xml;
-                      })() }}
-                    />
+                    <SvgIcon svgString={t.icon} size={60} color={tribeIconColor} />
                   </div>
                 )}
               </div>
@@ -130,6 +119,9 @@ const styles = {
   container: {
     width: '100%',
     marginBottom: 20,
+    paddingTop: 4,
+    paddingBottom: 10,
+    overflow: 'visible',
   },
   titleRow: {
     display: 'flex',
@@ -148,28 +140,30 @@ const styles = {
     flexDirection: 'row',
     gap: 12,
     overflowX: 'auto',
-    paddingBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   tribeButton: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: 8,
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 16,
-    paddingRight: 16,
-    borderRadius: 16,
+    paddingTop: 10,
+    paddingBottom: 14,
+    paddingLeft: 14,
+    paddingRight: 14,
+    borderRadius: 24,
     borderWidth: '2px',
     borderStyle: 'solid',
     background: 'transparent',
     cursor: 'pointer',
     minWidth: 90,
+    overflow: 'visible',
   },
   tribeInner: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
     borderWidth: '2px',
     borderStyle: 'solid',
     display: 'flex',
@@ -178,8 +172,8 @@ const styles = {
     overflow: 'hidden',
   },
   iconBox: {
-    width: 44,
-    height: 44,
+    width: 60,
+    height: 60,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

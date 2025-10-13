@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -9,13 +9,10 @@ import Coins from '../../components/Shop/Coins.jsx';
 import Options from '../../components/Shop/Options.jsx';
 import List from '../../components/Shop/List.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
-import LucideIcon from '../../components/General/LucideIcon.jsx';
 
 export default function ShopScreen({ navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
-	const width = window.innerWidth;
-	const height = window.innerHeight;
 	const scrollRef = useRef(null);
 	const [tab, setTab] = useState('avatar'); // avatar | background | frames
 	const [avatars, setAvatars] = useState([]);
@@ -24,6 +21,8 @@ export default function ShopScreen({ navigation }) {
 	const [userCoins, setUserCoins] = useState(0);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+	const pageWidthRef = useRef(0);
+	const rafRef = useRef(null);
 
 	useEffect(() => {
 		const updateData = () => {
@@ -55,9 +54,51 @@ export default function ShopScreen({ navigation }) {
 		return unsubscribe;
 	}, []);
 
+	useEffect(() => {
+		function updateMeasurements() {
+			if (scrollRef.current) {
+				pageWidthRef.current = scrollRef.current.clientWidth;
+			}
+		}
+		updateMeasurements();
+		window.addEventListener('resize', updateMeasurements);
+		return () => {
+			window.removeEventListener('resize', updateMeasurements);
+			if (rafRef.current) {
+				cancelAnimationFrame(rafRef.current);
+			}
+		};
+	}, []);
+
+	const scrollToTab = useCallback((key) => {
+		const container = scrollRef.current;
+		if (!container) return;
+		const pageWidth = pageWidthRef.current || container.clientWidth;
+		const index = key === 'avatar' ? 0 : key === 'background' ? 1 : 2;
+		container.scrollTo({ left: index * pageWidth, behavior: 'smooth' });
+	}, []);
+
 	function onSelect(key) {
 		setTab(key);
+		scrollToTab(key);
 	}
+
+	const handleScroll = useCallback(() => {
+		const container = scrollRef.current;
+		if (!container) return;
+		const pageWidth = pageWidthRef.current || container.clientWidth;
+		if (!pageWidth) return;
+		if (rafRef.current) cancelAnimationFrame(rafRef.current);
+		rafRef.current = requestAnimationFrame(() => {
+			const index = Math.round(container.scrollLeft / pageWidth);
+			const keys = ['avatar', 'background', 'frames'];
+			const next = keys[index] || 'avatar';
+			if (next !== tab) {
+				setTab(next);
+			}
+			rafRef.current = null;
+		});
+	}, [tab]);
 
 	// Handle cosmetic purchase
 	const handlePurchase = async (item) => {
@@ -87,17 +128,23 @@ export default function ShopScreen({ navigation }) {
 			<div style={styles.topBar}>
 				<Coins />
 			</div>
-			<Options value={tab} onChange={onSelect} />
-			<div style={styles.contentArea}>
-				{tab === 'avatar' && (
-					<List data={avatars} userCoins={userCoins} numColumns={3} onPurchase={handlePurchase} />
-				)}
-				{tab === 'background' && (
-					<List data={backgrounds} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				)}
-				{tab === 'frames' && (
-					<List data={frames} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} />
-				)}
+			<div style={styles.optionsRow}>
+				<Options value={tab} onChange={onSelect} />
+			</div>
+			<div
+				ref={scrollRef}
+				onScroll={handleScroll}
+				style={styles.pager}
+			>
+				<div style={styles.page}>
+					<List data={avatars} userCoins={userCoins} numColumns={3} onPurchase={handlePurchase} style={styles.list} />
+				</div>
+				<div style={styles.page}>
+					<List data={backgrounds} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} style={styles.list} />
+				</div>
+				<div style={styles.page}>
+					<List data={frames} userCoins={userCoins} numColumns={2} onPurchase={handlePurchase} style={styles.list} />
+				</div>
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
@@ -107,7 +154,26 @@ export default function ShopScreen({ navigation }) {
 const styles = {
 	container: { flex: 1, display: 'flex', flexDirection: 'column' },
 	topBar: { paddingLeft: 16, paddingRight: 16, paddingTop: 16, display: 'flex', justifyContent: 'center' },
-	contentArea: { flex: 1, overflowY: 'auto' },
-	scrollContent: { },
+	optionsRow: { paddingLeft: 16, paddingRight: 16, marginTop: 12, display: 'flex', justifyContent: 'center' },
+	pager: {
+		flex: 1,
+		display: 'flex',
+		overflowX: 'auto',
+		overflowY: 'hidden',
+		scrollSnapType: 'x mandatory',
+		scrollBehavior: 'smooth',
+	},
+	page: {
+		flex: '0 0 100%',
+		scrollSnapAlign: 'start',
+		display: 'flex',
+		flexDirection: 'column',
+		maxWidth: '100%',
+		height: '100%',
+	},
+	list: {
+		flex: 1,
+		display: 'flex',
+	},
 };
 

@@ -23,11 +23,15 @@ export default function Coins({ style }) {
 		const unsubscribe = DataManager.subscribe(updateCoins);
 
 		// Cleanup subscription
-		return unsubscribe;
+		return () => {
+			if (typeof unsubscribe === 'function') {
+				unsubscribe();
+			}
+		};
 	}, []);
 
 	return (
-		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }}}>
+		<div style={{...styles.wrap, ...{ borderColor: colors.primary + 'AA' }, ...(style || {}) }}>
 			<LucideIcon name="coins" size={22} color={colors.primary} style={{ marginRight: 8 }} />
 			<span style={{...styles.value, ...{ color: colors.primary }}}>{coins}</span>
 		</div>
@@ -36,6 +40,7 @@ export default function Coins({ style }) {
 
 const styles = {
 	wrap: {
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		borderWidth: 2,

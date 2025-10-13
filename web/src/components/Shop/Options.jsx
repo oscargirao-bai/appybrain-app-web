@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../../components/General/SvgIcon.jsx';
 
@@ -20,6 +20,31 @@ export default function Options({
   ];
   const [internal, setInternal] = useState('avatar');
   const current = value ?? internal;
+  const rowRef = useRef(null);
+  const buttonRefs = useRef({});
+  const [highlight, setHighlight] = useState({ width: 0, left: 0 });
+
+  const updateHighlight = useCallback(() => {
+    const container = rowRef.current;
+    const target = buttonRefs.current[current];
+    if (!container || !target) return;
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    setHighlight({
+      width: targetRect.width,
+      left: targetRect.left - containerRect.left,
+    });
+  }, [current]);
+
+  useEffect(() => {
+    updateHighlight();
+  }, [current, updateHighlight]);
+
+  useEffect(() => {
+    const handleResize = () => updateHighlight();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [updateHighlight]);
 
   function select(k) {
     if (value == null) setInternal(k);
@@ -34,7 +59,17 @@ export default function Options({
 
   return (
     <div style={containerStyle}>
-      <div style={styles.row}>
+      <div ref={rowRef} style={styles.row}>
+        <div
+          style={{
+            ...styles.highlight,
+            height,
+            borderRadius: radius,
+            backgroundColor: colors.primary,
+            width: highlight.width,
+            transform: `translateX(${highlight.left}px)`
+          }}
+        />
         {options.map(opt => {
           const selected = current === opt.key;
           const btnStyle = {
@@ -42,21 +77,21 @@ export default function Options({
             height,
             minWidth,
             borderRadius: radius,
-            backgroundColor: selected ? colors.primary + '33' : 'transparent',
-            borderColor: selected ? colors.primary : colors.text + '20',
+            color: selected ? colors.background : colors.primary,
           };
           const txtStyle = {
             ...styles.labelText,
-            color: selected ? colors.primary : colors.text + '88',
+            color: selected ? colors.background : colors.text + '88',
           };
           return (
             <button
               key={opt.key}
+              ref={(el) => { buttonRefs.current[opt.key] = el; }}
               style={btnStyle}
               onClick={() => select(opt.key)}
               aria-label={opt.label}
             >
-              <SvgIcon name={opt.icon} size={iconSize} color={selected ? colors.primary : colors.text + '88'} />
+              <SvgIcon name={opt.icon} size={iconSize} color={selected ? colors.background : colors.primary} />
               <span style={txtStyle}>{opt.label}</span>
             </button>
           );
@@ -76,11 +111,13 @@ const styles = {
     paddingTop: 6,
     paddingBottom: 6,
     display: 'flex',
+    position: 'relative',
   },
   row: {
     display: 'flex',
     flexDirection: 'row',
     gap: 12,
+    position: 'relative',
   },
   option: {
     display: 'flex',
@@ -90,14 +127,23 @@ const styles = {
     gap: 6,
     paddingLeft: 12,
     paddingRight: 12,
-    borderWidth: 1,
-    borderStyle: 'solid',
     cursor: 'pointer',
     transition: 'all 0.26s ease-out',
     background: 'transparent',
+    borderWidth: 0,
+    position: 'relative',
+    zIndex: 1,
   },
   labelText: {
     fontSize: 13,
     fontWeight: '600',
+    zIndex: 1,
+  },
+  highlight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    transition: 'transform 0.26s ease-out, width 0.26s ease-out',
+    zIndex: 0,
   },
 };
