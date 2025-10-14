@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import SvgIcon from './SvgIcon.jsx';
+import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
@@ -66,6 +67,8 @@ export default function UserList({
 		const topMedal = showMedals && item.rank <= 3;
 		const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
 		const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
+		const firstLetter = (item.name || '?').charAt(0).toUpperCase();
+		const metricIcon = metric === 'points' ? 'trophy' : 'star';
 
 		return (
 			<button
@@ -88,7 +91,15 @@ export default function UserList({
 					)}
 				</div>
 				<div style={{ ...styles.avatar, borderColor: colors.primary + '66' }}>
-					<SvgIcon name={item.avatarIcon || 'user'} size={24} color={colors.primary} />
+					{item.avatarUrl ? (
+						<img src={item.avatarUrl} alt="" style={styles.avatarImage} />
+					) : item.avatarIcon ? (
+						<SvgIcon name={item.avatarIcon} size={24} color={colors.primary} />
+					) : (
+						<span style={{ ...styles.avatarLetter, color: colors.primary }}>
+							{firstLetter}
+						</span>
+					)}
 				</div>
 				<div style={styles.nameCol}>
 					<span style={{ ...styles.nameText, color: colors.text }}>
@@ -107,14 +118,19 @@ export default function UserList({
 					)}
 				</div>
 				<div style={styles.starsCol}>
+					{metric === 'xp' ? (
+						<span style={{ ...styles.valuePrefix, color: colors.primary }}>XP</span>
+					) : (
+						<LucideIcon
+							name={metricIcon}
+							size={18}
+							color={colors.primary}
+							style={{ marginRight: 6 }}
+						/>
+					)}
 					<span style={{ ...styles.starsText, color: colors.text }}>
 						{currentValue}
 					</span>
-					{metric === 'xp' && (
-						<span style={{ ...styles.valuePrefix, color: colors.primary }}>
-							XP
-						</span>
-					)}
 				</div>
 			</button>
 		);
@@ -153,16 +169,15 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingTop: 8,
-		paddingBottom: 8,
+		paddingTop: 10,
+		paddingBottom: 10,
 		paddingLeft: 12,
 		paddingRight: 12,
-		borderRadius: 12,
+		borderRadius: 14,
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		gap: 12,
 		background: 'transparent',
-		border: 'none',
 		width: '100%',
 	},
 	rankCol: {
@@ -177,14 +192,21 @@ const styles = {
 		fontFamily: family.bold,
 	},
 	avatar: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
+		width: 38,
+		height: 38,
+		borderRadius: 12,
 		borderWidth: '2px',
 		borderStyle: 'solid',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
+		overflow: 'hidden',
+		backgroundColor: '#00000011',
+	},
+	avatarImage: {
+		width: '100%',
+		height: '100%',
+		objectFit: 'cover',
 	},
 	nameCol: {
 		flex: 1,
@@ -211,7 +233,7 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: 4,
+		gap: 6,
 	},
 	starsText: {
 		fontSize: 16,
@@ -219,9 +241,10 @@ const styles = {
 		fontFamily: family.bold,
 	},
 	valuePrefix: {
-		fontSize: 10,
+		fontSize: 12,
 		fontWeight: '700',
 		fontFamily: family.bold,
+		marginRight: 6,
 	},
 	emptyWrapper: {
 		display: 'flex',

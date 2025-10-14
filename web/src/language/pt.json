@@ -282,6 +282,20 @@
     "incorrect": "Incorreto",
     "solution": "Solução"
   },
+  "rankings": {
+    "title": "Rankings",
+    "metrics": {
+      "points": "Pontos",
+      "stars": "Estrelas",
+      "xp": "XP"
+    },
+    "tabs": {
+      "global": "Global",
+      "school": "Escola",
+      "class": "Turma"
+    },
+    "empty": "Sem utilizadores"
+  },
   "quizPlay": {
     "next": "Seguinte",
     "finish": "Terminar"

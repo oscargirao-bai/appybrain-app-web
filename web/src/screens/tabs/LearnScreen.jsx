@@ -182,7 +182,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 				</div>
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-			<RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
+			<RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} navigation={navigation} />
 			<ChestRewardModal 
 				visible={chestRewardOpen} 
 				onClose={() => {

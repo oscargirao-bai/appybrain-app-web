@@ -319,6 +319,20 @@
     "ready": "Ready!",
     "errorLoading": "Error loading questions"
   },
+  "rankings": {
+    "title": "Rankings",
+    "metrics": {
+      "points": "Points",
+      "stars": "Stars",
+      "xp": "XP"
+    },
+    "tabs": {
+      "global": "Global",
+      "school": "School",
+      "class": "Class"
+    },
+    "empty": "No users"
+  },
   "rank": {
     "label": "LEVEL",
     "none": "no rank",
