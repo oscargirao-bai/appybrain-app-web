@@ -81,6 +81,8 @@ export default function ChallengeScreen({ navigation }) {
 						/>
 					</div>
 					<div style={styles.chestLine}>
+						<div />
+						<div />
 						<div style={styles.buttonsRow}>
 							<Button2
 								iconName="medal"
@@ -176,7 +178,7 @@ const styles = {
 		minHeight: 0,
 		overflowX: 'hidden',
 		overflowY: 'auto',
-		paddingTop: 12,
+		paddingTop: 10,
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
