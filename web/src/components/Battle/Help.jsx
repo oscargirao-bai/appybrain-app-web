@@ -1,7 +1,7 @@
 import React from 'react';
 
 import LucideIcon from '../../components/General/LucideIcon.jsx';
-import { useThemeColors } from '../../services/Theme.jsx';
+import { useTheme } from '../../services/Theme.jsx';
 
 /**
  * Battle Help bar — three icon-only buttons:
@@ -10,7 +10,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
  *  - Trocar pergunta
  */
 export default function Help({ onAddTime, onRemoveWrong, onSwapQuestion, disabled = false }) {
-  const colors = useThemeColors();
+  const { colors, resolvedTheme } = useTheme();
 
   return (
     <div style={styles.wrap} pointerEvents="box-none">
@@ -20,6 +20,7 @@ export default function Help({ onAddTime, onRemoveWrong, onSwapQuestion, disable
         onClick={onAddTime}
         disabled={disabled}
         colors={colors}
+        theme={resolvedTheme}
       />
       <IconButton
         icon="circle-minus"
@@ -27,6 +28,7 @@ export default function Help({ onAddTime, onRemoveWrong, onSwapQuestion, disable
         onClick={onRemoveWrong}
         disabled={disabled}
         colors={colors}
+        theme={resolvedTheme}
       />
       <IconButton
         icon="refresh-ccw"
@@ -34,26 +36,40 @@ export default function Help({ onAddTime, onRemoveWrong, onSwapQuestion, disable
         onClick={onSwapQuestion}
         disabled={disabled}
         colors={colors}
+        theme={resolvedTheme}
       />
     </div>
   );
 }
 
-function IconButton({ icon, label, onPress, disabled, colors }) {
+function IconButton({ icon, label, onClick, disabled, colors, theme }) {
+  const addAlpha = (hex, alpha) => (typeof hex === 'string' && hex.startsWith('#') && hex.length === 7 ? `${hex}${alpha}` : hex);
+  const backgroundColor = disabled ? addAlpha(colors.text, '04') : addAlpha(colors.text, '06');
+  const baseIconColor = theme === 'dark' ? colors.secondary : colors.text;
+  const iconColor = disabled ? addAlpha(baseIconColor, '66') : baseIconColor;
   return (
-    <button       
+    <button
       aria-label={label}
-      onClick={disabled ? undefined : onPress}
+      type="button"
+      onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      style={{...styles.btn, borderColor: colors.text + '22'}}
+      style={{
+        ...styles.btn,
+        borderColor: colors.text + '22',
+        backgroundColor,
+        opacity: disabled ? 0.5 : 1,
+        display: 'flex',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+      }}
     >
-      <LucideIcon name={icon} size={20} color={colors.text} />
+      <LucideIcon name={icon} size={20} color={iconColor} />
     </button>
   );
 }
 
 const styles = {
   wrap: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

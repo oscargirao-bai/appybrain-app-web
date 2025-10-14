@@ -30,52 +30,85 @@ const MathJaxRenderer = ({
 
   useEffect(() => {
     if (!enabled || !content) {
-      setProcessedContent(content);
+      setProcessedContent(content || '');
+      setIsTypesetting(false);
       return;
     }
 
-    // Process content for MathJax
     let processed = String(content);
-    
-    // Normalize double backslashes in LaTeX (API often sends \\frac instead of \frac)
-    processed = processed.replace(/\\\\\\\\/g, '\\\\');
+
+    processed = processed.replace(/\\\\/g, '\\\\');
     processed = processed.replace(/\\\\\(/g, '\\(');
     processed = processed.replace(/\\\\\)/g, '\\)');
     processed = processed.replace(/\\\\\[/g, '\\[');
     processed = processed.replace(/\\\\\]/g, '\\]');
 
     if (inlineDisplay) {
-      // Force display math to render inline
       processed = processed.replace(/\\\[/g, '\\(');
       processed = processed.replace(/\\\]/g, '\\)');
     }
 
     setProcessedContent(processed);
 
-    // Trigger MathJax to process the content after DOM update
-    if (typeof window !== 'undefined' && window.MathJax && containerRef.current) {
-      setIsTypesetting(true);
-      
-      // Use requestAnimationFrame to ensure DOM is updated
-      requestAnimationFrame(() => {
-        if (window.MathJax.typesetPromise && containerRef.current) {
-          window.MathJax.typesetPromise([containerRef.current])
-            .then(() => {
-              setIsTypesetting(false);
-              // Notify height change if callback provided
-              if (onHeightChange && containerRef.current) {
-                onHeightChange(containerRef.current.scrollHeight);
-              }
-            })
-            .catch((err) => {
-              console.error('MathJax processing error:', err);
-              setIsTypesetting(false);
-            });
-        } else {
-          setIsTypesetting(false);
-        }
-      });
+    if (typeof window === 'undefined') {
+      return;
     }
+
+    const element = containerRef.current;
+    if (!window.MathJax || !element) {
+      return;
+    }
+
+    let canceled = false;
+    let rafId;
+
+    setIsTypesetting(true);
+
+    const runTypeset = () => {
+      if (canceled || !window.MathJax || !element) {
+        setIsTypesetting(false);
+        return;
+      }
+
+      try {
+        if (typeof window.MathJax.typesetClear === 'function') {
+          window.MathJax.typesetClear([element]);
+        } else if (typeof window.MathJax.texReset === 'function') {
+          window.MathJax.texReset();
+        }
+      } catch (clearError) {
+        console.warn('MathJax clear error:', clearError);
+      }
+
+      const promise = window.MathJax.typesetPromise ? window.MathJax.typesetPromise([element]) : null;
+      if (!promise) {
+        setIsTypesetting(false);
+        return;
+      }
+
+      promise
+        .then(() => {
+          if (canceled) return;
+          setIsTypesetting(false);
+          if (onHeightChange && containerRef.current) {
+            onHeightChange(containerRef.current.scrollHeight);
+          }
+        })
+        .catch((err) => {
+          if (canceled) return;
+          console.error('MathJax processing error:', err);
+          setIsTypesetting(false);
+        });
+    };
+
+    rafId = requestAnimationFrame(runTypeset);
+
+    return () => {
+      canceled = true;
+      if (typeof cancelAnimationFrame === 'function' && rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, [content, enabled, inlineDisplay, onHeightChange]);
 
   const containerStyle = {
