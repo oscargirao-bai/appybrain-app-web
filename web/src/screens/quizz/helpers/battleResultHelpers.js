@@ -295,4 +295,3 @@ export function getOpponentIdentity(opponent, fallbackName, fallbackTribe) {
   const tribe = typeof tribeCandidate === 'string' && tribeCandidate.length > 0 ? tribeCandidate : fallbackTribe;
   return { username: name, tribe };
 }
-```}

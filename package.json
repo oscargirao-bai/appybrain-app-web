@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "npm run build:vite",
     "start": "expo start --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "dev:vite": "npm --prefix web run dev",
-  "build:vite": "mkdir -p web/public/assets && cp -R assets/* web/public/assets/ 2>/dev/null || true && npm --prefix web install && npm --prefix web run build && rm -rf dist && cp -R web/dist ./dist",
+    "build:vite": "mkdir -p web/public/assets && cp -R assets/* web/public/assets/ 2>/dev/null || true && npm --prefix web install && npm --prefix web run build && rm -rf dist && cp -R web/dist ./dist",
     "preview:vite": "npm --prefix web run preview"
   },
   "dependencies": {
