@@ -28,7 +28,7 @@ export default function NewScreen({ navigation }) {
 		return unsubscribe;
 	}, []);
 	return (
-		<div style={{...styles.container, ...{ backgroundColor: colors.background }}}> 
+		<div style={{ ...styles.container, backgroundColor: colors.background }}>
 			<Header 
 				title="Noticias" 
 				style={{ paddingRight: 10 }}
@@ -40,8 +40,8 @@ export default function NewScreen({ navigation }) {
 				)}
 				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
-			<div style={{...styles.body, ...{ backgroundColor: colors.background }}}> 
-				<NewsList />
+			<div style={{ ...styles.body, backgroundColor: colors.background }}>
+				<NewsList style={styles.list} />
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
@@ -49,8 +49,9 @@ export default function NewScreen({ navigation }) {
 }
 
 const styles = {
-	container: { flex: 1 },
-	body: { flex: 1, paddingLeft: 0, paddingRight: 0, paddingTop: 20 },
+	container: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
+	body: { flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 0, paddingRight: 0, paddingTop: 20, minHeight: 0, overflow: 'hidden' },
+	list: { flex: 1, minHeight: 0 },
 	title: { fontSize: 22, fontWeight: '800', marginBottom: 8 },
 	subtitle: { fontSize: 16, fontWeight: '500' },
 };

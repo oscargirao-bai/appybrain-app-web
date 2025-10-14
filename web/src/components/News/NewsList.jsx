@@ -100,6 +100,7 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'column',
 		width: '100%',
+		overflowY: 'auto',
 		paddingLeft: 16,
 		paddingRight: 16,
 		boxSizing: 'border-box',

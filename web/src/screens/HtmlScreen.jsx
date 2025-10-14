@@ -76,7 +76,7 @@ export default function HtmlScreen({ navigation, route }) {
   };
 
   return (
-    <div style={{...styles.container, ...{ backgroundColor: colors.background }}}>
+    <div style={{ ...styles.container, backgroundColor: colors.background }}>
       <Header title={headerTitle} showBack onBack={() => navigation.goBack?.()} />
       
       {/* Show news metadata if this is a news item */}
@@ -149,8 +149,8 @@ export default function HtmlScreen({ navigation, route }) {
 }
 
 const styles = {
-  container: { flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' },
-  contentWrapper: { flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' },
+  container: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
+  contentWrapper: { flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', minHeight: 0 },
   webview: { flex: 1, width: '100%', border: 'none' },
   metadataContainer: {
     borderBottomWidth: 1,

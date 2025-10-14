@@ -201,8 +201,8 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 	}
 
 const styles = {
-	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
-			content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20 },
+	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
+		content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20, overflow: 'hidden' },
 	headerSection: {
 		width: '100%',
 	},

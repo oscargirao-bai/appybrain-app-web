@@ -274,23 +274,27 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 				userTribe={userTribe}
 				isInTribe={isInTribe}
 			/>
-			<TribeInfo 
-				name={selectedTribe?.name}
-				description={selectedTribe?.description}
-				members={tribeMembers.length}
-				joined={isInTribe && selectedTribe && userTribe && selectedTribe.id === userTribe.id}
-				accentColor={selectedTribe?.color}
-				iconColor={selectedTribe?.iconColor}
-				icon={selectedTribe?.icon}
-				tribeIconName="users"
-				onJoin={handleJoinTribe}
-				onLeave={handleLeaveTribe}
-				disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
-			/>
-			<MemberList
-				members={tribeMembers}
-				currentUserId={DataManager.getUser()?.id}
-			/>
+			<div style={styles.body}>
+				<TribeInfo 
+					name={selectedTribe?.name}
+					description={selectedTribe?.description}
+					members={tribeMembers.length}
+					joined={isInTribe && selectedTribe && userTribe && selectedTribe.id === userTribe.id}
+					accentColor={selectedTribe?.color}
+					iconColor={selectedTribe?.iconColor}
+					icon={selectedTribe?.icon}
+					tribeIconName="users"
+					onJoin={handleJoinTribe}
+					onLeave={handleLeaveTribe}
+					disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
+				/>
+				<div style={styles.memberArea}>
+					<MemberList
+						members={tribeMembers}
+						currentUserId={DataManager.getUser()?.id}
+					/>
+				</div>
+			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
 	);
@@ -300,21 +304,41 @@ const styles = {
 	container: {
 		flex: 1,
 		width: '100%',
-		height: '100%',
 		display: 'flex',
 		flexDirection: 'column',
+		minHeight: 0,
+		overflow: 'hidden',
+	},
+	body: {
+		display: 'flex',
+		flexDirection: 'column',
+		flex: 1,
+		minHeight: 0,
+		overflow: 'hidden',
+	},
+	memberArea: {
+		flex: 1,
+		display: 'flex',
+		minHeight: 0,
 	},
 };
 
 const memberListStyles = {
 	list: {
-		flexGrow: 0,
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: 0,
 		overflowY: 'auto',
 	},
 	contentContainer: {
 		paddingLeft: 8,
 		paddingRight: 8,
 		paddingBottom: 24,
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		gap: 0,
 	},
 	row: {
 		display: 'flex',
