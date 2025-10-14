@@ -109,7 +109,18 @@
       "pending": "PENDING",
       "won": "WON",
       "lost": "LOST",
-      "draw": "DRAW"
+    },
+    "result": {
+      "title": "1v1 Battle",
+      "win": "Victory",
+      "lose": "Defeat",
+      "draw": "Draw",
+      "pending": "Pending",
+      "opponent": "Opponent",
+      "time": "Total Time",
+      "help": "Help",
+      "loading": "Loading result..."
+    },
     },
     "vs": "VS",
     "history": {

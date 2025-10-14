@@ -117,7 +117,18 @@
       "pending": "PENDENTE",
       "won": "VENCEU",
       "lost": "PERDEU",
-      "draw": "EMPATE"
+    },
+    "result": {
+      "title": "Batalha 1v1",
+      "win": "Vitória",
+      "lose": "Derrota",
+      "draw": "Empate",
+      "pending": "Pendente",
+      "opponent": "Adversário",
+      "time": "Tempo Total",
+      "help": "Ajuda",
+      "loading": "A carregar resultado..."
+    },
     },
     "vs": "VS",
     "history": {
