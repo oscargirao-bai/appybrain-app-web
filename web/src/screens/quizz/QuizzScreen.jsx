@@ -330,8 +330,42 @@ export default function QuizzScreen({ navigation, route }) {
 			timerRef.current = setInterval(() => {
 				setRemaining((r) => (r > 0 ? r - 1 : 0));
 			}, 1000);
+			// Force MathJax typeset after question change (delay to allow DOM mount)
+			if (typeof window !== 'undefined' && window.MathJax) {
+				const el = document.querySelector('[data-quiz-root]');
+				setTimeout(() => {
+					try {
+						// Prefer typesetClear+typesetPromise for fresh render
+						if (window.MathJax.typesetClear) {
+							window.MathJax.typesetClear();
+						}
+						if (window.MathJax.typesetPromise) {
+							window.MathJax.typesetPromise(el ? [el] : undefined).catch(()=>{});
+						}
+					} catch(e) {
+						console.warn('MathJax force typeset error:', e);
+					}
+				}, 40);
+			}
 			return () => { if (timerRef.current) clearInterval(timerRef.current); };
 		}, [currentTimeSec, qIndex]);
+
+		// Also re-typeset after closing solution modal (state transition showSolution -> false)
+		useEffect(() => {
+			if (!showSolution) {
+				if (typeof window !== 'undefined' && window.MathJax) {
+					setTimeout(() => {
+						try {
+							if (window.MathJax.typesetPromise) {
+								window.MathJax.typesetPromise();
+							}
+						} catch(err) {
+							console.warn('MathJax re-typeset after modal close failed:', err);
+						}
+					}, 50);
+				}
+			}
+		}, [showSolution]);
 
 		useEffect(() => {
 			if (remaining === 0) {
@@ -372,7 +406,7 @@ export default function QuizzScreen({ navigation, route }) {
 		}
 
 		return (
-			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>      
+			<div style={{...styles.safe, ...{ backgroundColor: colors.background }}} data-quiz-root>      
 				<QuizzHeader
 					title={title}
 					totalSec={currentMaxTime}
