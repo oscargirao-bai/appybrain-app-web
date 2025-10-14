@@ -172,6 +172,9 @@ const styles = {
   },
   actions: {
     width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
     paddingLeft: 12, paddingRight: 12,

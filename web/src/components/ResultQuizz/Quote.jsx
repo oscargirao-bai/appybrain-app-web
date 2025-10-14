@@ -30,10 +30,10 @@ export default function Quote({ percentage = 50 }) {
 const styles = {
 	container: {
 		width: '100%',
-		paddingLeft: 20,
-		paddingRight: 20,
 		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 0,
 	},
 	messageBox: {
 		paddingLeft: 16,
