@@ -65,7 +65,7 @@ export default function ChallengeScreen({ navigation }) {
 			/>
 			<div style={styles.content}>
 				<div style={styles.headerSection}>
-					<div style={{ ...styles.fullBleed, ...styles.bannerSection }}>
+					<div style={styles.bannerSection}>
 						<Banner 
 							topFlat={true} 
 							avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
@@ -73,21 +73,20 @@ export default function ChallengeScreen({ navigation }) {
 							frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 						/>
 					</div>
-					<div style={{ ...styles.fullBleed, ...styles.infoSection }}>
+					<div style={styles.infoSection}>
 						<Info
 							username={userInfo?.nickname}
 							tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
 							coins={userInfo?.coins ?? 0}
 						/>
 					</div>
-					<div style={{ ...styles.fullBleed, ...styles.actionsLine }}>
+					<div style={styles.chestLine}>
 						<div style={styles.buttonsRow}>
-						<Button2
-							size={54}
-							iconName="medal"
-							onClick={() => setRankingsOpen(true)}
-							style={styles.buttonSpacing}
-						/>
+							<Button2
+								iconName="medal"
+								onClick={() => setRankingsOpen(true)}
+								style={styles.buttonSpacing}
+							/>
 						</div>
 					</div>
 				</div>
@@ -130,42 +129,45 @@ export default function ChallengeScreen({ navigation }) {
 
 const styles = {
 	safe: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
-	content: {
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'flex-start',
-		minHeight: 0,
-		paddingBottom: 20,
-		overflow: 'hidden',
-	},
+	content: { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, paddingBottom: 20, overflow: 'hidden' },
 	headerSection: {
 		width: '100%',
-	},
-	sectionTitleWrap: { paddingLeft: 6, paddingRight: 6 },
-	sectionTitleRow: { flexDirection: 'column' },
-	inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' },
-	sectionTitle: { fontSize: 20, fontWeight: '900', letterSpacing: 1.2, color: '#F05454' },
-	sectionUnderline: { height: 2, width: 96, borderRadius: 2, backgroundColor: '#F05454', marginTop: 2 },
-	middleSection: {
-		// removed
-	},
-	bottomSection: {
-		// removed
 	},
 	buttonsRow: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
-		width: '100%',
+		marginTop: 0,
+		marginBottom: 0,
 	},
-	actionRow: {
+	buttonSpacing: {
+		marginLeft: 12,
+	},
+	bannerSection: {
+		width: '100%',
+		overflow: 'hidden',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 0,
+		marginBottom: 0,
+		paddingTop: 0,
+		paddingBottom: 0,
+	},
+	infoSection: {
+		width: '100%',
+		justifyContent: 'center',
+		marginTop: 0,
+	},
+	chestLine: {
+		width: '100%',
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		width: '100%',
-		marginTop: 4,
+		paddingLeft: 10,
+		paddingRight: 10,
+		boxSizing: 'border-box',
 	},
 	listArea: {
 		flex: 1,
@@ -178,48 +180,6 @@ const styles = {
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
-	},
-	bannerSection: {
-		width: '100%',
-		overflow: 'hidden',
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: 0,
-		marginBottom: 0,
-		paddingTop: 0,
-		paddingBottom: 0,
-	},
-	infoSection: {
-		width: '100%',
-		display: 'flex',
-		justifyContent: 'center',
-		marginTop: 0,
-	},
-	actionsLine: {
-		width: '100%',
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		paddingLeft: 10,
-		paddingRight: 10,
-		boxSizing: 'border-box',
-		marginTop: 0,
-	},
-	fullBleed: {
-		marginLeft: -10,
-		marginRight: -10,
-		width: 'auto',
-	},
-	// chestPressable removed
-	// learnButtonWrap removed
-	subjectsRow: {
-		// removed
-	},
-	subjectItem: {},
-	buttonSpacing: {
-		marginLeft: 12,
 	},
 };
 
