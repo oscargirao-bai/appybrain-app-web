@@ -116,7 +116,7 @@
     "status": {
       "pending": "PENDENTE",
       "won": "VENCEU",
-      "lost": "PERDEU",
+      "lost": "PERDEU"
     },
     "result": {
       "title": "Batalha 1v1",
@@ -128,7 +128,6 @@
       "time": "Tempo Total",
       "help": "Ajuda",
       "loading": "A carregar resultado..."
-    },
     },
     "vs": "VS",
     "history": {

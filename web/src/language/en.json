@@ -108,7 +108,7 @@
     "status": {
       "pending": "PENDING",
       "won": "WON",
-      "lost": "LOST",
+      "lost": "LOST"
     },
     "result": {
       "title": "1v1 Battle",
@@ -120,7 +120,6 @@
       "time": "Total Time",
       "help": "Help",
       "loading": "Loading result..."
-    },
     },
     "vs": "VS",
     "history": {
