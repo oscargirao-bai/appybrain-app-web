@@ -213,11 +213,12 @@ const styles = {
 				justifyContent: 'space-between', // ensure button sits above navbar
 	},
 	buttonsRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
-		marginTop: 8,
-		marginBottom: 8,
+		marginTop: 0,
+		marginBottom: 0,
 	},
 	actionRow: {
 		flexDirection: 'row',
@@ -241,8 +242,6 @@ const styles = {
 		alignSelf: 'center',
 		marginLeft: 8,
 		marginRight: 8,
-		marginTop: 10, // baixa ligeiramente as estrelas
-		marginBottom: 16, // mais espaço antes de "Matemática"/botão
 	},
 	fullBleed: {
 		marginLeft: -10,

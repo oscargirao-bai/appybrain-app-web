@@ -246,14 +246,15 @@ export default function BattleScreen({ navigation, route }) {
                 size={54}
                 iconName="history"
                 onClick={() => setHistoryOpen(true)}
-                
-                aria-label={translate('battle.history.title')}
-              />
-              <Button2
-                size={54}
-                iconName="medal"
-                onClick={() => setRankingsOpen(true)}
-              />
+            style={styles.buttonSpacing}
+            aria-label={translate('battle.history.title')}
+            />
+            <Button2
+            size={54}
+            iconName="medal"
+            onClick={() => setRankingsOpen(true)}
+            style={styles.buttonSpacing}
+            />
             </div>
           </div>
         </div>
@@ -268,7 +269,7 @@ export default function BattleScreen({ navigation, route }) {
             <div style={styles.battleButtonWrap}>
               <Button1
                 label={translate('titles.battle')}
-                color={colors.secondary}
+            color="#339DFF"
                 onClick={() => {
                   // Navigate to battle quiz
                   //console.log('Battle button pressed - starting battle quiz');
@@ -326,11 +327,9 @@ const styles = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     minHeight: 0,
     paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
     overflow: 'hidden',
   },
   headerSection: {
@@ -338,22 +337,18 @@ const styles = {
     marginBottom: 0,
   },
   bottomSection: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    gap: 12,
-    paddingBottom: 16,
-    marginTop: -12,
+    justifyContent: 'space-between',
   },
   buttonsRow: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    gap: 12,
+    alignItems: 'center',
     marginTop: 0,
     marginBottom: 0,
-    marginLeft: 'auto',
   },
   actionRow: {
     flexDirection: 'row',
@@ -375,10 +370,10 @@ const styles = {
     width: 'auto',
   },
   battleButtonWrap: {
-    paddingBottom: 0,
-    marginBottom: -18,
-    marginTop: -6,
+    paddingBottom: 16,
+    margin: 0,
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
@@ -406,11 +401,11 @@ const styles = {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 10,
     paddingRight: 10,
-    gap: 16,
+    boxSizing: 'border-box',
   },
   trophySection: {
     display: 'none',
@@ -432,15 +427,18 @@ const styles = {
     gap: 16,
     paddingLeft: 12,
     paddingRight: 12,
-    marginTop: -36,
+    marginTop: -12,
   },
   buttonSection: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 8,
-    paddingTop: 0,
-    marginTop: -6,
+    paddingTop: 4,
+    paddingBottom: 24,
+    flex: 0,
+  },
+  buttonSpacing: {
+    marginLeft: 12,
   },
 };
