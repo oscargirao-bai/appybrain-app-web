@@ -126,15 +126,15 @@ function MainTabs({ route, navigation }) {
 				flex: 1,
 				display: 'flex',
 				flexDirection: 'column',
-				overflow: 'auto',
-				paddingBottom: '80px',
+				overflow: 'hidden',
 				backgroundColor: colors.background 
 			}}>
 				<div style={{ 
 					flex: 1,
 					display: 'flex',
 					flexDirection: 'column',
-					backgroundColor: colors.background 
+					backgroundColor: colors.background,
+					overflow: 'hidden' 
 				}}>
 					{/* Renderizar APENAS o screen ativo, não todos simultaneamente */}
 					{screens.map(({ id, Comp }, screenIndex) => {
@@ -151,7 +151,7 @@ function MainTabs({ route, navigation }) {
 									position: 'relative',
 									width: '100%',
 									height: '100%',
-									overflow: 'auto'
+									overflow: 'hidden'
 								}}
 							>
 								<Comp navigation={navigation} {...getScreenParams(screenIndex)} />
