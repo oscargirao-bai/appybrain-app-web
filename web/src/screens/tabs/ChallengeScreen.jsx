@@ -65,7 +65,7 @@ export default function ChallengeScreen({ navigation }) {
 			/>
 			<div style={styles.content}>
 				<div style={styles.headerSection}>
-					<div style={styles.bannerSection}>
+					<div style={{ ...styles.fullBleed, ...styles.bannerSection }}>
 						<Banner 
 							topFlat={true} 
 							avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
@@ -73,7 +73,7 @@ export default function ChallengeScreen({ navigation }) {
 							frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
 						/>
 					</div>
-					<div style={styles.infoSection}>
+					<div style={{ ...styles.fullBleed, ...styles.infoSection }}>
 						<Info
 							username={userInfo?.nickname}
 							tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
@@ -141,7 +141,7 @@ const styles = {
 		width: '100%',
 		display: 'flex',
 		flexDirection: 'column',
-		gap: 8,
+		gap: 0,
 		flexShrink: 0,
 	},
 	sectionTitleWrap: { paddingLeft: 6, paddingRight: 6 },
@@ -199,6 +199,11 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'center',
 		marginTop: 0,
+	},
+	fullBleed: {
+		marginLeft: -10,
+		marginRight: -10,
+		width: 'auto',
 	},
 	// chestPressable removed
 	// learnButtonWrap removed
