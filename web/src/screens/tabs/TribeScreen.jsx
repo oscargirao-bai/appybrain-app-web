@@ -11,7 +11,7 @@ import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import Button2 from '../../components/General/Button2.jsx';
 
-export default function TribeScreen({ sourceId, timestamp, navigation }) {
+export default function TribeScreen({ navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const [userTribe, setUserTribe] = useState(null);
@@ -23,86 +23,78 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 	const [joiningTribe, setJoiningTribe] = useState(false);
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+	const [animateMembers, setAnimateMembers] = useState(false);
 
 	useEffect(() => {
-		// Get user's current tribe
 		const currentTribe = DataManager.getUserTribe();
 		setUserTribe(currentTribe);
-		
-		// Check if user is in a tribe
+
 		const inTribe = DataManager.isInTribe();
 		setIsInTribe(inTribe);
-		
-		// Get ALL tribes (both user's tribe and available tribes)
+
 		const tribes = DataManager.getTribes();
 		setAllTribes(tribes);
-		
-		// Set initial selected tribe (user's tribe if they have one, otherwise first available)
+
 		let initialTribe = null;
 		if (inTribe && currentTribe) {
 			initialTribe = currentTribe;
 		} else if (tribes.length > 0) {
 			initialTribe = tribes[0];
 		}
-		
+
 		if (initialTribe) {
 			setSelectedTribe(initialTribe);
-			// Fetch members for the initial selected tribe
 			fetchTribeMembers(initialTribe.id);
 		}
-		
 	}, []);
 
-	// Separate useEffect for DataManager subscriptions (notifications count)
 	useEffect(() => {
 		const updateNotificationsData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
 		};
 
-		// Initial load
 		updateNotificationsData();
-
-		// Subscribe to DataManager changes
 		const unsubscribe = DataManager.subscribe(updateNotificationsData);
-
-		// Cleanup subscription
 		return unsubscribe;
 	}, []);
 
+	useEffect(() => {
+		if (!tribeMembers.length) {
+			setAnimateMembers(false);
+			return undefined;
+		}
+		setAnimateMembers(false);
+		const timer = setTimeout(() => setAnimateMembers(true), 60);
+		return () => clearTimeout(timer);
+	}, [tribeMembers]);
+
 	const handleSelect = (tribe) => {
-		// Update selected tribe when user selects from header
 		setSelectedTribe(tribe);
-		
-		// Fetch members for the selected tribe
 		fetchTribeMembers(tribe.id);
 	};
 
 	const fetchTribeMembers = async (tribeId) => {
 		if (!tribeId) return;
-		
+
 		try {
-			// Clear previous tribe members immediately
-			setTribeMembers([]);
 			setLoadingMembers(true);
-			
+			setAnimateMembers(false);
+			setTribeMembers([]);
+
 			const response = await ApiManager.getTribeMembers(tribeId);
-			
-			// Transform API response to format expected by UserList component
 			const members = response.members || response.users || response || [];
-			
-			// Sort members alphabetically by name
+
 			const sortedMembers = members.sort((a, b) => {
 				const nameA = (a.name || a.firstName || '').toLowerCase();
 				const nameB = (b.name || b.firstName || '').toLowerCase();
 				return nameA.localeCompare(nameB);
 			});
-			
+
 			setTribeMembers(sortedMembers);
-			
 		} catch (error) {
 			console.error('Failed to fetch tribe members:', error);
-			setTribeMembers([]); // Clear members on error
+			setTribeMembers([]);
 		} finally {
 			setLoadingMembers(false);
 		}
@@ -113,19 +105,11 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 
 		try {
 			setJoiningTribe(true);
-			
-			const response = await ApiManager.joinTribe(selectedTribe.id);
-			
-			// Update DataManager with new tribe membership
+			await ApiManager.joinTribe(selectedTribe.id);
 			DataManager.updateUserTribeMembership(selectedTribe.id, true);
-			
-			// Update local state
 			setUserTribe(selectedTribe);
 			setIsInTribe(true);
-			
-			// Refresh the member list to include the current user
 			await fetchTribeMembers(selectedTribe.id);
-			
 		} catch (error) {
 			console.error('Failed to join tribe:', error);
 		} finally {
@@ -138,19 +122,11 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 
 		try {
 			setJoiningTribe(true);
-			
-			const response = await ApiManager.leaveTribe();
-			
-			// Update DataManager with removed tribe membership
+			await ApiManager.leaveTribe();
 			DataManager.updateUserTribeMembership(selectedTribe.id, false);
-			
-			// Update local state
 			setUserTribe(null);
 			setIsInTribe(false);
-			
-			// Refresh the member list to remove the current user
 			await fetchTribeMembers(selectedTribe.id);
-			
 		} catch (error) {
 			console.error('Failed to leave tribe:', error);
 		} finally {
@@ -158,41 +134,42 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 		}
 	};
 
-	// Custom member list component (web version without animations)
 	const MemberList = ({ members, currentUserId }) => {
-		const colors = useThemeColors();
+		const themeColors = useThemeColors();
 
 		const ranked = useMemo(() => {
 			const sorted = [...members].sort((a, b) => (b.stars || 0) - (a.stars || 0));
 			let lastStars = null;
 			let lastRank = 0;
-			let itemsProcessed = 0;
-			return sorted.map((u) => {
-				itemsProcessed += 1;
-				const s = u.stars || 0;
+			let processed = 0;
+			return sorted.map((user) => {
+				processed += 1;
+				const stars = user.stars || 0;
 				let rank;
 				if (lastStars === null) {
 					rank = 1;
-				} else if (s === lastStars) {
+				} else if (stars === lastStars) {
 					rank = lastRank;
 				} else {
-					rank = itemsProcessed;
+					rank = processed;
 				}
-				lastStars = s;
+				lastStars = stars;
 				lastRank = rank;
-				return { ...u, rank };
+				return { ...user, rank };
 			});
 		}, [members]);
 
 		if (ranked.length === 0) {
 			return (
-				<div style={{
-					...memberListStyles.emptyWrapper,
-					borderColor: colors.text + '22',
-					backgroundColor: colors.text + '05'
-				}}>
-					<span style={{ color: colors.text + '99', fontSize: 14 }}>
-						{loadingMembers ? "" : "Sem membros nesta tribo"}
+				<div
+					style={{
+						...memberListStyles.emptyWrapper,
+						borderColor: themeColors.text + '22',
+						backgroundColor: themeColors.text + '05',
+					}}
+				>
+					<span style={{ color: themeColors.text + '99', fontSize: 14 }}>
+						{loadingMembers ? '' : 'Sem membros nesta tribo'}
 					</span>
 				</div>
 			);
@@ -205,45 +182,54 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 						const isSelf = item.id === currentUserId;
 						const topMedal = item.rank <= 3;
 						const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
-						const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
+						const medalColor = item.rank === 1 ? themeColors.accent : item.rank === 2 ? themeColors.primary : themeColors.primary;
+						const delay = animateMembers ? `${index * 0.1}s` : '0s';
 
 						return (
 							<div
 								key={`user-${item.id || index}-${item.email || ''}-${index}`}
 								style={{
 									...memberListStyles.row,
-									backgroundColor: isSelf ? colors.accent + '22' : colors.text + '08',
-									borderColor: colors.text + '15',
+									backgroundColor: isSelf ? themeColors.accent + '22' : themeColors.text + '08',
+									borderColor: themeColors.text + '15',
+									transform: animateMembers ? 'translateY(0)' : 'translateY(30px)',
+									opacity: animateMembers ? 1 : 0,
+									transition: 'transform 0.4s ease, opacity 0.4s ease',
+									transitionDelay: delay,
 								}}
 							>
 								<div style={memberListStyles.rankCol}>
 									{topMedal ? (
 										<LucideIcon name={medalIcon} size={22} color={medalColor} />
 									) : (
-										<span style={{...memberListStyles.rankText, color: colors.text + 'AA'}}>{item.rank}</span>
+										<span style={{ ...memberListStyles.rankText, color: themeColors.text + 'AA' }}>{item.rank}</span>
 									)}
 								</div>
-								<div style={{
-									...memberListStyles.avatar,
-									borderColor: colors.primary + '66'
-								}}>
+								<div
+									style={{
+										...memberListStyles.avatar,
+										borderColor: themeColors.primary + '66',
+									}}
+								>
 									{item.avatarIcon ? (
-										<LucideIcon name={item.avatarIcon} size={20} color={colors.primary} />
+										<LucideIcon name={item.avatarIcon} size={20} color={themeColors.primary} />
 									) : (
-										<span style={{...memberListStyles.avatarLetter, color: colors.primary}}>
+										<span style={{ ...memberListStyles.avatarLetter, color: themeColors.primary }}>
 											{(item.name || '?').charAt(0).toUpperCase()}
 										</span>
 									)}
 								</div>
 								<div style={memberListStyles.mainCol}>
-									<span style={{
-										...memberListStyles.name,
-										color: colors.text,
-										display: '-webkit-box',
-										WebkitLineClamp: 1,
-										WebkitBoxOrient: 'vertical',
-										overflow: 'hidden',
-									}}>
+									<span
+										style={{
+											...memberListStyles.name,
+											color: themeColors.text,
+											display: '-webkit-box',
+											WebkitLineClamp: 1,
+											WebkitBoxOrient: 'vertical',
+											overflow: 'hidden',
+										}}
+									>
 										{item.name}
 									</span>
 								</div>
@@ -256,7 +242,7 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 	};
 
 	return (
-		<div style={{...styles.container, backgroundColor: colors.background}}>
+		<div style={{ ...styles.container, backgroundColor: colors.background }}>
 			<Header
 				title={translate('titles.tribes')}
 				style={{ paddingRight: 10 }}
@@ -268,33 +254,26 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 				)}
 				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
-			<TribesHeader 
-				onSelect={handleSelect} 
+			<TribesHeader
+				onSelect={handleSelect}
 				allTribes={allTribes}
 				userTribe={userTribe}
 				isInTribe={isInTribe}
 			/>
-			<div style={styles.body}>
-				<TribeInfo 
-					name={selectedTribe?.name}
-					description={selectedTribe?.description}
-					members={tribeMembers.length}
-					joined={isInTribe && selectedTribe && userTribe && selectedTribe.id === userTribe.id}
-					accentColor={selectedTribe?.color}
-					iconColor={selectedTribe?.iconColor}
-					icon={selectedTribe?.icon}
-					tribeIconName="users"
-					onJoin={handleJoinTribe}
-					onLeave={handleLeaveTribe}
-					disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
-				/>
-				<div style={styles.memberArea}>
-					<MemberList
-						members={tribeMembers}
-						currentUserId={DataManager.getUser()?.id}
-					/>
-				</div>
-			</div>
+			<TribeInfo
+				name={selectedTribe?.name}
+				description={selectedTribe?.description}
+				members={tribeMembers.length}
+				joined={Boolean(isInTribe && selectedTribe && userTribe && selectedTribe.id === userTribe.id)}
+				accentColor={selectedTribe?.color}
+				iconColor={selectedTribe?.iconColor}
+				icon={selectedTribe?.icon}
+				tribeIconName="users"
+				onJoin={handleJoinTribe}
+				onLeave={handleLeaveTribe}
+				disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
+			/>
+			<MemberList members={tribeMembers} currentUserId={DataManager.getUser()?.id} />
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>
 	);
@@ -303,23 +282,10 @@ export default function TribeScreen({ sourceId, timestamp, navigation }) {
 const styles = {
 	container: {
 		flex: 1,
-		width: '100%',
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: 0,
 		overflow: 'hidden',
-	},
-	body: {
-		display: 'flex',
-		flexDirection: 'column',
-		flex: 1,
-		minHeight: 0,
-		overflow: 'hidden',
-	},
-	memberArea: {
-		flex: 1,
-		display: 'flex',
-		minHeight: 0,
 	},
 };
 
@@ -329,16 +295,15 @@ const memberListStyles = {
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: 0,
+		marginTop: 16,
 		overflowY: 'auto',
 	},
 	contentContainer: {
+		display: 'flex',
+		flexDirection: 'column',
 		paddingLeft: 8,
 		paddingRight: 8,
 		paddingBottom: 24,
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'column',
-		gap: 0,
 	},
 	row: {
 		display: 'flex',

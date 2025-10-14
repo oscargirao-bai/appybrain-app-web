@@ -3,188 +3,182 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function TribesHeader({ 
-  title = 'Tribos', 
-  allTribes = [], 
-  userTribe, 
-  isInTribe = false,
-  onSelect 
+export default function TribesHeader({
+	title = 'Tribos',
+	allTribes = [],
+	userTribe,
+	isInTribe = false,
+	onSelect,
 }) {
-  const colors = useThemeColors();
-  const width = window.innerWidth;
-  const horizontalPadding = width >= 768 ? 28 : 16;
+	const colors = useThemeColors();
+	const width = typeof window !== 'undefined' ? window.innerWidth : 0;
+	const horizontalPadding = width >= 768 ? 28 : 16;
 
-  // Sort tribes: user's tribe first, then others
-  const sortedTribes = useMemo(() => {
-    if (!isInTribe || !userTribe) {
-      return allTribes;
-    }
-    
-    const userTribeData = allTribes.find(t => t.id === userTribe.id);
-    const otherTribes = allTribes.filter(t => t.id !== userTribe.id);
-    
-    return userTribeData ? [userTribeData, ...otherTribes] : allTribes;
-  }, [allTribes, userTribe, isInTribe]);
+	const sortedTribes = useMemo(() => {
+		if (!isInTribe || !userTribe) {
+			return allTribes;
+		}
 
-  // Use the sorted list of tribes
-  const [active, setActive] = useState(userTribe?.id || sortedTribes[0]?.id || null);
-  
-  useEffect(() => {
-    // Only set initial active tribe if none is selected yet
-    if (!active && sortedTribes.length > 0) {
-      // Set default to user's tribe if they have one, otherwise first tribe
-      const defaultTribe = (isInTribe && userTribe) ? userTribe.id : sortedTribes[0].id;
-      setActive(defaultTribe);
-    }
-  }, [sortedTribes, active, isInTribe, userTribe]);
+		const userTribeData = allTribes.find((tribe) => tribe.id === userTribe.id);
+		const otherTribes = allTribes.filter((tribe) => tribe.id !== userTribe.id);
+		return userTribeData ? [userTribeData, ...otherTribes] : allTribes;
+	}, [allTribes, userTribe, isInTribe]);
 
-  // Update active when active changes
-  useEffect(() => {
-    if (active) {
-      const selectedTribe = sortedTribes.find(t => t.id === active);
-      if (selectedTribe && onSelect) {
-        onSelect(selectedTribe);
-      }
-    }
-  }, [active, sortedTribes, onSelect]);
+	const [active, setActive] = useState(() => userTribe?.id || sortedTribes[0]?.id || null);
 
-  const handlePress = useCallback((tribe) => {
-    setActive(tribe.id);
-  }, []);
+	useEffect(() => {
+		if (!sortedTribes.length) {
+			setActive(null);
+			return;
+		}
+		const stillExists = active ? sortedTribes.some((tribe) => tribe.id === active) : false;
+		if (!stillExists) {
+			const defaultId = (isInTribe && userTribe?.id) || sortedTribes[0]?.id;
+			setActive(defaultId ?? null);
+			if (defaultId) {
+				const defaultTribe = sortedTribes.find((tribe) => tribe.id === defaultId);
+				if (defaultTribe && onSelect) {
+					onSelect(defaultTribe);
+				}
+			}
+		}
+	}, [sortedTribes, active, isInTribe, userTribe, onSelect]);
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.titleRow}>
-        <span style={{...styles.title, color: colors.text}}>{title}</span>
-      </div>
-      <div 
-        style={{
-          ...styles.scrollView,
-          paddingLeft: horizontalPadding,
-          paddingRight: horizontalPadding,
-        }}
-      >
-        {sortedTribes.map((t) => {
-          const isActive = t.id === active;
-          const tribeColor = t.color || colors.primary;
-          const tribeIconColor = t.iconColor || colors.background;
+	const handlePress = useCallback(
+		(tribe) => {
+			setActive(tribe.id);
+			onSelect?.(tribe);
+		},
+		[onSelect],
+	);
 
-          return (
-            <button
-              type="button"
-              key={t.id}
-              onClick={() => handlePress(t)}
-              style={{
-                ...styles.tribeButton,
-                backgroundColor: tribeColor,
-                borderColor: tribeColor + (isActive ? 'aa' : '66'),
-                boxShadow: isActive ? `0 10px 22px ${tribeColor}55` : 'none',
-                opacity: isActive ? 1 : 0.9,
-                transition: 'box-shadow 0.2s ease, opacity 0.2s ease',
-              }}
-            >
-              <div
-                style={{
-                  ...styles.tribeInner,
-                  borderColor: tribeColor + (isActive ? '55' : '33'),
-                }}
-              >
-                {t.icon && (
-                  <div style={styles.iconBox}>
-                    <SvgIcon svgString={t.icon} size={60} color={tribeIconColor} />
-                  </div>
-                )}
-              </div>
-              <span 
-                style={{
-                  ...styles.tribeLabel, 
-                  color: '#000',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}
-              >
-                {t.name}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
+	return (
+		<div style={styles.container}>
+			<div style={{ ...styles.titleRow }}>
+				<span style={{ ...styles.title, color: colors.text }}>{title}</span>
+			</div>
+			<div
+				style={{
+					...styles.scrollContent,
+					paddingLeft: horizontalPadding,
+					paddingRight: horizontalPadding,
+				}}
+			>
+				{sortedTribes.map((tribe) => {
+					const isActive = tribe.id === active;
+					const tribeColor = tribe.color || colors.primary;
+					const tribeIconColor = tribe.iconColor || colors.text;
+
+					return (
+						<button
+							type="button"
+							key={tribe.id}
+							onClick={() => handlePress(tribe)}
+							style={{
+								...styles.tribeWrapper,
+								transform: isActive ? 'scale(1)' : 'scale(0.75)',
+								boxShadow: isActive ? `0 8px 18px ${tribeColor}66` : 'none',
+							}}
+						>
+							<div
+								style={{
+									...styles.pill,
+									backgroundColor: tribeColor,
+									borderColor: tribeColor,
+								}}
+							>
+								<div style={styles.symbolContainer}>
+									{tribe.icon && tribe.icon.includes('<svg') ? (
+										<SvgIcon svgString={tribe.icon} size={60} color={tribeIconColor} />
+									) : (
+										<span style={{ ...styles.symbol, color: tribeIconColor }}>
+											{tribe.icon || '◇'}
+										</span>
+									)}
+								</div>
+							</div>
+							<span
+								style={{
+									...styles.tribeLabel,
+									color: colors.text,
+								}}
+							>
+								{tribe.name}
+							</span>
+						</button>
+					);
+				})}
+			</div>
+		</div>
+	);
 }
 
 const styles = {
-  container: {
-    width: '100%',
-    marginBottom: 20,
-    paddingTop: 4,
-    paddingBottom: 10,
-    overflow: 'visible',
-  },
-  titleRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    fontFamily: family.bold,
-  },
-  scrollView: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 12,
-    overflowX: 'auto',
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  tribeButton: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-    paddingTop: 10,
-    paddingBottom: 14,
-    paddingLeft: 14,
-    paddingRight: 14,
-    borderRadius: 24,
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    background: 'transparent',
-    cursor: 'pointer',
-    minWidth: 108,
-    minHeight: 132,
-    overflow: 'visible',
-    outline: 'none',
-  },
-  tribeInner: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  iconBox: {
-    width: 60,
-    height: 60,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tribeLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    fontFamily: family.semibold,
-    textAlign: 'center',
-  },
+	container: {
+		width: '100%',
+		paddingTop: 4,
+		paddingBottom: 10,
+		overflow: 'visible',
+	},
+	titleRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginBottom: 4,
+	},
+	title: {
+		fontSize: 22,
+		fontFamily: family.bold,
+		letterSpacing: 0.5,
+	},
+	scrollContent: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		overflowX: 'auto',
+		gap: 16,
+		paddingTop: 16,
+		paddingBottom: 16,
+	},
+	tribeWrapper: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		gap: 8,
+		border: 'none',
+		background: 'transparent',
+		cursor: 'pointer',
+		outline: 'none',
+		padding: 0,
+		transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+	},
+	pill: {
+		width: 92,
+		height: 68,
+		borderRadius: 26,
+		borderWidth: '2px',
+		borderStyle: 'solid',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+	},
+	symbolContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	symbol: {
+		fontSize: 32,
+		fontFamily: family.semibold,
+	},
+	tribeLabel: {
+		fontSize: 12,
+		fontFamily: family.bold,
+		fontStyle: 'italic',
+		textAlign: 'center',
+		maxWidth: 92,
+	},
 };
