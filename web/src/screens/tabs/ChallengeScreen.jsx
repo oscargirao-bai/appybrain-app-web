@@ -170,6 +170,8 @@ const styles = {
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
+		marginTop: 6,
+		marginBottom: 6,
 	},
 	listArea: {
 		flex: 1,
@@ -178,7 +180,7 @@ const styles = {
 		minHeight: 0,
 		overflowX: 'hidden',
 		overflowY: 'auto',
-		paddingTop: 10,
+		paddingTop: 6,
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
