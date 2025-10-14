@@ -44,6 +44,18 @@ export default function TribeInfo({
 						}}>
 							{name}
 						</span>
+					</div>
+					<div style={styles.statsBelowNameRow}>
+						<div style={styles.statLeftGroup}>
+							<div style={{
+								...styles.statInlineCompact,
+								backgroundColor: colors.text + '08',
+								borderColor: colors.text + '22'
+							}}>
+								<LucideIcon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
+								<span style={{...styles.statValueInline, color: colors.text}}>{members}</span>
+							</div>
+						</div>
 						<button
 							onClick={joined ? onLeave : onJoin}
 							disabled={!joined && disabledJoin}
@@ -57,16 +69,6 @@ export default function TribeInfo({
 							<LucideIcon name={joined ? 'log-out' : 'log-in'} size={14} color={'#fff'} style={{ marginRight: 4 }} />
 							<span style={styles.joinTextSmall}>{joinLabel}</span>
 						</button>
-					</div>
-					<div style={styles.statsBelowNameRow}>
-						<div style={{
-							...styles.statInlineCompact,
-							backgroundColor: colors.text + '08',
-							borderColor: colors.text + '22'
-						}}>
-						<LucideIcon name="users" size={12} color={colors.text} style={{ marginRight: 3 }} />
-						<span style={{...styles.statValueInline, color: colors.text}}>{members}</span>
-						</div>
 					</div>
 					<span style={{
 						...styles.descriptionInline,
@@ -169,7 +171,16 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
+		justifyContent: 'space-between',
 		marginTop: 6,
+		gap: 12,
+		flexWrap: 'nowrap',
+	},
+	statLeftGroup: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 6,
 	},
 	statInlineCompact: {
 		display: 'flex',

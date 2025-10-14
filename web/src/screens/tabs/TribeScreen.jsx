@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
+import { family } from '../../constants/font.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
@@ -136,26 +137,52 @@ export default function TribeScreen({ navigation }) {
 
 	const MemberList = ({ members, currentUserId }) => {
 		const themeColors = useThemeColors();
+		const { translate } = useTranslate();
+		const xpFormatter = useMemo(() => new Intl.NumberFormat('pt-PT'), []);
 
 		const ranked = useMemo(() => {
-			const sorted = [...members].sort((a, b) => (b.stars || 0) - (a.stars || 0));
-			let lastStars = null;
+			const getXpValue = (user) => {
+				const candidates = [
+					user?.xp,
+					user?.totalXp,
+					user?.totalXP,
+					user?.total_xp,
+					user?.points,
+					user?.totalPoints,
+					user?.total_points,
+				];
+				for (const value of candidates) {
+					if (typeof value === 'number' && !Number.isNaN(value)) {
+						return value;
+					}
+					if (typeof value === 'string') {
+						const numericValue = Number(value);
+						if (!Number.isNaN(numericValue)) {
+							return numericValue;
+						}
+					}
+				}
+				return 0;
+			};
+
+			const sorted = [...members].sort((a, b) => getXpValue(b) - getXpValue(a));
+			let lastXp = null;
 			let lastRank = 0;
 			let processed = 0;
 			return sorted.map((user) => {
+				const xpValue = getXpValue(user);
 				processed += 1;
-				const stars = user.stars || 0;
 				let rank;
-				if (lastStars === null) {
+				if (lastXp === null) {
 					rank = 1;
-				} else if (stars === lastStars) {
+				} else if (xpValue === lastXp) {
 					rank = lastRank;
 				} else {
 					rank = processed;
 				}
-				lastStars = stars;
+				lastXp = xpValue;
 				lastRank = rank;
-				return { ...user, rank };
+				return { ...user, rank, computedXp: xpValue };
 			});
 		}, [members]);
 
@@ -168,8 +195,8 @@ export default function TribeScreen({ navigation }) {
 						backgroundColor: themeColors.text + '05',
 					}}
 				>
-					<span style={{ color: themeColors.text + '99', fontSize: 14 }}>
-						{loadingMembers ? '' : 'Sem membros nesta tribo'}
+					<span style={{ ...memberListStyles.emptyText, color: themeColors.text + '99' }}>
+						{loadingMembers ? '' : translate('tribes.noMembers')}
 					</span>
 				</div>
 			);
@@ -184,6 +211,9 @@ export default function TribeScreen({ navigation }) {
 						const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
 						const medalColor = item.rank === 1 ? themeColors.accent : item.rank === 2 ? themeColors.primary : themeColors.primary;
 						const delay = animateMembers ? `${index * 0.1}s` : '0s';
+						const displayName = item.nickname || item.name || item.firstName || '';
+						const fallbackInitial = displayName.charAt(0).toUpperCase() || '?';
+						const formattedXp = xpFormatter.format(item.computedXp || 0);
 
 						return (
 							<div
@@ -211,11 +241,13 @@ export default function TribeScreen({ navigation }) {
 										borderColor: themeColors.primary + '66',
 									}}
 								>
-									{item.avatarIcon ? (
+									{item.avatarUrl ? (
+										<img src={item.avatarUrl} alt="" style={memberListStyles.avatarImage} />
+									) : item.avatarIcon ? (
 										<LucideIcon name={item.avatarIcon} size={20} color={themeColors.primary} />
 									) : (
 										<span style={{ ...memberListStyles.avatarLetter, color: themeColors.primary }}>
-											{(item.name || '?').charAt(0).toUpperCase()}
+											{fallbackInitial}
 										</span>
 									)}
 								</div>
@@ -230,7 +262,12 @@ export default function TribeScreen({ navigation }) {
 											overflow: 'hidden',
 										}}
 									>
-										{item.name}
+										{displayName}
+									</span>
+								</div>
+								<div style={memberListStyles.xpCol}>
+									<span style={{ ...memberListStyles.xpText, color: themeColors.text + 'CC' }}>
+										{formattedXp} {translate('rankings.metrics.xp')}
 									</span>
 								</div>
 							</div>
@@ -327,6 +364,7 @@ const memberListStyles = {
 	rankText: {
 		fontSize: 16,
 		fontWeight: '800',
+		fontFamily: family.bold,
 	},
 	avatar: {
 		width: 40,
@@ -342,6 +380,7 @@ const memberListStyles = {
 	avatarLetter: {
 		fontSize: 18,
 		fontWeight: '700',
+		fontFamily: family.bold,
 	},
 	mainCol: {
 		flex: 1,
@@ -353,6 +392,18 @@ const memberListStyles = {
 	name: {
 		fontSize: 15,
 		fontWeight: '700',
+		fontFamily: family.semibold,
+	},
+	xpCol: {
+		minWidth: 92,
+		display: 'flex',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+	},
+	xpText: {
+		fontSize: 14,
+		fontWeight: '600',
+		fontFamily: family.semibold,
 	},
 	emptyWrapper: {
 		marginTop: 16,
@@ -365,5 +416,15 @@ const memberListStyles = {
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	emptyText: {
+		fontSize: 14,
+		fontFamily: family.medium,
+	},
+	avatarImage: {
+		width: 32,
+		height: 32,
+		borderRadius: 10,
+		objectFit: 'cover',
 	},
 };

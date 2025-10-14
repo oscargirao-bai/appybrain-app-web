@@ -76,9 +76,8 @@ export default function TribesHeader({
 							onClick={() => handlePress(tribe)}
 							style={{
 								...styles.tribeWrapper,
-								transform: isActive ? 'scale(1)' : 'scale(0.75)',
-								boxShadow: isActive ? `0 8px 18px ${tribeColor}66` : 'none',
-							}}
+								transform: isActive ? 'scale(1)' : 'scale(0.78)',
+						}}
 						>
 							<div
 								style={{
