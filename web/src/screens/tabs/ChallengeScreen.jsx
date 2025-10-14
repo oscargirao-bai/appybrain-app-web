@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import Banner from '../../components/Profile/Banner.jsx';
@@ -14,6 +15,7 @@ import Button2 from '../../components/General/Button2.jsx';
 
 export default function ChallengeScreen({ navigation }) {
 	const colors = useThemeColors();
+	const { translate } = useTranslate();
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [rankingsOpen, setRankingsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -51,7 +53,7 @@ export default function ChallengeScreen({ navigation }) {
 	return (
 		<div style={{...styles.safe, ...{ backgroundColor: colors.background }}}>
 			<Header
-				title="Desafios"
+				title={translate('titles.challenge')}
 				style={{ paddingRight: 10 }}
 				right={(
 					<div style={{ position: 'relative' }}>
@@ -63,26 +65,27 @@ export default function ChallengeScreen({ navigation }) {
 			/>
 			<div style={styles.content}>
 				<div style={styles.headerSection}>
-					<div style={styles.fullBleed}>
-					<Banner 
-						topFlat={true} 
-						avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
-						bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
-						frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
-					/>
+					<div style={styles.bannerSection}>
+						<Banner 
+							topFlat={true} 
+							avatarSource={userInfo?.avatarUrl ? { uri: userInfo.avatarUrl } : null}
+							bannerImageSource={userInfo?.backgroundUrl ? { uri: userInfo.backgroundUrl } : null}
+							frameSource={userInfo?.frameUrl ? { uri: userInfo.frameUrl } : null}
+						/>
 					</div>
-					<div style={styles.fullBleed}>
-					<Info
-						username={userInfo?.nickname}
-						tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
-						coins={userInfo?.coins ?? 0}
-					/>
+					<div style={styles.infoSection}>
+						<Info
+							username={userInfo?.nickname}
+							tribe={userInfo?.tribes?.[0]?.name || 'Sem Tribo'}
+							coins={userInfo?.coins ?? 0}
+						/>
 					</div>
 					<div style={styles.buttonsRow}>
 						<Button2
 							size={54}
 							iconName="medal"
 							onClick={() => setRankingsOpen(true)}
+							style={styles.buttonSpacing}
 						/>
 					</div>
 				</div>
@@ -129,15 +132,13 @@ const styles = {
 		flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
-		paddingLeft: 10,
-		paddingRight: 10,
+		justifyContent: 'flex-start',
 		minHeight: 0,
+		paddingBottom: 20,
 		overflow: 'hidden',
-		gap: 8,
 	},
 	headerSection: {
 		width: '100%',
-		marginBottom: 8,
 		display: 'flex',
 		flexDirection: 'column',
 		gap: 8,
@@ -158,13 +159,12 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
-		alignItems: 'flex-start',
-		gap: 12,
+		alignItems: 'center',
 		marginTop: 0,
 		marginBottom: 0,
 		paddingLeft: 10,
 		paddingRight: 10,
-		marginLeft: 'auto',
+		boxSizing: 'border-box',
 	},
 	actionRow: {
 		flexDirection: 'row',
@@ -179,10 +179,24 @@ const styles = {
 		flexDirection: 'column',
 		minHeight: 0,
 		overflow: 'hidden',
+		paddingLeft: 10,
+		paddingRight: 10,
+		boxSizing: 'border-box',
 	},
-	fullBleed: {
-		marginLeft: -10, marginRight: -10,
-		width: 'auto',
+	bannerSection: {
+		width: '100%',
+		overflow: 'hidden',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 0,
+		marginBottom: 0,
+	},
+	infoSection: {
+		width: '100%',
+		display: 'flex',
+		justifyContent: 'center',
+		marginTop: 0,
 	},
 	// chestPressable removed
 	// learnButtonWrap removed
@@ -190,5 +204,8 @@ const styles = {
 		// removed
 	},
 	subjectItem: {},
+	buttonSpacing: {
+		marginLeft: 12,
+	},
 };
 
