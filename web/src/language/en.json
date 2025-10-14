@@ -288,6 +288,7 @@
   "customize": {
     "title": "Customize",
     "buyMore": "Buy More",
+    "selected": "Selected",
     "empty": {
       "title": "No cosmetics available",
       "subtitle": "Go to the Shop to get new cosmetics!",

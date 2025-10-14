@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
 
 const RARITY_MAP = {
@@ -16,35 +17,57 @@ const RARITY_COLORS = {
 	legendary: '#E84D7A',
 };
 
-export default function CustomizeList({ 
-	data = [], 
-	numColumns = 3, 
-	style, 
-	userCoins = 0, 
-	onPurchase, 
-	onSelect, 
-	selectedIds = {}, 
-	bottomPadding = 200 
+export default function CustomizeList({
+	data = [],
+	numColumns = 3,
+	style,
+	onPurchase,
+	onSelect,
+	selectedIds = {},
+	bottomPadding = 200,
 }) {
 	const colors = useThemeColors();
-	const width = window.innerWidth;
+	const { translate } = useTranslate();
+	const containerRef = useRef(null);
+	const [containerWidth, setContainerWidth] = useState(() => {
+		if (typeof window === 'undefined') return 360;
+		return Math.max(320, Math.min(window.innerWidth * 0.5, 560));
+	});
 	const styles = useMemo(() => createStyles(colors), [colors]);
+
+	useEffect(() => {
+		const node = containerRef.current;
+		if (!node || typeof ResizeObserver === 'undefined') return undefined;
+
+		const observer = new ResizeObserver((entries) => {
+			const entry = entries[0];
+			if (!entry) return;
+			setContainerWidth(entry.contentRect.width);
+		});
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, []);
 
 	const itemSize = useMemo(() => {
 		const horizontalPadding = 16 * 2;
 		const gap = 12;
-		const totalGap = gap * (numColumns - 1);
-		return Math.floor((width - horizontalPadding - totalGap) / numColumns);
-	}, [width, numColumns]);
+		const available = Math.max(containerWidth - horizontalPadding - gap * (numColumns - 1), 180);
+		return Math.floor(available / Math.max(numColumns, 1));
+	}, [containerWidth, numColumns]);
 
 	return (
-		<div style={{ ...styles.container, ...style }}>
-			<div style={styles.grid}>
+		<div ref={containerRef} style={{ ...styles.container, ...(style || {}) }}>
+			<div
+				style={{
+					...styles.grid,
+					gridTemplateColumns: `repeat(${numColumns}, minmax(${itemSize}px, 1fr))`,
+					paddingBottom: bottomPadding,
+				}}
+			>
 				{data.map((item) => {
 					const rarity = RARITY_MAP[item.rarityTypeId] || 'common';
 					const rarityColor = RARITY_COLORS[rarity] || colors.primary;
 					const owned = item.acquired === 1;
-					const price = item.coins || 0;
 					
 					const typeKey = item.cosmeticTypeId === 1 
 						? 'avatar' 
@@ -75,17 +98,21 @@ export default function CustomizeList({
 						? chosenFromState 
 						: (chosenFromState || chosenApi);
 					
+					const cardStyle = {
+						...styles.card,
+						borderColor: rarityColor,
+						boxShadow: chosen ? `0 14px 24px ${addAlpha(rarityColor, 0.32)}` : 'none',
+						transform: chosen ? 'translateY(-2px)' : 'translateY(0)',
+					};
+
 					return (
-						<div key={item.id} style={{ ...styles.cardWrap, width: itemSize }}>
+						<div key={item.id} style={styles.cardWrap}>
 							<button
-								style={{ 
-									...styles.card, 
-									width: itemSize, 
-									borderColor: rarityColor 
-								}}
+								type="button"
+								style={cardStyle}
 								onClick={() => {
-									if (onSelect && owned) onSelect(item);
-									else if (!owned && onPurchase) onPurchase({ ...item, price });
+									if (owned && onSelect) onSelect(item);
+									else if (!owned && onPurchase) onPurchase(item);
 								}}
 								aria-label={`Cosmético ${item.name}`}
 							>
@@ -103,17 +130,19 @@ export default function CustomizeList({
 								
 								{chosen && (
 									<div style={styles.pricePillWrap}>
-										<div 
+										<div
 											style={{
-												...styles.pricePill, 
-												backgroundColor: rarityColor
+												...styles.pricePill,
+												backgroundColor: rarityColor,
 											}}
 										>
-											<span style={{
-												...styles.priceText, 
-												color: colors.background
-											}}>
-												Escolhido
+											<span
+												style={{
+													...styles.priceText,
+													color: colors.background,
+												}}
+											>
+												{translate('customize.selected')}
 											</span>
 										</div>
 									</div>
@@ -131,20 +160,19 @@ function createStyles(colors) {
 	return {
 		container: {
 			overflowY: 'auto',
-			paddingBottom: 60,
 			paddingTop: 20,
 		},
 		grid: {
-			display: 'flex',
-			flexWrap: 'wrap',
-			gap: 12,
+			display: 'grid',
+			columnGap: 12,
+			rowGap: 12,
 			paddingLeft: 16,
 			paddingRight: 16,
 		},
-		cardWrap: { 
+		cardWrap: {
 			display: 'flex',
-			alignItems: 'center', 
-			justifyContent: 'flex-start' 
+			alignItems: 'center',
+			justifyContent: 'center',
 		},
 		card: {
 			display: 'flex',
@@ -153,11 +181,12 @@ function createStyles(colors) {
 			borderRadius: 12,
 			alignItems: 'center',
 			justifyContent: 'center',
-			backgroundColor: colors.background,
+			backgroundColor: colors.card,
 			position: 'relative',
-			aspectRatio: 1,
+			aspectRatio: '1 / 1',
 			cursor: 'pointer',
 			padding: 0,
+			transition: 'transform 0.2s ease, box-shadow 0.2s ease',
 		},
 		itemImage: {
 			width: '80%',
@@ -183,7 +212,8 @@ function createStyles(colors) {
 		pricePillWrap: {
 			position: 'absolute',
 			bottom: -18,
-			left: 6,
+			left: '50%',
+			transform: 'translateX(-50%)',
 			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'center',
@@ -193,4 +223,16 @@ function createStyles(colors) {
 			fontFamily: family.bold 
 		},
 	};
+}
+
+function addAlpha(hex, alpha) {
+	if (!hex) return `rgba(0,0,0,${alpha})`;
+	let value = hex.replace('#', '');
+	if (value.length === 3) {
+		value = value.split('').map((c) => c + c).join('');
+	}
+	const r = parseInt(value.slice(0, 2), 16);
+	const g = parseInt(value.slice(2, 4), 16);
+	const b = parseInt(value.slice(4, 6), 16);
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }

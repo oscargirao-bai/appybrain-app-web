@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
-
-
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Header from '../components/General/Header.jsx';
 import Options from '../components/Shop/Options.jsx';
 import Banner from '../components/Profile/Banner.jsx';
@@ -12,116 +10,220 @@ import DataManager from '../services/DataManager.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import LucideIcon from '../components/General/LucideIcon.jsx';
 
-// Simple, responsive Customize screen based on wireframe
-// Sections: avatar header, divider, segmented control, 3x3 grid, "Buy More" CTA
 export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const width = window.innerWidth; const height = window.innerHeight;
-
-  // Which category we are customizing
-  const [category, setCategory] = useState('avatar'); // 'avatar' | 'background' | 'frames'
+  const [category, setCategory] = useState('avatar');
   const [avatars, setAvatars] = useState([]);
   const [backgrounds, setBackgrounds] = useState([]);
   const [frames, setFrames] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
-  // Local selection (pending confirmation)
   const [selAvatarId, setSelAvatarId] = useState(null);
   const [selBackgroundId, setSelBackgroundId] = useState(null);
   const [selFrameId, setSelFrameId] = useState(null);
 
-  // Responsive paddings
-  const horizontal = width >= 768 ? 28 : 16;
-  // Load cosmetics (owned only) and user profile for banner
   useEffect(() => {
     const updateData = () => {
-      // Use the same method as ShopScreen to ensure cached images are used
-      // Then filter for acquired items (same as getAcquiredCosmeticsByType but with cached images)
-      const allAvatars = DataManager.getCosmeticsByType(1);
-      const allBackgrounds = DataManager.getCosmeticsByType(2);
-      const allFrames = DataManager.getCosmeticsByType(3);
-      
-      // Filter for acquired items only
-      const avatarItems = allAvatars.filter(item => item.acquired === 1);
-      const backgroundItems = allBackgrounds.filter(item => item.acquired === 1);
-      const frameItems = allFrames.filter(item => item.acquired === 1);
-      
+      const avatarItems = DataManager.getCosmeticsByType(1).filter((item) => item.acquired === 1);
+      const backgroundItems = DataManager.getCosmeticsByType(2).filter((item) => item.acquired === 1);
+      const frameItems = DataManager.getCosmeticsByType(3).filter((item) => item.acquired === 1);
       setAvatars(avatarItems);
       setBackgrounds(backgroundItems);
       setFrames(frameItems);
       setUserProfile(DataManager.getUserProfile());
     };
+
     updateData();
-    const unsub = DataManager.subscribe(updateData);
-    return unsub;
+    const unsubscribe = DataManager.subscribe(updateData);
+    return unsubscribe;
   }, []);
 
-  // Segmented control change handler
-  function onSelect(key) {
-    setCategory(key);
-  }
-
-  // Helper: get preview sources (prefer selected item image)
-  const selectedAvatar = useMemo(() => avatars.find(a => String(a.id) === String(selAvatarId)), [avatars, selAvatarId]);
-  const selectedBackground = useMemo(() => backgrounds.find(b => String(b.id) === String(selBackgroundId)), [backgrounds, selBackgroundId]);
-  const selectedFrame = useMemo(() => frames.find(f => String(f.id) === String(selFrameId)), [frames, selFrameId]);
+  const selectedAvatar = useMemo(
+    () => avatars.find((a) => String(a.id) === String(selAvatarId)),
+    [avatars, selAvatarId],
+  );
+  const selectedBackground = useMemo(
+    () => backgrounds.find((b) => String(b.id) === String(selBackgroundId)),
+    [backgrounds, selBackgroundId],
+  );
+  const selectedFrame = useMemo(
+    () => frames.find((f) => String(f.id) === String(selFrameId)),
+    [frames, selFrameId],
+  );
 
   const previewAvatar = selectedAvatar?.imageUrl || userProfile?.avatarUrl;
   const previewBackground = selectedBackground?.imageUrl || userProfile?.backgroundUrl;
-  const previewFrame = selectedFrame?.imageUrl || selectedFrame?.previewUrl || userProfile?.frameUrl || null; // frame uses overlay image
+  const previewFrame = selectedFrame?.imageUrl || selectedFrame?.previewUrl || userProfile?.frameUrl || null;
 
-  function handleConfirm() {
-    const equipCosmetics = async () => {
-      try {
-        // Collect all selected cosmetics for API calls
-        const selectedCosmetics = [];
-        if (selAvatarId) selectedCosmetics.push(selAvatarId);
-        if (selBackgroundId) selectedCosmetics.push(selBackgroundId);
-        if (selFrameId) selectedCosmetics.push(selFrameId);
-
-        // Make API calls for each selected cosmetic
-        for (const cosmeticId of selectedCosmetics) {
-          try {
-            await ApiManager.cosmeticsUse(cosmeticId);
-            //console.log(`Successfully equipped cosmetic ${cosmeticId}`);
-          } catch (error) {
-            console.warn(`Failed to equip cosmetic ${cosmeticId} via API:`, error);
-            // Continue with local update even if API fails
-          }
-        }
-
-        // Apply changes locally in DataManager
-        DataManager.equipCosmetics({ avatarId: selAvatarId, backgroundId: selBackgroundId, frameId: selFrameId });
-        
-        navigation?.goBack?.();
-      } catch (error) {
-        console.error('Failed to confirm cosmetic changes:', error);
-        // Still try to go back even if there's an error
-        navigation?.goBack?.();
-      }
-    };
-
-    equipCosmetics();
-  }
-
-  // Compute list data based on selected category
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
   const listColumns = category === 'background' ? 2 : 3;
 
-  // Selection handler for current category
-  const handleSelectItem = useCallback((item) => {
-    if (category === 'avatar') setSelAvatarId(item.id);
-    else if (category === 'background') setSelBackgroundId(item.id);
-    else setSelFrameId(item.id);
-  }, [category]);
+  const handleSelectItem = useCallback(
+    (item) => {
+      if (category === 'avatar') setSelAvatarId(item.id);
+      else if (category === 'background') setSelBackgroundId(item.id);
+      else setSelFrameId(item.id);
+    },
+    [category],
+  );
+
+  const handleConfirm = useCallback(() => {
+    (async () => {
+      try {
+        const pending = [];
+        if (selAvatarId) pending.push(selAvatarId);
+        if (selBackgroundId) pending.push(selBackgroundId);
+        if (selFrameId) pending.push(selFrameId);
+
+        for (const cosmeticId of pending) {
+          try {
+            await ApiManager.cosmeticsUse(cosmeticId);
+          } catch (error) {
+            console.warn('Failed to equip cosmetic via API:', error);
+          }
+        }
+
+        DataManager.equipCosmetics({
+          avatarId: selAvatarId,
+          backgroundId: selBackgroundId,
+          frameId: selFrameId,
+        });
+      } catch (error) {
+        console.error('Failed to confirm cosmetic changes:', error);
+      } finally {
+        navigation?.goBack?.();
+      }
+    })();
+  }, [navigation, selAvatarId, selBackgroundId, selFrameId]);
+
+  const ui = useMemo(() => ({
+    outer: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'stretch',
+      backgroundColor: colors.background,
+      paddingTop: 32,
+      paddingBottom: 32,
+      overflowY: 'auto',
+    },
+    panel: {
+      width: '50vw',
+      minWidth: 340,
+      maxWidth: 600,
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: colors.card,
+      borderRadius: 28,
+      boxShadow: '0 24px 48px rgba(0,0,0,0.32)',
+      overflow: 'hidden',
+    },
+    header: {
+      paddingLeft: 16,
+      paddingRight: 16,
+      borderBottomWidth: 0,
+    },
+    scroll: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      paddingLeft: 16,
+      paddingRight: 16,
+      paddingBottom: 16,
+      gap: 16,
+      overflowY: 'auto',
+    },
+    bannerWrap: {
+      marginTop: 8,
+    },
+    optionsWrap: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    optionsInner: {
+      width: '100%',
+    },
+    listWrap: {
+      flex: 1,
+      minHeight: 0,
+      display: 'flex',
+    },
+    list: {
+      flex: 1,
+      minHeight: 0,
+    },
+    empty: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      gap: 18,
+      paddingTop: 40,
+      paddingBottom: 40,
+      paddingLeft: 24,
+      paddingRight: 24,
+    },
+    emptyIcon: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '0 auto',
+    },
+    emptyTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    emptySubtitle: {
+      fontSize: 14,
+      fontWeight: '500',
+      lineHeight: 20,
+      color: colors.muted,
+    },
+    shopButton: {
+      border: 'none',
+      cursor: 'pointer',
+      borderRadius: 25,
+      paddingLeft: 24,
+      paddingRight: 24,
+      paddingTop: 16,
+      paddingBottom: 16,
+      backgroundColor: colors.primary,
+      color: colors.background,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    footer: {
+      borderTop: `1px solid ${colors.text + '1A'}`,
+      paddingLeft: 16,
+      paddingRight: 16,
+      paddingTop: 16,
+      paddingBottom: 20,
+      display: 'flex',
+      justifyContent: 'center',
+      backgroundColor: colors.card,
+    },
+    confirmButton: {
+      minWidth: 220,
+    },
+  }), [colors]);
 
   return (
-    <div style={{...styles.container, ...{ backgroundColor: colors.background }}}> 
-      <Header title={translate('customize.title') || 'Customize'} showBack onBack={() => navigation?.goBack?.()} />
-
-      <div style={styles.content}> 
-        {/* Banner header */}
-        <div style={{ marginLeft: 0, marginRight: 0, marginTop: 0 }}>
+    <div style={ui.outer}>
+      <div style={ui.panel}>
+        <Header
+          title={translate('customize.title')}
+          showBack
+          onBack={() => navigation?.goBack?.()}
+          style={ui.header}
+        />
+        <div style={ui.scroll}>
+          <div style={ui.bannerWrap}>
             <Banner
               avatarSource={previewAvatar ? { uri: previewAvatar } : null}
               bannerImageSource={previewBackground ? { uri: previewBackground } : null}
@@ -130,112 +232,46 @@ export default function CustomizeScreen({ navigation }) {
               topFlat
             />
           </div>
-
-        {/* Segmented control */}
-        <Options value={category} onChange={onSelect} style={{ marginTop: 16 }} />
-
-        {/* Conditional rendering: Empty state or list */}
-        {listData.length === 0 ? (
-          <div style={styles.emptyContainer}>
-            <div style={{...styles.emptyIconContainer, ...{ backgroundColor: colors.card }}}>
-              <LucideIcon name="shopping-bag" size={48} color={colors.muted} />
-            </div>
-            <span style={{...styles.emptyTitle, ...{ color: colors.text }}}>
-              {translate('customize.empty.title')}
-            </span>
-            <span style={{...styles.emptySubtitle, ...{ color: colors.muted }}}>
-              {translate('customize.empty.subtitle')}
-            </span>
-            <button               style={{...styles.shopButton, ...{ backgroundColor: colors.primary }}}
-              onClick={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
-            >
-              <span style={{...styles.shopButtonText, ...{ color: colors.background }}}>
-                {translate('customize.empty.shopButton')}
-              </span>
-            </button>
+          <div style={ui.optionsWrap}>
+            <Options value={category} onChange={setCategory} style={ui.optionsInner} />
           </div>
-        ) : (
-          <CustomizeList
-            data={listData}
-            numColumns={listColumns}
-            scrollEnabled={true}
-            onSelect={handleSelectItem}
-            selectedIds={{ avatar: selAvatarId, background: selBackgroundId, frame: selFrameId }}
-            bottomPadding={20}
-          />
-        )}
-      </div>
-
-      {/* Footer confirm button */}
-      <div style={{...styles.footer, ...{ backgroundColor: colors.background }}}> 
-        <Button1 label={translate('common.confirm') || 'Confirmar'} onClick={handleConfirm} />
+          <div style={ui.listWrap}>
+            {listData.length === 0 ? (
+              <div style={ui.empty}>
+                <div style={{ ...ui.emptyIcon, backgroundColor: colors.card }}>
+                  <LucideIcon name="shopping-bag" size={48} color={colors.muted} />
+                </div>
+                <span style={ui.emptyTitle}>{translate('customize.empty.title')}</span>
+                <span style={ui.emptySubtitle}>{translate('customize.empty.subtitle')}</span>
+                <button
+                  type="button"
+                  style={ui.shopButton}
+                  onClick={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
+                >
+                  {translate('customize.empty.shopButton')}
+                </button>
+              </div>
+            ) : (
+              <CustomizeList
+                data={listData}
+                numColumns={listColumns}
+                onSelect={handleSelectItem}
+                selectedIds={{
+                  avatar: selAvatarId,
+                  background: selBackgroundId,
+                  frame: selFrameId,
+                }}
+                bottomPadding={24}
+                style={ui.list}
+              />
+            )}
+          </div>
+        </div>
+        <div style={ui.footer}>
+          <Button1 label={translate('common.confirm')} onClick={handleConfirm} style={ui.confirmButton} />
+        </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: { flex: 1 },
-  content: { flex: 1 },
-  divider: { height: 2, marginTop: 14, opacity: 0.6, marginLeft: 0, marginRight: 0 },
-  fabContainer: { position: 'absolute', zIndex: 10 },
-  buyBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 16, paddingRight: 16,
-    paddingTop: 14, paddingBottom: 14,
-    borderRadius: 24,
-    borderWidth: 1,
-    minWidth: 150,
-  },
-  buyRow: { flexDirection: 'row', alignItems: 'center' },
-  buyLabel: { fontSize: 16, fontWeight: '800', fontStyle: 'italic', letterSpacing: 0.5 },
-  footer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingLeft: 16, paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 10,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 32, paddingRight: 32,
-    paddingTop: 40, paddingBottom: 40,
-  },
-  emptyIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  emptySubtitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 32,
-  },
-  shopButton: {
-    paddingLeft: 24, paddingRight: 24,
-    paddingTop: 16, paddingBottom: 16,
-    borderRadius: 25,
-    minWidth: 200,
-    alignItems: 'center',
-  },
-  shopButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-};
 

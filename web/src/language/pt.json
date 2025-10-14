@@ -319,6 +319,7 @@
   "customize": {
     "title": "Personalizar",
     "buyMore": "Comprar Mais",
+    "selected": "Escolhido",
     "empty": {
       "title": "Sem cosméticos disponíveis",
       "subtitle": "Vai à Loja para conseguir novos cosméticos!",
