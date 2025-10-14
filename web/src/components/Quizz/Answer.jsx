@@ -120,6 +120,7 @@ function AnswerRow({ item, optionHeight, colors, onPress, evalOutcome }) {
 			}}>
 				{item.html ? (
 					<MathJaxRenderer 
+						key={item.html}
 						content={item.html} 
 						enabled={true}
 						baseFontSize={fsize} 
