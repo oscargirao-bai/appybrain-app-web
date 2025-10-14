@@ -56,11 +56,13 @@ export default function ChallengeCard({
         cursor: isAvailable ? 'pointer' : 'default',
       }}
     >
-      <div style={{
-        ...styles.leftIcon,
-        backgroundColor: colors.surface,
-        borderColor: colors.text + (isAvailable ? '22' : '10'),
-      }}>
+      <div
+        style={{
+          ...styles.leftIcon,
+          backgroundColor: colors.surface,
+          borderColor: colors.text + (isAvailable ? '22' : '10'),
+        }}
+      >
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -123,7 +125,7 @@ const styles = {
     borderRadius: 12,
     borderWidth: '1px',
     borderStyle: 'solid',
-    paddingTop: 12,
+    paddingTop: 6,
     paddingBottom: 12,
     paddingLeft: 12,
     paddingRight: 12,

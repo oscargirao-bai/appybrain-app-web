@@ -45,7 +45,7 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
 
 const styles = {
   wrapper: {
-    marginTop: 8,
+    marginTop: 0,
     flex: 1,
     display: 'flex',
     flexDirection: 'column',

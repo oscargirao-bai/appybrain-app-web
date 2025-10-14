@@ -180,6 +180,7 @@ const styles = {
 		minHeight: 0,
 		overflowX: 'hidden',
 		overflowY: 'auto',
+		paddingTop: 12,
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
