@@ -266,8 +266,11 @@ export default function TribeScreen({ navigation }) {
 									</span>
 								</div>
 								<div style={memberListStyles.xpCol}>
-									<span style={{ ...memberListStyles.xpText, color: themeColors.text + 'CC' }}>
-										{formattedXp} {translate('rankings.metrics.xp')}
+									<span style={{ ...memberListStyles.xpLabel }}>
+										{translate('rankings.metrics.xp')}
+									</span>
+									<span style={{ ...memberListStyles.xpText, color: themeColors.text }}>
+										{formattedXp}
 									</span>
 								</div>
 							</div>
@@ -399,6 +402,14 @@ const memberListStyles = {
 		display: 'flex',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		gap: 4,
+	},
+	xpLabel: {
+		fontSize: 14,
+		fontWeight: '700',
+		fontFamily: family.bold,
+		color: '#FFCE3B',
+		letterSpacing: 0.4,
 	},
 	xpText: {
 		fontSize: 14,

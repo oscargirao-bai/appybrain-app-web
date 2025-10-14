@@ -37,8 +37,8 @@ export default function ShopScreen({ navigation }) {
 			setFrames(frameItems);
 			
 			// Get user coins
-			const userData = DataManager.getUser();
-			setUserCoins(userData?.coins || 0);
+			const stats = DataManager.getUserStats();
+			setUserCoins(stats?.coins || 0);
 
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
@@ -104,11 +104,14 @@ export default function ShopScreen({ navigation }) {
 	const handlePurchase = async (item) => {
 		try {
 			await DataManager.purchaseCosmetic(item.id);
-			//console.log('Cosmetic purchased successfully:', item.id);
+			const updatedStats = DataManager.getUserStats();
+			setUserCoins(updatedStats?.coins || 0);
 		} catch (error) {
 			console.error('Purchase failed:', error);
-			// You could show an error message to the user here
-			// For now, just log the error - the optimistic update will be reverted
+			const message = error?.message || '';
+			if (message.toLowerCase().includes('insufficient')) {
+				window.alert(`${translate('shop.insufficientCoinsTitle')}\n\n${translate('shop.insufficientCoinsDescription')}`);
+			}
 		}
 	};
 

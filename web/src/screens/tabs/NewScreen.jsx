@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
@@ -9,6 +10,7 @@ import NewsList from '../../components/News/NewsList.jsx';
 
 export default function NewScreen({ navigation }) {
 	const colors = useThemeColors();
+	const { translate } = useTranslate();
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
@@ -29,8 +31,8 @@ export default function NewScreen({ navigation }) {
 	}, []);
 	return (
 		<div style={{ ...styles.container, backgroundColor: colors.background }}>
-			<Header 
-				title="Noticias" 
+			<Header
+				title={translate('news.title')}
 				style={{ paddingRight: 10 }}
 				right={(
 					<div style={{ position: 'relative' }}>
@@ -41,7 +43,16 @@ export default function NewScreen({ navigation }) {
 				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
 			/>
 			<div style={{ ...styles.body, backgroundColor: colors.background }}>
-				<NewsList style={styles.list} />
+				<NewsList
+					style={styles.list}
+					onPressItem={(item) => {
+						if (!item) return;
+						navigation.navigate('Html', {
+							title: item.title || translate('news.title'),
+							newsId: item.id,
+						});
+					}}
+				/>
 			</div>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 		</div>

@@ -66,6 +66,8 @@ export default function Banner({
 		window.dispatchEvent(new CustomEvent('navigate-to-profile'));
 	}, [onPress]);
 
+	const avatarBackgroundColor = avatarImg ? 'transparent' : avatarBgLightBlue;
+
 	return (
 		<button
 			onClick={handlePress}
@@ -111,6 +113,7 @@ export default function Banner({
 								...styles.bannerFrameOverlay,
 								objectFit: 'stretch',
 								opacity: frameOpacity,
+								transform: frameScale !== 1 ? `scale(${frameScale})` : undefined,
 								pointerEvents: 'none',
 							}}
 							alt="Frame"
@@ -120,6 +123,7 @@ export default function Banner({
 						<div style={{
 							...styles.avatarCircle,
 							borderColor: colors.background,
+							backgroundColor: avatarBackgroundColor,
 						}}>
 							{avatarImg ? (
 								<img
@@ -138,7 +142,7 @@ export default function Banner({
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
-									backgroundColor: avatarBgLightBlue,
+										backgroundColor: avatarBackgroundColor,
 								}}>
 									<LucideIcon name="user" size={64} color={avatarIconBlue} />
 								</div>
@@ -223,5 +227,6 @@ const styles = {
 		width: '100%',
 		height: '100%',
 		zIndex: 2,
+		transformOrigin: 'center center',
 	},
 };

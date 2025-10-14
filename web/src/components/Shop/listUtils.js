@@ -88,6 +88,7 @@ export function createStyles(colors, priceFontSize, numColumns, itemSize) {
 			paddingTop: 4,
 			paddingBottom: 4,
 			borderRadius: 12,
+			justifyContent: 'center',
 		},
 		priceRow: {
 			display: 'flex',
@@ -97,7 +98,8 @@ export function createStyles(colors, priceFontSize, numColumns, itemSize) {
 		pricePillWrap: {
 			position: 'absolute',
 			bottom: -18,
-			left: 6,
+			left: '50%',
+			transform: 'translateX(-50%)',
 			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'center',

@@ -4,7 +4,7 @@ import SvgIcon from '../General/SvgIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function TribesHeader({
-	title = 'Tribos',
+	title,
 	allTribes = [],
 	userTribe,
 	isInTribe = false,
@@ -54,9 +54,11 @@ export default function TribesHeader({
 
 	return (
 		<div style={styles.container}>
-			<div style={{ ...styles.titleRow }}>
-				<span style={{ ...styles.title, color: colors.text }}>{title}</span>
-			</div>
+			{title ? (
+				<div style={{ ...styles.titleRow }}>
+					<span style={{ ...styles.title, color: colors.text }}>{title}</span>
+				</div>
+			) : null}
 			<div
 				style={{
 					...styles.scrollContent,

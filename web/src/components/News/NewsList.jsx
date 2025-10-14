@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function NewsList({ style, limit, onPressItem }) {
 	const colors = useThemeColors();
+	const { translate } = useTranslate();
 	const [news, setNews] = useState([]);
 
 	useEffect(() => {
@@ -87,7 +89,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 			{displayedNews.length === 0 && (
 				<div style={styles.empty}>
 					<span style={{ ...styles.emptyText, color: colors.text + '88' }}>
-						Sem notícias disponíveis
+						{translate('news.noItems')}
 					</span>
 				</div>
 			)}
