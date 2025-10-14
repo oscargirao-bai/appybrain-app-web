@@ -75,116 +75,149 @@ export default function HtmlScreen({ navigation, route }) {
     }
   };
 
+  const ui = useMemo(() => ({
+    outer: {
+      flex: 1,
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'stretch',
+      backgroundColor: colors.background,
+      paddingTop: 32,
+      paddingBottom: 32,
+      overflowY: 'auto',
+    },
+    panel: {
+      width: '50vw',
+      minWidth: 340,
+      maxWidth: 640,
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: colors.card,
+      borderRadius: 28,
+      boxShadow: '0 24px 48px rgba(0,0,0,0.32)',
+      overflow: 'hidden',
+    },
+    header: {
+      paddingLeft: 16,
+      paddingRight: 16,
+      borderBottomWidth: 0,
+    },
+    body: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflowY: 'auto',
+      backgroundColor: colors.card,
+    },
+    metadata: {
+      borderBottom: `1px solid ${colors.text + '1A'}`,
+    },
+    image: {
+      width: '100%',
+      height: 220,
+      objectFit: 'cover',
+      backgroundColor: colors.text + '10',
+    },
+    info: {
+      padding: 20,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 6,
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: '800',
+      lineHeight: '28px',
+      color: colors.text,
+    },
+    description: {
+      fontSize: 16,
+      lineHeight: '22px',
+      color: colors.text + 'CC',
+    },
+    date: {
+      fontSize: 14,
+      fontStyle: 'italic',
+      color: colors.text + '99',
+    },
+    loading: {
+      padding: 18,
+      textAlign: 'center',
+      color: colors.text + '99',
+    },
+    contentWrapper: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 24,
+      backgroundColor: isStudyContent ? '#ffffff' : colors.card,
+    },
+    iframe: {
+      flex: 1,
+      width: '100%',
+      border: 'none',
+      backgroundColor: isStudyContent ? '#ffffff' : colors.card,
+    },
+    mathjax: {
+      flex: 1,
+      border: 'none',
+      backgroundColor: isStudyContent ? '#ffffff' : colors.card,
+    },
+  }), [colors, isStudyContent]);
+
   return (
-    <div style={{ ...styles.container, backgroundColor: colors.background }}>
-      <Header title={headerTitle} showBack onBack={() => navigation.goBack?.()} />
-      
-      {/* Show news metadata if this is a news item */}
-      {newsData && (
-        <div style={styles.metadataContainer}>
-          {/* News Image */}
-          {newsData.imageUrl && (
-            <img 
-              src={newsData.imageUrl}
-              alt={newsData.title}
-              style={{...styles.newsImage, objectFit: "cover"}}
-            />
+    <div style={ui.outer}>
+      <div style={ui.panel}>
+        <Header title={headerTitle} showBack onBack={() => navigation.goBack?.()} style={ui.header} />
+        <div style={ui.body}>
+          {newsData && (
+            <div style={ui.metadata}>
+              {newsData.imageUrl && (
+                <img
+                  src={newsData.imageUrl}
+                  alt={newsData.title}
+                  style={ui.image}
+                />
+              )}
+              <div style={ui.info}>
+                <span style={ui.title}>{newsData.title}</span>
+                {newsData.description && (
+                  <span style={ui.description}>{newsData.description}</span>
+                )}
+                {newsData.publishDate && (
+                  <span style={ui.date}>{formatDate(newsData.publishDate)}</span>
+                )}
+              </div>
+            </div>
           )}
-          
-          {/* News Info */}
-          <div style={styles.newsInfo}>
-            <span style={{...styles.newsTitle, color: colors.text}}> 
-              {newsData.title}
-            </span>
-            
-            {newsData.description && (
-              <span style={{...styles.newsDescription, ...{ color: colors.text + 'CC' }}}> 
-                {newsData.description}
-              </span>
-            )}
-            
-            {newsData.publishDate && (
-              <span style={{...styles.newsDate, ...{ color: colors.text + '99' }}}> 
-                {formatDate(newsData.publishDate)}
-              </span>
+
+          {newsId && loading && (
+            <div style={ui.loading}>Carregando notícia...</div>
+          )}
+
+          <div style={ui.contentWrapper}>
+            {uri ? (
+              <iframe
+                src={uri}
+                style={ui.iframe}
+                title={headerTitle}
+              />
+            ) : (
+              <MathJaxRenderer
+                content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
+                enabled={true}
+                scrollEnabled={true}
+                style={ui.mathjax}
+                baseFontSize={16}
+                backgroundColor={isStudyContent ? '#ffffff' : colors.card}
+                textColor={isStudyContent ? '#000000' : colors.text}
+                padding={16}
+              />
             )}
           </div>
         </div>
-      )}
-
-      {/* Loading indicator for news */}
-      {newsId && loading && (
-        <div style={styles.loadingContainer}>
-          <span style={{...styles.loadingText, ...{ color: colors.text + '99' }}}>
-            Carregando notícia...
-          </span>
-        </div>
-      )}
-      
-      {/* Content rendering */}
-      <div style={styles.contentWrapper}>
-        {uri ? (
-          // For external URLs, use iframe
-          <iframe 
-            src={uri} 
-            style={{...styles.webview, backgroundColor: colors.background}}
-            title={headerTitle}
-          />
-        ) : (
-          // For HTML content (especially study content), use MathJaxRenderer for math support
-          <MathJaxRenderer
-            content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
-            enabled={true}
-            scrollEnabled={true}
-            style={{...styles.webview, backgroundColor: isStudyContent ? '#ffffff' : colors.background}}
-            baseFontSize={16}
-            backgroundColor={isStudyContent ? '#ffffff' : colors.background}
-            textColor={isStudyContent ? '#000000' : colors.text}
-            padding={16}
-          />
-        )}
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
-  contentWrapper: { flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', minHeight: 0 },
-  webview: { flex: 1, width: '100%', border: 'none' },
-  metadataContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(127,127,127,0.2)',
-  },
-  newsImage: {
-    width: '100%',
-    height: 180,
-    backgroundColor: 'rgba(127,127,127,0.1)',
-  },
-  newsInfo: {
-    padding: 16,
-  },
-  newsTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 8,
-    lineHeight: 26,
-  },
-  newsDescription: {
-    fontSize: 16,
-    lineHeight: 22,
-    marginBottom: 8,
-  },
-  newsDate: {
-    fontSize: 14,
-    fontStyle: 'italic',
-    marginBottom: 8,
-  },
-  loadingContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
-  },
-};

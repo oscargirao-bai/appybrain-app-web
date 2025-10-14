@@ -63,7 +63,7 @@ export default function Button1({ label, color, onPress, onClick, style }) {
 
 	return (
 		<div style={buttonStyle}>
-			<div style={{...styles.aura, backgroundColor: auraColor}} />
+			<div style={{ ...styles.aura, backgroundColor: auraColor }} />
 			<button style={faceStyle} onClick={handleClick} aria-label={resolvedLabel}>
 				<span style={textStyle}>{resolvedLabel}</span>
 			</button>
@@ -79,11 +79,11 @@ const styles = {
 	},
 	aura: {
 		position: 'absolute',
-		top: -16,
-		left: -20,
-		right: -20,
-		bottom: -16,
-		borderRadius: 40,
+		top: -18,
+		left: -18,
+		right: -18,
+		bottom: -18,
+		borderRadius: 44,
 		opacity: 0.4,
 		animation: 'glow-pulse 4.4s ease-in-out infinite',
 	},
