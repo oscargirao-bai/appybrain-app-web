@@ -93,26 +93,24 @@ export default function ResultScreen1({ navigation, route }) {
           />
         </div>
         <Stats correct={correct} total={total} totalSec={typeof totalSec === 'number' ? totalSec : null} />
-        {/* Rewards block centered */}
-        <div style={styles.centerBlock}> 
-          <div style={styles.rewardsLabelRow}> 
-            <span style={{...styles.rewardsLabel, color: colors.text}}>Recompensas</span>
-          </div>
-          <div style={styles.rewardWrapCentered}>
-            {(() => {
-              const rewardType = getRewardType(quizType);
-              const rewardAmount = getRewardAmount(sessionResult, { correct, total });
-              return (
-                <Reward 
-                  type={rewardType} 
-                  amount={rewardAmount} 
-                />
-              );
-            })()}
-          </div>
-          <div style={styles.quoteWrap}>
-            <Quote percentage={hasStats ? Math.round((correct / total) * 100) : 50} />
-          </div>
+        {/* Rewards label + pill centered */}
+        <div style={styles.rewardsOuter}> 
+          <span style={{...styles.rewardsBigLabel, color: colors.text}}>Recompensas</span>
+          {(() => {
+            const rewardType = getRewardType(quizType);
+            const rewardAmount = getRewardAmount(sessionResult, { correct, total });
+            return (
+              <Reward 
+                type={rewardType} 
+                amount={rewardAmount} 
+                hideLabel={true}
+                style={{ paddingTop: 0, paddingBottom: 0, justifyContent: 'center' }}
+              />
+            );
+          })()}
+        </div>
+        <div style={styles.quoteWrapCentered}>
+          <Quote percentage={hasStats ? Math.round((correct / total) * 100) : 50} />
         </div>
       </div>
       {/* Bottom action button */}
@@ -146,20 +144,9 @@ const styles = {
   bannerWrap: { paddingLeft: 12, paddingRight: 12, paddingTop: 16 },
   infoWrap: { paddingLeft: 12, paddingRight: 12, marginTop: 0 },
   rewardWrap: { paddingLeft: 12, paddingRight: 12, marginTop: -10 },
-  rewardWrapCentered: { marginTop: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' },
-  centerBlock: { 
-    width: '100%',
-    paddingLeft: 12, paddingRight: 12,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: 14,
-    marginTop: -6,
-  },
-  rewardsLabelRow: { width: '100%', display: 'flex', justifyContent: 'center' },
-  rewardsLabel: { fontSize: 14, fontWeight: '800', letterSpacing: 0.5 },
-  quoteWrap: { width: '100%', display: 'flex', justifyContent: 'center' },
+  rewardsOuter: { width: '100%', paddingLeft: 12, paddingRight: 12, marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 },
+  rewardsBigLabel: { fontSize: 18, fontWeight: '900', letterSpacing: 0.5, textAlign: 'center' },
+  quoteWrapCentered: { width: '100%', display: 'flex', justifyContent: 'center', marginTop: 12 },
   spacer: { 
     flex: 1, 
     justifyContent: 'center',

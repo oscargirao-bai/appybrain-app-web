@@ -3,14 +3,16 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function Reward({ type = 'stars', amount = 0, style }) {
+export default function Reward({ type = 'stars', amount = 0, style, hideLabel = false }) {
 	const colors = useThemeColors();
 	const styles = React.useMemo(() => createStyles(colors), [colors]);
 	const config = getConfig(type, colors);
 
 	return (
 		<div style={{...styles.container, ...style}}>
-			<span style={{...styles.title, color: colors.text}}>Recompensas</span>
+			{!hideLabel && (
+				<span style={{...styles.title, color: colors.text}}>Recompensas</span>
+			)}
 			<div 
 				style={{...styles.pill, borderColor: colors.text + 'AA'}}
 				aria-label={`Recompensa: ${config.label} +${amount}`}
