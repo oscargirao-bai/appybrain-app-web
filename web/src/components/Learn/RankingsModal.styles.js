@@ -31,6 +31,7 @@ const styles = {
     border: 'none',
     background: 'transparent',
     cursor: 'pointer',
+    zIndex: 0,
   },
   panel: {
     width: '100%',
@@ -44,6 +45,8 @@ const styles = {
     flexDirection: 'column',
     gap: 16,
     maxHeight: '80vh',
+    position: 'relative',
+    zIndex: 1,
   },
   titleRow: {
     display: 'flex',
@@ -93,6 +96,7 @@ const styles = {
     overflowY: 'auto',
     paddingLeft: 4,
     paddingRight: 4,
+    WebkitOverflowScrolling: 'touch',
   },
 };
 

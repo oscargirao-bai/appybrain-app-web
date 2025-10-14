@@ -1,5 +1,4 @@
 import React, { useMemo, useCallback } from 'react';
-import SvgIcon from './SvgIcon.jsx';
 import LucideIcon from './LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
@@ -65,8 +64,8 @@ export default function UserList({
 		const currentValue = metric === 'points' ? (item.trophies || 0) : metric === 'xp' ? (item.xp || 0) : (item.stars || 0);
 		const pct = maxValue > 0 ? currentValue / maxValue : 0;
 		const topMedal = showMedals && item.rank <= 3;
-		const medalIcon = item.rank === 1 ? 'crown' : item.rank === 2 ? 'award' : 'award';
-		const medalColor = item.rank === 1 ? colors.accent : item.rank === 2 ? colors.primary : colors.primary;
+		const medalIcon = item.rank === 1 ? 'trophy' : 'medal';
+		const medalColor = item.rank === 1 ? colors.accent : colors.primary;
 		const firstLetter = (item.name || '?').charAt(0).toUpperCase();
 		const metricIcon = metric === 'points' ? 'trophy' : 'star';
 
@@ -83,7 +82,7 @@ export default function UserList({
 			>
 				<div style={styles.rankCol}>
 					{topMedal ? (
-						<SvgIcon name={medalIcon} size={22} color={medalColor} />
+						<LucideIcon name={medalIcon} size={22} color={medalColor} />
 					) : (
 						<span style={{ ...styles.rankText, color: colors.text + 'AA' }}>
 							{item.rank}
@@ -94,7 +93,7 @@ export default function UserList({
 					{item.avatarUrl ? (
 						<img src={item.avatarUrl} alt="" style={styles.avatarImage} />
 					) : item.avatarIcon ? (
-						<SvgIcon name={item.avatarIcon} size={24} color={colors.primary} />
+						<LucideIcon name={item.avatarIcon} size={24} color={colors.primary} />
 					) : (
 						<span style={{ ...styles.avatarLetter, color: colors.primary }}>
 							{firstLetter}
