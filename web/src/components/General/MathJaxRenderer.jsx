@@ -64,21 +64,24 @@ const MathJaxRenderer = ({
 
     setIsTypesetting(true);
 
-    const runTypeset = () => {
+    const runTypeset = async () => {
       if (canceled || !window.MathJax || !element) {
         setIsTypesetting(false);
         return;
       }
 
       try {
+        // Clear previous typeset state first and wait for it to complete
         if (typeof window.MathJax.typesetClear === 'function') {
-          window.MathJax.typesetClear([element]);
+          await window.MathJax.typesetClear([element]);
         } else if (typeof window.MathJax.texReset === 'function') {
           window.MathJax.texReset();
         }
       } catch (clearError) {
         console.warn('MathJax clear error:', clearError);
       }
+
+      if (canceled) return;
 
       const promise = window.MathJax.typesetPromise ? window.MathJax.typesetPromise([element]) : null;
       if (!promise) {
