@@ -16,6 +16,7 @@ export default function Question({ html, height, style }) {
 		<div style={{...styles.wrapper, borderColor: colors.text + 'CC', ...style}}>
 			<div style={{...styles.inner, backgroundColor: 'transparent', flex: 1}}> 
 				<MathJaxRenderer
+					key={html}
 					content={html}
 					enabled={true}
 					baseFontSize={18}

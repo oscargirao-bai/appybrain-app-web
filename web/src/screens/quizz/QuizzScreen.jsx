@@ -381,7 +381,7 @@ export default function QuizzScreen({ navigation, route }) {
 				/>
 				<div style={styles.body}>
 					<div style={styles.questionWrapper}>
-						<Question html={current?.html} />
+						<Question key={current?.id || qIndex} html={current?.html} />
 						{/* Battle helps appear only in battle mode, between question and answers */}
 						{isBattle && (
 										<BattleHelp
