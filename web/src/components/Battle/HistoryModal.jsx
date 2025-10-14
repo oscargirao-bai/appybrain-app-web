@@ -8,6 +8,12 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
+	const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+	const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+	const appMaxWidth = Math.min(Math.round(viewportWidth * 0.5), 640);
+	const cardWidth = Math.min(640, Math.max(340, Math.round(appMaxWidth * 0.94)));
+	const cardHeight = Math.min(540, Math.max(260, Math.round(viewportHeight * 0.62)));
+	const scrollHeight = Math.max(160, cardHeight - 90);
 
 	if (!visible) {
 		return null;
@@ -17,8 +23,14 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 		<div style={styles.modalContainer}>
 			<div style={{...styles.backdrop, backgroundColor: colors.overlay?.black50 || 'rgba(0,0,0,0.5)'}}>
 				<button style={styles.backdropHit} onClick={onClose} aria-label="Fechar histórico" />
-				<div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-					<div style={{...styles.card, backgroundColor: colors.card || colors.background, borderColor: colors.border}}>
+				<div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					<div style={{
+						...styles.card,
+						backgroundColor: colors.card || colors.background,
+						borderColor: colors.border,
+						width: cardWidth,
+						height: cardHeight,
+					}}>
 						<button onClick={onClose} style={styles.closeWrap} aria-label={translate('common.close')}>
 							<LucideIcon name="x" size={22} color={colors.text} />
 						</button>
@@ -27,13 +39,13 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 							{title || translate('battle.history.title')}
 						</span>
 
-						<div style={styles.scrollBox}>
+						<div style={{ ...styles.scrollBox, height: scrollHeight }}>
 							{!hasAny ? (
-								<div style={styles.emptyWrap}>
+								<div style={{ ...styles.emptyWrap, height: scrollHeight }}>
 									<span style={{...styles.emptyText, color: colors.muted}}>{translate('battle.history.empty')}</span>
 								</div>
 							) : (
-								<div style={{ paddingBottom: 64, overflowY: 'auto', maxHeight: '100%' }}>
+								<div style={{ paddingBottom: 48, overflowY: 'auto', maxHeight: '100%' }}>
 									{pending?.length > 0 && (
 										<>
 											<span style={{...styles.sectionTitle, color: colors.text}}>{translate('battle.history.pending')}</span>
@@ -120,10 +132,6 @@ function HistoryRow({ item, colors, translate, onOpenBattle, onClose }) {
 	);
 }
 
-const CARD_W = 640;
-const CARD_H = 480;
-const SCROLL_H = 410;
-
 const styles = {
 	modalContainer: {
 		position: 'fixed',
@@ -153,9 +161,8 @@ const styles = {
 		cursor: 'pointer',
 	},
 	card: {
-		width: CARD_W,
+		width: '100%',
 		maxWidth: '94%',
-		height: CARD_H,
 		borderRadius: 18,
 		borderWidth: '1px',
 		borderStyle: 'solid',
@@ -186,7 +193,6 @@ const styles = {
 		display: 'block',
 	},
 	scrollBox: {
-		height: SCROLL_H,
 		width: '100%',
 	},
 	sectionTitle: {
@@ -205,7 +211,6 @@ const styles = {
 		marginRight: 'auto',
 	},
 	emptyWrap: {
-		height: SCROLL_H,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',

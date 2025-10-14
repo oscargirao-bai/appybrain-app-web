@@ -6,6 +6,9 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 import { getHeroIcon } from '../../screens/quizz/helpers/battleResultHelpers.js';
 
+const MAX_ROW_WIDTH = 420;
+const BANNER_WIDTH_RATIO = 0.75;
+
 export function BattleParticipantRow({
   side,
   bannerProps,
@@ -30,11 +33,14 @@ export function BattleParticipantRow({
   const magnitude = pending ? '...' : hasValue ? String(Math.abs(value)) : '0';
 
   const wrapperStyle = {
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    alignItems: 'center',
+    gap: 4,
     paddingLeft: 12,
     paddingRight: 12,
+    boxSizing: 'border-box',
   };
 
   const rowStyle = {
@@ -43,6 +49,8 @@ export function BattleParticipantRow({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 12,
+    width: '100%',
+    maxWidth: MAX_ROW_WIDTH,
   };
 
   const trophyArea = (
@@ -66,7 +74,12 @@ export function BattleParticipantRow({
       frameSource={frameSource}
       topFlat={false}
       onPress={isOpponent ? (() => {}) : undefined}
-      style={isOpponent ? styles.bannerRight : styles.bannerLeft}
+      style={{
+        ...(isOpponent ? styles.bannerRight : styles.bannerLeft),
+        width: `${BANNER_WIDTH_RATIO * 100}%`,
+        maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
+      }}
+      aspectRatio={560 / 180}
     />
   );
 
@@ -101,7 +114,7 @@ export function BattleMetrics({
   translate,
   compact,
 }) {
-  const dotSize = compact ? 24 : 30;
+  const dotSize = compact ? 22 : 26;
   const labelTime = translate('battle.result.time');
   const labelHelp = translate('battle.result.help');
 
@@ -115,7 +128,13 @@ export function BattleMetrics({
   );
 
   return (
-    <div style={{ ...styles.vsSection, padding: compact ? '8px 16px' : '12px 24px' }}>
+    <div
+      style={{
+        ...styles.vsSection,
+        padding: compact ? '8px 12px' : '12px 20px',
+        maxWidth: MAX_ROW_WIDTH,
+      }}
+    >
       <div style={styles.scoreBlock}>
         <ResultsDots sequence={topSequence} colors={colors} dotSize={dotSize} />
         <div style={styles.metricsRow}>
@@ -216,21 +235,24 @@ export function HelpIcons({ data, colors }) {
 
 const styles = {
   bannerLeft: {
-    width: '75%',
+    width: '100%',
   },
   bannerRight: {
-    width: '75%',
+    width: '100%',
   },
   infoLeft: {
-    width: '75%',
+    width: '100%',
+    maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
     alignSelf: 'flex-start',
   },
   infoRight: {
-    width: '75%',
+    width: '100%',
+    maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
     alignSelf: 'flex-end',
   },
   trophyArea: {
-    width: '25%',
+    width: `${(1 - BANNER_WIDTH_RATIO) * 100}%`,
+    minWidth: 96,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -254,7 +276,8 @@ const styles = {
   vsSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 12,
+    gap: 10,
+    margin: '0 auto',
     borderRadius: 18,
   },
   scoreBlock: {
@@ -279,7 +302,7 @@ const styles = {
   metricsRow: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 24,
+    gap: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
