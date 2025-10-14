@@ -70,6 +70,8 @@ export default function BattleScreen({ navigation, route }) {
   const [battleHistory, setBattleHistory] = useState({ pending: [], completed: [] });
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState(null);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [loadingBattles, setLoadingBattles] = useState(false);
+  const [requestedBattles, setRequestedBattles] = useState(false);
 
   // Get route params for battle result opening
   const routeParams = route?.params || {};
@@ -101,6 +103,33 @@ export default function BattleScreen({ navigation, route }) {
     // Cleanup subscription
     return unsubscribe;
   }, []);
+
+  // Lazy load battles the first time this screen opens if none are present yet
+  useEffect(() => {
+    // Only attempt once per mount; wait until we have user info so token flow finished
+    if (requestedBattles) return;
+    if (!userInfo) return; // wait for user to be set
+    if ((battleHistory.pending.length + battleHistory.completed.length) > 0) return; // already have data
+
+    let cancelled = false;
+    (async () => {
+      try {
+        setRequestedBattles(true);
+        setLoadingBattles(true);
+        // Sequential API rule respected: this single request runs inside ApiManager queue
+        await DataManager.refreshBattles();
+        if (!cancelled) {
+          const updated = DataManager.getBattleHistory();
+            setBattleHistory(updated);
+        }
+      } catch (e) {
+        console.warn('Falha ao carregar batalhas:', e?.message || e);
+      } finally {
+        if (!cancelled) setLoadingBattles(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [userInfo, battleHistory, requestedBattles]);
 
   // Handle opening battle result from navigation params (e.g., from notifications)
   useEffect(() => {
@@ -287,6 +316,7 @@ export default function BattleScreen({ navigation, route }) {
         onClose={() => setHistoryOpen(false)}
         pending={battleHistory.pending}
         completed={battleHistory.completed}
+        loading={loadingBattles}
         onOpenBattle={(battleSessionId) => {
           // Navigate to ResultScreen2 with battle data
           try {

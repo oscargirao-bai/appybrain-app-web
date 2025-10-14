@@ -4,16 +4,22 @@ import { useTranslate } from '../../services/Translate.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function HistoryModal({ visible, onClose, pending = [], completed = [], title, onOpenBattle }) {
+export default function HistoryModal({ visible, onClose, pending = [], completed = [], title, onOpenBattle, loading = false }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
 	const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
 	const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
-	const appMaxWidth = Math.min(Math.round(viewportWidth * 0.5), 640);
-	const cardWidth = Math.min(640, Math.max(340, Math.round(appMaxWidth * 0.94)));
-	const cardHeight = Math.min(540, Math.max(260, Math.round(viewportHeight * 0.62)));
-	const scrollHeight = Math.max(160, cardHeight - 90);
+	// App column is 50% centered – keep modal inside that with a small gutter
+	const appColumnWidth = Math.min(680, Math.round(viewportWidth * 0.5));
+	const cardWidth = Math.max(340, Math.min(620, appColumnWidth - 24));
+	// Height: leave generous space but never overflow; allow internal scroll
+	const maxCardHeight = Math.min(560, Math.round(viewportHeight * 0.8));
+	const minCardHeight = 260;
+	const cardHeight = Math.max(minCardHeight, maxCardHeight);
+	const headerHeight = 54; // approx title + close
+	const sectionMargin = 12;
+	const scrollHeight = Math.max(160, cardHeight - headerHeight - sectionMargin);
 
 	if (!visible) {
 		return null;
@@ -29,7 +35,8 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 						backgroundColor: colors.card || colors.background,
 						borderColor: colors.border,
 						width: cardWidth,
-						height: cardHeight,
+						maxHeight: maxCardHeight,
+						height: 'auto',
 					}}>
 						<button onClick={onClose} style={styles.closeWrap} aria-label={translate('common.close')}>
 							<LucideIcon name="x" size={22} color={colors.text} />
@@ -39,13 +46,19 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 							{title || translate('battle.history.title')}
 						</span>
 
-						<div style={{ ...styles.scrollBox, height: scrollHeight }}>
-							{!hasAny ? (
-								<div style={{ ...styles.emptyWrap, height: scrollHeight }}>
+						<div style={{ ...styles.scrollBox, maxHeight: scrollHeight, overflowY: 'auto', paddingRight: 4 }}>
+							{loading && !hasAny && (
+								<div style={{ ...styles.emptyWrap, minHeight: 120 }}>
+									<span style={{...styles.emptyText, color: colors.muted}}>{translate('common.loading')}</span>
+								</div>
+							)}
+							{!loading && !hasAny && (
+								<div style={{ ...styles.emptyWrap, minHeight: 120 }}>
 									<span style={{...styles.emptyText, color: colors.muted}}>{translate('battle.history.empty')}</span>
 								</div>
-							) : (
-								<div style={{ paddingBottom: 48, overflowY: 'auto', maxHeight: '100%' }}>
+							)}
+							{hasAny && (
+								<>
 									{pending?.length > 0 && (
 										<>
 											<span style={{...styles.sectionTitle, color: colors.text}}>{translate('battle.history.pending')}</span>
@@ -66,13 +79,14 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 											</div>
 										</>
 									)}
-								</div>
+								</>
 							)}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	);
 	);
 }
 
