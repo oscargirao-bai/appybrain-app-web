@@ -80,13 +80,15 @@ export default function ChallengeScreen({ navigation }) {
 							coins={userInfo?.coins ?? 0}
 						/>
 					</div>
-					<div style={styles.buttonsRow}>
+					<div style={{ ...styles.fullBleed, ...styles.actionsLine }}>
+						<div style={styles.buttonsRow}>
 						<Button2
 							size={54}
 							iconName="medal"
 							onClick={() => setRankingsOpen(true)}
 							style={styles.buttonSpacing}
 						/>
+						</div>
 					</div>
 				</div>
 				<div style={styles.listArea}>
@@ -139,10 +141,6 @@ const styles = {
 	},
 	headerSection: {
 		width: '100%',
-		display: 'flex',
-		flexDirection: 'column',
-		gap: 0,
-		flexShrink: 0,
 	},
 	sectionTitleWrap: { paddingLeft: 6, paddingRight: 6 },
 	sectionTitleRow: { flexDirection: 'column' },
@@ -160,11 +158,7 @@ const styles = {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
-		marginTop: 0,
-		marginBottom: 0,
-		paddingLeft: 10,
-		paddingRight: 10,
-		boxSizing: 'border-box',
+		width: '100%',
 	},
 	actionRow: {
 		flexDirection: 'row',
@@ -193,11 +187,24 @@ const styles = {
 		alignItems: 'center',
 		marginTop: 0,
 		marginBottom: 0,
+		paddingTop: 0,
+		paddingBottom: 0,
 	},
 	infoSection: {
 		width: '100%',
 		display: 'flex',
 		justifyContent: 'center',
+		marginTop: 0,
+	},
+	actionsLine: {
+		width: '100%',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		paddingLeft: 10,
+		paddingRight: 10,
+		boxSizing: 'border-box',
 		marginTop: 0,
 	},
 	fullBleed: {
