@@ -87,7 +87,6 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 			</div>
 		</div>
 	);
-	);
 }
 
 function HistoryRow({ item, colors, translate, onOpenBattle, onClose }) {
