@@ -26,4 +26,10 @@ html, body, #root {
 }
 body {
   margin: 0;
+  font-family: 'Work Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
 }

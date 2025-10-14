@@ -25,7 +25,8 @@ export default function App() {
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        fontFamily: 'Work Sans, sans-serif'
       }}>
         <ThemeProvider defaultTheme="dark">
           <TranslationProvider>

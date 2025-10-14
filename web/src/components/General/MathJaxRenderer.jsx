@@ -80,6 +80,7 @@ const MathJaxRenderer = ({
 
   const containerStyle = {
     fontSize: baseFontSize,
+    fontFamily: 'Work Sans, sans-serif',
     textAlign,
     backgroundColor: backgroundColor || 'transparent',
     color: textColor || colors.text,

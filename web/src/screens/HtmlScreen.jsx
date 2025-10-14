@@ -5,6 +5,7 @@ import { useTranslate } from '../services/Translate.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import Header from '../components/General/Header.jsx';
 import MathJaxRenderer from '../components/General/MathJaxRenderer.jsx';
+import { family } from '../constants/font.jsx';
 
 // Recebe navigation/route via props do AppRouter
 
@@ -50,8 +51,6 @@ export default function HtmlScreen({ navigation, route }) {
 
   // Determine what content to display
   const contentHtml = newsData?.content || html;
-  const displayTitle = newsData?.title || title;
-  
   // Determine if this is study content (should have white background)
   const isStudyContent = !newsId && !newsData;
 
@@ -78,24 +77,20 @@ export default function HtmlScreen({ navigation, route }) {
   const ui = useMemo(() => ({
     outer: {
       flex: 1,
-      minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'stretch',
-      backgroundColor: colors.background,
-      paddingTop: 32,
-      paddingBottom: 32,
-      overflowY: 'auto',
-    },
-    panel: {
-      width: '50vw',
-      minWidth: 340,
-      maxWidth: 640,
+      width: '100%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: colors.card,
-      borderRadius: 28,
-      boxShadow: '0 24px 48px rgba(0,0,0,0.32)',
+      backgroundColor: colors.background,
+      overflow: 'hidden',
+    },
+    panel: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: colors.background,
+      borderRadius: 0,
+      boxShadow: 'none',
       overflow: 'hidden',
     },
     header: {
@@ -107,11 +102,13 @@ export default function HtmlScreen({ navigation, route }) {
       flex: 1,
       display: 'flex',
       flexDirection: 'column',
-      overflowY: 'auto',
-      backgroundColor: colors.card,
+      minHeight: 0,
+      backgroundColor: colors.background,
     },
     metadata: {
       borderBottom: `1px solid ${colors.text + '1A'}`,
+      flexShrink: 0,
+  backgroundColor: colors.card,
     },
     image: {
       width: '100%',
@@ -127,31 +124,39 @@ export default function HtmlScreen({ navigation, route }) {
     },
     title: {
       fontSize: 22,
-      fontWeight: '800',
       lineHeight: '28px',
+      fontFamily: family.bold,
+      fontWeight: 700,
       color: colors.text,
     },
     description: {
       fontSize: 16,
       lineHeight: '22px',
+      fontFamily: family.medium,
+      fontWeight: 500,
       color: colors.text + 'CC',
     },
     date: {
       fontSize: 14,
       fontStyle: 'italic',
+      fontFamily: family.regular,
       color: colors.text + '99',
     },
     loading: {
       padding: 18,
       textAlign: 'center',
+      fontFamily: family.medium,
       color: colors.text + '99',
     },
     contentWrapper: {
       flex: 1,
+      minHeight: 0,
       display: 'flex',
       flexDirection: 'column',
+      overflowY: 'auto',
+  backgroundColor: isStudyContent ? '#ffffff' : colors.background,
       padding: 24,
-      backgroundColor: isStudyContent ? '#ffffff' : colors.card,
+      gap: 0,
     },
     iframe: {
       flex: 1,
@@ -161,8 +166,7 @@ export default function HtmlScreen({ navigation, route }) {
     },
     mathjax: {
       flex: 1,
-      border: 'none',
-      backgroundColor: isStudyContent ? '#ffffff' : colors.card,
+      backgroundColor: isStudyContent ? '#ffffff' : colors.background,
     },
   }), [colors, isStudyContent]);
 
@@ -193,7 +197,7 @@ export default function HtmlScreen({ navigation, route }) {
           )}
 
           {newsId && loading && (
-            <div style={ui.loading}>Carregando notícia...</div>
+            <div style={ui.loading}>{translate('common.loading')}</div>
           )}
 
           <div style={ui.contentWrapper}>
@@ -207,10 +211,10 @@ export default function HtmlScreen({ navigation, route }) {
               <MathJaxRenderer
                 content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
                 enabled={true}
-                scrollEnabled={true}
+                scrollEnabled={false}
                 style={ui.mathjax}
                 baseFontSize={16}
-                backgroundColor={isStudyContent ? '#ffffff' : colors.card}
+                backgroundColor={isStudyContent ? '#ffffff' : colors.background}
                 textColor={isStudyContent ? '#000000' : colors.text}
                 padding={16}
               />

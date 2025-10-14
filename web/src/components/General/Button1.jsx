@@ -1,6 +1,7 @@
 import React from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
+import { family } from '../../constants/font.jsx';
 
 export default function Button1({ label, color, onPress, onClick, style }) {
 	const themeColors = useThemeColors();
@@ -12,7 +13,6 @@ export default function Button1({ label, color, onPress, onClick, style }) {
 	const handleClick = onClick || onPress;
 	
 	const isYellow = baseColor && (baseColor.toLowerCase().includes('#ffd') || baseColor.toLowerCase().includes('#ff') || baseColor.toLowerCase() === '#ffd700');
-	const gradientColors = isYellow ? [baseColor, '#FFA500'] : [baseColor, themeColors.secondary];
 
 	const hexToRgb = (h) => {
 		let x = h?.replace('#', '') || '000000';
@@ -27,20 +27,23 @@ export default function Button1({ label, color, onPress, onClick, style }) {
 		const { r, g, b } = hexToRgb(hex);
 		return `rgba(${r},${g},${b},${alpha})`;
 	};
-	const darken = (hex, amt = 0.25) => {
-		const rgb = hexToRgb(hex);
-		const d = mix(rgb, { r: 0, g: 0, b: 0 }, amt);
-		return rgbToHex(d);
-	};
 	const lighten = (hex, amt = 0.4) => {
 		const rgb = hexToRgb(hex);
 		const l = mix(rgb, { r: 255, g: 255, b: 255 }, amt);
 		return rgbToHex(l);
 	};
+	const darken = (hex, amt = 0.25) => {
+		const rgb = hexToRgb(hex);
+		const d = mix(rgb, { r: 0, g: 0, b: 0 }, amt);
+		return rgbToHex(d);
+	};
+
+	// Use lighter/darker shades of the same color to keep the glow balanced on both sides
+	const gradientTop = lighten(baseColor, isYellow ? 0.18 : 0.22);
+	const gradientBottom = darken(baseColor, isYellow ? 0.18 : 0.24);
+	const gradientColors = [gradientTop, gradientBottom];
 
 	const borderColor = darken(baseColor, 0.28);
-	const highlightStart = addAlpha('#FFFFFF', 0.85);
-	const highlightMid = addAlpha('#FFFFFF', 0.25);
 	const auraColor = addAlpha(lighten(baseColor, 0.3), 0.35);
 	const textStrokeColor = darken(baseColor, 0.35);
 
@@ -75,14 +78,14 @@ const styles = {
 	wrapper: {
 		position: 'relative',
 		alignSelf: 'center',
+		display: 'inline-flex',
+		justifyContent: 'center',
+		alignItems: 'center',
 		minWidth: 160,
 	},
 	aura: {
 		position: 'absolute',
-		top: -18,
-		left: -18,
-		right: -18,
-		bottom: -18,
+		inset: -18,
 		borderRadius: 44,
 		opacity: 0.4,
 		animation: 'glow-pulse 4.4s ease-in-out infinite',
@@ -107,6 +110,7 @@ const styles = {
 	buttonText: {
 		fontSize: 22,
 		fontWeight: '900',
+		fontFamily: family.bold,
 		textTransform: 'none',
 		letterSpacing: 0.4,
 	},

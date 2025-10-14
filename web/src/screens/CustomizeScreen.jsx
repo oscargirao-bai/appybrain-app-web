@@ -139,9 +139,13 @@ export default function CustomizeScreen({ navigation }) {
     optionsWrap: {
       display: 'flex',
       justifyContent: 'center',
+      paddingLeft: 16,
+      paddingRight: 16,
     },
     optionsInner: {
-      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      minWidth: 0,
     },
     listWrap: {
       flex: 1,
