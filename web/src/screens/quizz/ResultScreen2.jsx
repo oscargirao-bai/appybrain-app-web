@@ -119,7 +119,7 @@ export default function ResultScreen2({ navigation, route }) {
 	const opponent = useMemo(() => activeBattleData?.opponent || activeBattleData?.rival || null, [activeBattleData]);
 	const opponentIdentity = useMemo(() => {
 		if (!isFinal) {
-			return { username: translate('common.unknown') || 'Desconhecido', tribe: '' };
+			return { username: translate('battle.unknownOpponent') || 'Desconhecido', tribe: '' };
 		}
 		return getOpponentIdentity(opponent, placeholderOpponent, fallbackTribe);
 	}, [opponent, placeholderOpponent, fallbackTribe, isFinal, translate]);
