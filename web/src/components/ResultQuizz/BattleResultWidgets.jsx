@@ -58,8 +58,9 @@ export function BattleParticipantRow({
     display: 'flex',
     flexDirection: 'column',
     alignItems: isOpponent ? 'flex-end' : 'flex-start',
-    width: `${BANNER_WIDTH_RATIO * 100}%`,
-    maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
+    // Use fixed banner width for better alignment with design
+    width: '300px',
+    maxWidth: 300,
     boxSizing: 'border-box',
   };
 
@@ -86,8 +87,8 @@ export function BattleParticipantRow({
       onPress={isOpponent ? (() => {}) : undefined}
       style={{
         ...(isOpponent ? styles.bannerRight : styles.bannerLeft),
-        width: `${BANNER_WIDTH_RATIO * 100}%`,
-        maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
+        width: '300px',
+        maxWidth: 300,
       }}
       aspectRatio={560 / 180}
     />
@@ -125,18 +126,7 @@ export function BattleParticipantRow({
         )}
       </div>
       {/* Render the info box directly under the banner. For the opponent (isOpponent) show metrics; for the player hide metrics. */}
-      {/* Center the info box below the banner and make it match the banner width */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 0 }}>
-        <div style={{ width: `${BANNER_WIDTH_RATIO * 100}%`, maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO }}>
-          <Info
-            username={username}
-            tribe={tribe}
-            stars={isOpponent ? stars : undefined}
-            trophies={isOpponent ? trophies : undefined}
-            coins={isOpponent ? coins : undefined}
-          />
-        </div>
-      </div>
+      {/* Removed duplicate Info render — Info is rendered inside the banner column above. */}
     </div>
   );
 }
