@@ -32,7 +32,6 @@ export default function ResultScreen1({ navigation, route }) {
         await DataManager.refreshSection('userStars');
         //console.log('ResultScreen1: User data and stars refreshed successfully');
       } catch (error) {
-        console.error('ResultScreen1: Failed to refresh user data:', error);
       }
     };
 

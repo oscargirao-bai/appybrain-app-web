@@ -22,7 +22,6 @@ export default function LucideIcon({ name, size = 24, color = '#000', style }) {
 	const IconComponent = LucideIcons[iconName];
 
 	if (!IconComponent) {
-		console.warn(`LucideIcon: icon "${name}" (${iconName}) not found in lucide-react`);
 		return null;
 	}
 

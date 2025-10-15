@@ -59,7 +59,6 @@ class DataManagerClass {
 
             //console.log('Session cache initialized');
         } catch (error) {
-            console.error('Failed to initialize session cache:', error);
         }
     }
 
@@ -108,7 +107,6 @@ class DataManagerClass {
             this.imageCache.set(url, url);
             return url;
         } catch (error) {
-            console.error(`Error caching image ${url}:`, error);
             return url; // Return original URL as fallback
         } finally {
             this.downloadingImages.delete(url);
@@ -231,7 +229,6 @@ class DataManagerClass {
             try {
                 callback(this.data, this.loading, this.error);
             } catch (err) {
-                console.error('Error in data subscriber:', err);
             }
         });
     }
@@ -277,46 +274,39 @@ class DataManagerClass {
             try {
                 // Load all ranking types sequentially (no parallel API calls)
                 const pointsRankings = await this.apiManager.getRankings('points').catch(error => {
-                    console.warn('DataManager: Failed to load points rankings:', error);
                     return null;
                 });
                 rankingsData.points = pointsRankings;
 
                 const starsRankings = await this.apiManager.getRankings('stars').catch(error => {
-                    console.warn('DataManager: Failed to load stars rankings:', error);
                     return null;
                 });
                 rankingsData.stars = starsRankings;
 
                 const xpRankings = await this.apiManager.getRankings('xp').catch(error => {
-                    console.warn('DataManager: Failed to load xp rankings:', error);
                     return null;
                 });
                 rankingsData.xp = xpRankings;
 
                 //console.log('DataManager: Successfully preloaded all ranking types sequentially');
             } catch (error) {
-                console.warn('DataManager: Error during rankings preload:', error);
             }
 
             // Load cosmetics separately (not in main API response yet)
             //console.log('DataManager: Loading cosmetics...');
             const cosmeticsData = await this.apiManager.getCosmetics().catch(error => {
-                console.warn('DataManager: Failed to load cosmetics:', error);
                 return [];
             });
 
             // Load challenges separately
             //console.log('DataManager: Loading challenges...');
             const challengesApiData = await this.apiManager.getChallenges().catch(error => {
-                console.warn('DataManager: Failed to load challenges:', error);
                 return [];
             });
 
             // Load quotes separately
             //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('gamification/quotes').catch(error => {
-                console.warn('DataManager: Failed to load quotes:', error);
                 return { items: [] };
             });
 
@@ -449,7 +439,6 @@ class DataManagerClass {
             //console.log('DataManager: Finished notifying subscribers after refreshing', section); // Debug log
             return this.data[section];
         } catch (error) {
-            console.error(`Failed to refresh ${section}:`, error);
             throw error;
         }
     }
@@ -499,7 +488,6 @@ class DataManagerClass {
             this.imageCache.clear();
             this.downloadingImages.clear();
         } catch (error) {
-            console.error('Failed to clear image cache:', error);
         }
     }
 
@@ -587,7 +575,6 @@ class DataManagerClass {
                         const cachedUrl = await this._downloadAndCacheImage(this.data.organizationInfo.logoUrl);
                         this.data.organizationInfo.logoUrl = cachedUrl;
                     } catch (error) {
-                        console.warn('Failed to cache organization logo:', error);
                         // Keep the original URL if caching fails
                     }
                 }
@@ -597,7 +584,6 @@ class DataManagerClass {
 
             return this.data.organizationInfo;
         } catch (error) {
-            console.error('DataManager: Failed to load organization data:', error);
             throw error;
         }
     }
@@ -742,7 +728,6 @@ class DataManagerClass {
             this._notifySubscribers();
             return rankingsData;
         } catch (error) {
-            console.error(`Failed to refresh rankings for type ${type}:`, error);
             throw error;
         }
     }
@@ -791,7 +776,6 @@ class DataManagerClass {
 
             return hasUpdates;
         } catch (error) {
-            console.error('Failed to check and update rankings:', error);
             throw error;
         }
     }
@@ -803,7 +787,6 @@ class DataManagerClass {
             this.data.rankings[type] = rankingsData;
             return rankingsData;
         } catch (error) {
-            console.error(`Failed to update ${type} rankings:`, error);
             return null;
         }
     }
@@ -1053,7 +1036,6 @@ class DataManagerClass {
 
             return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
-            console.error('DataManager: Failed to load notifications:', error);
             throw error;
         }
     }
@@ -1079,7 +1061,6 @@ class DataManagerClass {
             await this.apiManager.markNotificationAsRead(notificationId);
             return true;
         } catch (error) {
-            console.error('DataManager: Failed to mark notification(s) as read:', error);
             // Revert to previous snapshot
             this.data.notifications = prevNotifications;
             this._notifySubscribers();
@@ -1123,7 +1104,6 @@ class DataManagerClass {
 
             return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
-            console.error('DataManager: Failed to load news:', error);
             throw error;
         }
     }
@@ -1240,7 +1220,6 @@ class DataManagerClass {
                 this.data.userInfo.user.coins = newCoins;
                 //console.log('Purchase: Updated user coins to', this.data.userInfo.user.coins);
             } else {
-                console.warn('Purchase: Unable to update coins - userInfo.user not found');
             }
 
             // Notify subscribers immediately for instant UI feedback
@@ -1248,7 +1227,6 @@ class DataManagerClass {
 
             // Make API call (don't wait for response)
             this.apiManager.purchaseCosmetic(cosmeticId).catch(error => {
-                console.error('Purchase API call failed, reverting optimistic update:', error);
 
                 // Revert optimistic changes on API failure
                 const cosmeticsIndex = this.data.cosmetics.findIndex(item => item.id === cosmeticId);
@@ -1278,7 +1256,6 @@ class DataManagerClass {
             };
 
         } catch (error) {
-            console.error('Purchase failed:', error);
             throw error;
         }
     }
@@ -1392,7 +1369,6 @@ class DataManagerClass {
         try {
             await this.refreshSection('battles');
         } catch (error) {
-            console.error('Failed to refresh battles:', error);
             throw error;
         }
     }
@@ -1463,7 +1439,6 @@ class DataManagerClass {
                 await this.loadAppData();
                 result.reloaded = true;
             } catch (error) {
-                console.error('Failed to auto-reload data:', error);
                 result.reloadError = error.message;
             }
         }
@@ -1486,13 +1461,11 @@ class DataManagerClass {
     // Update user stats from quiz quit response
     updateStatsFromQuitResponse(quitResponse, quizType) {
         if (!quitResponse || !quitResponse.success) {
-            console.warn('Invalid quit response, skipping stats update');
             return;
         }
 
         const user = this.data.userInfo?.user;
         if (!user) {
-            console.warn('No user info found, skipping stats update');
             return;
         }
 
@@ -1522,7 +1495,6 @@ class DataManagerClass {
         // Notify subscribers of the stats update
         this._notifySubscribers();
         
-        console.log('Updated user stats:', {
             coins: user.coins,
             stars: user.stars,
             points: user.points
@@ -1580,7 +1552,6 @@ class DataManagerClass {
             this._notifySubscribers();
             return true;
         } catch (e) {
-            console.error('equipCosmetics failed:', e);
             return false;
         }
     }

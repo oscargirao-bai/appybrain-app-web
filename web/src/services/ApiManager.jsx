@@ -68,7 +68,6 @@ class ApiManager {
             await this.loadSession();
             this.initialized = true;
         } catch (error) {
-            console.error('Failed to initialize ApiManager:', error);
             this.initialized = true;
         }
     }
@@ -96,7 +95,6 @@ class ApiManager {
                 expiresAt: this.expiresAt
             };
         } catch (error) {
-            console.error('Failed to load session:', error);
             return {
                 accessToken: null,
                 refreshToken: null,
@@ -129,7 +127,6 @@ class ApiManager {
             // Save refresh token to secure storage
             await secureSet(TOKENS.refresh, refreshToken);
         } catch (error) {
-            console.error('Failed to save session:', error);
             throw error;
         }
     }
@@ -151,7 +148,6 @@ class ApiManager {
             // Clear refresh token from secure storage
             await secureDelete(TOKENS.refresh);
         } catch (error) {
-            console.error('Failed to clear session:', error);
         }
     }
 
@@ -185,7 +181,6 @@ class ApiManager {
                 newExpiresIn
             };
         } catch (error) {
-            console.error('Failed to update rotated tokens:', error);
         }
     }
 
@@ -239,15 +234,11 @@ class ApiManager {
                     data.user = userResponse.user;
                 }
             } catch (error) {
-                console.warn('Failed to fetch user data after login:', error);
                 // Continue with login even if this fails
             }
 
             return data;
         } catch (error) {
-            console.log('Email: ', email);
-            console.log('Password: ', password);
-            console.error('Login error:', error);
             throw error;
         }
     }
@@ -273,7 +264,6 @@ class ApiManager {
                 ...data
             };
         } catch (error) {
-            console.error('Forgot password error:', error);
             throw error;
         }
     }
@@ -297,7 +287,6 @@ class ApiManager {
                 ...response
             };
         } catch (error) {
-            console.error('Password change error:', error);
             throw error;
         }
     }
@@ -313,7 +302,6 @@ class ApiManager {
                     });
                 } catch (error) {
                     // Ignore logout API errors, still clear local session
-                    console.warn('Logout API call failed:', error);
                 }
             }
         } finally {
@@ -418,7 +406,6 @@ class ApiManager {
 
             return true;
         } catch (error) {
-            console.log('Session validation failed:', error.message);
 
             // Check if it's an authentication error (401 or 400)
             if (error.message.includes('Unauthorized') || error.message.includes('400')) {
@@ -445,7 +432,6 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/auth/logon_user');
             return response;
         } catch (error) {
-            console.error('Failed to get logon_user data:', error);
             throw error;
         }
     }
@@ -455,55 +441,46 @@ class ApiManager {
         try {
             // Make request to user info endpoint only
             const userInfo = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges').catch(err => {
-                console.warn('Failed to load user info:', err);
                 return null;
             });
 
             // Make request to disciplines endpoint
             const disciplines = await this.makeAuthenticatedJSONRequest('api/app/learn_content_list').catch(err => {
-                console.warn('Failed to load disciplines:', err);
                 return null;
             });
 
             // Make request to user stars endpoint
             const userStars = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_stars').catch(err => {
-                console.warn('Failed to load user stars:', err);
                 return null;
             });
 
             // Make request to tribes list endpoint
             const tribes = await this.makeAuthenticatedJSONRequest('api/app/tribes_list').catch(err => {
-                console.warn('Failed to load tribes:', err);
                 return null;
             });
 
             // Make request to user chests endpoint
             const userChests = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_chests').catch(err => {
-                console.warn('Failed to load user chests:', err);
                 return null;
             });
 
             // Make request to notifications endpoint
             const notifications = await this.makeAuthenticatedJSONRequest('api/app/user_notifications').catch(err => {
-                console.warn('Failed to load notifications:', err);
                 return null;
             });
 
             // Make request to news endpoint
             const news = await this.makeAuthenticatedJSONRequest('api/app/information_news').catch(err => {
-                console.warn('Failed to load news:', err);
                 return null;
             });
 
             // Make request to rankings endpoint
             const rankings = await this.makeAuthenticatedJSONRequest('api/app/ranking').catch(err => {
-                console.warn('Failed to load rankings:', err);
                 return null;
             });
 
             // Make request to challenges endpoint
             const challenges = await this.makeAuthenticatedJSONRequest('api/app/challenges_list').catch(err => {
-                console.warn('Failed to load challenges:', err);
                 return null;
             });
 
@@ -522,7 +499,6 @@ class ApiManager {
             };
 
         } catch (error) {
-            console.error('Failed to load app data:', error);
 
             // If it's an auth error, let it bubble up
             if (error.status === 401) {
@@ -544,7 +520,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to fetch tribe members:', error);
             throw error;
         }
     }
@@ -560,7 +535,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to join tribe:', error);
             throw error;
         }
     }
@@ -574,7 +548,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to leave tribe:', error);
             throw error;
         }
     }
@@ -587,7 +560,6 @@ class ApiManager {
             // Return the news array from the response
             return response?.news || [];
         } catch (error) {
-            console.error('Failed to load news:', error);
             throw error;
         }
     }
@@ -600,7 +572,6 @@ class ApiManager {
             // Return the notifications array from the response
             return response?.notifications || [];
         } catch (error) {
-            console.error('Failed to load notifications:', error);
             throw error;
         }
     }
@@ -616,7 +587,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to mark notification as read:', error);
             throw error;
         }
     }
@@ -632,7 +602,6 @@ class ApiManager {
             // Return the full response including ranking array and metadata
             return response || { success: false, ranking: [] };
         } catch (error) {
-            console.error('Failed to load rankings:', error);
             throw error;
         }
     }
@@ -648,7 +617,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to load user badges:', error);
             throw error;
         }
     }
@@ -661,7 +629,6 @@ class ApiManager {
             // Return the items array from the response
             return response?.items || [];
         } catch (error) {
-            console.error('Failed to load cosmetics:', error);
             throw error;
         }
     }
@@ -698,7 +665,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to load quiz questions:', error);
             throw error;
         }
     }
@@ -721,7 +687,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to submit answer result:', error);
             throw error;
         }
     }
@@ -736,7 +701,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to purchase cosmetic:', error);
             throw error;
         }
     }
@@ -755,7 +719,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to update nickname:', error);
             throw error;
         }
     }
@@ -771,7 +734,6 @@ class ApiManager {
             // Return the content data
             return response;
         } catch (error) {
-            console.error('Failed to load learn content:', error);
             throw error;
         }
     }
@@ -784,7 +746,6 @@ class ApiManager {
             // Return the challenges array from the response
             return response?.challenges || [];
         } catch (error) {
-            console.error('Failed to load challenges:', error);
             throw error;
         }
     }
@@ -799,7 +760,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to start challenge:', error);
             throw error;
         }
     }
@@ -814,7 +774,6 @@ class ApiManager {
             // Return the news array from the response
             return response?.news || [];
         } catch (error) {
-            console.error('Failed to load news content:', error);
             throw error;
         }
     }
@@ -834,7 +793,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to submit challenge answer:', error);
             throw error;
         }
     }
@@ -850,7 +808,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to complete challenge:', error);
             throw error;
         }
     }
@@ -865,7 +822,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to use cosmetic:', error);
             throw error;
         }
     }
@@ -880,7 +836,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to open chest:', error);
             throw error;
         }
     }
@@ -900,7 +855,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to quit quiz:', error);
             throw error;
         }
     }
@@ -914,7 +868,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to get battle list:', error);
             throw error;
         }
     }
@@ -929,7 +882,6 @@ class ApiManager {
 
             return response;
         } catch (error) {
-            console.error('Failed to get battle result:', error);
             throw error;
         }
     }
@@ -945,14 +897,12 @@ class ApiManager {
             // Return success object without trying to parse
             return response;
         } catch (error) {
-            console.error('Failed to report quiz error:', error);
             throw error;
         }
     }
 
     // Legacy method for backward compatibility - now uses makeAuthenticatedJSONRequest
     async makeRequest(url, options = {}) {
-        console.warn('makeRequest is deprecated, use makeAuthenticatedJSONRequest instead');
         return this.makeAuthenticatedJSONRequest(url, options);
     }
 }

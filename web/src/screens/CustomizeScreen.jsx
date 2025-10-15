@@ -79,7 +79,6 @@ export default function CustomizeScreen({ navigation }) {
           try {
             await ApiManager.cosmeticsUse(cosmeticId);
           } catch (error) {
-            console.warn('Failed to equip cosmetic via API:', error);
           }
         }
 
@@ -89,7 +88,6 @@ export default function CustomizeScreen({ navigation }) {
           frameId: selFrameId,
         });
       } catch (error) {
-        console.error('Failed to confirm cosmetic changes:', error);
       } finally {
         navigation?.goBack?.();
       }

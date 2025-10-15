@@ -35,7 +35,6 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
       setLoading(true);
       try {
         const resp = await post('/api/app/battle_list');
-        console.log('Battle list response:', resp);
 
         if (!mounted) return;
 
@@ -97,7 +96,6 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
           setCompletedList([]);
         }
       } catch (err) {
-        console.warn('Failed to load battle history:', err.message || err);
         setPendingList([]);
         setCompletedList([]);
       } finally {

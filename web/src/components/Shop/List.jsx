@@ -80,7 +80,6 @@ export default function List({
 		try {
 			await onPurchase(item);
 		} catch (error) {
-			console.error('Purchase failed:', error);
 		}
 	};
 

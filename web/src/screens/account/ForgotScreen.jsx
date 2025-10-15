@@ -39,7 +39,6 @@ export default function ForgotScreen({ navigation }) {
 			setIsSuccess(response.success || false);
 			setModalVisible(true);
 		} catch (error) {
-			console.error('Forgot password error:', error);
 			setModalMessage(error.message || 'Não foi possível enviar o email.');
 			setIsSuccess(false);
 			setModalVisible(true);

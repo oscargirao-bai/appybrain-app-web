@@ -45,7 +45,6 @@ export default function LoginScreen({ navigation }) {
 							fullAccess: loginResult.user.fullAccess
 						});
 					} catch (error) {
-						console.warn('Failed to set user config:', error);
 					}
 				}
 
@@ -60,7 +59,6 @@ export default function LoginScreen({ navigation }) {
 				window.alert(translate('login.unexpectedError') || 'Resposta inesperada do servidor.');
 			}
 		} catch (error) {
-			console.error('Login error:', error);
 			
 			let errorMessage = translate('login.loginFailed') || 'Falha no login. Verifique as suas credenciais.';
 			

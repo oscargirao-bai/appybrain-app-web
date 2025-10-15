@@ -123,7 +123,6 @@ export default function BattleScreen({ navigation, route }) {
             setBattleHistory(updated);
         }
       } catch (e) {
-        console.warn('Falha ao carregar batalhas:', e?.message || e);
       } finally {
         if (!cancelled) setLoadingBattles(false);
       }
@@ -134,7 +133,6 @@ export default function BattleScreen({ navigation, route }) {
   // Handle opening battle result from navigation params (e.g., from notifications)
   useEffect(() => {
     /*
-    console.log('BattleScreen: Battle result effect triggered', { 
       openBattleResult, 
       timestamp, 
       lastProcessedTimestamp, 
@@ -164,16 +162,13 @@ export default function BattleScreen({ navigation, route }) {
             if (resultParams) {
               navigation.navigate('Result2', resultParams);
             } else {
-              console.warn('Battle not found with id:', targetBattle.battleSessionId);
             }
           } catch (e) {
-            console.error('Failed to navigate to battle result:', e);
           }
         }, 300); // Short delay to allow screen transition to complete
         
         setLastProcessedTimestamp(timestamp);
       } else {
-        console.warn('Battle not found with id:', openBattleResult, 'Available battles:', allBattles.map(b => b.battleSessionId));
         setLastProcessedTimestamp(timestamp);
       }
 
@@ -329,10 +324,8 @@ export default function BattleScreen({ navigation, route }) {
               // Mark that this navigation originated from the HistoryModal so ResultScreen2 can return and reopen it
               navigation.navigate('Result2', { ...resultParams, openedFromHistory: true, openedFromHistoryBattleId: battleSessionId });
             } else {
-              console.warn('Battle not found with id:', battleSessionId);
             }
           } catch (e) {
-            console.error('Error opening battle session:', e);
             //console.log('Fallback: Open battle session:', battleSessionId);
           }
         }}

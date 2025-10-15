@@ -104,7 +104,6 @@ export default function Learn({ onNavigate, openNotifications }){
   };
 
   const openDiscipline = (disciplineId) => {
-    console.log('Open discipline', disciplineId);
     onNavigate && onNavigate('Category', { disciplineId });
   };
 

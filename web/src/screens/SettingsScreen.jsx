@@ -42,7 +42,6 @@ export default function SettingsScreen({ navigation }) {
 			await DataManager.refreshSection('userInfo');
 			setCurrentUserName(newNickname);
 		} catch (error) {
-			console.error('Error updating nickname:', error);
 			if (error.status === 409) {
 				setMessageModal({
 					title: translate('error'),
@@ -67,7 +66,6 @@ export default function SettingsScreen({ navigation }) {
 					await apiManagerInstance.logout();
 					navigation.replace('Login');
 				} catch (error) {
-					console.error('Logout error:', error);
 					navigation.replace('Login');
 				}
 			})();
@@ -79,7 +77,6 @@ export default function SettingsScreen({ navigation }) {
 		try {
 			window.open(INSTAGRAM_URL, '_blank');
 		} catch (err) {
-			console.error('Error opening Instagram:', err);
 			window.alert('Não foi possível abrir o link.');
 		}
 	}, []);

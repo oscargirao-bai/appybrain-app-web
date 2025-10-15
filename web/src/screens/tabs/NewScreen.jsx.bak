@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from 'react';
+import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
+import DataManager from '../../services/DataManager.jsx';
+import Header from '../../components/General/Header.jsx';
+import NotificationBadge from '../../components/General/NotificationBadge.jsx';
+import Button2 from '../../components/General/Button2.jsx';
+import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
+import NewsList from '../../components/News/NewsList.jsx';
+
+export default function NewScreen({ navigation }) {
+	const colors = useThemeColors();
+	const { translate } = useTranslate();
+	const [notificationsOpen, setNotificationsOpen] = useState(false);
+	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+
+	useEffect(() => {
+		const updateData = () => {
+			const unreadCount = DataManager.getUnreadNotificationsCount();
+			setUnreadNotificationsCount(unreadCount);
+		};
+
+		// Initial load
+		updateData();
+
+		// Subscribe to DataManager changes
+		const unsubscribe = DataManager.subscribe(updateData);
+
+		// Cleanup subscription
+		return unsubscribe;
+	}, []);
+	return (
+		<div style={{ ...styles.container, backgroundColor: colors.background }}>
+			<Header
+				title={translate('news.title')}
+				style={{ paddingRight: 10 }}
+				right={(
+					<div style={{ position: 'relative' }}>
+						<Button2 iconName="bell" size={40} onClick={() => setNotificationsOpen(true)} style={{ padding: 0 }} />
+						<NotificationBadge count={unreadNotificationsCount} />
+					</div>
+				)}
+				extraRight={(<Button2 iconName="settings" size={40} onClick={() => navigation.navigate('Settings')} style={{ padding: 0 }} />)}
+			/>
+			<div style={{ ...styles.body, backgroundColor: colors.background }}>
+				<NewsList
+					style={styles.list}
+					onPressItem={(item) => {
+						if (!item) return;
+						navigation.navigate('Html', {
+							title: item.title || translate('news.title'),
+							newsId: item.id,
+						});
+					}}
+				/>
+			</div>
+			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
+		</div>
+	);
+}
+
+const styles = {
+	container: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' },
+	body: { flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 0, paddingRight: 0, paddingTop: 20, minHeight: 0, overflow: 'hidden' },
+	list: { flex: 1, minHeight: 0 },
+	title: { fontSize: 22, fontWeight: '800', marginBottom: 8 },
+	subtitle: { fontSize: 16, fontWeight: '500' },
+};
+

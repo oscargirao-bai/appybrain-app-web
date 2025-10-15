@@ -107,7 +107,6 @@ export default function ShopScreen({ navigation }) {
 			const updatedStats = DataManager.getUserStats();
 			setUserCoins(updatedStats?.coins || 0);
 		} catch (error) {
-			console.error('Purchase failed:', error);
 			const message = error?.message || '';
 			if (message.toLowerCase().includes('insufficient')) {
 				window.alert(`${translate('shop.insufficientCoinsTitle')}\n\n${translate('shop.insufficientCoinsDescription')}`);

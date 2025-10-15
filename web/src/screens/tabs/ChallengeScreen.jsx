@@ -112,11 +112,9 @@ export default function ChallengeScreen({ navigation }) {
 					setSelectedChallenge(null);
 				}}
 				onConfirm={() => {
-					console.log('ChallengeScreen: Starting challenge', selectedChallenge);
 					setConfirmOpen(false);
 					if (selectedChallenge) {
 						// Navigate directly to quiz with challengeId - no API call needed
-						console.log('ChallengeScreen: Navigating to Quizz with challengeId:', selectedChallenge.id);
 						navigation.navigate('Quizz', { challengeId: selectedChallenge.id });
 					}
 					setSelectedChallenge(null);

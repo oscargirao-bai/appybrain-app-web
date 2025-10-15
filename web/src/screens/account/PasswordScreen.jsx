@@ -74,7 +74,6 @@ export default function PasswordScreen({ navigation, route }) {
       setModalVisible(true);
       
     } catch (error) {
-      console.error('Password change error:', error);
       // Show error in modal
       setModalMessage(error.message || 'Falha ao alterar a palavra-passe.');
       setIsSuccess(false);

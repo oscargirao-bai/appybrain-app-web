@@ -38,7 +38,6 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			}
 			setNotifications(currentNotifications);
 		} catch (error) {
-			console.error('NotificationsModal: Failed to load notifications:', error);
 		}
 	};
 
@@ -51,7 +50,6 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			onClose();
 			setTimeout(() => handleNotificationNavigation(item), 100);
 		} catch (error) {
-			console.error('Error marking notification as read:', error);
 		}
 	}, [onUpdate, onClose]);
 
@@ -64,7 +62,6 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 				onUpdate('ALL');
 			}
 		} catch (error) {
-			console.error('Error marking all notifications as read:', error);
 		} finally {
 			setMarkAllLoading(false);
 		}
@@ -77,12 +74,10 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			// notification types (e.g. badges) route immediately to avoid showing the Loading screen.
 			const rawType = notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType;
 			const type = String(rawType || '').toLowerCase();
-			console.log('[NotificationsModal] handleNotificationNavigation called with notification:', notification, 'resolvedType:', type);
 			// Delegate routing decision to the centralized notification service. It will decide
 			// whether to go straight to the result screen or set pending+Loading as needed.
 			executeNotificationNavigation(notification);
 		} catch (err) {
-			console.warn('[NotificationsModal] Failed to navigate via Loading, falling back:', err);
 			executeNotificationNavigation(notification);
 		}
 	};

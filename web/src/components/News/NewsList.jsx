@@ -33,7 +33,6 @@ export default function NewsList({ style, limit, onPressItem }) {
 			const newsData = DataManager.getNews();
 			setNews(newsData);
 		} catch (error) {
-			console.error('NewsList: Failed to load news:', error);
 		}
 	};
 

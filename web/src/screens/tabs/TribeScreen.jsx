@@ -94,7 +94,6 @@ export default function TribeScreen({ navigation }) {
 
 			setTribeMembers(sortedMembers);
 		} catch (error) {
-			console.error('Failed to fetch tribe members:', error);
 			setTribeMembers([]);
 		} finally {
 			setLoadingMembers(false);
@@ -112,7 +111,6 @@ export default function TribeScreen({ navigation }) {
 			setIsInTribe(true);
 			await fetchTribeMembers(selectedTribe.id);
 		} catch (error) {
-			console.error('Failed to join tribe:', error);
 		} finally {
 			setJoiningTribe(false);
 		}
@@ -129,7 +127,6 @@ export default function TribeScreen({ navigation }) {
 			setIsInTribe(false);
 			await fetchTribeMembers(selectedTribe.id);
 		} catch (error) {
-			console.error('Failed to leave tribe:', error);
 		} finally {
 			setJoiningTribe(false);
 		}
