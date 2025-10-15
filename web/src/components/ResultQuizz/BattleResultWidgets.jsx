@@ -98,8 +98,12 @@ export function BattleParticipantRow({
           </>
         )}
       </div>
-      <div style={isOpponent ? styles.infoRight : styles.infoLeft}>
-        <Info username={username} tribe={tribe} coins={coins} stars={stars} trophies={trophies} />
+      {/* Make the info box overlap the banner by using negative margin and center alignment */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: -34 }}>
+        <div style={{ width: '100%', maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO }}>
+          {/* Pass only username and tribe; hide coins/stars/trophies for the lower user */}
+          <Info username={username} tribe={tribe} />
+        </div>
       </div>
     </div>
   );

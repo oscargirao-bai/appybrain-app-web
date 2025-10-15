@@ -117,10 +117,12 @@ export default function ResultScreen2({ navigation, route }) {
 	const fallbackTribe = translate('common.noTribe');
 
 	const opponent = useMemo(() => activeBattleData?.opponent || activeBattleData?.rival || null, [activeBattleData]);
-	const opponentIdentity = useMemo(
-		() => getOpponentIdentity(opponent, placeholderOpponent, fallbackTribe),
-		[opponent, placeholderOpponent, fallbackTribe],
-	);
+	const opponentIdentity = useMemo(() => {
+		if (!isFinal) {
+			return { username: translate('common.unknown') || 'Desconhecido', tribe: '' };
+		}
+		return getOpponentIdentity(opponent, placeholderOpponent, fallbackTribe);
+	}, [opponent, placeholderOpponent, fallbackTribe, isFinal, translate]);
 		const opponentBannerSources = useMemo(() => ({
 			avatarSource: safeImageSource(opponent?.avatarUrl),
 			bannerImageSource: safeImageSource(opponent?.backgroundUrl),

@@ -7,9 +7,9 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	const colors = useThemeColors();
 	const styles = React.useMemo(() => createStyles(colors), [colors]);
 
-	const showCoins = coins !== undefined;
-	const showStars = stars !== undefined;
-	const showTrophies = trophies !== undefined;
+	const showCoins = typeof coins === 'number';
+	const showStars = typeof stars === 'number';
+	const showTrophies = typeof trophies === 'number';
 
 	const metrics = [];
 	if (showStars) metrics.push({ key: 'stars' });
@@ -21,7 +21,7 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 			<div style={styles.row}>
 				<div style={styles.leftBlock}>
 					<span style={styles.username}>{username}</span>
-					<span style={styles.tribe}>{tribe}</span>
+					{tribe && tribe.length > 0 ? <span style={styles.tribe}>{tribe}</span> : null}
 				</div>
 				{metrics.length > 0 && (
 					<div style={styles.metricsColumn}>
