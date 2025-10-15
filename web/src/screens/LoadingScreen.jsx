@@ -75,6 +75,7 @@ export default function LoadingScreen({ navigation }) {
 				const pendingNavigation = getPendingNotificationNavigation();
 
 				if (pendingNavigation) {
+					console.log('[LoadingScreen] Found pending notification navigation:', pendingNavigation);
 
 					// Prepare a payload marked as coming from Loading so executeNotificationNavigation
 					// doesn't try to reset back to Loading again.
@@ -95,6 +96,7 @@ export default function LoadingScreen({ navigation }) {
 					navigation?.replace?.('MainTabs');
 				}
 			} catch (error) {
+				console.error('Failed during app initialization:', error);
 				// On error, redirect to login as fallback
 				navigation?.replace?.('Login');
 			}

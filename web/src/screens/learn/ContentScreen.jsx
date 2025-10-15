@@ -103,6 +103,7 @@ export default function ContentScreen({ navigation, route }) {
 				html: response?.content?.longDescription || '<p>Conteúdo não disponível</p>'
 			});
 		} catch (error) {
+			console.error('Failed to load content for study:', error);
 			
 			// Navigate with error message
 			navigation.navigate('Html', {

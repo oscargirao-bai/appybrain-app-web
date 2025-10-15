@@ -131,6 +131,7 @@ export default function QuizzScreen({ navigation, route }) {
 						throw new Error('Failed to load quiz questions');
 					}
 				} catch (err) {
+					console.error('Error fetching quiz questions:', err);
 					setError(err.message);
 					// No fallback questions - show error state
 				} finally {
@@ -150,6 +151,7 @@ export default function QuizzScreen({ navigation, route }) {
 
 		const submitAnswerResult = async (answerType) => {
 			if (!sessionId || !current?.quizId || questionStartTimeRef.current === null) {
+				console.warn('Missing data for answer submission:', { sessionId, quizId: current?.quizId, startTime: questionStartTimeRef.current });
 				return null;
 			}
 
@@ -172,6 +174,7 @@ export default function QuizzScreen({ navigation, route }) {
 						correctValue = -1;
 						break;
 					default:
+						console.warn('Unknown answer type:', answerType);
 						correctValue = -1; // Default to incorrect
 				}
 				
@@ -198,6 +201,7 @@ export default function QuizzScreen({ navigation, route }) {
 				
 				return response;
 			} catch (error) {
+				console.error('Failed to submit answer result:', error);
 				// Don't block the user experience if API call fails
 				return null;
 			}
@@ -222,6 +226,7 @@ export default function QuizzScreen({ navigation, route }) {
 				
 				//console.log('User data refreshed successfully');
 			} catch (error) {
+				console.error('Failed to refresh user data:', error);
 				// Don't block navigation if refresh fails
 			}
 		};
@@ -338,6 +343,7 @@ export default function QuizzScreen({ navigation, route }) {
 							window.MathJax.typesetPromise(el ? [el] : undefined).catch(()=>{});
 						}
 					} catch(e) {
+						console.warn('MathJax force typeset error:', e);
 					}
 				}, 40);
 			}
@@ -354,6 +360,7 @@ export default function QuizzScreen({ navigation, route }) {
 								window.MathJax.typesetPromise();
 							}
 						} catch(err) {
+							console.warn('MathJax re-typeset after modal close failed:', err);
 						}
 					}, 50);
 				}
@@ -492,6 +499,7 @@ export default function QuizzScreen({ navigation, route }) {
 													
 													//console.log('Help 3 used: Swapped question with difficulty', currentDifficulty);
 												} catch (error) {
+													console.error('Error submitting help 3 result:', error);
 												}
 											} else {
 												//console.log('No replacement questions available for difficulty:', currentDifficulty);
@@ -616,26 +624,33 @@ export default function QuizzScreen({ navigation, route }) {
 											// Update user stats from quit response
 											if (quitResponse && quitResponse.success) {
 												DataManager.updateStatsFromQuitResponse(quitResponse, quizType);
+												console.log('Quiz quit successful, stats updated');
 												
 												// Refresh user data and related sections based on quiz type
 												try {
 													await DataManager.refreshSection('userInfo');
+													console.log('User info refreshed after quiz quit');
 													
 													// Refresh quiz-type specific data sequentially
 													if (quizType === 'learn') {
 														await DataManager.refreshSection('disciplines');
+														console.log('Disciplines refreshed after learn quiz quit');
 														await DataManager.refreshSection('userStars');
+														console.log('User stars refreshed after learn quiz quit');
 													} else if (quizType === 'challenge') {
 														await DataManager.refreshSection('challenges');
+														console.log('Challenges refreshed after challenge quiz quit');
 													}
 													
 													// Small delay to ensure subscribers get notified
 													await new Promise(resolve => setTimeout(resolve, 100));
 												} catch (refreshError) {
+													console.warn('Failed to refresh data after quit:', refreshError);
 												}
 											}
 										}
 									} catch (error) {
+										console.error('Failed to quit quiz properly:', error);
 										// Continue with navigation even if quit API fails
 									}
 								}

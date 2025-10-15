@@ -39,6 +39,7 @@ export default function HtmlRender({ html, baseFontSize = 18, textColor, linkCol
 				onHeightChange && onHeightChange(h);
 			}
 			if (data.katex === 'error') {
+				console.error('KaTeX error received:', data.message);
 			}
 		} catch {}
 	}

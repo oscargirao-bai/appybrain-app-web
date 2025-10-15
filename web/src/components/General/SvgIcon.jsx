@@ -261,6 +261,7 @@ export default function SvgIcon({ svgString, size = 24, color = '#000' }) {
         />
       );
     } catch (e) {
+      console.warn('SvgIcon: failed to render SVG XML', e);
       return null;
     }
   }
