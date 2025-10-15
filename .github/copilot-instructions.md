@@ -54,5 +54,6 @@ cd web
 npm install
 npm run build
 ```
+É SEMPRE OBRIGATÓRIO fazer build e testar localmente antes de qualquer commit/push.
 
 Depois do build, publicar `web/dist/` no servidor. Ver logs no console do browser.

@@ -61,8 +61,6 @@ export async function getAllScheduledNotificationsAsync() {
 }
 
 export function executeNotificationNavigation(notification) {
-  console.log('[Notifications] executeNotificationNavigation called with:', notification);
-  
   if (!notification) {
     console.warn('[Notifications] executeNotificationNavigation called without payload');
     return;
@@ -73,20 +71,19 @@ export function executeNotificationNavigation(notification) {
   const sourceType = String(rawSourceType).toLowerCase();
   const sourceId = normalizeSourceId(notification?.sourceId ?? data?.sourceId ?? data?.id ?? notification?.id ?? null);
   
-  console.log('[Notifications] Parsed - sourceType:', sourceType, 'sourceId:', sourceId);
+  console.log('[Notifications] Executing navigation - sourceType:', sourceType, 'sourceId:', sourceId);
 
-  // Store navigation info for after Loading screen refreshes data (like mobile)
+  // Store navigation info for LoadingScreen to pick up after data refresh (like mobile)
   const navigationInfo = { sourceType, sourceId, data };
   
-  // Store in sessionStorage to survive Loading screen
   try {
     sessionStorage.setItem('pendingNotificationNavigation', JSON.stringify(navigationInfo));
-    console.log('[Notifications] Stored pending navigation, going to Loading screen');
+    console.log('[Notifications] Stored pending navigation, navigating to Loading');
   } catch (err) {
     console.error('[Notifications] Failed to store pending navigation:', err);
   }
   
-  // Navigate to Loading screen to refresh data first (exactly like mobile)
+  // Navigate to Loading screen (exactly like mobile - always refresh data first)
   navigate('Loading');
 }
 

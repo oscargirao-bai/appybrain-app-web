@@ -3,7 +3,6 @@ import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
-import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef.jsx';
 
 // Assets
 const logo = '/assets/logo.png';
@@ -70,19 +69,24 @@ export default function LoadingScreen({ navigation }) {
 				// Ensure minimum loading time to show both texts
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				
-				// Check if there's a pending notification navigation
-				const pendingNavigation = getPendingNotificationNavigation();
+				// Check for pending notification navigation (from sessionStorage, like mobile)
+				let pendingNav = null;
+				try {
+					const stored = sessionStorage.getItem('pendingNotificationNavigation');
+					if (stored) {
+						pendingNav = JSON.parse(stored);
+						sessionStorage.removeItem('pendingNotificationNavigation');
+						console.log('[LoadingScreen] Found pending notification:', pendingNav);
+					}
+				} catch (err) {
+					console.warn('[LoadingScreen] Failed to read pending navigation:', err);
+				}
 				
-				if (pendingNavigation) {
-					console.log('[LoadingScreen] Found pending notification navigation:', pendingNavigation);
-					
-					// Clear the pending navigation immediately
-					clearPendingNotificationNavigation();
-					
-					const { sourceType, sourceId } = pendingNavigation;
+				if (pendingNav) {
+					const { sourceType, sourceId } = pendingNav;
 					console.log('[LoadingScreen] Executing navigation - sourceType:', sourceType, 'sourceId:', sourceId);
 					
-					// Execute navigation based on sourceType (replicate mobile logic exactly)
+					// Execute navigation based on sourceType (replicate mobile exactly)
 					switch (sourceType) {
 						case 'broadcast':
 							navigation?.replace?.('MainTabs', {
@@ -93,10 +97,7 @@ export default function LoadingScreen({ navigation }) {
 						
 						case 'battles':
 						case 'battle':
-							navigation?.replace?.('MainTabs', {
-								screen: 'Battle',
-								params: { openBattleResult: sourceId, timestamp: Date.now() }
-							});
+							navigation?.replace?.('Result2', { battleSessionId: sourceId });
 							break;
 						
 						case 'challenges':

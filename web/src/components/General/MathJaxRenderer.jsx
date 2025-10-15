@@ -7,24 +7,29 @@ import { useThemeColors } from '../../services/Theme.jsx';
  * 
  * MathJax script must be loaded globally in index.html
  */
-export default function MathJaxRenderer({
-  content = '',
-  enabled = true,
-  baseFontSize = 14,
-  textColor = '#333',
-  compact = false,
-  padding = 10,
-  as = 'div',
-  style = {},
-  scrollEnabled = false,
-  ...props
-}) {
-  const divRef = useRef(null);
-  const [sanitized, setSanitized] = useState('');
-  const [isTypeset, setIsTypeset] = useState(false);
-  
-  // Log para rastrear renderizações
-  console.log('[MathJaxRenderer] Rendering with content:', content?.substring(0, 100), 'enabled:', enabled);  useEffect(() => {
+const MathJaxRenderer = (props) => {
+  const { 
+    content = '', 
+    className = '', 
+    inlineDisplay = false, 
+    compact = false, 
+    enabled = false, 
+    as = 'div', 
+    baseFontSize = 18, 
+    style = {}, 
+    onHeightChange = undefined, 
+    scrollEnabled = true, 
+    textAlign = 'left', 
+    backgroundColor = undefined, 
+    textColor = undefined, 
+    padding = 0,
+  } = props || {};
+  const colors = useThemeColors();
+  const containerRef = useRef(null);
+  const [processedContent, setProcessedContent] = useState('');
+  const [isTypesetting, setIsTypesetting] = useState(false);
+
+  useEffect(() => {
     if (!enabled || !content) {
       setProcessedContent(content || '');
       setIsTypesetting(false);
@@ -164,3 +169,5 @@ export default function MathJaxRenderer({
     />
   );
 };
+
+export default MathJaxRenderer;

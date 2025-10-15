@@ -15,36 +15,14 @@ export function resetRoot(state) {
 
 export function setPendingNotificationNavigation(routeInfo) {
   pendingNotificationNavigation = routeInfo;
-  try {
-    sessionStorage.setItem('pendingNotificationNavigation', JSON.stringify(routeInfo));
-  } catch (err) {
-    console.error('[navigationRef] Failed to store pending navigation:', err);
-  }
 }
 
 export function getPendingNotificationNavigation() {
-  if (pendingNotificationNavigation) {
-    return pendingNotificationNavigation;
-  }
-  try {
-    const stored = sessionStorage.getItem('pendingNotificationNavigation');
-    if (stored) {
-      pendingNotificationNavigation = JSON.parse(stored);
-      return pendingNotificationNavigation;
-    }
-  } catch (err) {
-    console.error('[navigationRef] Failed to read pending navigation:', err);
-  }
-  return null;
+  return pendingNotificationNavigation;
 }
 
 export function clearPendingNotificationNavigation() {
   pendingNotificationNavigation = null;
-  try {
-    sessionStorage.removeItem('pendingNotificationNavigation');
-  } catch (err) {
-    console.error('[navigationRef] Failed to clear pending navigation:', err);
-  }
 }
 
 export function isAppReady() {
