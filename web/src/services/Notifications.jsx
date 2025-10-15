@@ -66,6 +66,8 @@ export function executeNotificationNavigation(notification) {
     return;
   }
 
+  console.log('[Notifications] executeNotificationNavigation payload:', notification);
+
   const data = notification?.data ?? {};
   const rawSourceType = notification?.sourceType ?? data?.sourceType ?? notification?.type ?? data?.type ?? '';
   const sourceType = String(rawSourceType).toLowerCase();

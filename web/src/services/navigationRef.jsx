@@ -34,6 +34,14 @@ export function resetRoot(state) {
 
 export function setPendingNotificationNavigation(routeInfo) {
   pendingNotificationNavigation = routeInfo;
+  try {
+    console.log('[navigationRef] setPendingNotificationNavigation:', routeInfo);
+    if (typeof window !== 'undefined') {
+      window.__pendingNotificationNavigation = routeInfo;
+    }
+  } catch (e) {
+    // ignore
+  }
 }
 
 export function getPendingNotificationNavigation() {

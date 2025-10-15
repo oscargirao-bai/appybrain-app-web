@@ -77,6 +77,7 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			// notification types (e.g. badges) route immediately to avoid showing the Loading screen.
 			const rawType = notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType;
 			const type = String(rawType || '').toLowerCase();
+			console.log('[NotificationsModal] handleNotificationNavigation called with notification:', notification, 'resolvedType:', type);
 			if (type === 'battle' || type === 'battles') {
 				// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
 				setPendingNotificationNavigation({
