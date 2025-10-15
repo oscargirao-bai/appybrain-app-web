@@ -80,9 +80,12 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			console.log('[NotificationsModal] handleNotificationNavigation called with notification:', notification, 'resolvedType:', type);
 			if (type === 'battle' || type === 'battles') {
 				// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
+				// Prefer the notification's sourceId (payload) over the DB id so we route to the correct resource.
+				const resolvedSourceId = notification?.sourceId ?? notification?.data?.sourceId ?? notification?.id ?? null;
+				console.log('[NotificationsModal] resolvedSourceId for pending navigation:', resolvedSourceId);
 				setPendingNotificationNavigation({
 					sourceType: notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType,
-					sourceId: notification?.id ?? notification?.sourceId ?? notification?.data?.sourceId,
+					sourceId: resolvedSourceId,
 					data: notification?.data ?? {}
 				});
 				resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
