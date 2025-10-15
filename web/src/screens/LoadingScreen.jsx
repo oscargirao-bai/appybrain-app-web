@@ -3,6 +3,8 @@ import { useThemeColors } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
+import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef.jsx';
+import { executeNotificationNavigation } from '../services/Notifications.jsx';
 
 // Assets
 const logo = '/assets/logo.png';
@@ -69,86 +71,22 @@ export default function LoadingScreen({ navigation }) {
 				// Ensure minimum loading time to show both texts
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				
-				// Check for pending notification navigation (from sessionStorage, like mobile)
-				let pendingNav = null;
-				try {
-					const stored = sessionStorage.getItem('pendingNotificationNavigation');
-					if (stored) {
-						pendingNav = JSON.parse(stored);
-						sessionStorage.removeItem('pendingNotificationNavigation');
-						console.log('[LoadingScreen] Found pending notification:', pendingNav);
-					}
-				} catch (err) {
-					console.warn('[LoadingScreen] Failed to read pending navigation:', err);
-				}
+				// Check if there's a pending notification navigation
+				const pendingNavigation = getPendingNotificationNavigation();
 				
-				if (pendingNav) {
-					const { sourceType, sourceId } = pendingNav;
-					console.log('[LoadingScreen] Executing navigation - sourceType:', sourceType, 'sourceId:', sourceId);
+				if (pendingNavigation) {
+					console.log('[LoadingScreen] Found pending notification navigation:', pendingNavigation);
 					
-					// Execute navigation based on sourceType (replicate mobile exactly)
-					switch (sourceType) {
-						case 'broadcast':
-							navigation?.replace?.('MainTabs', {
-								screen: 'Learn',
-								params: { openNotifications: true, timestamp: Date.now() }
-							});
-							break;
-						
-						case 'battles':
-						case 'battle':
-							navigation?.replace?.('Result2', { battleSessionId: sourceId });
-							break;
-						
-						case 'challenges':
-						case 'challenge':
-							navigation?.replace?.('MainTabs', {
-								screen: 'Challenges',
-								params: { timestamp: Date.now() }
-							});
-							break;
-						
-						case 'news':
-							navigation?.replace?.('Html', { newsId: Number(sourceId) || sourceId });
-							break;
-						
-						case 'badges':
-						case 'badge':
-							navigation?.replace?.('Profile', {
-								openBadgeModal: sourceId,
-								timestamp: Date.now()
-							});
-							break;
-						
-						case 'tribe':
-						case 'tribes':
-							navigation?.replace?.('MainTabs', {
-								screen: 'Tribes',
-								params: { sourceId, timestamp: Date.now() }
-							});
-							break;
-						
-						case 'chest':
-						case 'chests':
-							navigation?.replace?.('Profile', {
-								highlightChests: true,
-								timestamp: Date.now()
-							});
-							break;
-						
-						case 'learn':
-						case 'content':
-							navigation?.replace?.('MainTabs', {
-								screen: 'Learn',
-								params: { sourceId, timestamp: Date.now() }
-							});
-							break;
-						
-						default:
-							console.log('[LoadingScreen] Unknown sourceType, navigating to Profile');
-							navigation?.replace?.('Profile', { timestamp: Date.now() });
-							break;
-					}
+					// Clear the pending navigation
+					clearPendingNotificationNavigation();
+					
+					// Navigate to main tabs first
+					navigation?.replace?.('MainTabs');
+					
+					// Execute the notification navigation after a brief delay
+					setTimeout(() => {
+						executeNotificationNavigation(pendingNavigation);
+					}, 300);
 				} else {
 					// Navigate to main tab navigator after data is loaded
 					navigation?.replace?.('MainTabs');
