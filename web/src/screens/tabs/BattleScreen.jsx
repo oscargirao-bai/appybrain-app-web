@@ -143,10 +143,12 @@ export default function BattleScreen({ navigation, route }) {
     });
     */
     // Only process if we have a new timestamp (avoid processing the same navigation twice)
-    if (openBattleResult && timestamp && timestamp !== lastProcessedTimestamp && (battleHistory.pending.length > 0 || battleHistory.completed.length > 0)) {
+    const hasBattleTarget = openBattleResult !== undefined && openBattleResult !== null && openBattleResult !== '';
+    if (hasBattleTarget && timestamp && timestamp !== lastProcessedTimestamp && (battleHistory.pending.length > 0 || battleHistory.completed.length > 0)) {
+      const targetId = String(openBattleResult);
       // Find the battle in either pending or completed arrays
       const allBattles = [...battleHistory.pending, ...battleHistory.completed];
-      const targetBattle = allBattles.find(battle => battle.battleSessionId === openBattleResult);
+      const targetBattle = allBattles.find((battle) => String(battle.battleSessionId) === targetId);
       
       //console.log('BattleScreen: Looking for battle with ID:', openBattleResult, 'in', allBattles.length, 'battles');
       

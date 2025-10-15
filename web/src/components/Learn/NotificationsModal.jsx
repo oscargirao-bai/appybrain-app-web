@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
-import { navigationRef } from '../../services/navigationRef.jsx';
+import { executeNotificationNavigation } from '../../services/Notifications.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function NotificationsModal({ visible, onClose, onUpdate }) {
@@ -70,56 +70,10 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 	};
 
 	const handleNotificationNavigation = (notification) => {
-		if (!navigationRef.current) {
-			console.error('Navigation ref not available');
+		if (!notification) {
 			return;
 		}
-
-		const { sourceType, sourceId } = notification;
-		const timestamp = Date.now();
-
-		switch (sourceType) {
-			case 'badge':
-			case 'badges':
-				navigationRef.current.navigate('Profile', {
-					openBadgeModal: sourceId,
-					timestamp,
-				});
-				break;
-			case 'battle':
-			case 'battles':
-				navigationRef.current.navigate('MainTabs', {
-					screen: 'Battle',
-					params: { openBattleResult: sourceId, timestamp },
-				});
-				break;
-			case 'tribe':
-			case 'tribes':
-				navigationRef.current.navigate('MainTabs', {
-					screen: 'Tribes',
-					params: { sourceId, timestamp },
-				});
-				break;
-			case 'chest':
-			case 'chests':
-				navigationRef.current.navigate('Profile', {
-					highlightChests: true,
-					timestamp,
-				});
-				break;
-			case 'learn':
-			case 'content':
-				navigationRef.current.navigate('MainTabs', {
-					screen: 'Learn',
-					params: { sourceId, timestamp },
-				});
-				break;
-			default:
-				navigationRef.current.navigate('Profile', {
-					timestamp,
-				});
-				break;
-		}
+		executeNotificationNavigation(notification);
 	};
 
 	const renderItem = (item, index) => {

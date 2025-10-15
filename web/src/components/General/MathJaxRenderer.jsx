@@ -37,11 +37,38 @@ const MathJaxRenderer = ({
 
     let processed = String(content);
 
-    const collapseEscapes = (segment) => segment.replace(/\\\\(?=[a-zA-Z])/g, '\\');
+    const decodeEntities = (segment) => segment
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+    const needsCollapse = /[a-zA-Z()[\]{}]/;
+    const collapseEscapes = (segment) => {
+      let result = '';
+      let index = 0;
+      const length = segment.length;
+      while (index < length) {
+        const current = segment[index];
+        if (
+          current === '\\' &&
+          segment[index + 1] === '\\' &&
+          needsCollapse.test(segment[index + 2] || '')
+        ) {
+          result += '\\';
+          index += 2;
+          continue;
+        }
+        result += current;
+        index += 1;
+      }
+      return result;
+    };
+    const normalizeWithinDelimiters = (raw, pattern, wrap) => raw.replace(pattern, (_, inner) => wrap(collapseEscapes(inner)));
 
-    processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (_, inner) => `$$${collapseEscapes(inner)}$$`);
-    processed = processed.replace(/\\\(([\s\S]*?)\\\)/g, (_, inner) => `\\(${collapseEscapes(inner)}\\)`);
-    processed = processed.replace(/\\\[([\s\S]*?)\\\]/g, (_, inner) => `\\[${collapseEscapes(inner)}\\]`);
+    processed = decodeEntities(processed);
+    processed = normalizeWithinDelimiters(processed, /\$\$([\s\S]*?)\$\$/g, (inner) => `$$${inner}$$`);
+    processed = normalizeWithinDelimiters(processed, /\\\(([\s\S]*?)\\\)/g, (inner) => `\\(${inner}\\)`);
+    processed = normalizeWithinDelimiters(processed, /\\\[([\s\S]*?)\\\]/g, (inner) => `\\[${inner}\\]`);
+    processed = collapseEscapes(processed);
 
     if (inlineDisplay) {
       processed = processed.replace(/\\\[/g, '\\(');
