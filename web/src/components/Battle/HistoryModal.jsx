@@ -8,11 +8,7 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const hasAny = (pending?.length || 0) > 0 || (completed?.length || 0) > 0;
-	const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
 	const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
-	// App column is 50% centered – keep modal inside that with a small gutter
-	const appColumnWidth = Math.min(680, Math.round(viewportWidth * 0.5));
-	const cardWidth = Math.max(340, Math.min(620, appColumnWidth - 24));
 	// Height: leave generous space but never overflow; allow internal scroll
 	const maxCardHeight = Math.min(560, Math.round(viewportHeight * 0.8));
 	const minCardHeight = 260;
@@ -34,7 +30,9 @@ export default function HistoryModal({ visible, onClose, pending = [], completed
 						...styles.card,
 						backgroundColor: colors.card || colors.background,
 						borderColor: colors.border,
-						width: cardWidth,
+						// Fixed desired width 500px, but allow shrinking on very small screens
+						width: 500,
+						maxWidth: '100%',
 						maxHeight: maxCardHeight,
 						height: 'auto',
 					}}>
