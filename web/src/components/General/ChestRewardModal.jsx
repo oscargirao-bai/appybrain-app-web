@@ -76,7 +76,7 @@ export default function ChestRewardModal({ visible, onClose, rewards = defaultRe
 						<span style={{...styles.title, color: colors.text}}>Baú Aberto!</span>
 						<span style={{...styles.subtitle, color: colors.text + 'AA'}}>Recebeste:</span>
 					</div>
-					<div style={{ marginBottom: 10 }}>
+					<div style={{ marginBottom: 10, display: 'flex', justifyContent: 'center' }}>
 						<img src={chestOpenedImg} style={{ width: 150, height: 120, objectFit: "contain" }} alt="Chest opened" />
 					</div>
 					<div style={styles.rewardsRow}>
@@ -128,10 +128,12 @@ const styles = {
 		borderStyle: 'solid',
 		width: '100%',
 		maxWidth: 460,
-		alignItems: 'center',
 		overflow: 'hidden',
 		pointerEvents: 'auto',
 		position: 'relative',
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
 	},
 	title: {
 		fontSize: 22,
