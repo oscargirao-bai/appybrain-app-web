@@ -41,6 +41,7 @@ export function BattleParticipantRow({
     paddingLeft: 0,
     paddingRight: 0,
     boxSizing: 'border-box',
+    marginBottom: 6,
   };
 
   const rowStyle = {
@@ -51,6 +52,15 @@ export function BattleParticipantRow({
     gap: 12,
     width: '100%',
     maxWidth: MAX_ROW_WIDTH,
+  };
+
+  const bannerColumnStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: isOpponent ? 'flex-end' : 'flex-start',
+    width: `${BANNER_WIDTH_RATIO * 100}%`,
+    maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO,
+    boxSizing: 'border-box',
   };
 
   const trophyArea = (
@@ -89,11 +99,27 @@ export function BattleParticipantRow({
         {isOpponent ? (
           <>
             {trophyArea}
-            {banner}
+            <div style={bannerColumnStyle}>
+              {banner}
+              <div style={{ marginTop: 8 }}>
+                <Info
+                  username={username}
+                  tribe={tribe}
+                  stars={isOpponent ? stars : undefined}
+                  trophies={isOpponent ? trophies : undefined}
+                  coins={isOpponent ? coins : undefined}
+                />
+              </div>
+            </div>
           </>
         ) : (
           <>
-            {banner}
+            <div style={bannerColumnStyle}>
+              {banner}
+              <div style={{ marginTop: 8 }}>
+                <Info username={username} tribe={tribe} />
+              </div>
+            </div>
             {trophyArea}
           </>
         )}
@@ -141,7 +167,7 @@ export function BattleMetrics({
     <div
       style={{
         ...styles.vsSection,
-        padding: compact ? '8px 12px' : '12px 20px',
+        padding: compact ? '6px 12px' : '8px 16px',
         maxWidth: MAX_ROW_WIDTH,
       }}
     >
