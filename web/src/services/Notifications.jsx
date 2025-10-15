@@ -89,36 +89,21 @@ export function executeNotificationNavigation(notification) {
 
   case 'battle':
   case 'battles':
-      // If this notification comes from Loading (we're executing a pending navigation),
-      // then navigate directly to Result2 so that Result2 will call the API to fetch the battle result.
-      if (notification && notification.__fromLoading) {
-        navigate('Result2', { battleSessionId: sourceId });
-        break;
-      }
-
-      // If app already has fresh data (user + battles), we can skip the Loading screen and
-      // navigate directly to Result2 (web should match mobile UX here).
+      // Always navigate directly to Result2 for battle notifications.
+      // Result2 is responsible for fetching the battle result when needed,
+      // so going through Loading is unnecessary and causes UX regression on web.
       try {
-        const hasUser = !!DataManager.getUser();
-        const battles = DataManager.getBattles ? DataManager.getBattles() : [];
-        const dataFresh = DataManager.isDataFresh ? DataManager.isDataFresh() : false;
-        console.log('[Notifications] battle notification - hasUser:', hasUser, 'battlesCount:', (battles || []).length, 'dataFresh:', dataFresh);
-
-        if (hasUser && Array.isArray(battles) && battles.length > 0 && dataFresh) {
-          // We have necessary data already - go straight to result (Result2 will also fetch if needed)
-          navigate('Result2', { battleSessionId: sourceId });
-          break;
-        }
-
-        // Otherwise replicate mobile flow: store pending navigation and go to Loading so data is refreshed
-        const navigationInfo = { sourceType, sourceId, data };
-        setPendingNotificationNavigation(navigationInfo);
-        // Reset navigation to Loading (Loading will refresh data and execute pending navigation)
-        resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
-      } catch (err) {
-        console.error('[Notifications] Failed to route battle notification via Loading:', err);
-        // Fallback to direct navigation to Result2 which will fetch the result
         navigate('Result2', { battleSessionId: sourceId });
+      } catch (err) {
+        console.error('[Notifications] Failed to navigate to Result2, falling back to Loading:', err);
+        // Fallback: preserve previous behavior
+        try {
+          const navigationInfo = { sourceType, sourceId, data };
+          setPendingNotificationNavigation(navigationInfo);
+          resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
+        } catch (e) {
+          console.error('[Notifications] Fallback also failed:', e);
+        }
       }
       break;
 
