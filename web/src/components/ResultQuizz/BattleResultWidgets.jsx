@@ -37,9 +37,9 @@ export function BattleParticipantRow({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 4,
-    paddingLeft: 12,
-    paddingRight: 12,
+    gap: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
     boxSizing: 'border-box',
   };
 
@@ -99,14 +99,17 @@ export function BattleParticipantRow({
         )}
       </div>
       {/* Render the info box directly under the banner. For the opponent (isOpponent) show metrics; for the player hide metrics. */}
-      <div style={isOpponent ? styles.infoRight : styles.infoLeft}>
-        <Info
-          username={username}
-          tribe={tribe}
-          stars={isOpponent ? stars : undefined}
-          trophies={isOpponent ? trophies : undefined}
-          coins={isOpponent ? coins : undefined}
-        />
+      {/* Center the info box below the banner and make it match the banner width */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 0 }}>
+        <div style={{ width: `${BANNER_WIDTH_RATIO * 100}%`, maxWidth: MAX_ROW_WIDTH * BANNER_WIDTH_RATIO }}>
+          <Info
+            username={username}
+            tribe={tribe}
+            stars={isOpponent ? stars : undefined}
+            trophies={isOpponent ? trophies : undefined}
+            coins={isOpponent ? coins : undefined}
+          />
+        </div>
       </div>
     </div>
   );
