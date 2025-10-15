@@ -207,8 +207,8 @@ export default function ResultScreen2({ navigation, route }) {
 					style={{ ...styles.bottomGlow, pointerEvents: 'none' }}
 				/>
 			)}
-			<div style={styles.content}>
-				<div style={styles.header}>
+			<div style={{...styles.content, gap: isCompact ? 6 : 10}}>
+				<div style={{...styles.header, paddingBottom: isCompact ? 4 : 6, marginBottom: isCompact ? -8 : -6}}>
 					<span style={{ ...styles.headerText, color: outcomeColor }}>{outcomeLabel}</span>
 				</div>
 
@@ -276,7 +276,6 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
-		gap: 10,
 		paddingBottom: 16,
 		width: '100%',
 		maxWidth: 440,
@@ -284,11 +283,9 @@ const styles = {
 	},
 	header: {
 		paddingTop: 16,
-		paddingBottom: 6,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginBottom: -6,
 	},
 	headerText: {
 		fontSize: 20,
