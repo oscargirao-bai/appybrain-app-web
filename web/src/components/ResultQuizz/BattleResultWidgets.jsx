@@ -59,8 +59,8 @@ export function BattleParticipantRow({
     flexDirection: 'column',
     alignItems: isOpponent ? 'flex-end' : 'flex-start',
     // Use fixed banner width for better alignment with design
-    width: '300px',
-    maxWidth: 300,
+    width: '350px',
+    maxWidth: 350,
     boxSizing: 'border-box',
   };
 
@@ -87,8 +87,8 @@ export function BattleParticipantRow({
       onPress={isOpponent ? (() => {}) : undefined}
       style={{
         ...(isOpponent ? styles.bannerRight : styles.bannerLeft),
-        width: '300px',
-        maxWidth: 300,
+  width: '350px',
+  maxWidth: 350,
       }}
       aspectRatio={560 / 180}
     />
@@ -102,7 +102,7 @@ export function BattleParticipantRow({
             {trophyArea}
             <div style={bannerColumnStyle}>
               {banner}
-              <div style={{ marginTop: 8 }}>
+              <div style={{ marginTop: 8, width: '350px', maxWidth: 350 }}>
                 <Info
                   username={username}
                   tribe={tribe}
