@@ -37,11 +37,11 @@ const MathJaxRenderer = ({
 
     let processed = String(content);
 
-    processed = processed.replace(/\\\\/g, '\\\\');
-    processed = processed.replace(/\\\\\(/g, '\\(');
-    processed = processed.replace(/\\\\\)/g, '\\)');
-    processed = processed.replace(/\\\\\[/g, '\\[');
-    processed = processed.replace(/\\\\\]/g, '\\]');
+    const collapseEscapes = (segment) => segment.replace(/\\\\(?=[a-zA-Z])/g, '\\');
+
+    processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (_, inner) => `$$${collapseEscapes(inner)}$$`);
+    processed = processed.replace(/\\\(([\s\S]*?)\\\)/g, (_, inner) => `\\(${collapseEscapes(inner)}\\)`);
+    processed = processed.replace(/\\\[([\s\S]*?)\\\]/g, (_, inner) => `\\[${collapseEscapes(inner)}\\]`);
 
     if (inlineDisplay) {
       processed = processed.replace(/\\\[/g, '\\(');
