@@ -6,7 +6,8 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 import { getHeroIcon } from '../../screens/quizz/helpers/battleResultHelpers.js';
 
-const MAX_ROW_WIDTH = 420;
+// Row width accommodates banner+info (75%) and trophy area (25%)
+const MAX_ROW_WIDTH = 560; // 20% wider banner -> 420px banner => 560px total row
 const BANNER_WIDTH_RATIO = 0.75;
 
 export function BattleParticipantRow({
@@ -50,7 +51,7 @@ export function BattleParticipantRow({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 10,
     width: '100%',
     maxWidth: MAX_ROW_WIDTH,
   };
@@ -60,8 +61,8 @@ export function BattleParticipantRow({
     flexDirection: 'column',
     alignItems: isOpponent ? 'flex-end' : 'flex-start',
     // Use fixed banner width for better alignment with design
-    width: '350px',
-    maxWidth: 350,
+    width: '420px',
+    maxWidth: 420,
     boxSizing: 'border-box',
   };
 
@@ -88,8 +89,8 @@ export function BattleParticipantRow({
       onPress={isOpponent ? (() => {}) : undefined}
       style={{
         ...(isOpponent ? styles.bannerRight : styles.bannerLeft),
-  width: '350px',
-  maxWidth: 350,
+  width: '420px',
+  maxWidth: 420,
       }}
       aspectRatio={560 / 180}
     />
@@ -104,7 +105,7 @@ export function BattleParticipantRow({
             <div style={bannerColumnStyle}>
               {banner}
               {/* Name box glued to banner, exact same width */}
-              <div style={{ marginTop: 0, width: '350px', maxWidth: 350 }}>
+              <div style={{ marginTop: 0, width: '420px', maxWidth: 420 }}>
                 <Info
                   username={username}
                   tribe={tribe}
@@ -119,8 +120,8 @@ export function BattleParticipantRow({
           <>
             <div style={bannerColumnStyle}>
               {banner}
-              {/* Name box glued to banner, enforce width 350px */}
-              <div style={{ marginTop: 0, width: '350px', maxWidth: 350 }}>
+              {/* Name box glued to banner, enforce width 420px */}
+              <div style={{ marginTop: 0, width: '420px', maxWidth: 420 }}>
                 <Info username={username} tribe={tribe} />
               </div>
             </div>
@@ -305,7 +306,7 @@ const styles = {
   vsSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 10,
+    gap: 8,
     margin: '0 auto',
     borderRadius: 18,
   },
@@ -313,12 +314,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 10,
+    gap: 8,
   },
   dotsRow: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 6,
+    gap: 5,
     justifyContent: 'center',
   },
   dot: {
@@ -356,7 +357,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     justifyContent: 'center',
   },
   vsBar: {
