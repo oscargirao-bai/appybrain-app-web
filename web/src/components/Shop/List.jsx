@@ -134,7 +134,7 @@ export default function List({
 											}}
 										>
 											{owned ? (
-												<span style={{ ...styles.priceText, color: colors.background }}>
+												<span style={{ ...styles.priceText, color: '#fff' }}>
 													{translate('shop.owned')}
 												</span>
 											) : price === 0 ? (

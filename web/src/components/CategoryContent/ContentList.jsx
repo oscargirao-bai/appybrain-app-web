@@ -218,7 +218,7 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 				<div style={styles.expandedBody}>
 					<MathJaxRenderer
 						content={item.description || 'Sem descrição'}
-						enabled={true}
+						enabled={containsMathMarkers(item.description)}
 						baseFontSize={14}
 						textColor={iconColor}
 						compact={true}

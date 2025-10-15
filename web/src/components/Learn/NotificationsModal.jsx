@@ -74,16 +74,31 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 		const timestamp = Date.now();
 		switch (sourceType) {
 			case 'badge':
-			case 'medal':
+			case 'badges':
 				navigationRef.current.navigate('Profile', { 
 					openBadgeModal: sourceId, 
 					timestamp 
 				});
 				break;
 			case 'battle':
+			case 'battles':
 				navigationRef.current.navigate('MainTabs', { 
 					screen: 'Battle', 
-					params: { openBattleResultId: sourceId, openHistoryModal: true, timestamp }
+					params: { openBattleResult: sourceId, timestamp }
+				});
+				break;
+			case 'tribe':
+			case 'tribes':
+				navigationRef.current.navigate('MainTabs', { 
+					screen: 'Tribes',
+					params: { sourceId, timestamp }
+				});
+				break;
+			case 'chest':
+			case 'chests':
+				navigationRef.current.navigate('Profile', { 
+					highlightChests: true, 
+					timestamp 
 				});
 				break;
 			case 'learn':
