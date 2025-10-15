@@ -7,23 +7,22 @@ import { useThemeColors } from '../../services/Theme.jsx';
  * 
  * MathJax script must be loaded globally in index.html
  */
-const MathJaxRenderer = (props) => {
-  const { 
-    content = '', 
-    className = '', 
-    inlineDisplay = false, 
-    compact = false, 
-    enabled = false, 
-    as = 'div', 
-    baseFontSize = 18, 
-    style = {}, 
-    onHeightChange = undefined, 
-    scrollEnabled = true, 
-    textAlign = 'left', 
-    backgroundColor = undefined, 
-    textColor = undefined, 
-    padding = 0,
-  } = props || {};
+const MathJaxRenderer = ({ 
+  content = '', 
+  className = '', 
+  inlineDisplay = false, 
+  compact = false, 
+  enabled = false, 
+  as = 'div', 
+  baseFontSize = 18, 
+  style = {}, 
+  onHeightChange, 
+  scrollEnabled = true, 
+  textAlign = 'left', 
+  backgroundColor, 
+  textColor, 
+  padding = 0,
+}) => {
   const colors = useThemeColors();
   const containerRef = useRef(null);
   const [processedContent, setProcessedContent] = useState('');

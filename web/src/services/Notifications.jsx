@@ -84,8 +84,15 @@ export function executeNotificationNavigation(notification) {
       navigate('Profile', buildTimestampedParams({ openBadgeModal: sourceId }));
       break;
 
-    case 'battle':
-    case 'battles':
+  case 'battle':
+  case 'battles':
+      // If this notification comes from Loading (we're executing a pending navigation),
+      // then navigate directly to Result2 so that Result2 will call the API to fetch the battle result.
+      if (notification && notification.__fromLoading) {
+        navigate('Result2', { battleSessionId: sourceId });
+        break;
+      }
+
       // Replicate mobile flow: store pending navigation and go to Loading so data is refreshed
       try {
         const navigationInfo = { sourceType, sourceId, data };
@@ -94,11 +101,8 @@ export function executeNotificationNavigation(notification) {
         resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
       } catch (err) {
         console.error('[Notifications] Failed to route battle notification via Loading:', err);
-        // Fallback to direct navigation
-        navigate('MainTabs', {
-          screen: 'Battle',
-          params: buildTimestampedParams({ openBattleResult: sourceId }),
-        });
+        // Fallback to direct navigation to Result2 which will fetch the result
+        navigate('Result2', { battleSessionId: sourceId });
       }
       break;
 

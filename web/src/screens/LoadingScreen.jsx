@@ -73,19 +73,23 @@ export default function LoadingScreen({ navigation }) {
 				
 				// Check if there's a pending notification navigation
 				const pendingNavigation = getPendingNotificationNavigation();
-				
+
 				if (pendingNavigation) {
 					console.log('[LoadingScreen] Found pending notification navigation:', pendingNavigation);
-					
-					// Clear the pending navigation
+
+					// Prepare a payload marked as coming from Loading so executeNotificationNavigation
+					// doesn't try to reset back to Loading again.
+					const navToExecute = { ...pendingNavigation, __fromLoading: true };
+
+					// Clear the pending navigation stored in the module
 					clearPendingNotificationNavigation();
-					
+
 					// Navigate to main tabs first
 					navigation?.replace?.('MainTabs');
-					
+
 					// Execute the notification navigation after a brief delay
 					setTimeout(() => {
-						executeNotificationNavigation(pendingNavigation);
+						executeNotificationNavigation(navToExecute);
 					}, 300);
 				} else {
 					// Navigate to main tab navigator after data is loaded
