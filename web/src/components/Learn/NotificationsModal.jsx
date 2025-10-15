@@ -78,21 +78,9 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 			const rawType = notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType;
 			const type = String(rawType || '').toLowerCase();
 			console.log('[NotificationsModal] handleNotificationNavigation called with notification:', notification, 'resolvedType:', type);
-			if (type === 'battle' || type === 'battles') {
-				// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
-				// Prefer the notification's sourceId (payload) over the DB id so we route to the correct resource.
-				const resolvedSourceId = notification?.sourceId ?? notification?.data?.sourceId ?? notification?.id ?? null;
-				console.log('[NotificationsModal] resolvedSourceId for pending navigation:', resolvedSourceId);
-				setPendingNotificationNavigation({
-					sourceType: notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType,
-					sourceId: resolvedSourceId,
-					data: notification?.data ?? {}
-				});
-				resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
-			} else {
-				// Directly execute the navigation for non-battle notifications
-				executeNotificationNavigation(notification);
-			}
+			// Delegate routing decision to the centralized notification service. It will decide
+			// whether to go straight to the result screen or set pending+Loading as needed.
+			executeNotificationNavigation(notification);
 		} catch (err) {
 			console.warn('[NotificationsModal] Failed to navigate via Loading, falling back:', err);
 			executeNotificationNavigation(notification);
