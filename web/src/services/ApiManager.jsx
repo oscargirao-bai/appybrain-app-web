@@ -68,7 +68,6 @@ class ApiManager {
             await this.loadSession();
             this.initialized = true;
         } catch (error) {
-            console.error('Failed to initialize ApiManager:', error);
             this.initialized = true;
         }
     }
@@ -96,7 +95,6 @@ class ApiManager {
                 expiresAt: this.expiresAt
             };
         } catch (error) {
-            console.error('Failed to load session:', error);
             return {
                 accessToken: null,
                 refreshToken: null,
@@ -129,7 +127,6 @@ class ApiManager {
             // Save refresh token to secure storage
             await secureSet(TOKENS.refresh, refreshToken);
         } catch (error) {
-            console.error('Failed to save session:', error);
             throw error;
         }
     }
@@ -151,7 +148,6 @@ class ApiManager {
             // Clear refresh token from secure storage
             await secureDelete(TOKENS.refresh);
         } catch (error) {
-            console.error('Failed to clear session:', error);
         }
     }
 
@@ -185,7 +181,6 @@ class ApiManager {
                 newExpiresIn
             };
         } catch (error) {
-            console.error('Failed to update rotated tokens:', error);
         }
     }
 
@@ -239,15 +234,11 @@ class ApiManager {
                     data.user = userResponse.user;
                 }
             } catch (error) {
-                console.warn('Failed to fetch user data after login:', error);
                 // Continue with login even if this fails
             }
 
             return data;
         } catch (error) {
-            console.log('Email: ', email);
-            console.log('Password: ', password);
-            console.error('Login error:', error);
             throw error;
         }
     }
@@ -273,7 +264,6 @@ class ApiManager {
                 ...data
             };
         } catch (error) {
-            console.error('Forgot password error:', error);
             throw error;
         }
     }
@@ -297,7 +287,6 @@ class ApiManager {
                 ...response
             };
         } catch (error) {
-            console.error('Password change error:', error);
             throw error;
         }
     }
@@ -313,7 +302,6 @@ class ApiManager {
                     });
                 } catch (error) {
                     // Ignore logout API errors, still clear local session
-                    console.warn('Logout API call failed:', error);
                 }
             }
         } finally {
@@ -418,7 +406,7 @@ class ApiManager {
 
             return true;
         } catch (error) {
-            console.log('Session validation failed:', error.message);
+            
 
             // Check if it's an authentication error (401 or 400)
             if (error.message.includes('Unauthorized') || error.message.includes('400')) {
@@ -445,7 +433,6 @@ class ApiManager {
             const response = await this.makeAuthenticatedJSONRequest('api/auth/logon_user');
             return response;
         } catch (error) {
-            console.error('Failed to get logon_user data:', error);
             throw error;
         }
     }

@@ -302,7 +302,7 @@ function PushNotificationsRegistrar() {
       if (!Device.isDevice) {
 
 
-        console.log('[Push] Not a physical device; skipping push registration');
+        
 
 
         return;
@@ -311,7 +311,7 @@ function PushNotificationsRegistrar() {
       }
 
 
-      console.log('[Push] Starting registration attempt...');
+      
 
 
       await ensureAndroidChannel();
@@ -329,7 +329,7 @@ function PushNotificationsRegistrar() {
       if (settings.status !== 'granted') {
 
 
-        console.log('[Push] Permission not granted yet, requesting...');
+        
 
 
         const req = await Notifications.requestPermissionsAsync();
@@ -338,7 +338,7 @@ function PushNotificationsRegistrar() {
         if (req.status !== 'granted') {
 
 
-          console.warn('[Push] Notification permission denied; will retry later when app becomes active again');
+          
 
 
           return; // Do not mark completed; we'll retry on foreground
@@ -356,13 +356,13 @@ function PushNotificationsRegistrar() {
       const expoPushToken = await getExpoPushToken();
 
 
-      console.log('[Push] Expo push token acquired');
+      
 
 
       const { nativeType, nativeToken } = await getNativePushToken();
 
 
-      console.log('[Push] Native token type:', nativeType, 'present:', !!nativeToken);
+      
 
 
 
@@ -371,7 +371,7 @@ function PushNotificationsRegistrar() {
       const resp = await registerTokenOnBackend(expoPushToken, nativeType, nativeToken);
 
 
-      console.log('[Push] Registered successfully:', resp);
+      
 
 
       completedRef.current = true;
@@ -383,7 +383,7 @@ function PushNotificationsRegistrar() {
       retryCountRef.current += 1;
 
 
-      console.warn(`[Push] Registration error (attempt ${retryCountRef.current}):`, e?.message || String(e));
+      
 
 
       // Basic backoff: try up to 3 times on this app session entry
@@ -404,7 +404,7 @@ function PushNotificationsRegistrar() {
       } else {
 
 
-        console.warn('[Push] Max retries reached; will retry on next foreground if still authenticated');
+        
 
 
       }
@@ -458,7 +458,7 @@ function PushNotificationsRegistrar() {
         if (isAuthenticated && !completedRef.current) {
 
 
-          console.log('[Push] App foregrounded; retrying registration');
+          
 
 
           attemptRegister();

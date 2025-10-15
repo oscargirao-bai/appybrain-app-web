@@ -105,7 +105,7 @@ const MathJaxRenderer = ({
           window.MathJax.texReset();
         }
       } catch (clearError) {
-        console.warn('MathJax clear error:', clearError);
+        
       }
 
       if (canceled) return;
@@ -126,7 +126,7 @@ const MathJaxRenderer = ({
         })
         .catch((err) => {
           if (canceled) return;
-          console.error('MathJax processing error:', err);
+          
           setIsTypesetting(false);
         });
     };

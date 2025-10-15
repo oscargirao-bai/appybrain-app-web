@@ -43,7 +43,7 @@ export default function HtmlScreen({ navigation, route }) {
         setNewsData(newsArray[0]); // Take the first (and only) news item
       }
     } catch (error) {
-      console.error('Failed to load news content:', error);
+      
     } finally {
       setLoading(false);
     }

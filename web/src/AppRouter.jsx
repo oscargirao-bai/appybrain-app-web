@@ -185,12 +185,12 @@ export default function AppRouter() {
 	// Navigation object (mimics RN navigation)
 	const navigation = {
 		navigate: (screenName, params = {}) => {
-			console.log('AppRouter.navigate called:', screenName, params);
+
 			// Push route with params into history and set current
 			setNavigationHistory(prev => [...prev, { name: screenName, params }]);
 			setCurrentScreen(screenName);
 			setScreenParams(params);
-			console.log('AppRouter.navigate currentScreen set to:', screenName);
+
 		},
 		replace: (screenName, params = {}) => {
 			// Replace top of history with the new route and set current

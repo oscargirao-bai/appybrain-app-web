@@ -22,7 +22,7 @@ export default function Profile({ onNavigate }) {
       setUserInfo(userData);
       
       if (badgesData && badgesData.length > 0) {
-        console.log('[Profile] Badges from API:', badgesData);
+        
         const transformedBadges = badgesData.map(badge => ({
           id: badge.id,
           icon: badge.icon,
@@ -42,7 +42,7 @@ export default function Profile({ onNavigate }) {
           nextLevel: badge.nextLevel,
           nextLevelCoins: badge.nextLevelCoins
         }));
-        console.log('[Profile] Transformed badges:', transformedBadges);
+        
         setBadges(transformedBadges);
       } else {
         setBadges([]);
