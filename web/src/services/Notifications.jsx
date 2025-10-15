@@ -1,6 +1,6 @@
 // Notifications.jsx - Web mock (no push notifications on web)
 import { useEffect } from 'react';
-import { navigate } from './navigationRef.jsx';
+import { navigate, resetRoot, setPendingNotificationNavigation } from './navigationRef.jsx';
 
 function normalizeSourceId(value) {
   if (value === null || value === undefined) {
@@ -86,10 +86,20 @@ export function executeNotificationNavigation(notification) {
 
     case 'battle':
     case 'battles':
-      navigate('MainTabs', {
-        screen: 'Battle',
-        params: buildTimestampedParams({ openBattleResult: sourceId }),
-      });
+      // Replicate mobile flow: store pending navigation and go to Loading so data is refreshed
+      try {
+        const navigationInfo = { sourceType, sourceId, data };
+        setPendingNotificationNavigation(navigationInfo);
+        // Reset navigation to Loading (Loading will refresh data and execute pending navigation)
+        resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
+      } catch (err) {
+        console.error('[Notifications] Failed to route battle notification via Loading:', err);
+        // Fallback to direct navigation
+        navigate('MainTabs', {
+          screen: 'Battle',
+          params: buildTimestampedParams({ openBattleResult: sourceId }),
+        });
+      }
       break;
 
     case 'challenge':
