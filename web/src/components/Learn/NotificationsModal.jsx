@@ -73,13 +73,22 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 	const handleNotificationNavigation = (notification) => {
 		if (!notification) return;
 		try {
-			// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
-			setPendingNotificationNavigation({
-				sourceType: notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType,
-				sourceId: notification?.id ?? notification?.sourceId ?? notification?.data?.sourceId,
-				data: notification?.data ?? {}
-			});
-			resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
+			// Only route through Loading for battles (which require data refresh). For other
+			// notification types (e.g. badges) route immediately to avoid showing the Loading screen.
+			const rawType = notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType;
+			const type = String(rawType || '').toLowerCase();
+			if (type === 'battle' || type === 'battles') {
+				// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
+				setPendingNotificationNavigation({
+					sourceType: notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType,
+					sourceId: notification?.id ?? notification?.sourceId ?? notification?.data?.sourceId,
+					data: notification?.data ?? {}
+				});
+				resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
+			} else {
+				// Directly execute the navigation for non-battle notifications
+				executeNotificationNavigation(notification);
+			}
 		} catch (err) {
 			console.warn('[NotificationsModal] Failed to navigate via Loading, falling back:', err);
 			executeNotificationNavigation(notification);
