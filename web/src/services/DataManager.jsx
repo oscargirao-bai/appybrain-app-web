@@ -1354,9 +1354,11 @@ class DataManagerClass {
                 status = battle.winnerId === currentUser.id ? 'win' : 'lose';
             }
 
+            const rightName = isPending ? (typeof window !== 'undefined' && window.navigator && window.navigator.language && window.navigator.language.startsWith('pt') ? 'Desconhecido' : 'Unknown') : (opponent.nickname || 'Unknown');
+
             const historyItem = {
                 left: currentUser.nickname || 'You',
-                right: opponent.nickname || 'Unknown',
+                right: rightName,
                 leftStats: userStats,
                 rightStats: opponentStats,
                 status: status,
