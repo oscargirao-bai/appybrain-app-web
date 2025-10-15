@@ -20,7 +20,13 @@ export function getUserIdentity(fallbackTribe) {
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
   return {
     username: typeof nickname === 'string' && nickname.length > 0 ? nickname : (fullName || 'Nickname'),
-    tribe: typeof user?.tribeName === 'string' && user.tribeName.length > 0 ? user.tribeName : (fallbackTribe || 'Sem Tribo'),
+    tribe: (() => {
+      const t = user?.tribeName || user?.teamName || user?.organizationName || null;
+      if (!t) return (fallbackTribe || 'Sem Tribo');
+      if (typeof t === 'string') return t;
+      if (typeof t === 'object' && typeof t.name === 'string') return t.name;
+      return (fallbackTribe || 'Sem Tribo');
+    })(),
   };
 }
 
@@ -69,9 +75,9 @@ export function transformBattleApiResponse(apiResult, battleSessionId) {
       avatarUrl: opponentData.avatarUrl,
       backgroundUrl: opponentData.backgroundUrl,
       frameUrl: opponentData.frameUrl,
-      teamName: opponentData.tribe,
-      tribeName: opponentData.tribe,
-      organizationName: opponentData.tribe,
+      teamName: (typeof opponentData.tribe === 'object' && opponentData.tribe?.name) ? opponentData.tribe.name : (typeof opponentData.tribe === 'string' ? opponentData.tribe : ''),
+      tribeName: (typeof opponentData.tribe === 'object' && opponentData.tribe?.name) ? opponentData.tribe.name : (typeof opponentData.tribe === 'string' ? opponentData.tribe : ''),
+      organizationName: (typeof opponentData.tribe === 'object' && opponentData.tribe?.name) ? opponentData.tribe.name : (typeof opponentData.tribe === 'string' ? opponentData.tribe : ''),
       coins: opponentData.coins,
       stars: opponentData.stars,
     },

@@ -126,7 +126,7 @@ export function BattleParticipantRow({
         )}
       </div>
       {/* Render the info box directly under the banner. For the opponent (isOpponent) show metrics; for the player hide metrics. */}
-      {/* Removed duplicate Info render — Info is rendered inside the banner column above. */}
+  {/* Info is rendered inside the banner column above; no duplicate render here. */}
     </div>
   );
 }
