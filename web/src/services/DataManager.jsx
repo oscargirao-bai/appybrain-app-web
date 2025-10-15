@@ -1133,6 +1133,11 @@ class DataManagerClass {
         return this.data.cosmetics || [];
     }
 
+    getCosmeticById(cosmeticId) {
+        const cosmetics = this.getCosmetics();
+        return cosmetics.find(item => item.id === cosmeticId) || null;
+    }
+
 
     // Get available challenges (published and within date range)
     getAvailableChallenges() {
