@@ -45,72 +45,78 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 		try {
 			await DataManager.markNotificationAsRead(item.id);
 			if (onUpdate) {
-				onUpdate();
-			}
-			if (item.sourceType && item.sourceId) {
-				navigateToSource(item.sourceType, item.sourceId, item.id);
+				onUpdate(item.id);
 			}
 			onClose();
+			setTimeout(() => handleNotificationNavigation(item), 100);
 		} catch (error) {
 			console.error('Error marking notification as read:', error);
 		}
 	}, [onUpdate, onClose]);
 
 	const markAllRead = async () => {
+		if (markAllLoading) return;
 		try {
 			setMarkAllLoading(true);
-			await DataManager.markAllNotificationsAsRead();
-			setMarkAllLoading(false);
+			await DataManager.markNotificationAsRead(0);
 			if (onUpdate) {
-				onUpdate();
+				onUpdate('ALL');
 			}
 		} catch (error) {
 			console.error('Error marking all notifications as read:', error);
+		} finally {
 			setMarkAllLoading(false);
 		}
 	};
 
-	const navigateToSource = (sourceType, sourceId, notificationId) => {
+	const handleNotificationNavigation = (notification) => {
+		if (!navigationRef.current) {
+			console.error('Navigation ref not available');
+			return;
+		}
+
+		const { sourceType, sourceId } = notification;
 		const timestamp = Date.now();
+
 		switch (sourceType) {
 			case 'badge':
 			case 'badges':
-				navigationRef.current.navigate('Profile', { 
-					openBadgeModal: sourceId, 
-					timestamp 
+				navigationRef.current.navigate('Profile', {
+					openBadgeModal: sourceId,
+					timestamp,
 				});
 				break;
 			case 'battle':
 			case 'battles':
-				navigationRef.current.navigate('MainTabs', { 
-					screen: 'Battle', 
-					params: { openBattleResult: sourceId, timestamp }
+				navigationRef.current.navigate('MainTabs', {
+					screen: 'Battle',
+					params: { openBattleResult: sourceId, timestamp },
 				});
 				break;
 			case 'tribe':
 			case 'tribes':
-				navigationRef.current.navigate('MainTabs', { 
+				navigationRef.current.navigate('MainTabs', {
 					screen: 'Tribes',
-					params: { sourceId, timestamp }
+					params: { sourceId, timestamp },
 				});
 				break;
 			case 'chest':
 			case 'chests':
-				navigationRef.current.navigate('Profile', { 
-					highlightChests: true, 
-					timestamp 
+				navigationRef.current.navigate('Profile', {
+					highlightChests: true,
+					timestamp,
 				});
 				break;
 			case 'learn':
 			case 'content':
-				navigationRef.current.navigate('MainTabs', { 
+				navigationRef.current.navigate('MainTabs', {
 					screen: 'Learn',
-					params: { sourceId, timestamp }
+					params: { sourceId, timestamp },
 				});
 				break;
 			default:
-				navigationRef.current.navigate('Profile', { 
-					timestamp 
+				navigationRef.current.navigate('Profile', {
+					timestamp,
 				});
 				break;
 		}

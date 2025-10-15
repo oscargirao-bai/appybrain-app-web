@@ -167,6 +167,7 @@ function StudyButton({ onPress, colors, iconColor }) {
 function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficulty, onPressStudy, onAskConfirm, starsByDifficulty }) {
 	const colors = useThemeColors();
 	const [showFullTitle, setShowFullTitle] = useState(false);
+	const wantsMath = containsMathMarkers(item?.description);
 
 	const baseColor = item.color || colors.primary;
 	const iconColor = item.iconColor || colors.text;
@@ -216,17 +217,24 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 			</button>
 			{expanded && (
 				<div style={styles.expandedBody}>
-					<MathJaxRenderer
-						content={item.description || 'Sem descrição'}
-						enabled={containsMathMarkers(item.description)}
-						baseFontSize={14}
-						textColor={iconColor}
-						compact={true}
-						padding={0}
-						as="div"
-						scrollEnabled={false}
-						style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}
-					/>
+					{wantsMath ? (
+						<MathJaxRenderer
+							key={`math-${item.id}`}
+							content={item.description || 'Sem descrição'}
+							enabled={true}
+							baseFontSize={14}
+							textColor={iconColor}
+							compact={true}
+							padding={0}
+							as="div"
+							scrollEnabled={false}
+							style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}
+						/>
+					) : (
+						<span style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}>
+							{item.description || 'Sem descrição'}
+						</span>
+					)}
 					<DifficultySelector
 						value={difficulty}
 						onChange={onChangeDifficulty}
