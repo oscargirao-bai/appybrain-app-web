@@ -61,6 +61,8 @@ export async function getAllScheduledNotificationsAsync() {
 }
 
 export function executeNotificationNavigation(notification) {
+  console.log('[Notifications] executeNotificationNavigation called with:', notification);
+  
   if (!notification) {
     console.warn('[Notifications] executeNotificationNavigation called without payload');
     return;
@@ -70,65 +72,22 @@ export function executeNotificationNavigation(notification) {
   const rawSourceType = notification?.sourceType ?? data?.sourceType ?? notification?.type ?? data?.type ?? '';
   const sourceType = String(rawSourceType).toLowerCase();
   const sourceId = normalizeSourceId(notification?.sourceId ?? data?.sourceId ?? data?.id ?? notification?.id ?? null);
+  
+  console.log('[Notifications] Parsed - sourceType:', sourceType, 'sourceId:', sourceId);
 
-  switch (sourceType) {
-    case 'broadcast':
-      navigate('MainTabs', {
-        screen: 'Learn',
-        params: buildTimestampedParams({ openNotifications: true }),
-      });
-      break;
-
-    case 'badge':
-    case 'badges':
-      navigate('Profile', buildTimestampedParams({ openBadgeModal: sourceId }));
-      break;
-
-    case 'battle':
-    case 'battles':
-      navigate('MainTabs', {
-        screen: 'Battle',
-        params: buildTimestampedParams({ openBattleResult: sourceId }),
-      });
-      break;
-
-    case 'challenge':
-    case 'challenges':
-      navigate('MainTabs', {
-        screen: 'Challenges',
-        params: buildTimestampedParams({}),
-      });
-      break;
-
-    case 'news':
-      navigate('Html', { newsId: sourceId });
-      break;
-
-    case 'tribe':
-    case 'tribes':
-      navigate('MainTabs', {
-        screen: 'Tribes',
-        params: buildTimestampedParams({ sourceId }),
-      });
-      break;
-
-    case 'chest':
-    case 'chests':
-      navigate('Profile', buildTimestampedParams({ highlightChests: true }));
-      break;
-
-    case 'learn':
-    case 'content':
-      navigate('MainTabs', {
-        screen: 'Learn',
-        params: buildTimestampedParams({ sourceId }),
-      });
-      break;
-
-    default:
-      navigate('Profile', buildTimestampedParams({}));
-      break;
+  // Store navigation info for after Loading screen refreshes data (like mobile)
+  const navigationInfo = { sourceType, sourceId, data };
+  
+  // Store in sessionStorage to survive Loading screen
+  try {
+    sessionStorage.setItem('pendingNotificationNavigation', JSON.stringify(navigationInfo));
+    console.log('[Notifications] Stored pending navigation, going to Loading screen');
+  } catch (err) {
+    console.error('[Notifications] Failed to store pending navigation:', err);
   }
+  
+  // Navigate to Loading screen to refresh data first (exactly like mobile)
+  navigate('Loading');
 }
 
 export default {

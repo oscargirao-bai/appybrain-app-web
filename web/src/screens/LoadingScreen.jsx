@@ -4,7 +4,6 @@ import { useTranslate } from '../services/Translate.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import DataManager from '../services/DataManager.jsx';
 import { getPendingNotificationNavigation, clearPendingNotificationNavigation } from '../services/navigationRef.jsx';
-import { executeNotificationNavigation } from '../services/Notifications.jsx';
 
 // Assets
 const logo = '/assets/logo.png';
@@ -77,16 +76,78 @@ export default function LoadingScreen({ navigation }) {
 				if (pendingNavigation) {
 					console.log('[LoadingScreen] Found pending notification navigation:', pendingNavigation);
 					
-					// Clear the pending navigation
+					// Clear the pending navigation immediately
 					clearPendingNotificationNavigation();
 					
-					// Navigate to main tabs first
-					navigation?.replace?.('MainTabs');
+					const { sourceType, sourceId } = pendingNavigation;
+					console.log('[LoadingScreen] Executing navigation - sourceType:', sourceType, 'sourceId:', sourceId);
 					
-					// Execute the notification navigation after a brief delay
-					setTimeout(() => {
-						executeNotificationNavigation(pendingNavigation);
-					}, 300);
+					// Execute navigation based on sourceType (replicate mobile logic exactly)
+					switch (sourceType) {
+						case 'broadcast':
+							navigation?.replace?.('MainTabs', {
+								screen: 'Learn',
+								params: { openNotifications: true, timestamp: Date.now() }
+							});
+							break;
+						
+						case 'battles':
+						case 'battle':
+							navigation?.replace?.('MainTabs', {
+								screen: 'Battle',
+								params: { openBattleResult: sourceId, timestamp: Date.now() }
+							});
+							break;
+						
+						case 'challenges':
+						case 'challenge':
+							navigation?.replace?.('MainTabs', {
+								screen: 'Challenges',
+								params: { timestamp: Date.now() }
+							});
+							break;
+						
+						case 'news':
+							navigation?.replace?.('Html', { newsId: Number(sourceId) || sourceId });
+							break;
+						
+						case 'badges':
+						case 'badge':
+							navigation?.replace?.('Profile', {
+								openBadgeModal: sourceId,
+								timestamp: Date.now()
+							});
+							break;
+						
+						case 'tribe':
+						case 'tribes':
+							navigation?.replace?.('MainTabs', {
+								screen: 'Tribes',
+								params: { sourceId, timestamp: Date.now() }
+							});
+							break;
+						
+						case 'chest':
+						case 'chests':
+							navigation?.replace?.('Profile', {
+								highlightChests: true,
+								timestamp: Date.now()
+							});
+							break;
+						
+						case 'learn':
+						case 'content':
+							navigation?.replace?.('MainTabs', {
+								screen: 'Learn',
+								params: { sourceId, timestamp: Date.now() }
+							});
+							break;
+						
+						default:
+							console.log('[LoadingScreen] Unknown sourceType, navigating to Profile');
+							navigation?.replace?.('Profile', { timestamp: Date.now() });
+							break;
+					}
 				} else {
 					// Navigate to main tab navigator after data is loaded
 					navigation?.replace?.('MainTabs');
