@@ -18,15 +18,19 @@ export function getUserIdentity(fallbackTribe) {
   const user = getUserProfile();
   const nickname = user?.nickname;
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
+  // Prefer DataManager tribe membership when available
+  const myTribe = DataManager.getUserTribe?.();
+  const tribeFromMembership = myTribe && (myTribe.name || (typeof myTribe === 'string' ? myTribe : ''));
+  const fallbackFromUser = user?.tribeName || user?.teamName || user?.organizationName || null;
+  const resolvedTribe = (() => {
+    if (typeof tribeFromMembership === 'string' && tribeFromMembership.length > 0) return tribeFromMembership;
+    if (typeof fallbackFromUser === 'string' && fallbackFromUser.length > 0) return fallbackFromUser;
+    if (fallbackFromUser && typeof fallbackFromUser === 'object' && typeof fallbackFromUser.name === 'string') return fallbackFromUser.name;
+    return (fallbackTribe || 'Sem Tribo');
+  })();
   return {
     username: typeof nickname === 'string' && nickname.length > 0 ? nickname : (fullName || 'Nickname'),
-    tribe: (() => {
-      const t = user?.tribeName || user?.teamName || user?.organizationName || null;
-      if (!t) return (fallbackTribe || 'Sem Tribo');
-      if (typeof t === 'string') return t;
-      if (typeof t === 'object' && typeof t.name === 'string') return t.name;
-      return (fallbackTribe || 'Sem Tribo');
-    })(),
+    tribe: resolvedTribe,
   };
 }
 

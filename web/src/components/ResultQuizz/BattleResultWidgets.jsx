@@ -41,7 +41,8 @@ export function BattleParticipantRow({
     paddingLeft: 0,
     paddingRight: 0,
     boxSizing: 'border-box',
-    marginBottom: 6,
+    // Halve the space before the metrics area
+    marginBottom: 3,
   };
 
   const rowStyle = {
@@ -102,7 +103,8 @@ export function BattleParticipantRow({
             {trophyArea}
             <div style={bannerColumnStyle}>
               {banner}
-              <div style={{ marginTop: 8, width: '350px', maxWidth: 350 }}>
+              {/* Name box glued to banner, exact same width */}
+              <div style={{ marginTop: 0, width: '350px', maxWidth: 350 }}>
                 <Info
                   username={username}
                   tribe={tribe}
@@ -117,7 +119,8 @@ export function BattleParticipantRow({
           <>
             <div style={bannerColumnStyle}>
               {banner}
-              <div style={{ marginTop: 8 }}>
+              {/* Name box glued to banner, enforce width 350px */}
+              <div style={{ marginTop: 0, width: '350px', maxWidth: 350 }}>
                 <Info username={username} tribe={tribe} />
               </div>
             </div>
