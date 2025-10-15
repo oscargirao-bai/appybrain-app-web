@@ -217,24 +217,18 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 			</button>
 			{expanded && (
 				<div style={styles.expandedBody}>
-					{wantsMath ? (
-						<MathJaxRenderer
-							key={`math-${item.id}`}
-							content={item.description || 'Sem descrição'}
-							enabled={true}
-							baseFontSize={14}
-							textColor={iconColor}
-							compact={true}
-							padding={0}
-							as="div"
-							scrollEnabled={false}
-							style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}
-						/>
-					) : (
-						<span style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}>
-							{item.description || 'Sem descrição'}
-						</span>
-					)}
+					<MathJaxRenderer
+						key={`desc-${item.id}-${wantsMath ? 'math' : 'plain'}`}
+						content={item.description || 'Sem descrição'}
+						enabled={wantsMath}
+						baseFontSize={14}
+						textColor={iconColor}
+						compact={true}
+						padding={0}
+						as="div"
+						scrollEnabled={false}
+						style={{ ...styles.descText, color: iconColor, marginBottom: 12 }}
+					/>
 					<DifficultySelector
 						value={difficulty}
 						onChange={onChangeDifficulty}

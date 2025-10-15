@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme, useThemeColors } from './services/Theme.jsx';
 import DataManager from './services/DataManager.jsx';
+import { navigationRef as globalNavigationRef } from './services/navigationRef.jsx';
 // Screens
 import LoginScreen from './screens/account/LoginScreen.jsx';
 import PasswordScreen from './screens/account/PasswordScreen.jsx';
@@ -179,8 +180,7 @@ export default function AppRouter() {
 	const { resolvedTheme, colors } = useTheme();
 	const [currentScreen, setCurrentScreen] = useState('Loading');
 	const [screenParams, setScreenParams] = useState({});
-	const [navigationHistory, setNavigationHistory] = useState(['Loading']);
-	const navigationRef = useRef(null);
+	const [navigationHistory, setNavigationHistory] = useState([{ name: 'Loading', params: {} }]);
 
 	// Navigation object (mimics RN navigation)
 	const navigation = {
@@ -231,8 +231,18 @@ export default function AppRouter() {
 				setScreenParams(normalized[0].params);
 				setNavigationHistory(normalized);
 			}
-		}
+		},
+		getCurrentRoute: () => ({ name: currentScreen, params: screenParams })
 	};
+
+	useEffect(() => {
+		globalNavigationRef.current = navigation;
+		return () => {
+			if (globalNavigationRef.current === navigation) {
+				globalNavigationRef.current = null;
+			}
+		};
+	});
 
 	// Listen for custom navigation events (e.g., from Banner component)
 	useEffect(() => {

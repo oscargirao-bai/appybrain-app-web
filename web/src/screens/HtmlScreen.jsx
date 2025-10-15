@@ -211,7 +211,7 @@ export default function HtmlScreen({ navigation, route }) {
               <MathJaxRenderer
                 content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
                 enabled={true}
-                scrollEnabled={false}
+                scrollEnabled={true}
                 style={ui.mathjax}
                 baseFontSize={16}
                 backgroundColor={isStudyContent ? '#ffffff' : colors.background}
