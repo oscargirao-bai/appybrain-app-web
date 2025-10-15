@@ -3,6 +3,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import { executeNotificationNavigation } from '../../services/Notifications.jsx';
+import { setPendingNotificationNavigation, resetRoot } from '../../services/navigationRef.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function NotificationsModal({ visible, onClose, onUpdate }) {
@@ -70,10 +71,19 @@ export default function NotificationsModal({ visible, onClose, onUpdate }) {
 	};
 
 	const handleNotificationNavigation = (notification) => {
-		if (!notification) {
-			return;
+		if (!notification) return;
+		try {
+			// Store pending navigation and go to Loading — LoadingScreen will execute the navigation
+			setPendingNotificationNavigation({
+				sourceType: notification?.type ?? notification?.sourceType ?? notification?.data?.sourceType,
+				sourceId: notification?.id ?? notification?.sourceId ?? notification?.data?.sourceId,
+				data: notification?.data ?? {}
+			});
+			resetRoot({ index: 0, routes: [{ name: 'Loading' }] });
+		} catch (err) {
+			console.warn('[NotificationsModal] Failed to navigate via Loading, falling back:', err);
+			executeNotificationNavigation(notification);
 		}
-		executeNotificationNavigation(notification);
 	};
 
 	const renderItem = (item, index) => {
