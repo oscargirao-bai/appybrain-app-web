@@ -75,7 +75,6 @@ export default function SolutionModal({
       setShowSuccessModal(true);
       onReport && onReport();
     } catch (error) {
-      console.error('Report error:', error);
       alert('Erro ao reportar. Por favor tente novamente.');
     } finally {
       setReporting(false);

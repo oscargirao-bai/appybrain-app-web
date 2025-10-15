@@ -83,7 +83,6 @@ export function useRankingsData({ visible, metric, tab }) {
 				await DataManager.checkAndUpdateRankings();
 				syncRankings();
 			} catch (error) {
-				console.error('RankingsModal: Failed to update rankings', error);
 			} finally {
 				if (!cancelled) {
 					setLoading(false);
@@ -113,7 +112,6 @@ export function useRankingsData({ visible, metric, tab }) {
 				await DataManager.refreshRankings(metric);
 				syncRankings();
 			} catch (error) {
-				console.error(`RankingsModal: Failed to load ${metric} rankings`, error);
 			} finally {
 				if (!cancelled) {
 					setLoading(false);

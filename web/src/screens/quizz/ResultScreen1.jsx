@@ -26,13 +26,11 @@ export default function ResultScreen1({ navigation, route }) {
   // Refresh user data when screen loads
   useEffect(() => {
     const refreshUserData = async () => {
-      try {
+        try {
         // Refresh both user info and stars to get latest values
         await DataManager.refreshSection('userInfo');
         await DataManager.refreshSection('userStars');
-        //console.log('ResultScreen1: User data and stars refreshed successfully');
       } catch (error) {
-        console.error('ResultScreen1: Failed to refresh user data:', error);
       }
     };
 
@@ -49,7 +47,7 @@ export default function ResultScreen1({ navigation, route }) {
       ? `${correct}/${total} corretas`
       : 'Terminaste o quiz!';
 
-  //console.log('ResultScreen1 received sessionResult:', sessionResult);
+  
 
   return (
     <div style={{...styles.safe, backgroundColor: colors.background}}> 
@@ -242,25 +240,21 @@ function getFrameSource() {
 
 // Updated reward amount function to use session result
 function getRewardAmount(sessionResult, fallbackData) {
-  //console.log('getRewardAmount called with:', { sessionResult, fallbackData });
   
   // If we have session result with specific reward data, use it
   if (sessionResult) {
     // For challenges: show coins earned
     if (typeof sessionResult.coins === 'number') {
-      //console.log('Using coins from sessionResult:', sessionResult.coins);
       return sessionResult.coins;
     }
     // For learn quizzes: show stars earned
     if (typeof sessionResult.stars === 'number') {
-      //console.log('Using stars from sessionResult:', sessionResult.stars);
       return sessionResult.stars;
     }
   }
   
   // Fallback to old calculation method
   const fallbackAmount = computeRewardAmount(fallbackData);
-  //console.log('Using fallback amount:', fallbackAmount);
   return fallbackAmount;
 }
 

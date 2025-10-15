@@ -178,7 +178,7 @@ export default function QuizzScreen({ navigation, route }) {
 						correctValue = -1; // Default to incorrect
 				}
 				
-				//console.log('Submitting answer result:', { answerType, correctValue, timeMs });
+				
 				
 				// Only submit helpId if it was used for this specific question
 				const helpIdToSubmit = usedHelpId && usedHelpId !== 3 ? usedHelpId : null;
@@ -190,11 +190,11 @@ export default function QuizzScreen({ navigation, route }) {
 					timeMs,
 					helpIdToSubmit // pass the used help ID (null for help 3 as it's submitted separately)
 				);
-				//console.log('Answer submission response:', response);
+				
 				
 				// Store the final result if session is finished
 				if (response?.sessionFinished) {
-					//console.log('Session finished! Setting session result:', response);
+					
 					setSessionResult(response);
 					sessionResultRef.current = response; // Store in ref for immediate access
 				}
@@ -210,7 +210,7 @@ export default function QuizzScreen({ navigation, route }) {
 		// Function to refresh user data when quiz ends
 		const refreshUserData = async () => {
 			try {
-				//console.log('Refreshing user data after quiz completion...');
+				
 				
 				if (isChallenge) {
 					// For challenge quizzes, only refresh userInfo and challenges (sequential)
@@ -224,7 +224,7 @@ export default function QuizzScreen({ navigation, route }) {
 					await DataManager.refreshSection('chests');
 				}
 				
-				//console.log('User data refreshed successfully');
+				
 			} catch (error) {
 				
 				// Don't block navigation if refresh fails
@@ -233,7 +233,7 @@ export default function QuizzScreen({ navigation, route }) {
 
 		// Function to handle quiz completion and navigation
 		const handleQuizCompletion = async (finalCorrectCount = null) => {
-			//console.log('Quiz completed! Refreshing user data and navigating to result...');
+			
 			await refreshUserData();
 			// Compute a simple score summary
 			const total = questions.length;
@@ -244,7 +244,7 @@ export default function QuizzScreen({ navigation, route }) {
 			
 			// Use ref value to get the most recent session result
 			const currentSessionResult = sessionResultRef.current;
-			//console.log('Using session result from ref:', currentSessionResult);
+			
 			
 			// Prepare navigation params with session result if available
 			const navParams = { 
@@ -257,7 +257,7 @@ export default function QuizzScreen({ navigation, route }) {
 				battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
 			};
 			
-			//console.log('Navigating to result with params:', navParams);
+			
 			
 			// Small delay to ensure data subscribers apply updates
 				setTimeout(() => {
@@ -275,7 +275,7 @@ export default function QuizzScreen({ navigation, route }) {
 			if (inputLockedRef.current) return;
 			inputLockedRef.current = true;
 
-			//console.log('Question timeout reached');
+			
 
 			// Submit timeout result to API
 			await submitAnswerResult('timeout');
@@ -433,7 +433,7 @@ export default function QuizzScreen({ navigation, route }) {
 											});
 											setHelpUsed(true);
 											setUsedHelpId(2);
-											//console.log('Help 2 used: Added 30 seconds');
+								
 										}}
 										onRemoveWrong={() => {
 											if (helpUsed) return;
@@ -445,7 +445,7 @@ export default function QuizzScreen({ navigation, route }) {
 												const randomIndex = Math.floor(Math.random() * wrongOptions.length);
 												const optionToRemove = wrongOptions[randomIndex];
 												setRemovedAnswerIds(prev => [...prev, optionToRemove.id]);
-												//console.log('Help 1 used: Removed option', optionToRemove.id);
+										
 											}
 											setHelpUsed(true);
 											setUsedHelpId(1);
@@ -497,12 +497,11 @@ export default function QuizzScreen({ navigation, route }) {
 														setRemaining((r) => (r > 0 ? r - 1 : 0));
 													}, 1000);
 													
-													//console.log('Help 3 used: Swapped question with difficulty', currentDifficulty);
+												
 												} catch (error) {
-									
 												}
 											} else {
-												//console.log('No replacement questions available for difficulty:', currentDifficulty);
+								
 											}
 											
 											setHelpUsed(true);
@@ -615,7 +614,7 @@ export default function QuizzScreen({ navigation, route }) {
 											.map(q => q.quizId)
 											.filter(id => id != null); // Filter out any null/undefined IDs
 										
-										//console.log('Quitting quiz - remaining questions:', remainingQuizIds);
+									
 										
 										if (remainingQuizIds.length > 0) {
 											// Call quit API
@@ -624,22 +623,22 @@ export default function QuizzScreen({ navigation, route }) {
 											// Update user stats from quit response
 											if (quitResponse && quitResponse.success) {
 												DataManager.updateStatsFromQuitResponse(quitResponse, quizType);
-												console.log('Quiz quit successful, stats updated');
+										
 												
 												// Refresh user data and related sections based on quiz type
 												try {
 													await DataManager.refreshSection('userInfo');
-													console.log('User info refreshed after quiz quit');
+											
 													
 													// Refresh quiz-type specific data sequentially
 													if (quizType === 'learn') {
 														await DataManager.refreshSection('disciplines');
-														console.log('Disciplines refreshed after learn quiz quit');
+												
 														await DataManager.refreshSection('userStars');
-														console.log('User stars refreshed after learn quiz quit');
+												
 													} else if (quizType === 'challenge') {
 														await DataManager.refreshSection('challenges');
-														console.log('Challenges refreshed after challenge quiz quit');
+											
 													}
 													
 													// Small delay to ensure subscribers get notified

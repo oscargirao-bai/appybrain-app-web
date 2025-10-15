@@ -65,7 +65,6 @@ export default function RankingsModal({ visible, onClose, navigation }) {
           });
         }
       } catch (error) {
-        console.error('RankingsModal: Error loading user profile', error);
       } finally {
         setLoading(false);
       }

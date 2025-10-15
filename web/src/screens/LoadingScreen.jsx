@@ -40,13 +40,11 @@ export default function LoadingScreen({ navigation }) {
 				
 				if (!isSessionValid) {
 					// Session is invalid or doesn't exist, redirect to login
-					//console.log('Session invalid, redirecting to login');
 					navigation?.replace?.('Login');
 					return;
 				}
 				
 				// Session is valid, proceed with loading app data
-				//console.log('Session valid, loading app data');
 				
 				// Initialize DataManager with ApiManager
 				DataManager.init(ApiManager);

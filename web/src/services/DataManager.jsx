@@ -57,9 +57,8 @@ class DataManagerClass {
             this.imageCache.clear();
             this.downloadingImages.clear();
 
-            //console.log('Session cache initialized');
+            
         } catch (error) {
-            console.error('Failed to initialize session cache:', error);
         }
     }
 
@@ -108,7 +107,6 @@ class DataManagerClass {
             this.imageCache.set(url, url);
             return url;
         } catch (error) {
-            console.error(`Error caching image ${url}:`, error);
             return url; // Return original URL as fallback
         } finally {
             this.downloadingImages.delete(url);
@@ -226,12 +224,12 @@ class DataManagerClass {
 
     // Notify all subscribers of data changes
     _notifySubscribers() {
-        //console.log('DataManager: _notifySubscribers called, subscribers count:', this.subscribers.size); // Debug log
+        
         this.subscribers.forEach(callback => {
             try {
                 callback(this.data, this.loading, this.error);
             } catch (err) {
-                console.error('Error in data subscriber:', err);
+                
             }
         });
     }
@@ -262,12 +260,12 @@ class DataManagerClass {
             const processedData = await this._processAndCacheImages(appData);
 
             // Extract news and notifications from the main API response
-            //console.log('DataManager: Processing news and notifications from main API response...');
+            
             const newsData = appData.news?.news || [];
             const notificationsData = appData.notifications?.notifications || [];
             
             // Preload all ranking types during app initialization
-            //console.log('DataManager: Preloading all ranking types...');
+            
             const rankingsData = {
                 points: null,
                 stars: null,
@@ -277,55 +275,45 @@ class DataManagerClass {
             try {
                 // Load all ranking types sequentially (no parallel API calls)
                 const pointsRankings = await this.apiManager.getRankings('points').catch(error => {
-                    console.warn('DataManager: Failed to load points rankings:', error);
                     return null;
                 });
                 rankingsData.points = pointsRankings;
 
                 const starsRankings = await this.apiManager.getRankings('stars').catch(error => {
-                    console.warn('DataManager: Failed to load stars rankings:', error);
                     return null;
                 });
                 rankingsData.stars = starsRankings;
 
                 const xpRankings = await this.apiManager.getRankings('xp').catch(error => {
-                    console.warn('DataManager: Failed to load xp rankings:', error);
                     return null;
                 });
                 rankingsData.xp = xpRankings;
 
-                //console.log('DataManager: Successfully preloaded all ranking types sequentially');
+                
             } catch (error) {
-                console.warn('DataManager: Error during rankings preload:', error);
             }
 
             // Load cosmetics separately (not in main API response yet)
-            //console.log('DataManager: Loading cosmetics...');
             const cosmeticsData = await this.apiManager.getCosmetics().catch(error => {
-                console.warn('DataManager: Failed to load cosmetics:', error);
                 return [];
             });
 
             // Load challenges separately
-            //console.log('DataManager: Loading challenges...');
             const challengesApiData = await this.apiManager.getChallenges().catch(error => {
-                console.warn('DataManager: Failed to load challenges:', error);
                 return [];
             });
 
             // Load quotes separately
-            //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('gamification/quotes').catch(error => {
-                console.warn('DataManager: Failed to load quotes:', error);
                 return { items: [] };
             });
 
             // Process and cache cosmetic images
-            //console.log('DataManager: Processing and caching cosmetic images...');
+            
             const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData });
 
             // Process and cache challenge images
-            //console.log('DataManager: Processing and caching challenge images...');
+            
             const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData });
 
             // Store initial IDs for future diff detection
@@ -384,7 +372,7 @@ class DataManagerClass {
 
     // Refresh specific data section
     async refreshSection(section) {
-        //console.log('DataManager: refreshSection called for:', section); // Debug log
+        
         if (!this.apiManager) {
             throw new Error('DataManager not initialized with ApiManager');
         }
@@ -431,25 +419,24 @@ class DataManagerClass {
                 // Update userInfo and also update badges from userInfo.items
                 this.data[section] = processedData[section];
                 this.data.badges = processedData[section]?.items || [];
-                //console.log('DataManager: Updated userInfo and badges:', this.data.badges?.length || 0, 'badges');
+                
             } else if (section === 'challenges') {
                 // Store challenges data, extracting from API response if needed
                 this.data[section] = data?.challenges || data || [];
             } else if (section === 'battles') {
                 // Store battles data from API response
                 this.data[section] = data?.battles || [];
-                //console.log('DataManager: Updated battles:', this.data.battles?.length || 0, 'battles');
+                
             } else {
                 this.data[section] = processedData[section];
             }
 
             this.data.lastUpdated = new Date().toISOString();
-            //console.log('DataManager: About to notify subscribers after refreshing', section); // Debug log
+            
             this._notifySubscribers();
-            //console.log('DataManager: Finished notifying subscribers after refreshing', section); // Debug log
+            
             return this.data[section];
         } catch (error) {
-            console.error(`Failed to refresh ${section}:`, error);
             throw error;
         }
     }
@@ -499,13 +486,12 @@ class DataManagerClass {
             this.imageCache.clear();
             this.downloadingImages.clear();
         } catch (error) {
-            console.error('Failed to clear image cache:', error);
         }
     }
 
     // Start new session (call this from loading screen)
     async startNewSession() {
-        //console.log('Starting new session - clearing cache');
+        
         await this._initSessionCache();
     }
 
@@ -529,7 +515,7 @@ class DataManagerClass {
         if (userConfigData && typeof userConfigData === 'object') {
             this.userConfig.randomPosition = userConfigData.randomPosition || 1;
             this.userConfig.fullAccess = userConfigData.fullAccess || 0;
-            //console.log('DataManager: User config set:', this.userConfig);
+            
         }
     }
 
@@ -587,7 +573,6 @@ class DataManagerClass {
                         const cachedUrl = await this._downloadAndCacheImage(this.data.organizationInfo.logoUrl);
                         this.data.organizationInfo.logoUrl = cachedUrl;
                     } catch (error) {
-                        console.warn('Failed to cache organization logo:', error);
                         // Keep the original URL if caching fails
                     }
                 }
@@ -597,7 +582,6 @@ class DataManagerClass {
 
             return this.data.organizationInfo;
         } catch (error) {
-            console.error('DataManager: Failed to load organization data:', error);
             throw error;
         }
     }
@@ -742,7 +726,6 @@ class DataManagerClass {
             this._notifySubscribers();
             return rankingsData;
         } catch (error) {
-            console.error(`Failed to refresh rankings for type ${type}:`, error);
             throw error;
         }
     }
@@ -776,7 +759,7 @@ class DataManagerClass {
                 const hasChanged = this._hasRankingChanged(currentRanking, freshRanking);
                 
                 if (hasChanged) {
-                    //console.log(`DataManager: Detected changes in ${type} rankings, updating...`);
+                    
                     this.data.rankings[type] = freshRanking;
                     hasUpdates = true;
                 }
@@ -784,14 +767,13 @@ class DataManagerClass {
 
             if (hasUpdates) {
                 this._notifySubscribers();
-                //console.log('DataManager: Rankings updated successfully');
+                
             } else {
-                //console.log('DataManager: No ranking changes detected');
+                
             }
 
             return hasUpdates;
         } catch (error) {
-            console.error('Failed to check and update rankings:', error);
             throw error;
         }
     }
@@ -803,7 +785,6 @@ class DataManagerClass {
             this.data.rankings[type] = rankingsData;
             return rankingsData;
         } catch (error) {
-            console.error(`Failed to update ${type} rankings:`, error);
             return null;
         }
     }
@@ -1024,9 +1005,7 @@ class DataManagerClass {
 
     async loadNotifications() {
         try {
-            //console.log('DataManager: Loading notifications...');
             const notificationData = await this.apiManager.getNotifications();
-            //console.log('DataManager: Loaded notifications:', notificationData);
 
             // Get current notification IDs
             const currentNotificationIds = new Set(notificationData.map(item => item.id));
@@ -1036,13 +1015,13 @@ class DataManagerClass {
                 [...currentNotificationIds].some(id => !this.previousNotificationIds.has(id));
 
             if (!hasChanges) {
-                //console.log('DataManager: No changes in notifications, skipping update');
+                
                 return { hasChanges: false, newItems: [] };
             }
 
             // Find new items that weren't in previous notifications
             const newItemIds = [...currentNotificationIds].filter(id => !this.previousNotificationIds.has(id));
-            //console.log('DataManager: New notification items:', newItemIds);
+            
 
             // Update data
             this.data.notifications = notificationData;
@@ -1053,7 +1032,6 @@ class DataManagerClass {
 
             return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
-            console.error('DataManager: Failed to load notifications:', error);
             throw error;
         }
     }
@@ -1079,7 +1057,6 @@ class DataManagerClass {
             await this.apiManager.markNotificationAsRead(notificationId);
             return true;
         } catch (error) {
-            console.error('DataManager: Failed to mark notification(s) as read:', error);
             // Revert to previous snapshot
             this.data.notifications = prevNotifications;
             this._notifySubscribers();
@@ -1094,9 +1071,7 @@ class DataManagerClass {
 
     async loadNews() {
         try {
-            //console.log('DataManager: Loading news...');
             const newsData = await this.apiManager.getNews();
-            //console.log('DataManager: Loaded news:', newsData);
 
             // Get current news IDs
             const currentNewsIds = new Set(newsData.map(item => item.id));
@@ -1106,13 +1081,13 @@ class DataManagerClass {
                 [...currentNewsIds].some(id => !this.previousNewsIds.has(id));
 
             if (!hasChanges) {
-                //console.log('DataManager: No changes in news, skipping update');
+                
                 return { hasChanges: false, newItems: [] };
             }
 
             // Find new items that weren't in previous news
             const newItemIds = [...currentNewsIds].filter(id => !this.previousNewsIds.has(id));
-            //console.log('DataManager: New news items:', newItemIds);
+            
 
             // Update data
             this.data.news = newsData;
@@ -1123,7 +1098,6 @@ class DataManagerClass {
 
             return { hasChanges: true, newItems: newItemIds };
         } catch (error) {
-            console.error('DataManager: Failed to load news:', error);
             throw error;
         }
     }
@@ -1141,7 +1115,8 @@ class DataManagerClass {
 
     // Get available challenges (published and within date range)
     getAvailableChallenges() {
-        // Return all published challenges, sorted with available ones first
+                    this.data.news = newsData;
+                    this.previousNewsIds = currentNewsIds;
         const challenges = this.data.challenges?.filter(challenge => {
             return challenge.status === 'published';
         }) || [];
@@ -1224,7 +1199,7 @@ class DataManagerClass {
             // Optimistic UI update - update local state first
             const newCoins = userStats.coins - cosmeticPrice;
             
-            //console.log('Purchase: Updating coins from', userStats.coins, 'to', newCoins, 'for cosmetic', cosmeticId);
+            
 
             // Update cosmetic as acquired
             const cosmeticsIndex = this.data.cosmetics.findIndex(item => item.id === cosmeticId);
@@ -1238,9 +1213,7 @@ class DataManagerClass {
             // Update user coins
             if (this.data.userInfo?.user) {
                 this.data.userInfo.user.coins = newCoins;
-                //console.log('Purchase: Updated user coins to', this.data.userInfo.user.coins);
             } else {
-                console.warn('Purchase: Unable to update coins - userInfo.user not found');
             }
 
             // Notify subscribers immediately for instant UI feedback
@@ -1248,7 +1221,6 @@ class DataManagerClass {
 
             // Make API call (don't wait for response)
             this.apiManager.purchaseCosmetic(cosmeticId).catch(error => {
-                console.error('Purchase API call failed, reverting optimistic update:', error);
 
                 // Revert optimistic changes on API failure
                 const cosmeticsIndex = this.data.cosmetics.findIndex(item => item.id === cosmeticId);
@@ -1278,7 +1250,6 @@ class DataManagerClass {
             };
 
         } catch (error) {
-            console.error('Purchase failed:', error);
             throw error;
         }
     }
@@ -1392,7 +1363,6 @@ class DataManagerClass {
         try {
             await this.refreshSection('battles');
         } catch (error) {
-            console.error('Failed to refresh battles:', error);
             throw error;
         }
     }
@@ -1419,7 +1389,7 @@ class DataManagerClass {
     // Call when app goes to background
     onAppBackground() {
         this.lastAppBackgroundTime = Date.now();
-        //console.log('App went to background at:', new Date(this.lastAppBackgroundTime));
+            
     }
 
     // Call when app comes to foreground - returns true if data should be reloaded
@@ -1429,16 +1399,15 @@ class DataManagerClass {
 
         // Check if data is stale due to time
         if (!this.isDataFresh()) {
-            //console.log('Data is stale due to age');
+            
             shouldReload = true;
         }
 
         // Check if app was in background too long
         if (this.lastAppBackgroundTime) {
             const backgroundDuration = now - this.lastAppBackgroundTime;
-            if (backgroundDuration > this.backgroundThreshold) {
-                //console.log(`App was in background for ${Math.round(backgroundDuration / 60000)} minutes - data reload required`);
-                shouldReload = true;
+                if (backgroundDuration > this.backgroundThreshold) {
+                    shouldReload = true;
             }
             this.lastAppBackgroundTime = null;
         }
@@ -1458,12 +1427,11 @@ class DataManagerClass {
         };
 
         if (isDataStale && autoReload) {
-            //console.log('Auto-reloading stale data');
+            
             try {
                 await this.loadAppData();
                 result.reloaded = true;
             } catch (error) {
-                console.error('Failed to auto-reload data:', error);
                 result.reloadError = error.message;
             }
         }
@@ -1486,72 +1454,64 @@ class DataManagerClass {
     // Update user stats from quiz quit response
     updateStatsFromQuitResponse(quitResponse, quizType) {
         if (!quitResponse || !quitResponse.success) {
-            console.warn('Invalid quit response, skipping stats update');
             return;
         }
 
         const user = this.data.userInfo?.user;
         if (!user) {
-            console.warn('No user info found, skipping stats update');
             return;
         }
 
-        //console.log('Updating user stats from quit response:', quitResponse, 'quiz type:', quizType);
+        
 
         // Update coins from response (for challenges)
         if (typeof quitResponse.coins === 'number') {
             const oldCoins = user.coins || 0;
             user.coins = (user.coins || 0) + quitResponse.coins;
-            //console.log('Updated coins from', oldCoins, 'to', user.coins, '(+' + quitResponse.coins + ')');
+            
         }
 
         // Update stars from response (for learn quizzes)
         if (typeof quitResponse.stars === 'number') {
             const oldStars = user.stars || 0;
             user.stars = (user.stars || 0) + quitResponse.stars;
-            //console.log('Updated stars from', oldStars, 'to', user.stars, '(+' + quitResponse.stars + ')');
+            
         }
 
         // Update points from response (could be from XP or general points)
         if (typeof quitResponse.xp === 'number') {
             const oldPoints = user.points || 0;
             user.points = (user.points || 0) + quitResponse.xp;
-            //console.log('Updated points from', oldPoints, 'to', user.points, '(+' + quitResponse.xp + ')');
+            
         }
 
         // Notify subscribers of the stats update
         this._notifySubscribers();
-        
-        console.log('Updated user stats:', {
-            coins: user.coins,
-            stars: user.stars,
-            points: user.points
-        });
     }
 
     // Equip cosmetics (apply selections for avatar/background/frame) locally and notify
     equipCosmetics({ avatarId = null, backgroundId = null, frameId = null } = {}) {
         try {
-            //console.log('DataManager.equipCosmetics called with:', { avatarId, backgroundId, frameId });
+            
             const user = this.data.userInfo?.user;
             if (!user) {
-                //console.log('DataManager.equipCosmetics: No user found');
+                
                 return false;
             }
             const cosmetics = this.data.cosmetics || [];
 
             // Create a new user object to ensure React detects the change
             const updatedUser = { ...user };
-            //console.log('DataManager.equipCosmetics: Original user:', user.avatarUrl);
+            
 
             const applyEquip = (id, typeId, userField) => {
                 if (!id) return;
                 const item = cosmetics.find(c => String(c.id) === String(id));
                 if (!item) {
-                    //console.log(`DataManager.equipCosmetics: Item ${id} not found in cosmetics`);
+                    
                     return;
                 }
-                //console.log(`DataManager.equipCosmetics: Applying ${userField} = ${item.imageUrl}`);
+                
                 // Determine type from item if not given
                 const tId = item.cosmeticTypeId || typeId;
                 // Update equipped flags for all in the same type
@@ -1565,7 +1525,7 @@ class DataManagerClass {
                 if (userField === 'backgroundUrl') updatedUser.backgroundUrl = item.imageUrl || updatedUser.backgroundUrl;
                 if (userField === 'frameUrl') updatedUser.frameUrl = item.imageUrl || updatedUser.frameUrl;
             };
-
+                    throw error;
             // Map provided ids to expected type groups
             if (avatarId) applyEquip(avatarId, 1, 'avatarUrl');
             if (backgroundId) applyEquip(backgroundId, 2, 'backgroundUrl');
@@ -1573,14 +1533,13 @@ class DataManagerClass {
 
             // Update the user object with the new reference
             this.data.userInfo.user = updatedUser;
-            //console.log('DataManager.equipCosmetics: Updated user:', updatedUser.avatarUrl);
+            
             // Assign back (cosmetics mutated with new objects in loop)
             this.data.cosmetics = cosmetics;
-            //console.log('DataManager.equipCosmetics: Calling _notifySubscribers');
+            
             this._notifySubscribers();
             return true;
         } catch (e) {
-            console.error('equipCosmetics failed:', e);
             return false;
         }
     }

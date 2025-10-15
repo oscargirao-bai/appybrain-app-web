@@ -19,10 +19,10 @@ export default function ContentScreen({ navigation, route }) {
 	const [contents, setContents] = useState([]);
 
 	useEffect(() => {
-		//console.log('ContentScreen: categoryId =', categoryId);
+    
 		
 		const updateData = () => {
-			//console.log('ContentScreen: updateData called'); // Debug log
+            
 			if (categoryId) {
 				// Find the category across all disciplines
 				const disciplines = DataManager.getDisciplines();
@@ -33,13 +33,13 @@ export default function ContentScreen({ navigation, route }) {
 					if (foundCategory) break;
 				}
 				
-				//console.log('ContentScreen: foundCategory =', foundCategory); // Debug log
+                
 				setCategory(foundCategory);
 				
 				// Transform contents to include star data
 				const transformedContents = (foundCategory?.contents || []).map(content => {
 					const contentStars = DataManager.getContentStars(content.id);
-					//console.log(`ContentScreen: Content ${content.title} has ${contentStars.totalStars}/${contentStars.maxStars} stars`); // Debug log
+                    
 					return {
 						id: content.id,
 						order: content.title.split('.')[0] || '', // Extract order number from title
@@ -52,7 +52,7 @@ export default function ContentScreen({ navigation, route }) {
 					};
 				});
 				
-				//console.log('ContentScreen: Setting transformedContents =', transformedContents); // Debug log
+                
 				setContents(transformedContents);
 			}
 		};
@@ -85,10 +85,10 @@ export default function ContentScreen({ navigation, route }) {
 		// Use filteredContents which already has updated star data
 		filteredContents.forEach(content => {
 			const contentStars = DataManager.getContentStars(content.id);
-			//console.log(`ContentScreen: starsByDifficulty for ${content.title}:`, contentStars.stars); // Debug log
+            
 			result[content.id] = contentStars.stars; // stars object with easy/hard/genius keys
 		});
-		//console.log('ContentScreen: Final starsByDifficulty:', result); // Debug log
+        
 		return result;
 	}, [filteredContents]); // Use filteredContents instead of contents
 
@@ -102,9 +102,8 @@ export default function ContentScreen({ navigation, route }) {
 				title: item.title,
 				html: response?.content?.longDescription || '<p>Conteúdo não disponível</p>'
 			});
-		} catch (error) {
-			console.error('Failed to load content for study:', error);
-			
+			} catch (error) {
+        
 			// Navigate with error message
 			navigation.navigate('Html', {
 				title: item.title,
