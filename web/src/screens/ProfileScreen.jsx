@@ -159,8 +159,17 @@ export default function ProfileScreen({ navigation, route }) {
 					setLastProcessedTimestamp(timestamp);
 				}
 
-				// Clear the navigation parameters to prevent reopening on subsequent visits
-				navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined });
+						// Clear the navigation parameters to prevent reopening on subsequent visits
+						try {
+							if (navigation && typeof navigation.setParams === 'function') {
+								navigation.setParams({ openBadgeModal: undefined, highlightChests: undefined, timestamp: undefined });
+							} else if (navigation && typeof navigation.replace === 'function') {
+								// Fallback: replace current route without the params
+								navigation.replace('Profile');
+							} // else: no-op on web navigation implementation
+						} catch (e) {
+							// Swallow errors to avoid crashing the UI
+						}
 			}, 800); // 800ms delay to wait for screen transition to complete
 		}
 	}, [openBadgeModal, badges, handleMedalPress, timestamp, lastProcessedTimestamp, navigation]);
