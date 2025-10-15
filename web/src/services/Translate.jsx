@@ -32,6 +32,7 @@ export function TranslationProvider({ children }) {
 	// Placeholder function - language is always Portuguese
 	async function changeLanguage(languageCode) {
 		// No-op: language is fixed to Portuguese
+		console.log('Language change disabled - always Portuguese');
 	}
 
 	function translate(key, variables = {}) {

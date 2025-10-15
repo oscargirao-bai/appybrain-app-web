@@ -54,17 +54,17 @@ export default function ResultScreen2({ navigation, route }) {
 			try {
 				await DataManager.refreshSection('userInfo');
 			} catch (error) {
-				
+				console.error('ResultScreen2: failed to refresh userInfo', error);
 			}
 			try {
 				await DataManager.refreshSection('userStars');
 			} catch (error) {
-				
+				console.error('ResultScreen2: failed to refresh userStars', error);
 			}
 			try {
 				await DataManager.refreshSection('battles');
 			} catch (error) {
-				
+				console.error('ResultScreen2: failed to refresh battles', error);
 			}
 		};
 
@@ -74,14 +74,17 @@ export default function ResultScreen2({ navigation, route }) {
 				return;
 			}
 			try {
+				console.log('[Result2] loadBattleResult - battleSessionId:', battleSessionId);
 				if (isMounted) setLoading(true);
 				const result = await ApiManager.getBattleResult(battleSessionId);
+				console.log('[Result2] ApiManager.getBattleResult returned:', result);
 				if (isMounted && result?.success) {
 					const transformed = transformBattleApiResponse(result, battleSessionId);
+					console.log('[Result2] transformed battle result:', transformed);
 					setBattleResult(transformed);
 				}
 			} catch (error) {
-				
+				console.error('ResultScreen2: failed to load battle result', error);
 			} finally {
 				if (isMounted) setLoading(false);
 			}

@@ -29,14 +29,18 @@ export default function ChestBrowserModal({ visible, onClose, dataSource = 'star
 	useEffect(() => {
 		if (visible) {
 			const chestData = DataManager.getUserChests();
+			console.log('ChestBrowserModal: Raw chest data:', chestData);
 			
 			let sourceData = {};
 			if (dataSource === 'points') {
 				sourceData = chestData?.points || {};
+				console.log('ChestBrowserModal: Using points data');
 			} else {
 				sourceData = chestData?.stars || {};
+				console.log('ChestBrowserModal: Using stars data');
 			}
 			
+			console.log('ChestBrowserModal: Source data:', sourceData);
 			
 			const existingChests = sourceData?.chests || [];
 			const allChests = [...existingChests];
@@ -56,13 +60,14 @@ export default function ChestBrowserModal({ visible, onClose, dataSource = 'star
 			}
 			
 			const sortedChests = allChests.sort((a, b) => (a.milestone || 0) - (b.milestone || 0));
-			
+			console.log('ChestBrowserModal: Final chests:', sortedChests);
 			setChests(sortedChests);
 			
 			const progressInfo = {
 				current: sourceData?.current || 0,
 				nextThreshold: sourceData?.nextThreshold || 100
 			};
+			console.log('ChestBrowserModal: Progress info:', progressInfo);
 			setProgressData(progressInfo);
 			
 			// Scroll to bottom after content is loaded
@@ -91,11 +96,12 @@ export default function ChestBrowserModal({ visible, onClose, dataSource = 'star
 				onClose && onClose();
 			} else {
 				setLoadingChestId(null);
-											
+				console.warn('Open chest API did not succeed', response);
 			}
-			} catch (e) {
-				setLoadingChestId(null);
-			}
+		} catch (e) {
+			console.error('Error opening chest from browser modal', e);
+			setLoadingChestId(null);
+		}
 	};
 
 	if (!visible) {

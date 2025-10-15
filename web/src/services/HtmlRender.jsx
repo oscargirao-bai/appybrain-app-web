@@ -32,10 +32,14 @@ export default function HtmlRender({ html, baseFontSize = 18, textColor, linkCol
 	function handleMessage(e) {
 		try {
 			const data = JSON.parse(e.nativeEvent.data);
+			//console.log('HtmlRender received message:', data);
 			if (typeof data.height === 'number') {
 				const h = Math.max(20, Math.ceil(data.height));
 				setHeight(h);
 				onHeightChange && onHeightChange(h);
+			}
+			if (data.katex === 'error') {
+				console.error('KaTeX error received:', data.message);
 			}
 		} catch {}
 	}
@@ -54,9 +58,11 @@ export default function HtmlRender({ html, baseFontSize = 18, textColor, linkCol
 					mixedContentMode="compatibility"
 					onError={(syntheticEvent) => {
 						const { nativeEvent } = syntheticEvent;
+						//console.log('WebView error:', nativeEvent);
 					}}
 					onHttpError={(syntheticEvent) => {
 						const { nativeEvent } = syntheticEvent;
+						//console.log('WebView HTTP error:', nativeEvent);
 					}}
 					bounces={false}
 					overScrollMode="never"

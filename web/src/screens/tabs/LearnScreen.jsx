@@ -44,13 +44,13 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 	useEffect(() => {
 		const updateData = () => {
 			const userData = DataManager.getUser();
-            
+			console.log('LearnScreen - userData:', userData);
 			setUserInfo(userData);
 			const disciplinesData = DataManager.getDisciplines();
-            
+			console.log('LearnScreen - disciplinesData:', disciplinesData);
 			setDisciplines(disciplinesData);
 			const unreadCount = DataManager.getUnreadNotificationsCount();
-            
+			console.log('LearnScreen - unreadCount:', unreadCount);
 			setUnreadNotificationsCount(unreadCount);
 		};
 

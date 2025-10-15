@@ -114,6 +114,7 @@ export default function NewsList({ style, limit, onPressItem }) {
 			}
 			
 		} catch (error) {
+			console.error('NewsModal: Failed to load news:', error);
 			setNews([]);
 			setNewsAnimations([]);
 		}
