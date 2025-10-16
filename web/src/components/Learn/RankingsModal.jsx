@@ -5,6 +5,7 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import UserList from '../General/UserList.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import { useRankingsData } from './useRankingsData.js';
+import DataManager from '../../services/DataManager.jsx';
 import styles from './RankingsModal.styles.js';
 
 const METRIC_OPTIONS = [
@@ -22,7 +23,9 @@ const TAB_OPTIONS = [
 export default function RankingsModal({ visible, onClose, navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const [metric, setMetric] = useState('points');
+  // Default metric depends on user access: if no full access, only 'xp' is allowed
+  const hasFullAccess = DataManager.hasFullAccess();
+  const [metric, setMetric] = useState(() => (hasFullAccess ? 'points' : 'xp'));
   const [tab, setTab] = useState('global');
 
   const { users, loading, setLoading, currentUserId } = useRankingsData({ visible, metric, tab });
@@ -102,30 +105,32 @@ export default function RankingsModal({ visible, onClose, navigation }) {
             {loading ? <span style={{ ...styles.loadingIndicator, color: colors.primary }}>...</span> : null}
           </div>
           <div style={styles.tabsRowCentered}>
-            {METRIC_OPTIONS.map(({ value, icon }) => {
-              const active = metric === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setMetric(value)}
-                  style={{
-                    ...styles.tabBtn,
-                    borderColor: active ? colors.primary + 'AA' : colors.text + '33',
-                    backgroundColor: active ? activeBackgroundBase + 'AA' : 'transparent',
-                  }}
-                  aria-pressed={active}
-                  aria-label={metricLabels[value]}
-                >
-                  {icon ? (
-                    <LucideIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
-                  ) : null}
-                  <span style={{ ...styles.tabLabel, color: active ? colors.primary : colors.text }}>
-                    {metricLabels[value]}
-                  </span>
-                </button>
-              );
-            })}
+            {METRIC_OPTIONS
+              .filter(opt => hasFullAccess || opt.value === 'xp')
+              .map(({ value, icon }) => {
+                const active = metric === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setMetric(value)}
+                    style={{
+                      ...styles.tabBtn,
+                      borderColor: active ? colors.primary + 'AA' : colors.text + '33',
+                      backgroundColor: active ? activeBackgroundBase + 'AA' : 'transparent',
+                    }}
+                    aria-pressed={active}
+                    aria-label={metricLabels[value]}
+                  >
+                    {icon ? (
+                      <LucideIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
+                    ) : null}
+                    <span style={{ ...styles.tabLabel, color: active ? colors.primary : colors.text }}>
+                      {metricLabels[value]}
+                    </span>
+                  </button>
+                );
+              })}
           </div>
           <div style={styles.tabsRowCentered}>
             {TAB_OPTIONS.map(({ value, icon }) => {
@@ -158,7 +163,7 @@ export default function RankingsModal({ visible, onClose, navigation }) {
               currentUserId={currentUserId}
               emptyLabel={translate('rankings.empty')}
               onUserPress={navigation ? handleUserPress : undefined}
-              showMedals
+              showMedals={hasFullAccess}
               denseRanking={false}
               showRelativeBar={metric !== 'xp'}
             />
