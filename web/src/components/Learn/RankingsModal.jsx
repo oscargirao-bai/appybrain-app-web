@@ -23,9 +23,10 @@ const TAB_OPTIONS = [
 export default function RankingsModal({ visible, onClose, navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  // Default metric depends on user access: if no full access, only 'xp' is allowed
+  // Default metric depends on user access: if no full access, default to 'stars'
+  // and allow 'stars' and 'xp' (only 'points' / trophies are hidden).
   const hasFullAccess = DataManager.hasFullAccess();
-  const [metric, setMetric] = useState(() => (hasFullAccess ? 'points' : 'xp'));
+  const [metric, setMetric] = useState(() => (hasFullAccess ? 'points' : 'stars'));
   const [tab, setTab] = useState('global');
 
   const { users, loading, setLoading, currentUserId } = useRankingsData({ visible, metric, tab });
@@ -106,7 +107,7 @@ export default function RankingsModal({ visible, onClose, navigation }) {
           </div>
           <div style={styles.tabsRowCentered}>
             {METRIC_OPTIONS
-              .filter(opt => hasFullAccess || opt.value === 'xp')
+              .filter(opt => hasFullAccess || opt.value !== 'points')
               .map(({ value, icon }) => {
                 const active = metric === value;
                 return (
