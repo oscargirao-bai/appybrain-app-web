@@ -527,8 +527,8 @@ class DataManagerClass {
     // Set user configuration from login response
     setUserConfig(userConfigData) {
         if (userConfigData && typeof userConfigData === 'object') {
-            this.userConfig.randomPosition = userConfigData.randomPosition || 1;
-            this.userConfig.fullAccess = userConfigData.fullAccess || 0;
+            this.userConfig.randomPosition = userConfigData.randomPosition ?? 1;
+            this.userConfig.fullAccess = userConfigData.fullAccess ?? 0;
             //console.log('DataManager: User config set:', this.userConfig);
         }
     }
