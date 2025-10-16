@@ -87,7 +87,12 @@ export function executeNotificationNavigation(notification) {
       // Result2 is responsible for fetching the battle result when needed,
       // so going through Loading is unnecessary and causes UX regression on web.
       try {
-        navigate('Result2', { battleSessionId: sourceId });
+        if (DataManager.hasFullAccess()) {
+          navigate('Result2', { battleSessionId: sourceId });
+        } else {
+          // User doesn't have access to battles; fallback to Learn
+          navigate('MainTabs', { screen: 'Learn' });
+        }
       } catch (err) {
         console.error('[Notifications] Failed to navigate to Result2, falling back to Loading:', err);
         // Fallback: preserve previous behavior
@@ -103,10 +108,14 @@ export function executeNotificationNavigation(notification) {
 
     case 'challenge':
     case 'challenges':
-      navigate('MainTabs', {
-        screen: 'Challenges',
-        params: buildTimestampedParams({}),
-      });
+      if (DataManager.hasFullAccess()) {
+        navigate('MainTabs', {
+          screen: 'Challenges',
+          params: buildTimestampedParams({}),
+        });
+      } else {
+        navigate('MainTabs', { screen: 'Learn' });
+      }
       break;
 
     case 'news':
