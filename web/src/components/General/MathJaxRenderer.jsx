@@ -23,6 +23,12 @@ const MathJaxRenderer = ({
   textColor, 
   padding = 0,
 }) => {
+  // Debug: log incoming props to inspect what is being rendered (temporary)
+  try {
+    console.log('MathJaxRenderer props:', { content, enabled, inlineDisplay, compact, as, baseFontSize, textColor, padding });
+  } catch (e) {
+    // avoid throwing during render
+  }
   const colors = useThemeColors();
   const containerRef = useRef(null);
   const [processedContent, setProcessedContent] = useState('');
