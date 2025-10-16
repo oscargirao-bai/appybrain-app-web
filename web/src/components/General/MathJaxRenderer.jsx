@@ -88,7 +88,15 @@ const MathJaxRenderer = ({
     }
 
     const element = containerRef.current;
-    if (!window.MathJax || !element) {
+    try {
+      console.log('MathJaxRenderer typeset start', { enabled, contentLength: String(processed).length, hasMathJax: !!window.MathJax, elementPresent: !!element });
+    } catch (e) {}
+    if (!element) {
+      return;
+    }
+    if (!window.MathJax) {
+      // If MathJax isn't loaded yet log and bail out
+      try { console.warn('MathJaxRenderer: window.MathJax not available at typeset time'); } catch (e) {}
       return;
     }
 
@@ -102,6 +110,25 @@ const MathJaxRenderer = ({
         setIsTypesetting(false);
         return;
       }
+      // Wait a short while for the element to have layout (visible sizes) before typesetting.
+      const waitForVisible = (el, timeout = 500) => new Promise((resolve) => {
+        const start = Date.now();
+        const check = () => {
+          try {
+            const style = window.getComputedStyle(el);
+            const visible = el.offsetWidth > 0 && el.offsetHeight > 0 && style.display !== 'none' && style.visibility !== 'hidden' && parseFloat(style.opacity || '1') > 0;
+            if (visible) return resolve(true);
+          } catch (e) {
+            // ignore
+          }
+          if (Date.now() - start > timeout) return resolve(false);
+          setTimeout(check, 50);
+        };
+        check();
+      });
+
+      const becameVisible = await waitForVisible(element, 600);
+      try { console.log('MathJaxRenderer: element visibility before typeset', { becameVisible, width: element.offsetWidth, height: element.offsetHeight }); } catch (e) {}
 
       try {
         // Clear previous typeset state first and wait for it to complete
@@ -132,7 +159,7 @@ const MathJaxRenderer = ({
         })
         .catch((err) => {
           if (canceled) return;
-          console.error('MathJax processing error:', err);
+          try { console.error('MathJax processing error:', err); } catch (e) {}
           setIsTypesetting(false);
         });
     };
