@@ -251,14 +251,24 @@ export default function ResultScreen2({ navigation, route }) {
 					label={translate('common.close')}
 					color={colors.secondary}
 					onClick={() => {
-						if (openedFromHistory) {
-							navigation.navigate('MainTabs', {
-								screen: 'Battle',
-								params: { reopenHistory: true, highlightBattleId: openedFromHistoryBattleId },
-							});
-						} else {
-							navigation.navigate('MainTabs', { initialTab: 1 });
-						}
+							const hasFullAccess = DataManager.hasFullAccess();
+							if (openedFromHistory) {
+								if (hasFullAccess) {
+									navigation.navigate('MainTabs', {
+										screen: 'Battle',
+										params: { reopenHistory: true, highlightBattleId: openedFromHistoryBattleId },
+									});
+								} else {
+									// Fallback to main tabs default if no access
+									navigation.navigate('MainTabs', { initialTab: 0 });
+								}
+							} else {
+								if (hasFullAccess) {
+									navigation.navigate('MainTabs', { initialTab: 1 });
+								} else {
+									navigation.navigate('MainTabs', { initialTab: 0 });
+								}
+							}
 					}}
 					style={{ minWidth: 220 }}
 				/>
