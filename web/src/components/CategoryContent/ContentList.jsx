@@ -220,7 +220,7 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 					<MathJaxRenderer
 						key={`desc-${item.id}-${wantsMath ? 'math' : 'plain'}`}
 						content={item.description || 'Sem descrição'}
-						enabled={wantsMath}
+						enabled={true}
 						baseFontSize={14}
 						textColor={iconColor}
 						compact={true}
