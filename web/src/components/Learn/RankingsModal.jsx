@@ -125,10 +125,11 @@ export default function RankingsModal({ visible, onClose, navigation }) {
                   >
                     {icon ? (
                       <LucideIcon name={icon} size={16} color={active ? colors.primary : colors.text} />
-                    ) : null}
-                    <span style={{ ...styles.tabLabel, color: active ? colors.primary : colors.text }}>
-                      {metricLabels[value]}
-                    </span>
+                    ) : (
+                      <span style={{ ...styles.tabLabel, color: active ? colors.primary : colors.text }}>
+                        {metricLabels[value]}
+                      </span>
+                    )}
                   </button>
                 );
               })}
