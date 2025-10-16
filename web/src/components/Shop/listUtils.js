@@ -97,7 +97,7 @@ export function createStyles(colors, priceFontSize, numColumns, itemSize) {
 		},
 		pricePillWrap: {
 			position: 'absolute',
-			bottom: -18,
+			bottom: -14, // raised 4px to avoid touching cosmetic below
 			left: '50%',
 			transform: 'translateX(-50%)',
 			display: 'flex',
