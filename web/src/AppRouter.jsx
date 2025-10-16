@@ -216,8 +216,18 @@ export default function AppRouter() {
 					// Voltar ao ecrã anterior restaurando os params
 					const newHistory = prev.slice(0, -1);
 					const previousRoute = newHistory[newHistory.length - 1];
+					// If previous route is MainTabs but doesn't include initialTab, try to restore
+					// the last active tab (window.__lastMainTab) so the user returns to the
+					// same tab they were on (e.g. News) instead of defaulting to Learn.
+					let restoredParams = previousRoute.params || {};
+					if (previousRoute.name === 'MainTabs' && typeof restoredParams.initialTab !== 'number') {
+						const lastTab = (typeof window !== 'undefined' && typeof window.__lastMainTab === 'number') ? window.__lastMainTab : 0;
+						restoredParams = { ...restoredParams, initialTab: lastTab };
+						// persist the change into history so future back actions keep it
+						newHistory[newHistory.length - 1] = { ...previousRoute, params: restoredParams };
+					}
 					setCurrentScreen(previousRoute.name);
-					setScreenParams(previousRoute.params || {});
+					setScreenParams(restoredParams);
 					return newHistory;
 				}
 			});
