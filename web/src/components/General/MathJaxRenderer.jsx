@@ -23,12 +23,7 @@ const MathJaxRenderer = ({
   textColor, 
   padding = 0,
 }) => {
-  // Debug: log incoming props to inspect what is being rendered (temporary)
-  try {
-    console.log('MathJaxRenderer props:', { content, enabled, inlineDisplay, compact, as, baseFontSize, textColor, padding });
-  } catch (e) {
-    // avoid throwing during render
-  }
+  // (diagnostic logs removed)
   const colors = useThemeColors();
   const containerRef = useRef(null);
   const [processedContent, setProcessedContent] = useState('');
@@ -88,9 +83,7 @@ const MathJaxRenderer = ({
     }
 
     const element = containerRef.current;
-    try {
-      console.log('MathJaxRenderer typeset start', { enabled, contentLength: String(processed).length, hasMathJax: !!window.MathJax, elementPresent: !!element });
-    } catch (e) {}
+    // typeset start (diagnostics removed)
     if (!element) {
       return;
     }
@@ -127,8 +120,7 @@ const MathJaxRenderer = ({
         check();
       });
 
-      const becameVisible = await waitForVisible(element, 600);
-      try { console.log('MathJaxRenderer: element visibility before typeset', { becameVisible, width: element.offsetWidth, height: element.offsetHeight }); } catch (e) {}
+  const becameVisible = await waitForVisible(element, 600);
 
       try {
         // Clear previous typeset state first and wait for it to complete
