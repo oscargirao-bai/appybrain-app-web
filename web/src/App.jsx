@@ -25,26 +25,39 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div style={{
-        width: '550px',
-        minWidth: '375px',
-        maxWidth: '550px',
-        margin: '0 auto',
-        height: '100vh',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        fontFamily: 'Work Sans, sans-serif'
-      }}>
-        <ThemeProvider defaultTheme="dark">
-          <TranslationProvider>
-            <SearchProvider>
-              {isMobileOrTablet ? <StoreRedirect /> : <AppRouter />}
-            </SearchProvider>
-          </TranslationProvider>
-        </ThemeProvider>
-      </div>
+      {isMobileOrTablet ? (
+        // Full width store redirect for mobile/tablet
+        <div style={{ minHeight: '100vh' }}>
+          <ThemeProvider defaultTheme="dark">
+            <TranslationProvider>
+              <SearchProvider>
+                <StoreRedirect />
+              </SearchProvider>
+            </TranslationProvider>
+          </ThemeProvider>
+        </div>
+      ) : (
+        <div style={{
+          width: '550px',
+          minWidth: '375px',
+          maxWidth: '550px',
+          margin: '0 auto',
+          height: '100vh',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          fontFamily: 'Work Sans, sans-serif'
+        }}>
+          <ThemeProvider defaultTheme="dark">
+            <TranslationProvider>
+              <SearchProvider>
+                <AppRouter />
+              </SearchProvider>
+            </TranslationProvider>
+          </ThemeProvider>
+        </div>
+      )}
     </ErrorBoundary>
   );
 }

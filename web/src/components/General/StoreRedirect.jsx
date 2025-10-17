@@ -57,7 +57,7 @@ export default function StoreRedirect() {
       background: '#0f1113',
       color: '#fff'
     }}>
-      <img src="/assets/logo.png" alt="AppyBrain" style={{ width: 120, height: 120, objectFit: 'contain' }} />
+      <img src="/assets/logo.png" alt="AppyBrain" style={{ width: 240, height: 240, objectFit: 'contain' }} />
       <div style={{ marginTop: 28, textAlign: 'center', maxWidth: 420, padding: '0 16px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>Esta App está disponível em:</div>
         <div style={{ marginTop: 18 }}>
