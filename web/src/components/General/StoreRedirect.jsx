@@ -13,19 +13,8 @@ export default function StoreRedirect() {
   }, []);
 
   useEffect(() => {
-    // Only auto-redirect on mobile platforms
-    if (platform === 'android') {
-      const t = setTimeout(() => {
-        window.location.href = 'https://play.google.com/store/apps/details?id=com.baidigital.appybrain';
-      }, 5000);
-      return () => clearTimeout(t);
-    }
-    if (platform === 'ios') {
-      const t = setTimeout(() => {
-        window.location.href = 'https://www.apple.com/app-store/';
-      }, 5000);
-      return () => clearTimeout(t);
-    }
+    // No automatic redirect: user must click the store logo to open the store.
+    // This keeps control with the user and avoids accidental navigations.
   }, [platform]);
 
   const renderStore = () => {
@@ -64,7 +53,7 @@ export default function StoreRedirect() {
           {renderStore()}
         </div>
         <div style={{ marginTop: 12, fontSize: 13, opacity: 0.85 }}>
-          Serás redireccionado em 5 segundos...
+          Clique no logo para abrir a loja.
         </div>
       </div>
       {/* On desktop/web show nothing else (normal app loads) */}
