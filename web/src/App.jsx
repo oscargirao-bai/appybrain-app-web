@@ -4,6 +4,7 @@ import { TranslationProvider } from './services/Translate.jsx';
 import { SearchProvider } from './services/SearchContext.jsx';
 import ApiManager from './services/ApiManager.jsx';
 import AppRouter from './AppRouter.jsx';
+import StoreRedirect from './components/General/StoreRedirect.jsx';
 import ErrorBoundary from './ErrorBoundary.jsx';
 
 export default function App() {
@@ -12,6 +13,14 @@ export default function App() {
     ApiManager.init({
       baseUrl: 'https://appybrain.skillade.com/api/'
     });
+  }, []);
+
+  // Detect mobile/tablet by userAgent
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+  useEffect(() => {
+    const ua = navigator.userAgent || '';
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+    setIsMobileOrTablet(!!isMobile);
   }, []);
 
   return (
@@ -31,7 +40,7 @@ export default function App() {
         <ThemeProvider defaultTheme="dark">
           <TranslationProvider>
             <SearchProvider>
-              <AppRouter />
+              {isMobileOrTablet ? <StoreRedirect /> : <AppRouter />}
             </SearchProvider>
           </TranslationProvider>
         </ThemeProvider>
