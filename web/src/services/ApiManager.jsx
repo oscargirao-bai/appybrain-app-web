@@ -260,7 +260,7 @@ class ApiManager {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email, 'return': 'app.appybrain.pt' })
             });
 
             const data = await response.json();
