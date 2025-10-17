@@ -43,10 +43,12 @@ export default function StoreRedirect() {
       alignItems: 'center',
       justifyContent: 'flex-start',
       paddingTop: 40,
-      background: '#0f1113',
-      color: '#fff'
+      background: '#ffffff',
+      color: '#0b0b0b'
     }}>
-      <img src="/assets/logo.png" alt="AppyBrain" style={{ width: 240, height: 240, objectFit: 'contain' }} />
+      <a href="https://www.appybrain.pt" target="_blank" rel="noopener noreferrer">
+        <img src="/assets/logo.png" alt="AppyBrain" style={{ width: 240, height: 240, objectFit: 'contain' }} />
+      </a>
       <div style={{ marginTop: 28, textAlign: 'center', maxWidth: 420, padding: '0 16px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>Esta App está disponível em:</div>
         <div style={{ marginTop: 18 }}>

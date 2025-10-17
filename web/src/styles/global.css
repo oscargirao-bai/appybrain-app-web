@@ -32,8 +32,8 @@ body {
 
 /* Make page background white globally */
 body, #root {
-  background: #ffffff;
-  color: #0b0b0b;
+  /* background and color are intentionally left to individual pages/components
+     to avoid global visual changes — StoreRedirect will set its own background */
 }
 
 button, input, textarea, select {
