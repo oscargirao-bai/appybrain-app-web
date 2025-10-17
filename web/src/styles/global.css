@@ -30,6 +30,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Make page background white globally */
+body, #root {
+  background: #ffffff;
+  color: #0b0b0b;
+}
+
 button, input, textarea, select {
   font-family: inherit;
 }

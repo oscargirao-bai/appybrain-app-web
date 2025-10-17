@@ -52,7 +52,15 @@ export default function App() {
           <ThemeProvider defaultTheme="dark">
             <TranslationProvider>
               <SearchProvider>
-                <AppRouter />
+                {/* Clickable logo linking to appybrain site */}
+                <div style={{padding: '12px 16px', textAlign: 'center'}}>
+                  <a href="https://www.appybrain.pt" target="_blank" rel="noopener noreferrer">
+                    <img src="/assets/logo.png" alt="AppyBrain" style={{height: 48, width: 'auto'}} />
+                  </a>
+                </div>
+                <div style={{flex: 1, overflow: 'auto'}}>
+                  <AppRouter />
+                </div>
               </SearchProvider>
             </TranslationProvider>
           </ThemeProvider>
