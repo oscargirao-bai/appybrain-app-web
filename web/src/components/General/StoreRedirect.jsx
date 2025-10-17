@@ -54,9 +54,7 @@ export default function StoreRedirect() {
         <div style={{ marginTop: 18 }}>
           {renderStore()}
         </div>
-        <div style={{ marginTop: 12, fontSize: 13, opacity: 0.85 }}>
-          Clique no logo para abrir a loja.
-        </div>
+        {/* instruction removed as requested */}
       </div>
       {/* On desktop/web show nothing else (normal app loads) */}
     </div>
