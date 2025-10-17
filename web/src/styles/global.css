@@ -33,3 +33,22 @@ body {
 button, input, textarea, select {
   font-family: inherit;
 }
+
+/* Hide scrollbars visually but keep scrolling functional */
+/* WebKit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none !important; /* hide scrollbar but keep functionality */
+  -ms-overflow-style: none !important; /* IE 10+ */
+}
+
+/* Ensure elements that need scrolling keep it (for mobile/touch/keyboard) */
+.no-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+}
