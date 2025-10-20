@@ -87,7 +87,7 @@ export default function ResultScreen1({ navigation, route }) {
             tribe={getTribeName()}
             coins={getStats().coins}
             stars={getStats().stars}
-            trophies={getStats().points}
+            /* trophies intentionally omitted on this result screen */
           />
         </div>
         <Stats correct={correct} total={total} totalSec={typeof totalSec === 'number' ? totalSec : null} />
