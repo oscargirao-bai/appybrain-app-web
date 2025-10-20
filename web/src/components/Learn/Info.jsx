@@ -7,9 +7,10 @@ export default function Info({ username = 'Nickname', tribe = 'Sem Tribo', coins
 	const colors = useThemeColors();
 	const styles = React.useMemo(() => createStyles(colors), [colors]);
 
-	const showCoins = typeof coins === 'number';
-	const showStars = typeof stars === 'number';
-	const showTrophies = typeof trophies === 'number';
+	// Accept values that are defined (API may send numbers as strings); mirror mobile behavior
+	const showCoins = coins !== undefined && coins !== null;
+	const showStars = stars !== undefined && stars !== null;
+	const showTrophies = trophies !== undefined && trophies !== null;
 
 	const metrics = [];
 	if (showStars) metrics.push({ key: 'stars' });
