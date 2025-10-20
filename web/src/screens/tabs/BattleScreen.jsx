@@ -293,7 +293,8 @@ export default function BattleScreen({ navigation, route }) {
           <div style={styles.trophySection} />
           <div style={styles.rankSection}>
             <div style={styles.rankRow}>
-              <RankDisplay trophies={userInfo?.trophies ?? 0} size={shieldSize} />
+              {/* Use points when available (server uses 'points' in many endpoints); fallback to trophies for compatibility */}
+              <RankDisplay trophies={userInfo?.points ?? userInfo?.trophies ?? 0} size={shieldSize} />
             </div>
           </div>
           <div style={styles.buttonSection}>
