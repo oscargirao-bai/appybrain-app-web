@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
+import { useTheme } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function ConfirmModal({
@@ -11,7 +11,7 @@ export default function ConfirmModal({
   onCancel,
   destructive = false,
 }) {
-  const colors = useThemeColors();
+  const { colors } = useTheme();
 
   if (!visible) {
     return null;
@@ -35,12 +35,12 @@ export default function ConfirmModal({
               onClick={onConfirm}
               style={{
                 ...styles.btn,
-                backgroundColor: destructive ? colors.error : colors.success,
-                borderColor: destructive ? (colors.error + '55') : (colors.success + '55'),
+                backgroundColor: destructive ? colors.error : colors.secondary,
+                borderColor: destructive ? (colors.error + '55') : (colors.secondary + '55'),
               }}
               aria-label={confirmLabel}
             >
-              <span style={styles.btnTextWhite}>{confirmLabel}</span>
+              <span style={{ ...styles.btnTextWhite, fontWeight: '700' }}>{confirmLabel}</span>
             </button>
           </div>
         </div>

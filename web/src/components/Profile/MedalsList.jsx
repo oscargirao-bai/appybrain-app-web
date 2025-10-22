@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
+import { useTheme } from '../../services/Theme.jsx';
 import { family } from '../../constants/font.jsx';
 import MedalButton from './MedalButton.jsx';
 
@@ -48,7 +48,7 @@ const COLUMNS_PER_PAGE = 5;
 const FIXED_CELL_WIDTH = 80; // fixed width per badge column with more spacing
 
 export default function MedalsList({ medals: medalsProp, style, title = 'Medalhas', onMedalPress }) {
-	const colors = useThemeColors();
+	const { colors, resolvedTheme } = useTheme();
 	// Window width is fixed: 5 columns * 70px per column = 350px content width
 	const windowWidth = COLUMNS_PER_PAGE * FIXED_CELL_WIDTH;
 
@@ -178,9 +178,11 @@ export default function MedalsList({ medals: medalsProp, style, title = 'Medalha
 					</button>
 				</div>
 				<div style={styles.dotsRow}>
-					{Array.from({ length: pages }).map((_, i) => (
-						<button key={i} onClick={() => goToPage(i)} style={{ ...styles.dot, ...(i === page ? { backgroundColor: colors.primary } : {}) }} />
-					))}
+					{Array.from({ length: pages }).map((_, i) => {
+						const inactiveColor = resolvedTheme === 'light' ? colors.border : 'rgba(255,255,255,0.2)';
+						const dotStyle = { ...styles.dot, backgroundColor: i === page ? colors.primary : inactiveColor };
+						return <button key={i} onClick={() => goToPage(i)} style={dotStyle} />;
+					})}
 				</div>
 			</div>
 		);
