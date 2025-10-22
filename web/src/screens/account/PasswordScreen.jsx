@@ -108,7 +108,8 @@ export default function PasswordScreen({ navigation, route }) {
       </div>
       <div style={styles.flex}>
         <div style={styles.staticContainer}> 
-          <div style={[styles.inner, { maxWidth: containerMaxWidth, transform: [{ translateY: -(keyboardShift + baseLift) }] }]}>            
+          {/* Use web-friendly transform string instead of RN-style array/object */}
+          <div style={{...styles.inner, maxWidth: containerMaxWidth, transform: `translateY(${-(keyboardShift + baseLift)}px)`}}>            
             {/* Brand Logo */}
             <img               
               src={logoSource}
