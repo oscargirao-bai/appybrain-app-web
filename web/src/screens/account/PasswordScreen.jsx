@@ -12,7 +12,7 @@ const logoSource = '/assets/logo.png';
 export default function PasswordScreen({ navigation, route }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
-  const width = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const width = window.innerWidth > 600 ? 600 : window.innerWidth;
 
   const currentPassword = route?.params?.currentPassword || '';
   const [newPassword, setNewPassword] = useState('');
@@ -23,8 +23,11 @@ export default function PasswordScreen({ navigation, route }) {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const isTablet = width >= 768;
-  const containerMaxWidth = isTablet ? 520 : 420;
-  const logoWidth = Math.min(width * 0.5, 320);
+  const logoWidthPercent = isTablet ? 0.6 : 0.92;
+  const logoWidth = Math.min(width * logoWidthPercent, 720);
+  const logoCropFactor = 0.8;
+  const logoVisibleHeight = Math.round(logoWidth * logoCropFactor);
+  const logoVerticalShift = -logoWidth * 0.06;
 
   async function onSubmit() {
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -62,41 +65,56 @@ export default function PasswordScreen({ navigation, route }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: containerMaxWidth, padding: 16, boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <img src={logoSource} alt="App logo" style={{ width: logoWidth, objectFit: 'contain', marginTop: 6, marginBottom: 8 }} />
-            <h1 style={{ margin: 0, marginBottom: 8, fontSize: width < 420 ? 22 : 32, color: colors.text, textAlign: 'center' }}>
-              {translate('password.changeTitle') || 'Alterar Palavra‑passe'}
-            </h1>
-
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 32 }}>
-              <TextInputField
-                value={newPassword}
-                onChangeText={setNewPassword}
-                placeholder={translate('password.new') || 'Nova palavra‑passe'}
-                secureTextEntry
-                icon="password"
-                containerStyle={{ maxWidth: 420, width: '100%', marginBottom: 8 }}
-              />
-
-              <TextInputField
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                placeholder={translate('password.confirm') || 'Confirmar palavra‑passe'}
-                secureTextEntry
-                icon="password"
-                containerStyle={{ maxWidth: 420, width: '100%', marginBottom: 8 }}
-              />
-            </div>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <div style={{ 
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: width > 420 ? 'center' : 'flex-start',
+        padding: width > 420 ? '4% 6% 12%' : '6% 6% 10%'
+      }}>
+        {/* Logo (same positioning as login) */}
+        <div style={{ 
+          display: 'flex',
+          alignItems: 'center',
+          paddingTop: '2%',
+          marginBottom: '6%',
+          height: Math.min(logoVisibleHeight, 260)
+        }}>
+          <div style={{ overflow: 'hidden', width: logoWidth, height: logoVisibleHeight, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            <img
+              src={logoSource}
+              alt="App logo"
+              style={{ width: logoWidth, height: logoWidth, objectFit: 'contain', transform: `translateY(${logoVerticalShift}px)` }}
+            />
           </div>
         </div>
-      </div>
 
-      {/* Sticky submit for small screens: center the button and keep it visible */}
-      <div style={{ padding: 12, boxSizing: 'border-box', background: 'transparent', position: width < 720 ? 'fixed' : 'static', bottom: width < 720 ? 8 : 'auto', left: width < 720 ? 8 : 'auto', right: width < 720 ? 8 : 'auto', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: containerMaxWidth, padding: 2, boxSizing: 'border-box' }}>
+        {/* Form (fields placed same location as login) */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ width: '100%', marginBottom: '2%' }}>
+            <TextInputField
+              value={newPassword}
+              onChangeText={setNewPassword}
+              placeholder={translate('password.new') || 'Nova palavra‑passe'}
+              label={translate('password.new') || 'Nova palavra‑passe'}
+              secureTextEntry
+              icon="password"
+              containerStyle={{ maxWidth: Math.min(480, width - 48) }}
+            />
+
+            <TextInputField
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder={translate('password.confirm') || 'Confirmar palavra‑passe'}
+              label={translate('password.confirm') || 'Confirmar palavra‑passe'}
+              secureTextEntry
+              icon="password"
+              containerStyle={{ maxWidth: Math.min(480, width - 48) }}
+            />
+          </div>
+
           <PrimaryButton
             title={translate('password.change') || 'Alterar palavra‑passe'}
             onClick={onSubmit}
