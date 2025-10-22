@@ -198,8 +198,16 @@ const styles = {
 	dot: {
 		width: 10,
 		height: 10,
-		borderRadius: 10,
+		borderRadius: 9999,
 		backgroundColor: '#ffffff33',
+		border: 'none',
+		padding: 0,
+		margin: 0,
+		display: 'inline-block',
+		boxSizing: 'border-box',
+		lineHeight: 0,
+		WebkitAppearance: 'none',
+		appearance: 'none',
 	},
 	arrowBtn: {
 		position: 'absolute',

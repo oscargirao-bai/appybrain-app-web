@@ -117,4 +117,11 @@ const styles = {
 		letterSpacing: '0.3px',
 		fontWeight: '700',
 	},
+  btnTextWhite: {
+    fontSize: 15,
+    fontFamily: family.bold,
+    letterSpacing: '0.3px',
+    fontWeight: '700',
+    color: '#fff'
+  },
 };
