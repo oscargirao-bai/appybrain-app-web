@@ -18,6 +18,15 @@
     "fillEmail": "Por favor, introduza o seu email.",
     "error": "Erro"
   },
+  "password": {
+    "changeTitle": "Alterar Palavra‑passe",
+    "new": "Nova palavra‑passe",
+    "confirm": "Confirmar palavra‑passe",
+    "change": "Alterar palavra‑passe",
+    "fillFields": "Por favor, preencha todos os campos.",
+    "minLength": "A palavra-passe deve ter pelo menos 6 caracteres.",
+    "mismatchDesc": "Certifique-se de que ambas as palavras-passe são iguais."
+  },
   "battles": {
     "playNow": "Batalha",
     "trophyRoad": "Caminho de Troféus"

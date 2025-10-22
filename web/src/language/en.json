@@ -48,6 +48,15 @@
     "error": "Error",
     "errorMessage": "Failed to send recovery email. Please try again."
   },
+  "password": {
+    "changeTitle": "Change password",
+    "new": "New password",
+    "confirm": "Confirm password",
+    "change": "Change password",
+    "fillFields": "Please fill in all fields.",
+    "minLength": "Password must be at least 6 characters long.",
+    "mismatchDesc": "Please make sure both passwords match."
+  },
   "sessionExpired": {
     "title": "Session Expired",
     "message": "Your session has expired, so you need to log back in",

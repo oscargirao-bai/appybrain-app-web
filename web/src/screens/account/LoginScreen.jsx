@@ -19,10 +19,12 @@ export default function LoginScreen({ navigation }) {
 	const width = window.innerWidth > 600 ? 600 : window.innerWidth;
 	const isTablet = width >= 768;
 	const logoWidthPercent = isTablet ? 0.6 : 0.92;
-	const logoWidth = width * logoWidthPercent;
-	const logoCropFactor = 0.55;
+	const logoWidth = Math.min(width * logoWidthPercent, 720);
+	// show more of the logo to avoid cropping on small screens
+	const logoCropFactor = 0.8;
 	const logoVisibleHeight = Math.round(logoWidth * logoCropFactor);
-	const logoVerticalShift = -logoWidth * 0.20;
+	// smaller vertical shift so logo doesn't move out of view
+	const logoVerticalShift = -logoWidth * 0.06;
 
 	async function onSubmit() {
 		if (!email || !password) {
@@ -85,16 +87,17 @@ export default function LoginScreen({ navigation }) {
 				display: 'flex',
 				flexDirection: 'column',
 				alignItems: 'center',
-				justifyContent: 'center',
-				padding: '4% 6% 12%'
+				justifyContent: width > 420 ? 'center' : 'flex-start',
+				padding: width > 420 ? '4% 6% 12%' : '6% 6% 10%'
 			}}>
 				{/* Logo */}
 				<div style={{ 
 					display: 'flex',
 					alignItems: 'center',
 					paddingTop: '2%',
-					marginBottom: '8%',
-					height: logoVisibleHeight
+					marginBottom: '6%',
+					// ensure the logo wrapper doesn't overflow on small screens
+					height: Math.min(logoVisibleHeight, 260)
 				}}>
 					<div style={{ overflow: 'hidden', width: logoWidth, height: logoVisibleHeight, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 						<img
@@ -114,6 +117,7 @@ export default function LoginScreen({ navigation }) {
 							placeholder={translate('login.email') || 'Email'}
 							keyboardType="email-address"
 							icon="email"
+							containerStyle={{ maxWidth: Math.min(480, width - 48) }}
 						/>
 						<TextInputField
 							value={password}
@@ -121,6 +125,7 @@ export default function LoginScreen({ navigation }) {
 							placeholder={translate('login.password') || 'Palavra-passe'}
 							secureTextEntry
 							icon="password"
+							containerStyle={{ maxWidth: Math.min(480, width - 48) }}
 						/>
 					</div>
 					<button 

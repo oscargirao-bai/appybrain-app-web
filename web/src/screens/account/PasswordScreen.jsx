@@ -33,7 +33,7 @@ export default function PasswordScreen({ navigation, route }) {
   const isTablet = width >= 768;
   const containerMaxWidth = isTablet ? 520 : 480;
   const logoWidth = Math.min(width * 0.6, 480);
-  const baseLift = isTablet ? 40 : 90;
+  const baseLift = isTablet ? 28 : 40;
 
   // Keyboard handling to shift content so inputs remain visible
   const [keyboardShift, setKeyboardShift] = useState(0);
@@ -109,7 +109,7 @@ export default function PasswordScreen({ navigation, route }) {
       <div style={styles.flex}>
         <div style={styles.staticContainer}> 
           {/* Use web-friendly transform string instead of RN-style array/object */}
-          <div style={{...styles.inner, maxWidth: containerMaxWidth, transform: `translateY(${-(keyboardShift + baseLift)}px)`}}>            
+          <div style={{...styles.inner, maxWidth: containerMaxWidth, transform: `translateY(${-(keyboardShift + baseLift)}px)`, maxHeight: '78vh', overflow: 'auto', paddingBottom: 16}}>            
             {/* Brand Logo */}
             <img               
               src={logoSource}
@@ -117,7 +117,7 @@ export default function PasswordScreen({ navigation, route }) {
               
               aria-label="App logo"
             />
-            <span style={{...styles.welcome, ...{ color: colors.text }}}>{translate('password.changeTitle') || 'Alterar Palavra‑passe'}</span>
+            <span style={{...styles.welcome, ...{ color: colors.text, fontSize: width < 420 ? 28 : styles.welcome.fontSize }}}>{translate('password.changeTitle') || 'Alterar Palavra‑passe'}</span>
             <div style={styles.form}>
               <TextInputField
                 value={newPassword}
@@ -160,7 +160,7 @@ const styles = {
   flex: { flex: 1 },
   topBar: { paddingLeft: 12, paddingRight: 12, paddingTop: 8, zIndex: 10, elevation: 10 },
   staticContainer: { flex: 1, alignItems: 'center', paddingLeft: 24, paddingRight: 24 },
-  inner: { width: '100%', alignItems: 'center', flexGrow: 1 },
+  inner: { width: '100%', alignItems: 'center' },
   welcome: { fontSize: 42, fontWeight: '700', letterSpacing: -1, textAlign: 'center' },
   form: { width: '100%', alignItems: 'center', marginTop: 8 },
 };
