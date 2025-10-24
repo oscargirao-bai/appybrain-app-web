@@ -27,7 +27,7 @@ export default function StoreRedirect() {
     }
     if (platform === 'ios') {
       return (
-        <a href="https://www.apple.com/app-store/" target="_blank" rel="noreferrer">
+        <a href="https://apps.apple.com/app/6749809819" target="_blank" rel="noreferrer">
           <img src="/assets/applestore.jpg" alt="App Store" style={{ maxWidth: 220, width: '60%' }} />
         </a>
       );
@@ -46,7 +46,7 @@ export default function StoreRedirect() {
       background: '#ffffff',
       color: '#0b0b0b'
     }}>
-      <a href="https://www.appybrain.pt" target="_blank" rel="noopener noreferrer">
+      <a href={platform === 'ios' ? 'https://apps.apple.com/app/6749809819' : 'https://www.appybrain.pt'} target="_blank" rel="noopener noreferrer">
         <img src="/assets/logo.png" alt="AppyBrain" style={{ width: 240, height: 240, objectFit: 'contain' }} />
       </a>
       <div style={{ marginTop: 28, textAlign: 'center', maxWidth: 420, padding: '0 16px' }}>
