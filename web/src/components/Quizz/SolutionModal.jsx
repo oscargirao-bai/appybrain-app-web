@@ -71,7 +71,9 @@ export default function SolutionModal({
     if (!quizId || reporting) return;
     setReporting(true);
     try {
-      await ApiManager.reportQuiz({ quizId });
+      // call the API method that actually posts to api/app/error_report
+      // mobile implementation uses makeAuthenticatedRequest('api/app/error_report', { body: JSON.stringify({ quizId }) })
+      await ApiManager.reportQuizError(quizId);
       setShowSuccessModal(true);
       onReport && onReport();
     } catch (error) {
