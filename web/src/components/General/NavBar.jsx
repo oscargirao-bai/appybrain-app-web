@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import LucideIcon from './LucideIcon.jsx';
-import { useThemeColors } from '../../services/Theme.jsx';
+import { useThemeColors, useTheme } from '../../services/Theme.jsx';
 
 /**
  * Custom bottom NavBar (tab bar) used in MainTabs.
@@ -11,6 +11,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
  */
 export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) {
 	const colors = useThemeColors();
+	const { resolvedTheme } = useTheme();
 	const containersRef = useRef([]);
 	const containerWrapRef = useRef(null);
 	const [indicatorLeft, setIndicatorLeft] = useState(0);
@@ -105,8 +106,9 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 								size={24}
 								color={(() => {
 									if (isActive) return activeColor(i);
-									// Force black for Learn (book) and Battle (swords) when inactive
-									if (icon === 'book' || icon === 'swords') return '#000000';
+									// In light mode only, render Learn (book) and Battle (swords) as black when inactive.
+									// In dark mode keep the existing white/text color so contrast remains correct.
+									if (resolvedTheme === 'light' && (icon === 'book' || icon === 'swords')) return '#000000';
 									return colors.text + '80';
 								})()}
 							/>

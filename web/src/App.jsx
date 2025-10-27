@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ThemeProvider } from './services/Theme.jsx';
+import { ThemeProvider, useTheme, useThemeColors } from './services/Theme.jsx';
 import { TranslationProvider } from './services/Translate.jsx';
 import { SearchProvider } from './services/SearchContext.jsx';
 import ApiManager from './services/ApiManager.jsx';
@@ -52,7 +52,11 @@ export default function App() {
           <ThemeProvider defaultTheme="dark">
             <TranslationProvider>
               <SearchProvider>
-                <AppRouter />
+                {/* AppInner provides the white app background in light mode while the page/body
+                    keeps the subtle contrast color set by ThemeProvider */}
+                <AppInner>
+                  <AppRouter />
+                </AppInner>
               </SearchProvider>
             </TranslationProvider>
           </ThemeProvider>
@@ -60,4 +64,22 @@ export default function App() {
       )}
     </ErrorBoundary>
   );
+}
+
+function AppInner({ children }) {
+  // This component must be used inside ThemeProvider
+  const { resolvedTheme } = useTheme();
+  const colors = useThemeColors();
+
+  const wrapperStyle = {
+    backgroundColor: resolvedTheme === 'light' ? '#FFFFFF' : (colors.background || '#000000'),
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+    overflow: 'hidden'
+  };
+
+  return <div style={wrapperStyle}>{children}</div>;
 }

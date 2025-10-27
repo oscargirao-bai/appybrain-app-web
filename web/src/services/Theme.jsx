@@ -82,14 +82,17 @@ export function ThemeProvider({ children, defaultTheme = 'system' }) {
 
 	// Keep page background (outside the app container) in sync with theme
 	useEffect(() => {
-		try {
-			const bg = resolvedTheme === 'dark' ? '#000000' : '#FFFFFF';
-			if (typeof document !== 'undefined') {
-				document.body.style.backgroundColor = bg;
-				// Also set html element to avoid white gaps in some browsers
-				document.documentElement.style.backgroundColor = bg;
-			}
-		} catch {}
+			try {
+				// For light mode we want the page background (outside the centered app) to be
+				// a very light yellowish-grey for subtle contrast. The app container itself
+				// will be white. For dark mode keep solid black.
+				const pageBg = resolvedTheme === 'dark' ? '#000000' : '#f6f5ea';
+				if (typeof document !== 'undefined') {
+					document.body.style.backgroundColor = pageBg;
+					// Also set html element to avoid gaps in some browsers
+					document.documentElement.style.backgroundColor = pageBg;
+				}
+			} catch {}
 	}, [resolvedTheme]);
 
 	const value = useMemo(
