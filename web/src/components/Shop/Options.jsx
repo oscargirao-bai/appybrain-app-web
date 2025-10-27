@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
-import SvgIcon from '../../components/General/SvgIcon.jsx';
+import LucideIcon from '../../components/General/LucideIcon.jsx';
+import { useTheme } from '../../services/Theme.jsx';
 
 export default function Options({
   value,
@@ -14,11 +15,12 @@ export default function Options({
   showLabel = true,
 }) {
 	const colors = useThemeColors();
-	const options = [
+  const options = [
     { key: 'avatar', icon: 'user', label: 'Avatar' },
     { key: 'background', icon: 'image', label: 'Background' },
     { key: 'frames', icon: 'square', label: 'Molduras' },
   ];
+  const { resolvedTheme } = useTheme();
   const [internal, setInternal] = useState('avatar');
   const current = value ?? internal;
   const rowRef = useRef(null);
@@ -92,8 +94,15 @@ export default function Options({
               onClick={() => select(opt.key)}
               aria-label={opt.label}
             >
-              <SvgIcon name={opt.icon} size={iconSize} color={selected ? colors.background : colors.primary} />
-                {showLabel && <span style={txtStyle}>{opt.label}</span>}
+                  <LucideIcon
+                    name={opt.icon}
+                    size={iconSize}
+                    // When selected the icon sits on the yellow primary highlight.
+                    // Per spec: icon must be white in light mode and black in dark mode.
+                    color={selected ? (resolvedTheme === 'light' ? '#FFFFFF' : '#000000') : colors.primary}
+                    style={{ display: 'inline-flex' }}
+                  />
+                    {showLabel && <span style={txtStyle}>{opt.label}</span>}
             </button>
           );
         })}
