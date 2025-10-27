@@ -132,7 +132,7 @@ export default function ShopScreen({ navigation }) {
 				<Coins />
 			</div>
 			<div style={styles.optionsRow}>
-				<Options value={tab} onChange={onSelect} />
+				<Options value={tab} onChange={onSelect} showLabel={false} iconSize={20} />
 			</div>
 			<div
 				ref={scrollRef}
