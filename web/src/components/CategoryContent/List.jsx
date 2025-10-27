@@ -19,9 +19,9 @@ function StarCount({ stars, max, iconColor }) {
 		color: iconColor || colors.text
 	};
 	return (
-		<div style={badgeStyle} aria-label={`${stars} estrelas`}>
+		<div style={badgeStyle} aria-label={`${stars} / ${max} estrelas`}>
 			<LucideIcon name="star" size={14} color={iconColor || colors.text} style={iconStyle} />
-			<span style={textStyle}>{stars}</span>
+			<span style={textStyle}>{`${stars}/${max}`}</span>
 		</div>
 	);
 }
