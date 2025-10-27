@@ -9,6 +9,7 @@ import { useTranslate } from '../services/Translate.jsx';
 import DataManager from '../services/DataManager.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import LucideIcon from '../components/General/LucideIcon.jsx';
+import MessageModal from '../components/General/MessageModal.jsx';
 
 export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
@@ -108,9 +109,9 @@ export default function CustomizeScreen({ navigation }) {
       overflowY: 'auto',
     },
     panel: {
-      width: '100%',
-      minWidth: 0,
-      maxWidth: '100%',
+      width: '50vw',
+      minWidth: 340,
+      maxWidth: 600,
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: colors.card,
@@ -217,28 +218,9 @@ export default function CustomizeScreen({ navigation }) {
     },
   }), [colors]);
 
-  // Message modal state for success/error messages
+  // Keep a small message modal state to avoid runtime ReferenceError if the
+  // component is referenced elsewhere (some builds previously rendered it).
   const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
-
-  // Clear cosmetics handler
-  const handleClearCosmetics = useCallback(async () => {
-    try {
-      // Call API to remove cosmetics (sequential queue handled by ApiManager)
-      const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/remove_cosmetics', { method: 'POST' });
-      // Some endpoints return { success: true } or similar. Check success flag when available.
-      const ok = resp && (resp.success === true || resp.success === undefined);
-      if (ok) {
-        // Show success modal and then refresh cosmetics and user info when closed
-        setMessageModal({ visible: true, title: '', message: 'Cosméticos removidos com sucesso' });
-        // Wait for user to close modal before refreshing - the onClose below will trigger refresh
-      } else {
-        setMessageModal({ visible: true, title: '', message: 'Não foi possível remover os cosméticos' });
-      }
-    } catch (error) {
-      console.error('Failed to remove cosmetics:', error);
-      setMessageModal({ visible: true, title: '', message: 'Não foi possível remover os cosméticos' });
-    }
-  }, []);
 
   return (
     <div style={ui.outer}>
@@ -248,22 +230,6 @@ export default function CustomizeScreen({ navigation }) {
           showBack
           onBack={() => navigation?.goBack?.()}
           style={ui.header}
-          right={(
-            <button
-              onClick={handleClearCosmetics}
-              aria-label="Limpar cosméticos"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                color: colors.primary,
-                fontWeight: 700,
-                cursor: 'pointer',
-                padding: 8,
-              }}
-            >
-              Limpar
-            </button>
-          )}
         />
         <div style={ui.scroll}>
           <div style={ui.bannerWrap}>
@@ -314,30 +280,6 @@ export default function CustomizeScreen({ navigation }) {
           <Button1 label={translate('common.confirm')} onClick={handleConfirm} style={ui.confirmButton} />
         </div>
       </div>
-      <MessageModal
-        visible={messageModal.visible}
-        title={messageModal.title}
-        message={messageModal.message}
-        onClose={async () => {
-          // Close modal
-          setMessageModal({ visible: false, title: '', message: '' });
-          // If the success message was shown, refresh cosmetics/user info so UI shows defaults
-          if (messageModal.message === 'Cosméticos removidos com sucesso') {
-            try {
-              // Refresh user info and shop/cosmetics sequentially
-              await DataManager.refreshSection('userInfo');
-              await DataManager.refreshSection('shop');
-              // Reset local selection state so UI shows defaults
-              setSelAvatarId(null);
-              setSelBackgroundId(null);
-              setSelFrameId(null);
-            } catch (e) {
-              console.error('Failed to refresh after clearing cosmetics:', e);
-            }
-          }
-        }}
-        buttonLabel={translate('common.ok') || 'OK'}
-      />
     </div>
   );
 }
