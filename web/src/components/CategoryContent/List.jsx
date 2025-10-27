@@ -67,8 +67,6 @@ export default function ContentList({ data, onPressItem }) {
 						style={styles.rowOuter}
 						onClick={() => onPressItem && onPressItem(item)}
 						aria-label={`${translate('learn.openContent')}: ${item.title}. ${item.stars} / ${item.maxStars} ${translate('quizResult.stars')}.`}
-						onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-						onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
 					>
 						<div style={progressContainerStyle}>
 							<div style={progressFillStyle} />
