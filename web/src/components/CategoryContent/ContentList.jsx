@@ -181,10 +181,15 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 		}
 	}, [expanded]);
 	
+	// Use a slightly translucent background and a softer border so the
+	// color reads the same as on the category list (avoids the card
+	// appearing darker due to a solid border and stacking colors).
+	const containerBg = addAlpha(baseColor, 0.12);
+	const borderClr = addAlpha(baseColor, 0.5);
 	const containerStyle = {
 		...styles.itemContainer,
-		backgroundColor: baseColor,
-		borderColor: baseColor,
+		backgroundColor: containerBg,
+		borderColor: borderClr,
 		borderWidth: 2,
 		borderStyle: 'solid',
 	};
