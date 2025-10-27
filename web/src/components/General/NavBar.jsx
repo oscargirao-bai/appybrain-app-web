@@ -103,7 +103,12 @@ export default function NavBar({ icons = [], currentPage = 0, handleTabPress }) 
 							<LucideIcon
 								name={icon}
 								size={24}
-								color={isActive ? activeColor(i) : colors.text + '80'}
+								color={(() => {
+									if (isActive) return activeColor(i);
+									// Force black for Learn (book) and Battle (swords) when inactive
+									if (icon === 'book' || icon === 'swords') return '#000000';
+									return colors.text + '80';
+								})()}
 							/>
 						</button>
 					);
