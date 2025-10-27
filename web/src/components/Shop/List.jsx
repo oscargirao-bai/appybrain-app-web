@@ -134,21 +134,17 @@ export default function List({
 											}}
 										>
 											{owned ? (
-												<span style={{ ...styles.priceText, color: '#fff' }}>
-													{translate('shop.owned')}
-												</span>
-											) : price === 0 ? (
-												<span style={{ ...styles.priceText, color: '#fff' }}>
-													{translate('shop.free')}
-												</span>
-											) : (
-												<div style={styles.priceRow}>
-													<LucideIcon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
-													<span style={{ ...styles.priceText, color: colors.background }}>
-														{price}
-													</span>
-												</div>
-											)}
+													<LucideIcon name="check" size={14} color={colors.background} />
+												) : price === 0 ? (
+													<LucideIcon name="gift" size={14} color={colors.background} />
+												) : (
+													<div style={styles.priceRow}>
+														<LucideIcon name="coins" size={14} color={colors.background} style={{ marginRight: 4 }} />
+														<span style={{ ...styles.priceText, color: colors.background }}>
+															{price}
+														</span>
+													</div>
+												)}
 										</div>
 									</div>
 								)}
