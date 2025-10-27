@@ -3,7 +3,7 @@ import { useThemeColors, useTheme } from '../../services/Theme.jsx';
 import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function Button1({ label, color, onPress, onClick, style }) {
+export default function Button1({ label, color, onPress, onClick, style, textColorOverride }) {
 	const themeColors = useThemeColors();
 	const { translate } = useTranslate();
 	const { resolvedTheme } = useTheme();
@@ -59,13 +59,18 @@ export default function Button1({ label, color, onPress, onClick, style }) {
 		background: `linear-gradient(to bottom, ${gradientColors[0]}, ${gradientColors[1]})`,
 	};
 
-	// Default text color is white for contrast over colored buttons.
-	// However, for the specific primary actions 'Learn' and 'Battle' we want
-	// black text in light mode (as requested) and white text in dark mode.
-	const learnLabel = translate('titles.learn');
-	const battleLabel = translate('titles.battle');
-	const isSpecialPrimary = resolvedLabel === learnLabel || resolvedLabel === battleLabel;
-	const textColor = (resolvedTheme === 'light' && isSpecialPrimary) ? '#000000' : '#FFFFFF';
+	// Allow an explicit override for text color (useful for specific buttons)
+	if (textColorOverride) {
+		var textColor = textColorOverride;
+	} else {
+		// Default text color is white for contrast over colored buttons.
+		// However, for the specific primary actions 'Learn' and 'Battle' we want
+		// black text in light mode (as requested) and white text in dark mode.
+		const learnLabel = translate('titles.learn');
+		const battleLabel = translate('titles.battle');
+		const isSpecialPrimary = resolvedLabel === learnLabel || resolvedLabel === battleLabel;
+		var textColor = (resolvedTheme === 'light' && isSpecialPrimary) ? '#000000' : '#FFFFFF';
+	}
 
 	const textStyle = {
 		...styles.buttonText,

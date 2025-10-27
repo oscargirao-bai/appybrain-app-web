@@ -4,7 +4,7 @@ import Options from '../components/Shop/Options.jsx';
 import Banner from '../components/Profile/Banner.jsx';
 import CustomizeList from '../components/Profile/CustomizeList.jsx';
 import Button1 from '../components/General/Button1.jsx';
-import { useThemeColors } from '../services/Theme.jsx';
+import { useThemeColors, useTheme } from '../services/Theme.jsx';
 import { useTranslate } from '../services/Translate.jsx';
 import DataManager from '../services/DataManager.jsx';
 import ApiManager from '../services/ApiManager.jsx';
@@ -296,7 +296,7 @@ export default function CustomizeScreen({ navigation }) {
             />
           </div>
           <div style={ui.optionsWrap}>
-            <Options value={category} onChange={setCategory} style={ui.optionsInner} />
+            <Options value={category} onChange={setCategory} style={ui.optionsInner} showLabel={false} iconSize={20} />
           </div>
           <div style={ui.listWrap}>
             {listData.length === 0 ? (

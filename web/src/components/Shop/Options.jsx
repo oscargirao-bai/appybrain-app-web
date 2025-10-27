@@ -11,6 +11,7 @@ export default function Options({
   iconSize = 22,
   radius = 18,
   gap = 12,
+  showLabel = true,
 }) {
 	const colors = useThemeColors();
 	const options = [
@@ -92,7 +93,7 @@ export default function Options({
               aria-label={opt.label}
             >
               <SvgIcon name={opt.icon} size={iconSize} color={selected ? colors.background : colors.primary} />
-              <span style={txtStyle}>{opt.label}</span>
+                {showLabel && <span style={txtStyle}>{opt.label}</span>}
             </button>
           );
         })}
