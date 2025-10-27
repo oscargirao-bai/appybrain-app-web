@@ -109,9 +109,9 @@ export default function CustomizeScreen({ navigation }) {
       overflowY: 'auto',
     },
     panel: {
-      width: '50vw',
-      minWidth: 340,
-      maxWidth: 600,
+      width: '100%',
+      minWidth: 0,
+      maxWidth: 550,
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: colors.card,
@@ -218,9 +218,29 @@ export default function CustomizeScreen({ navigation }) {
     },
   }), [colors]);
 
-  // Keep a small message modal state to avoid runtime ReferenceError if the
-  // component is referenced elsewhere (some builds previously rendered it).
   const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
+  const [clearing, setClearing] = useState(false);
+
+  const handleClearCosmetics = useCallback(async () => {
+    if (clearing) return;
+    setClearing(true);
+    try {
+      const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/remove_cosmetics', { method: 'POST' });
+      // Consider success when resp.success === true
+      if (resp && resp.success === true) {
+        setMessageModal({ visible: true, title: '', message: 'Cosméticos removidos com sucesso' });
+      } else {
+        setMessageModal({ visible: true, title: '', message: 'Não foi possível remover os cosméticos' });
+      }
+    } catch (error) {
+      console.error('Error removing cosmetics:', error);
+      setMessageModal({ visible: true, title: '', message: 'Não foi possível remover os cosméticos' });
+    } finally {
+      setClearing(false);
+    }
+  }, [clearing]);
+
+  // (messageModal state declared above)
 
   return (
     <div style={ui.outer}>
@@ -230,6 +250,24 @@ export default function CustomizeScreen({ navigation }) {
           showBack
           onBack={() => navigation?.goBack?.()}
           style={ui.header}
+          right={(
+            <button
+              onClick={handleClearCosmetics}
+              aria-label="Limpar cosméticos"
+              style={{
+                border: 'none',
+                background: 'transparent',
+                color: colors.primary,
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 8,
+                opacity: clearing ? 0.6 : 1,
+              }}
+              disabled={clearing}
+            >
+              Limpar
+            </button>
+          )}
         />
         <div style={ui.scroll}>
           <div style={ui.bannerWrap}>
@@ -280,6 +318,30 @@ export default function CustomizeScreen({ navigation }) {
           <Button1 label={translate('common.confirm')} onClick={handleConfirm} style={ui.confirmButton} />
         </div>
       </div>
+      <MessageModal
+        visible={messageModal.visible}
+        title={messageModal.title}
+        message={messageModal.message}
+        buttonLabel={translate('common.ok') || 'OK'}
+        onClose={async () => {
+          // Close modal
+          const wasSuccess = messageModal.message === 'Cosméticos removidos com sucesso';
+          setMessageModal({ visible: false, title: '', message: '' });
+          if (wasSuccess) {
+            try {
+              // Refresh user info and shop (cosmetics) sequentially
+              await DataManager.refreshSection('userInfo');
+              await DataManager.refreshSection('shop');
+              // Reset selections so UI shows defaults
+              setSelAvatarId(null);
+              setSelBackgroundId(null);
+              setSelFrameId(null);
+            } catch (e) {
+              console.error('Failed to refresh after clearing cosmetics:', e);
+            }
+          }
+        }}
+      />
     </div>
   );
 }
