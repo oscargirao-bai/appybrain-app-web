@@ -15,6 +15,7 @@ import { family } from '../constants/font.jsx';
 export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
+  const { resolvedTheme } = useTheme();
   const [category, setCategory] = useState('avatar');
   const [avatars, setAvatars] = useState([]);
   const [backgrounds, setBackgrounds] = useState([]);
@@ -331,7 +332,12 @@ export default function CustomizeScreen({ navigation }) {
           </div>
         </div>
         <div style={ui.footer}>
-          <Button1 label={translate('common.confirm')} onClick={handleConfirm} style={ui.confirmButton} />
+          <Button1
+            label={translate('common.confirm')}
+            onClick={handleConfirm}
+            style={ui.confirmButton}
+            textColorOverride={resolvedTheme === 'light' ? '#000000' : '#FFFFFF'}
+          />
         </div>
       </div>
       <MessageModal
