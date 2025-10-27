@@ -10,6 +10,7 @@ import DataManager from '../services/DataManager.jsx';
 import ApiManager from '../services/ApiManager.jsx';
 import LucideIcon from '../components/General/LucideIcon.jsx';
 import MessageModal from '../components/General/MessageModal.jsx';
+import { family } from '../constants/font.jsx';
 
 export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
@@ -254,18 +255,33 @@ export default function CustomizeScreen({ navigation }) {
             <button
               onClick={handleClearCosmetics}
               aria-label="Limpar cosméticos"
+              disabled={clearing}
               style={{
-                border: 'none',
-                background: 'transparent',
-                color: colors.primary,
-                fontWeight: 700,
+                paddingLeft: 14,
+                paddingRight: 14,
+                paddingTop: 6,
+                paddingBottom: 6,
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderRadius: 18,
+                minHeight: 32,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 cursor: 'pointer',
-                padding: 8,
+                backgroundColor: colors.card + '55',
+                borderColor: colors.text + '33',
                 opacity: clearing ? 0.6 : 1,
               }}
-              disabled={clearing}
             >
-              Limpar
+              <span style={{
+                fontSize: 11,
+                fontFamily: family.bold,
+                letterSpacing: 0.5,
+                textTransform: 'uppercase',
+                lineHeight: '14px',
+                color: colors.text
+              }}>{clearing ? '...' : 'Limpar'}</span>
             </button>
           )}
         />
