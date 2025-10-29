@@ -55,7 +55,7 @@ export default function CustomizeScreen({ navigation }) {
   );
 
   const previewAvatar = selectedAvatar?.imageUrl || userProfile?.avatarUrl;
-  the const previewBackground = selectedBackground?.imageUrl || userProfile?.backgroundUrl;
+  const previewBackground = selectedBackground?.imageUrl || userProfile?.backgroundUrl;
   const previewFrame = selectedFrame?.imageUrl || selectedFrame?.previewUrl || userProfile?.frameUrl || null;
 
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
