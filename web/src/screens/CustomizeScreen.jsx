@@ -55,7 +55,7 @@ export default function CustomizeScreen({ navigation }) {
   );
 
   const previewAvatar = selectedAvatar?.imageUrl || userProfile?.avatarUrl;
-  const previewBackground = selectedBackground?.imageUrl || userProfile?.backgroundUrl;
+  the const previewBackground = selectedBackground?.imageUrl || userProfile?.backgroundUrl;
   const previewFrame = selectedFrame?.imageUrl || selectedFrame?.previewUrl || userProfile?.frameUrl || null;
 
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
@@ -145,7 +145,8 @@ export default function CustomizeScreen({ navigation }) {
       justifyContent: 'center',
       paddingLeft: 16,
       paddingRight: 16,
-      marginTop: 56,
+      // manter os botões quase colados ao banner (consistente em ambos estados)
+      marginTop: 16,
     },
     optionsInner: {
       display: 'flex',
@@ -162,8 +163,7 @@ export default function CustomizeScreen({ navigation }) {
       minHeight: 0,
     },
 
-    // ====== APENAS estilos para o estado "vazio" ======
-    // este é o "slot" que ocupa a MESMA área do list e tem scroll
+    /* ===== estado vazio (área com scroll e conteúdo compacto) ===== */
     emptyScroll: {
       flex: 1,
       minHeight: 0,
@@ -172,18 +172,14 @@ export default function CustomizeScreen({ navigation }) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
+      padding: 8,
     },
-    // conteúdo muito compacto
     emptyInner: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       textAlign: 'center',
-      gap: 4, // quase sem espaço
+      gap: 4,
     },
     emptyIcon: {
       width: 56,
@@ -192,7 +188,7 @@ export default function CustomizeScreen({ navigation }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 4,
+      marginBottom: 2,
     },
     emptyTitle: {
       fontSize: 16,
@@ -220,9 +216,9 @@ export default function CustomizeScreen({ navigation }) {
       color: colors.background,
       fontSize: 14,
       fontWeight: '700',
-      marginTop: 4, // quase colado
+      marginTop: 4,
     },
-    // ====== FIM dos estilos do estado "vazio" ======
+    /* ===== fim vazio ===== */
 
     footer: {
       borderTop: `1px solid ${colors.text + '1A'}`,
@@ -247,7 +243,6 @@ export default function CustomizeScreen({ navigation }) {
     setClearing(true);
     try {
       const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/remove_cosmetics', { method: 'POST' });
-      // Consider success when resp.success === true
       if (resp && resp.success === true) {
         setMessageModal({ visible: true, title: '', message: 'Cosméticos removidos com sucesso' });
       } else {
@@ -260,8 +255,6 @@ export default function CustomizeScreen({ navigation }) {
       setClearing(false);
     }
   }, [clearing]);
-
-  // (messageModal state declarado acima)
 
   return (
     <div style={ui.outer}>
@@ -313,8 +306,8 @@ export default function CustomizeScreen({ navigation }) {
               frameSource={previewFrame ? { uri: previewFrame } : null}
               bottomFlat
               topFlat
-              // mantém como no original
-              aspectRatio={isEmpty ? 6 : (560 / 260)}
+              /* tamanho fixo para ser igual com/sem cosméticos */
+              aspectRatio={(560 / 260)}
             />
           </div>
           <div style={ui.optionsWrap}>
@@ -322,7 +315,6 @@ export default function CustomizeScreen({ navigation }) {
           </div>
           <div style={ui.listWrap}>
             {listData.length === 0 ? (
-              // === NOVO: área com a MESMA posição e com SCROLL ===
               <div style={ui.emptyScroll}>
                 <div style={ui.emptyInner}>
                   <div style={{ ...ui.emptyIcon, backgroundColor: colors.card }}>
@@ -370,15 +362,12 @@ export default function CustomizeScreen({ navigation }) {
         message={messageModal.message}
         buttonLabel={translate('common.ok') || 'OK'}
         onClose={async () => {
-          // Close modal
           const wasSuccess = messageModal.message === 'Cosméticos removidos com sucesso';
           setMessageModal({ visible: false, title: '', message: '' });
           if (wasSuccess) {
             try {
-              // Refresh user info and shop (cosmetics) sequentially
               await DataManager.refreshSection('userInfo');
               await DataManager.refreshSection('shop');
-              // Reset selections so UI shows defaults
               setSelAvatarId(null);
               setSelBackgroundId(null);
               setSelFrameId(null);
