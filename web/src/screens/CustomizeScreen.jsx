@@ -16,6 +16,7 @@ export default function CustomizeScreen({ navigation }) {
   const colors = useThemeColors();
   const { translate } = useTranslate();
   const { resolvedTheme } = useTheme();
+
   const [category, setCategory] = useState('avatar');
   const [avatars, setAvatars] = useState([]);
   const [backgrounds, setBackgrounds] = useState([]);
@@ -60,6 +61,7 @@ export default function CustomizeScreen({ navigation }) {
 
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
   const listColumns = category === 'background' ? 2 : 3;
+  const isEmpty = (listData || []).length === 0;
 
   const handleSelectItem = useCallback(
     (item) => {
@@ -99,126 +101,139 @@ export default function CustomizeScreen({ navigation }) {
     })();
   }, [navigation, selAvatarId, selBackgroundId, selFrameId]);
 
-  const ui = useMemo(() => ({
-    outer: {
-      flex: 1,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'stretch',
-      backgroundColor: colors.background,
-      paddingTop: 32,
-      paddingBottom: 32,
-      overflowY: 'auto',
-    },
-    panel: {
-      width: '100%',
-      minWidth: 0,
-      maxWidth: 550,
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: colors.card,
-      borderRadius: 28,
-      boxShadow: '0 24px 48px rgba(0,0,0,0.32)',
-      overflow: 'hidden',
-    },
-    header: {
-      paddingLeft: 16,
-      paddingRight: 16,
-      borderBottomWidth: 0,
-    },
-    scroll: {
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      paddingLeft: 16,
-      paddingRight: 16,
-      paddingBottom: 16,
-      gap: 16,
-      overflowY: 'auto',
-    },
-    bannerWrap: {
-      marginTop: 8,
-    },
-    optionsWrap: {
-      display: 'flex',
-      justifyContent: 'center',
-      paddingLeft: 16,
-      paddingRight: 16,
-    },
-    optionsInner: {
-      display: 'flex',
-      justifyContent: 'center',
-      minWidth: 0,
-    },
-    listWrap: {
-      flex: 1,
-      minHeight: 0,
-      display: 'flex',
-    },
-    list: {
-      flex: 1,
-      minHeight: 0,
-    },
-    empty: {
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      gap: 18,
-      paddingTop: 40,
-      paddingBottom: 40,
-      paddingLeft: 24,
-      paddingRight: 24,
-    },
-    emptyIcon: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: '0 auto',
-    },
-    emptyTitle: {
-      fontSize: 18,
-      fontWeight: '700',
-      color: colors.text,
-    },
-    emptySubtitle: {
-      fontSize: 14,
-      fontWeight: '500',
-      lineHeight: 20,
-      color: colors.muted,
-    },
-    shopButton: {
-      border: 'none',
-      cursor: 'pointer',
-      borderRadius: 25,
-      paddingLeft: 24,
-      paddingRight: 24,
-      paddingTop: 16,
-      paddingBottom: 16,
-      backgroundColor: colors.primary,
-      color: colors.background,
-      fontSize: 14,
-      fontWeight: '700',
-    },
-    footer: {
-      borderTop: `1px solid ${colors.text + '1A'}`,
-      paddingLeft: 16,
-      paddingRight: 16,
-      paddingTop: 16,
-      paddingBottom: 20,
-      display: 'flex',
-      justifyContent: 'center',
-      backgroundColor: colors.card,
-    },
-    confirmButton: {
-      minWidth: 220,
-    },
-  }), [colors]);
+  // UI: tornar o layout mais compacto quando está vazio
+  const ui = useMemo(() => {
+    const compact = isEmpty;
+
+    return {
+      outer: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        backgroundColor: colors.background,
+        paddingTop: 32,
+        paddingBottom: 32,
+        overflowY: 'auto',
+      },
+      panel: {
+        width: '100%',
+        minWidth: 0,
+        maxWidth: 550,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: colors.card,
+        borderRadius: 28,
+        boxShadow: '0 24px 48px rgba(0,0,0,0.32)',
+        overflow: 'hidden',
+      },
+      header: {
+        paddingLeft: 16,
+        paddingRight: 16,
+        borderBottomWidth: 0,
+      },
+      scroll: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        paddingLeft: 16,
+        paddingRight: 16,
+        paddingBottom: 16,
+        gap: compact ? 8 : 16,
+        overflowY: 'auto',
+      },
+      bannerWrap: {
+        marginTop: 8,
+      },
+      optionsWrap: {
+        display: 'flex',
+        justifyContent: 'center',
+        paddingLeft: 16,
+        paddingRight: 16,
+        // empurra o selector mais para baixo quando o banner/avatares se sobrepõem
+        marginTop: compact ? 72 : 56,
+      },
+      optionsInner: {
+        display: 'flex',
+        justifyContent: 'center',
+        minWidth: 0,
+      },
+      listWrap: {
+        flex: 1,
+        minHeight: 0,
+        display: 'flex',
+      },
+      list: {
+        flex: 1,
+        minHeight: 0,
+      },
+      empty: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        gap: compact ? 8 : 18,
+        paddingTop: compact ? 12 : 40,
+        // menos espaço para que o botão “Loja” apareça acima do footer
+        paddingBottom: compact ? 48 : 140,
+        paddingLeft: 24,
+        paddingRight: 24,
+        // baixa um bocadinho o bloco para não ficar colado ao avatar/selector
+        marginTop: compact ? 8 : 0,
+      },
+      emptyIcon: {
+        width: compact ? 56 : 80,
+        height: compact ? 56 : 80,
+        borderRadius: compact ? 28 : 40,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto',
+      },
+      emptyTitle: {
+        fontSize: compact ? 16 : 18,
+        fontWeight: '700',
+        color: colors.text,
+      },
+      emptySubtitle: {
+        fontSize: compact ? 13 : 14,
+        fontWeight: '500',
+        lineHeight: compact ? 18 : 20,
+        color: colors.muted,
+      },
+      shopButton: {
+        border: 'none',
+        cursor: 'pointer',
+        borderRadius: 25,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 12,
+        paddingBottom: 12,
+        backgroundColor: colors.primary,
+        color: colors.background,
+        fontSize: 14,
+        fontWeight: '700',
+        marginTop: compact ? 4 : 0,
+      },
+      footer: {
+        borderTop: `1px solid ${colors.text + '1A'}`,
+        paddingLeft: 16,
+        paddingRight: 16,
+        paddingTop: 16,
+        paddingBottom: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: colors.card,
+      },
+      confirmButton: {
+        minWidth: 220,
+      },
+      // altura do banner: bastante menor no vazio
+      bannerAspectRatio: compact ? 4.2 : (560 / 260),
+    };
+  }, [colors, isEmpty]);
 
   const [messageModal, setMessageModal] = useState({ visible: false, title: '', message: '' });
   const [clearing, setClearing] = useState(false);
@@ -228,7 +243,6 @@ export default function CustomizeScreen({ navigation }) {
     setClearing(true);
     try {
       const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/remove_cosmetics', { method: 'POST' });
-      // Consider success when resp.success === true
       if (resp && resp.success === true) {
         setMessageModal({ visible: true, title: '', message: 'Cosméticos removidos com sucesso' });
       } else {
@@ -241,8 +255,6 @@ export default function CustomizeScreen({ navigation }) {
       setClearing(false);
     }
   }, [clearing]);
-
-  // (messageModal state declared above)
 
   return (
     <div style={ui.outer}>
@@ -294,6 +306,7 @@ export default function CustomizeScreen({ navigation }) {
               frameSource={previewFrame ? { uri: previewFrame } : null}
               bottomFlat
               topFlat
+              aspectRatio={ui.bannerAspectRatio}
             />
           </div>
           <div style={ui.optionsWrap}>
@@ -340,21 +353,19 @@ export default function CustomizeScreen({ navigation }) {
           />
         </div>
       </div>
+
       <MessageModal
         visible={messageModal.visible}
         title={messageModal.title}
         message={messageModal.message}
         buttonLabel={translate('common.ok') || 'OK'}
         onClose={async () => {
-          // Close modal
           const wasSuccess = messageModal.message === 'Cosméticos removidos com sucesso';
           setMessageModal({ visible: false, title: '', message: '' });
           if (wasSuccess) {
             try {
-              // Refresh user info and shop (cosmetics) sequentially
               await DataManager.refreshSection('userInfo');
               await DataManager.refreshSection('shop');
-              // Reset selections so UI shows defaults
               setSelAvatarId(null);
               setSelBackgroundId(null);
               setSelFrameId(null);
@@ -367,4 +378,3 @@ export default function CustomizeScreen({ navigation }) {
     </div>
   );
 }
-
