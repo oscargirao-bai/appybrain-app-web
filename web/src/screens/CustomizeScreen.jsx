@@ -167,7 +167,7 @@ export default function CustomizeScreen({ navigation }) {
       justifyContent: 'center',
       textAlign: 'center',
       gap: 18,
-      paddingTop: 40,
+      paddingTop: 60,
       paddingBottom: 40,
       paddingLeft: 24,
       paddingRight: 24,
@@ -183,7 +183,7 @@ export default function CustomizeScreen({ navigation }) {
     },
     emptyTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: '200',
       color: colors.text,
     },
     emptySubtitle: {
