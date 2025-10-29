@@ -60,6 +60,7 @@ export default function CustomizeScreen({ navigation }) {
 
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
   const listColumns = category === 'background' ? 2 : 3;
+  const isEmpty = (listData || []).length === 0;
 
   const handleSelectItem = useCallback(
     (item) => {
@@ -144,6 +145,7 @@ export default function CustomizeScreen({ navigation }) {
       justifyContent: 'center',
       paddingLeft: 16,
       paddingRight: 16,
+      marginTop: 56,
     },
     optionsInner: {
       display: 'flex',
@@ -159,52 +161,69 @@ export default function CustomizeScreen({ navigation }) {
       flex: 1,
       minHeight: 0,
     },
-    empty: {
+
+    // ====== APENAS estilos para o estado "vazio" ======
+    // este é o "slot" que ocupa a MESMA área do list e tem scroll
+    emptyScroll: {
       flex: 1,
+      minHeight: 0,
+      overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    // conteúdo muito compacto
+    emptyInner: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
       textAlign: 'center',
-      gap: 18,
-      paddingTop: 60,
-      paddingBottom: 40,
-      paddingLeft: 24,
-      paddingRight: 24,
+      gap: 4, // quase sem espaço
     },
     emptyIcon: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      margin: '0 auto',
+      marginBottom: 4,
     },
     emptyTitle: {
-      fontSize: 18,
-      fontWeight: '200',
+      fontSize: 16,
+      fontWeight: '700',
       color: colors.text,
+      lineHeight: '18px',
+      margin: 0,
     },
     emptySubtitle: {
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: '500',
-      lineHeight: 20,
+      lineHeight: '16px',
       color: colors.muted,
+      margin: 0,
     },
     shopButton: {
       border: 'none',
       cursor: 'pointer',
       borderRadius: 25,
-      paddingLeft: 24,
-      paddingRight: 24,
-      paddingTop: 16,
-      paddingBottom: 16,
+      paddingLeft: 18,
+      paddingRight: 18,
+      paddingTop: 8,
+      paddingBottom: 8,
       backgroundColor: colors.primary,
       color: colors.background,
       fontSize: 14,
       fontWeight: '700',
+      marginTop: 4, // quase colado
     },
+    // ====== FIM dos estilos do estado "vazio" ======
+
     footer: {
       borderTop: `1px solid ${colors.text + '1A'}`,
       paddingLeft: 16,
@@ -242,7 +261,7 @@ export default function CustomizeScreen({ navigation }) {
     }
   }, [clearing]);
 
-  // (messageModal state declared above)
+  // (messageModal state declarado acima)
 
   return (
     <div style={ui.outer}>
@@ -294,6 +313,8 @@ export default function CustomizeScreen({ navigation }) {
               frameSource={previewFrame ? { uri: previewFrame } : null}
               bottomFlat
               topFlat
+              // mantém como no original
+              aspectRatio={isEmpty ? 6 : (560 / 260)}
             />
           </div>
           <div style={ui.optionsWrap}>
@@ -301,19 +322,22 @@ export default function CustomizeScreen({ navigation }) {
           </div>
           <div style={ui.listWrap}>
             {listData.length === 0 ? (
-              <div style={ui.empty}>
-                <div style={{ ...ui.emptyIcon, backgroundColor: colors.card }}>
-                  <LucideIcon name="shopping-bag" size={48} color={colors.muted} />
+              // === NOVO: área com a MESMA posição e com SCROLL ===
+              <div style={ui.emptyScroll}>
+                <div style={ui.emptyInner}>
+                  <div style={{ ...ui.emptyIcon, backgroundColor: colors.card }}>
+                    <LucideIcon name="shopping-bag" size={48} color={colors.muted} />
+                  </div>
+                  <span style={ui.emptyTitle}>{translate('customize.empty.title')}</span>
+                  <span style={ui.emptySubtitle}>{translate('customize.empty.subtitle')}</span>
+                  <button
+                    type="button"
+                    style={ui.shopButton}
+                    onClick={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
+                  >
+                    {translate('customize.empty.shopButton')}
+                  </button>
                 </div>
-                <span style={ui.emptyTitle}>{translate('customize.empty.title')}</span>
-                <span style={ui.emptySubtitle}>{translate('customize.empty.subtitle')}</span>
-                <button
-                  type="button"
-                  style={ui.shopButton}
-                  onClick={() => navigation?.navigate?.('MainTabs', { screen: 'Shop' })}
-                >
-                  {translate('customize.empty.shopButton')}
-                </button>
               </div>
             ) : (
               <CustomizeList
@@ -367,4 +391,3 @@ export default function CustomizeScreen({ navigation }) {
     </div>
   );
 }
-
