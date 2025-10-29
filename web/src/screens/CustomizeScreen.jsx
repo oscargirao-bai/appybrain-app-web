@@ -60,6 +60,7 @@ export default function CustomizeScreen({ navigation }) {
 
   const listData = category === 'avatar' ? avatars : category === 'background' ? backgrounds : frames;
   const listColumns = category === 'background' ? 2 : 3;
+  const isEmpty = (listData || []).length === 0;
 
   const handleSelectItem = useCallback(
     (item) => {
@@ -144,6 +145,8 @@ export default function CustomizeScreen({ navigation }) {
       justifyContent: 'center',
       paddingLeft: 16,
       paddingRight: 16,
+      // Ensure the options selector sits below the avatar when banner overlaps
+      marginTop: 56,
     },
     optionsInner: {
       display: 'flex',
@@ -168,7 +171,8 @@ export default function CustomizeScreen({ navigation }) {
       textAlign: 'center',
       gap: 18,
       paddingTop: 40,
-      paddingBottom: 40,
+      // Leave extra bottom padding so the shop button stays above the footer
+      paddingBottom: 140,
       paddingLeft: 24,
       paddingRight: 24,
     },
@@ -294,6 +298,10 @@ export default function CustomizeScreen({ navigation }) {
               frameSource={previewFrame ? { uri: previewFrame } : null}
               bottomFlat
               topFlat
+              // Reduce banner height when there are no cosmetics so the
+              // rest of the UI (selector + message + shop button) fits on
+              // small screens without being overlapped by the avatar.
+              aspectRatio={isEmpty ? 6 : (560 / 260)}
             />
           </div>
           <div style={ui.optionsWrap}>
