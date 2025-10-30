@@ -14,6 +14,11 @@ export default function SolutionModal({
   onReport,
 }) {
   const colors = useThemeColors();
+  // option labels shown to the user (these exact strings will be sent as the payload)
+  const OPTION_QUESTION = 'A pergunta tem erro.';
+  const OPTION_NO_CORRECT = 'Nenhuma das respostas era a correta.';
+  const OPTION_ANSWER = 'A resposta tem erro.';
+  const OPTION_EXPLANATION = 'A explicação tem erro.';
   const [reporting, setReporting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
@@ -69,10 +74,10 @@ export default function SolutionModal({
     );
   };
 
-  const toggleOption = (key) => {
+  const toggleOption = (label) => {
     setSelectedErrors((prev) => {
-      if (prev.includes(key)) return prev.filter((p) => p !== key);
-      return [...prev, key];
+      if (prev.includes(label)) return prev.filter((p) => p !== label);
+      return [...prev, label];
     });
   };
 
@@ -85,10 +90,12 @@ export default function SolutionModal({
 
     // Submit selected errors
     if (!quizId || reporting) return;
-    if (!selectedErrors || selectedErrors.length === 0) return;
+      if (!selectedErrors || selectedErrors.length === 0) return;
     setReporting(true);
     try {
-      const payload = { quizId, error: selectedErrors.join(';') };
+      // send the exact visible texts joined by "; " so the backend receives
+      // the same strings the user saw in the modal
+      const payload = { quizId, error: selectedErrors.join('; ') };
       // send JSON body to api/app/error_report
       const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/error_report', {
         method: 'POST',
@@ -153,21 +160,21 @@ export default function SolutionModal({
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label style={styles.checkboxRow}>
-                  <input type="checkbox" checked={selectedErrors.includes('questionError')} onChange={() => toggleOption('questionError')} />
-                  <span style={{ marginLeft: 8 }}>A pergunta tem erro.</span>
+                  <input type="checkbox" checked={selectedErrors.includes(OPTION_QUESTION)} onChange={() => toggleOption(OPTION_QUESTION)} />
+                  <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_QUESTION}</span>
                 </label>
                 <label style={styles.checkboxRow}>
-                  <input type="checkbox" checked={selectedErrors.includes('noCorrectAnswer')} onChange={() => toggleOption('noCorrectAnswer')} />
-                  <span style={{ marginLeft: 8 }}>Nenhuma das respostas era a correta.</span>
+                  <input type="checkbox" checked={selectedErrors.includes(OPTION_NO_CORRECT)} onChange={() => toggleOption(OPTION_NO_CORRECT)} />
+                  <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_NO_CORRECT}</span>
                 </label>
                 <label style={styles.checkboxRow}>
-                  <input type="checkbox" checked={selectedErrors.includes('answerError')} onChange={() => toggleOption('answerError')} />
-                  <span style={{ marginLeft: 8 }}>A resposta tem erro.</span>
+                  <input type="checkbox" checked={selectedErrors.includes(OPTION_ANSWER)} onChange={() => toggleOption(OPTION_ANSWER)} />
+                  <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_ANSWER}</span>
                 </label>
                 {explanation ? (
                   <label style={styles.checkboxRow}>
-                    <input type="checkbox" checked={selectedErrors.includes('explanationError')} onChange={() => toggleOption('explanationError')} />
-                    <span style={{ marginLeft: 8 }}>A explicação tem erro.</span>
+                    <input type="checkbox" checked={selectedErrors.includes(OPTION_EXPLANATION)} onChange={() => toggleOption(OPTION_EXPLANATION)} />
+                    <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_EXPLANATION}</span>
                   </label>
                 ) : null}
               </div>
