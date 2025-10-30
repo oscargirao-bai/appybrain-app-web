@@ -16,6 +16,8 @@ export default function SolutionModal({
   const colors = useThemeColors();
   const [reporting, setReporting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [selectedErrors, setSelectedErrors] = useState([]);
 
   const renderOption = () => {
     if (!correctOption) return null;
@@ -67,13 +69,32 @@ export default function SolutionModal({
     );
   };
 
+  const toggleOption = (key) => {
+    setSelectedErrors((prev) => {
+      if (prev.includes(key)) return prev.filter((p) => p !== key);
+      return [...prev, key];
+    });
+  };
+
   const handleReport = async () => {
+    // If form not shown yet, open it
+    if (!showReportForm) {
+      setShowReportForm(true);
+      return;
+    }
+
+    // Submit selected errors
     if (!quizId || reporting) return;
+    if (!selectedErrors || selectedErrors.length === 0) return;
     setReporting(true);
     try {
-      // call the API method that actually posts to api/app/error_report
-      // mobile implementation uses makeAuthenticatedRequest('api/app/error_report', { body: JSON.stringify({ quizId }) })
-      await ApiManager.reportQuizError(quizId);
+      const payload = { quizId, error: selectedErrors.join(';') };
+      // send JSON body to api/app/error_report
+      const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/error_report', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      // consider success when resp.success === true or resp is truthy
       setShowSuccessModal(true);
       onReport && onReport();
     } catch (error) {
@@ -81,6 +102,8 @@ export default function SolutionModal({
       alert('Erro ao reportar. Por favor tente novamente.');
     } finally {
       setReporting(false);
+      setShowReportForm(false);
+      setSelectedErrors([]);
     }
   };
 
@@ -99,7 +122,6 @@ export default function SolutionModal({
       />
     ) : null;
   }
-
   return (
     <div style={styles.modalContainer}>
       <div style={{...styles.backdrop, backgroundColor: colors.backdrop + 'CC'}}>
@@ -112,42 +134,82 @@ export default function SolutionModal({
         <div style={{...styles.panel, backgroundColor: colors.card}}>
           <div style={{...styles.header, borderBottomColor: colors.text + '22'}}>
             <span style={{...styles.headerTitle, color: colors.text}}>
-              Explicação
+              {showReportForm ? 'Reportar erro' : 'Explicação'}
             </span>
           </div>
 
-          <div style={styles.body}>
-            <span style={{...styles.label, color: colors.text}}>
-              Resposta correta:
-            </span>
-            {renderOption()}
-            {renderExplanation()}
-          </div>
+          {!showReportForm ? (
+            <div style={styles.body}>
+              <span style={{...styles.label, color: colors.text}}>
+                Resposta correta:
+              </span>
+              {renderOption()}
+              {renderExplanation()}
+            </div>
+          ) : (
+            <div style={{ ...styles.body, gap: 12 }}>
+              <span style={{...styles.label, color: colors.text}}>
+                Qual foi o erro que detetaste na pergunta?
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <label style={styles.checkboxRow}>
+                  <input type="checkbox" checked={selectedErrors.includes('questionError')} onChange={() => toggleOption('questionError')} />
+                  <span style={{ marginLeft: 8 }}>A pergunta tem erro.</span>
+                </label>
+                <label style={styles.checkboxRow}>
+                  <input type="checkbox" checked={selectedErrors.includes('noCorrectAnswer')} onChange={() => toggleOption('noCorrectAnswer')} />
+                  <span style={{ marginLeft: 8 }}>Nenhuma das respostas era a correta.</span>
+                </label>
+                <label style={styles.checkboxRow}>
+                  <input type="checkbox" checked={selectedErrors.includes('answerError')} onChange={() => toggleOption('answerError')} />
+                  <span style={{ marginLeft: 8 }}>A resposta tem erro.</span>
+                </label>
+                {explanation ? (
+                  <label style={styles.checkboxRow}>
+                    <input type="checkbox" checked={selectedErrors.includes('explanationError')} onChange={() => toggleOption('explanationError')} />
+                    <span style={{ marginLeft: 8 }}>A explicação tem erro.</span>
+                  </label>
+                ) : null}
+              </div>
+
+              <div style={{ marginTop: 8, color: '#a33', fontWeight: 700 }}>
+                ATENÇÃO: Se reportares um erro e o mesmo não existir serão retiradas 5 moedas.
+              </div>
+            </div>
+          )}
 
           <div style={styles.footer}>
             <button
-              onClick={handleReport}
-              disabled={reporting}
+              onClick={() => {
+                if (showReportForm) {
+                  setShowReportForm(false);
+                  setSelectedErrors([]);
+                } else {
+                  onClose && onClose();
+                }
+              }}
               style={{
                 ...styles.reportBtn,
                 borderColor: colors.text + '33',
-                opacity: reporting ? 0.6 : 1,
+                background: 'transparent'
               }}
             >
               <span style={{...styles.reportBtnText, color: colors.text}}>
-                {reporting ? 'A reportar...' : 'Reportar erro'}
+                Cancelar
               </span>
             </button>
 
             <button
-              onClick={onClose}
+              onClick={handleReport}
+              disabled={reporting || (showReportForm && selectedErrors.length === 0)}
               style={{
                 ...styles.continueBtn,
-                backgroundColor: colors.primary,
+                backgroundColor: (showReportForm && selectedErrors.length === 0) ? '#ccc' : colors.primary,
+                cursor: (showReportForm && selectedErrors.length === 0) ? 'not-allowed' : 'pointer'
               }}
             >
               <span style={styles.continueBtnText}>
-                Continuar
+                {reporting ? 'A reportar...' : (showReportForm ? 'Reportar Erro' : 'Reportar erro')}
               </span>
             </button>
           </div>
