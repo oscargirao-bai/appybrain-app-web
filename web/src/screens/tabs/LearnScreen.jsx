@@ -38,6 +38,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, op
 	const [friendlyHistory, setFriendlyHistory] = useState({ toPlay: [], pending: [], completed: [] });
 	const [friendlyLoading, setFriendlyLoading] = useState(false);
 	const hasFriendlyToPlay = (friendlyHistory?.toPlay || []).length > 0;
+	const [initialFriendliesRequested, setInitialFriendliesRequested] = useState(false);
 
 	useEffect(() => {
 		// Open Notifications modal if requested via navigation params
@@ -66,6 +67,26 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, op
 		// Cleanup subscription
 		return unsubscribe;
 	}, []);
+
+	useEffect(() => {
+		if (initialFriendliesRequested) return;
+		let cancelled = false;
+		const loadInitialFriendlies = async () => {
+			setInitialFriendliesRequested(true);
+			try {
+				await DataManager.refreshFriendlyBattles();
+				if (!cancelled) {
+					setFriendlyHistory(DataManager.getFriendlyHistory());
+				}
+			} catch (error) {
+				console.warn('Failed to preload friendly battles on Learn screen:', error?.message || error);
+			}
+		};
+		loadInitialFriendlies();
+		return () => {
+			cancelled = true;
+		};
+	}, [initialFriendliesRequested]);
 
 	// Handle chest opening - open chest browser modal first
 	const handleChestOpen = async () => {
