@@ -124,10 +124,10 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, op
 			battleMode: true,
 			friendlyMode: true,
 			battleSessionId,
+			battleId,
 			friendlyPayload: {
 				quizType: 'friendly',
 				battleId,
-				battleSessionId,
 			},
 		});
 	};

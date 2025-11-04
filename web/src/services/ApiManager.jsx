@@ -692,6 +692,18 @@ class ApiManager {
                     if (!payload.quizType) {
                         payload.quizType = 'battle';
                     }
+
+                    if (payload.quizType === 'friendly') {
+                        if (payload.battleSessionId && !payload.battleId) {
+                            payload.battleId = payload.battleSessionId;
+                        }
+                        if (payload.battleSessionId !== undefined) {
+                            delete payload.battleSessionId;
+                        }
+                        if (payload.battleId === undefined) {
+                            delete payload.battleId;
+                        }
+                    }
                 } else if (idParam) {
                     payload = {
                         quizType: 'battle',

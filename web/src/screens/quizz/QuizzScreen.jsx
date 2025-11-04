@@ -83,8 +83,20 @@ export default function QuizzScreen({ navigation, route }) {
 			});
 		};
 
-		const friendlyPayloadRef = useRef(friendlyPayload);
-		const initialBattleSessionId = battleSessionId || friendlyPayload?.battleSessionId || prefetchedBattleData?.battleSessionId || null;
+		const initialFriendlyPayload = friendlyPayload ? { ...friendlyPayload } : null;
+		const friendlyPayloadRef = useRef(initialFriendlyPayload);
+		const initialBattleId = route.params?.battleId
+			|| initialFriendlyPayload?.battleId
+			|| initialFriendlyPayload?.battle_id
+			|| prefetchedBattleData?.battleId
+			|| prefetchedBattleData?.battle_id
+			|| initialFriendlyPayload?.battleSessionId
+			|| prefetchedBattleData?.battleSessionId
+			|| null;
+		const initialBattleSessionId = battleSessionId
+			|| initialFriendlyPayload?.battleSessionId
+			|| prefetchedBattleData?.battleSessionId
+			|| null;
 		const [questions, setQuestions] = useState([]);
 		const [sessionId, setSessionId] = useState(null);
 		const [loading, setLoading] = useState(true);
@@ -107,6 +119,7 @@ export default function QuizzScreen({ navigation, route }) {
         const [correctCount, setCorrectCount] = useState(0);
         const totalElapsedMsRef = useRef(0);
 
+		const [activeBattleId, setActiveBattleId] = useState(initialBattleId);
 		const [activeBattleSessionId, setActiveBattleSessionId] = useState(initialBattleSessionId);
 
 		const applyQuizResponse = React.useCallback((response) => {
@@ -127,10 +140,20 @@ export default function QuizzScreen({ navigation, route }) {
 
 			if (isBattle && response.battleSessionId) {
 				setActiveBattleSessionId((prev) => (prev ? prev : response.battleSessionId));
-				if (friendlyMode) {
+			}
+			if (isBattle && friendlyMode) {
+				const computedBattleId = response?.battleId
+					|| response?.battle_id
+					|| response?.battleSessionId
+					|| friendlyPayloadRef.current?.battleId
+					|| friendlyPayloadRef.current?.battle_id
+					|| friendlyPayloadRef.current?.battleSessionId
+					|| null;
+				if (computedBattleId) {
+					setActiveBattleId((prev) => (prev ? prev : computedBattleId));
 					friendlyPayloadRef.current = {
 						quizType: 'friendly',
-						battleSessionId: response.battleSessionId,
+						battleId: computedBattleId,
 					};
 				}
 			}
@@ -156,12 +179,18 @@ export default function QuizzScreen({ navigation, route }) {
 					} else if (isBattle) {
 						let battlePayload;
 						if (friendlyMode) {
-							if (activeBattleSessionId) {
-								battlePayload = { quizType: 'friendly', battleSessionId: activeBattleSessionId };
-							} else if (friendlyPayloadRef.current) {
-								battlePayload = friendlyPayloadRef.current;
+							const refPayload = friendlyPayloadRef.current ? { ...friendlyPayloadRef.current } : {};
+							const knownBattleId = activeBattleId
+								|| refPayload.battleId
+								|| refPayload.battle_id
+								|| refPayload.battleSessionId
+								|| activeBattleSessionId
+								|| null;
+							if (knownBattleId) {
+								battlePayload = { quizType: 'friendly', battleId: knownBattleId };
 							} else {
-								battlePayload = { quizType: 'friendly' };
+								battlePayload = { quizType: 'friendly', ...refPayload };
+								delete battlePayload.battleSessionId;
 							}
 						} else {
 							battlePayload = activeBattleSessionId;
@@ -189,7 +218,7 @@ export default function QuizzScreen({ navigation, route }) {
 			return () => {
 				isCancelled = true;
 			};
-		}, [activeBattleSessionId, applyQuizResponse, challengeId, contentId, difficulty, friendlyMode, isBattle, isChallenge, prefetchedBattleData]);
+		}, [activeBattleId, activeBattleSessionId, applyQuizResponse, challengeId, contentId, difficulty, friendlyMode, isBattle, isChallenge, prefetchedBattleData]);
 
 		const current = questions[qIndex] || questions[0];
 		const currentTimeSec = current?.timeSec || 60;
@@ -298,6 +327,7 @@ export default function QuizzScreen({ navigation, route }) {
 				title,
 				sessionResult: currentSessionResult, // Pass the API response data
 				battleSessionId: currentSessionResult?.battleSessionId || activeBattleSessionId || null,
+				battleId: currentSessionResult?.battleId || activeBattleId || null,
 				hidePoints: friendlyMode,
 				openedFromFriendly: friendlyMode
 			};
@@ -350,6 +380,7 @@ export default function QuizzScreen({ navigation, route }) {
 						title,
 						sessionResult: currentSessionResult, // Pass the API response data
 						battleSessionId: currentSessionResult?.battleSessionId || activeBattleSessionId || null,
+						battleId: currentSessionResult?.battleId || activeBattleId || null,
 						hidePoints: friendlyMode,
 						openedFromFriendly: friendlyMode
 					};

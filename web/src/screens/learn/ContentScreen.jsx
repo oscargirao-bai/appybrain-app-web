@@ -160,12 +160,12 @@ export default function ContentScreen({ navigation, route }) {
 		setChallengeLoading(true);
 		setChallengeError('');
 		try {
-			const payload = {
+			const requestPayload = {
 				quizType: 'friendly',
 				contentId: selectedContent.id,
 				player2Id: user.id,
 			};
-			const response = await ApiManager.getQuizQuestions('battle', payload, null);
+			const response = await ApiManager.getQuizQuestions('battle', requestPayload, null);
 			if (!response?.success) {
 				const message = response?.message || translate('learn.challenge.pendingFriendlyMessage');
 				handleChallengeModalClose();
@@ -181,12 +181,14 @@ export default function ContentScreen({ navigation, route }) {
 			}
 
 			handleChallengeModalClose();
+			const battleId = response?.battleId || response?.battleSessionId || null;
 			navigation.navigate('Quizz', {
 				battleMode: true,
 				friendlyMode: true,
-				friendlyPayload: payload,
+				friendlyPayload: battleId ? { quizType: 'friendly', battleId } : { quizType: 'friendly' },
 				prefetchedBattleData: response,
 				battleSessionId: response?.battleSessionId || null,
+				battleId: battleId,
 			});
 		} catch (error) {
 			setChallengeError(error?.message || translate('learn.challenge.genericError'));
