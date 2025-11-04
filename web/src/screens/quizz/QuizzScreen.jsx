@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 
 import { useThemeColors } from '../../services/Theme.jsx';
@@ -36,7 +36,7 @@ export default function QuizzScreen({ navigation, route }) {
 		const contentId = !isBattle && !isChallenge ? (quiz?.id || quiz?.contentId) : null; // Use 'id' property from content item, fallback to contentId
 
 		// Function to randomize answer positions
-		const randomizeAnswers = (answers) => {
+		const randomizeAnswers = useCallback((answers) => {
 			// Check user preference for answer randomization
 			const shouldRandomize = DataManager.shouldRandomizeAnswers();
 			if (!shouldRandomize) return answers;
@@ -48,10 +48,10 @@ export default function QuizzScreen({ navigation, route }) {
 				[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 			}
 			return shuffled;
-		};
+		}, []);
 
 		// Function to transform API response to component format
-		const transformApiQuestions = (apiQuestions) => {
+		const transformApiQuestions = useCallback((apiQuestions) => {
 			return apiQuestions.map((apiQ, index) => {
 				const answers = JSON.parse(apiQ.answers || '[]');
 				const options = answers.map((answer, idx) => ({
@@ -81,7 +81,7 @@ export default function QuizzScreen({ navigation, route }) {
 					explanation, // Pass explanation for SolutionModal (supports HTML/LaTeX)
 				};
 			});
-		};
+		}, [randomizeAnswers]);
 
 		const initialFriendlyPayload = friendlyPayload ? { ...friendlyPayload } : null;
 		const friendlyPayloadRef = useRef(initialFriendlyPayload);
