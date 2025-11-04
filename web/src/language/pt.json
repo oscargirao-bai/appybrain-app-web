@@ -162,6 +162,7 @@
         "title": "Batalhas Amigáveis",
         "empty": "Sem batalhas amigáveis",
         "playCta": "JOGAR",
+        "pendingBadge": "Pendente",
         "sections": {
           "play": "Jogar",
           "pending": "Pendentes",

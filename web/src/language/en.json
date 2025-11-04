@@ -144,6 +144,7 @@
       "title": "Friendly Battles",
       "empty": "No friendly battles",
       "playCta": "PLAY",
+        "pendingBadge": "Pending",
       "sections": {
         "play": "Play",
         "pending": "Pending",

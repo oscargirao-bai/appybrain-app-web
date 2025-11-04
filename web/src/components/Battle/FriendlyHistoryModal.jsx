@@ -156,7 +156,7 @@ function FriendlyRow({ item, colors, type, onPlay, onOpenBattle }) {
 			<button style={{ ...base, cursor: 'pointer' }} onClick={handleOpen}>
 				<div style={rowStyles.namesRow}>
 					<span style={{ ...rowStyles.name, textAlign: 'left', color: colors.text }}>{item.left}</span>
-					<span style={{ ...rowStyles.statusTag, backgroundColor: '#47391b', color: '#f1c46c' }}>{translate('battle.history.pending')}</span>
+					<span style={{ ...rowStyles.statusTag, backgroundColor: '#47391b', color: '#f1c46c' }}>{translate('battle.friendly.pendingBadge')}</span>
 					<span style={{ ...rowStyles.name, textAlign: 'right', color: colors.text }}>{item.right}</span>
 				</div>
 			</button>
