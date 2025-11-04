@@ -169,6 +169,7 @@ function StudyButton({ onPress, colors, iconColor }) {
 function ChallengeButton({ onPress }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
+	const label = translate('learn.challenge.action');
 	const style = {
 		...styles.challengeBtn,
 		backgroundColor: colors.surface,
@@ -180,10 +181,9 @@ function ChallengeButton({ onPress }) {
 			style={style}
 			onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
 			onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
-			aria-label={translate('learn.challenge.action')}
+			aria-label={label}
 		>
-			<LucideIcon name="swords" size={18} color={colors.primary} style={{ marginRight: 8 }} />
-			<span style={{ ...styles.challengeText, color: colors.primary }}>{translate('learn.challenge.action')}</span>
+			<span style={{ ...styles.challengeText, color: colors.primary }}>{label}</span>
 		</button>
 	);
 }

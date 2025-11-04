@@ -291,6 +291,17 @@
       "sampleDescription": "Descrição de conteúdo (exemplo). Explicação, exemplos e ideias chave aqui.",
       "difficulty": "Dificuldade"
     },
+    "challenge": {
+      "action": "Desafia um colega",
+      "modalTitle": "Escolhe um colega",
+      "loading": "A carregar colegas...",
+      "empty": "Sem colegas disponíveis",
+      "loadError": "Não foi possível carregar os colegas. Tenta novamente.",
+      "genericError": "Não foi possível iniciar a batalha amigável. Tenta novamente.",
+      "pendingFriendlyMessage": "Tens um convite para uma batalha amigável que tens que jogar antes de poder iniciar outra.",
+      "openFriendlyHistory": "Ver batalhas amigáveis",
+      "unknownName": "Sem nome"
+    },
     "subjectsCount": "{$n} matérias",
     "selectSubjectPrompt": "Seleciona uma matéria para aprender"
   },

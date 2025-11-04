@@ -203,7 +203,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, op
 						<div style={styles.buttonsRow}>
 							<div style={styles.iconButtonWrapper}>
 								<Button2
-									iconName="history"
+									iconName="swords"
 									onClick={showFriendlyHistoryModal}
 								/>
 								{hasFriendlyToPlay && (

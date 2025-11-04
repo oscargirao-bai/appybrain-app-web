@@ -83,6 +83,8 @@ export default function QuizzScreen({ navigation, route }) {
 			});
 		};
 
+		const friendlyPayloadRef = useRef(friendlyPayload);
+		const initialBattleSessionId = battleSessionId || friendlyPayload?.battleSessionId || prefetchedBattleData?.battleSessionId || null;
 		const [questions, setQuestions] = useState([]);
 		const [sessionId, setSessionId] = useState(null);
 		const [loading, setLoading] = useState(true);
@@ -105,7 +107,7 @@ export default function QuizzScreen({ navigation, route }) {
         const [correctCount, setCorrectCount] = useState(0);
         const totalElapsedMsRef = useRef(0);
 
-		const [activeBattleSessionId, setActiveBattleSessionId] = useState(battleSessionId);
+		const [activeBattleSessionId, setActiveBattleSessionId] = useState(initialBattleSessionId);
 
 		const applyQuizResponse = React.useCallback((response) => {
 			if (!response || !response.questions || response.success === false) {
@@ -124,9 +126,15 @@ export default function QuizzScreen({ navigation, route }) {
 			}
 
 			if (isBattle && response.battleSessionId) {
-				setActiveBattleSessionId(response.battleSessionId);
+				setActiveBattleSessionId((prev) => (prev ? prev : response.battleSessionId));
+				if (friendlyMode) {
+					friendlyPayloadRef.current = {
+						quizType: 'friendly',
+						battleSessionId: response.battleSessionId,
+					};
+				}
 			}
-		}, [isBattle, setActiveBattleSessionId, transformApiQuestions]);
+		}, [friendlyMode, isBattle, transformApiQuestions]);
 
 		// Fetch quiz questions from API (or use prefetched data)
 		useEffect(() => {
@@ -146,9 +154,18 @@ export default function QuizzScreen({ navigation, route }) {
 					if (isChallenge) {
 						response = await apiManagerInstance.getQuizQuestions('challenge', challengeId, null);
 					} else if (isBattle) {
-						const battlePayload = friendlyMode
-							? (friendlyPayload || { battleSessionId: activeBattleSessionId, quizType: 'friendly' })
-							: activeBattleSessionId;
+						let battlePayload;
+						if (friendlyMode) {
+							if (activeBattleSessionId) {
+								battlePayload = { quizType: 'friendly', battleSessionId: activeBattleSessionId };
+							} else if (friendlyPayloadRef.current) {
+								battlePayload = friendlyPayloadRef.current;
+							} else {
+								battlePayload = { quizType: 'friendly' };
+							}
+						} else {
+							battlePayload = activeBattleSessionId;
+						}
 						response = await apiManagerInstance.getQuizQuestions('battle', battlePayload, null);
 					} else {
 						response = await apiManagerInstance.getQuizQuestions('learn', contentId, difficulty);
@@ -172,7 +189,7 @@ export default function QuizzScreen({ navigation, route }) {
 			return () => {
 				isCancelled = true;
 			};
-		}, [activeBattleSessionId, applyQuizResponse, challengeId, contentId, difficulty, friendlyMode, friendlyPayload, isBattle, isChallenge, prefetchedBattleData]);
+		}, [activeBattleSessionId, applyQuizResponse, challengeId, contentId, difficulty, friendlyMode, isBattle, isChallenge, prefetchedBattleData]);
 
 		const current = questions[qIndex] || questions[0];
 		const currentTimeSec = current?.timeSec || 60;
