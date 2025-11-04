@@ -14,7 +14,6 @@
   },
   "forgot": {
     "title": "Esqueci a Palavra-passe",
-    "send": "Enviar Email de Recuperação",
     "fillEmail": "Por favor, introduza o seu email.",
     "error": "Erro"
   },
@@ -24,6 +23,7 @@
     "confirm": "Confirmar palavra‑passe",
     "change": "Alterar palavra‑passe",
     "fillFields": "Por favor, preencha todos os campos.",
+    "ok": "OK",
     "minLength": "A palavra-passe deve ter pelo menos 6 caracteres.",
     "mismatchDesc": "Certifique-se de que ambas as palavras-passe são iguais."
   },
@@ -87,6 +87,17 @@
     "subtitle": "Compra items para te ajudarem!"
   },
   "gamesTab": {
+    "challenge": {
+      "action": "Desafia um colega",
+      "modalTitle": "Escolhe um colega",
+      "loading": "A carregar colegas...",
+      "empty": "Sem colegas disponíveis",
+      "loadError": "Não foi possível carregar os colegas. Tenta novamente.",
+      "genericError": "Não foi possível iniciar a batalha amigável. Tenta novamente.",
+      "pendingFriendlyMessage": "Tens um convite para uma batalha amigável que tens que jogar antes de poder iniciar outra.",
+      "openFriendlyHistory": "Ver batalhas amigáveis",
+      "unknownName": "Sem nome"
+    },
     "title": "Jogos Educativos",
     "subtitle": "Selecione uma matéria para começar"
   },
@@ -146,7 +157,17 @@
       "completed": "Concluídas",
       "correct": "Acertos",
       "totalTime": "Tempo Total"
-    }
+      },
+      "friendly": {
+        "title": "Batalhas Amigáveis",
+        "empty": "Sem batalhas amigáveis",
+        "playCta": "JOGAR",
+        "sections": {
+          "play": "Jogar",
+          "pending": "Pendentes",
+          "completed": "Concluídas"
+        }
+      }
   },
   "settings": {
     "settings": "Configurações",

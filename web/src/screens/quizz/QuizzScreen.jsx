@@ -15,7 +15,15 @@ import BattleHelp from '../../components/Battle/Help.jsx';
 
 export default function QuizzScreen({ navigation, route }) {
 		const colors = useThemeColors();
-		const { quiz, challengeId, battleMode } = route.params || {};
+		const {
+			quiz,
+			challengeId,
+			battleMode,
+			friendlyMode = false,
+			battleSessionId = null,
+			friendlyPayload = null,
+			prefetchedBattleData = null,
+		} = route.params || {};
 
 		// Determine quiz type and parameters based on navigation
 		const isChallenge = !!challengeId;
@@ -97,50 +105,74 @@ export default function QuizzScreen({ navigation, route }) {
         const [correctCount, setCorrectCount] = useState(0);
         const totalElapsedMsRef = useRef(0);
 
-		// Fetch quiz questions from API
+		const [activeBattleSessionId, setActiveBattleSessionId] = useState(battleSessionId);
+
+		const applyQuizResponse = React.useCallback((response) => {
+			if (!response || !response.questions || response.success === false) {
+				const message = response?.message || 'Failed to load quiz questions';
+				throw new Error(message);
+			}
+
+			const transformedQuestions = transformApiQuestions(response.questions);
+			setQuestions(transformedQuestions);
+			if (response.sessionId) {
+				setSessionId(response.sessionId);
+			}
+			if (isBattle && response.replace_questions) {
+				const transformedReplaceQuestions = transformApiQuestions(response.replace_questions);
+				setReplaceQuestions(transformedReplaceQuestions);
+			}
+
+			if (isBattle && response.battleSessionId) {
+				setActiveBattleSessionId(response.battleSessionId);
+			}
+		}, [isBattle, setActiveBattleSessionId, transformApiQuestions]);
+
+		// Fetch quiz questions from API (or use prefetched data)
 		useEffect(() => {
-			const fetchQuestions = async () => {
+			let isCancelled = false;
+
+			const loadQuiz = async () => {
 				try {
 					setLoading(true);
 					setError(null);
-					
-					// Make API call with appropriate payload based on quiz type
+
+					if (isBattle && prefetchedBattleData) {
+						applyQuizResponse(prefetchedBattleData);
+						return;
+					}
+
 					let response;
 					if (isChallenge) {
-						// For challenge quizzes, use challengeId
 						response = await apiManagerInstance.getQuizQuestions('challenge', challengeId, null);
 					} else if (isBattle) {
-						// For battle quizzes, use simple battle payload
-						response = await apiManagerInstance.getQuizQuestions('battle', null, null);
+						const battlePayload = friendlyMode
+							? (friendlyPayload || { battleSessionId: activeBattleSessionId, quizType: 'friendly' })
+							: activeBattleSessionId;
+						response = await apiManagerInstance.getQuizQuestions('battle', battlePayload, null);
 					} else {
-						// For learn quizzes, use contentId and difficulty
 						response = await apiManagerInstance.getQuizQuestions('learn', contentId, difficulty);
 					}
-					
-					if (response.success && response.questions) {
-						const transformedQuestions = transformApiQuestions(response.questions);
-						setQuestions(transformedQuestions);
-						setSessionId(response.sessionId);
-						
-						// Store replace questions for battle mode help system
-						if (isBattle && response.replace_questions) {
-							const transformedReplaceQuestions = transformApiQuestions(response.replace_questions);
-							setReplaceQuestions(transformedReplaceQuestions);
-						}
-					} else {
-						throw new Error('Failed to load quiz questions');
-					}
+
+					applyQuizResponse(response);
 				} catch (err) {
-					console.error('Error fetching quiz questions:', err);
-					setError(err.message);
-					// No fallback questions - show error state
+					if (!isCancelled) {
+						console.error('Error fetching quiz questions:', err);
+						setError(err.message);
+					}
 				} finally {
-					setLoading(false);
+					if (!isCancelled) {
+						setLoading(false);
+					}
 				}
 			};
 
-			fetchQuestions();
-		}, [isChallenge, isBattle, challengeId, contentId, difficulty]);
+			loadQuiz();
+
+			return () => {
+				isCancelled = true;
+			};
+		}, [activeBattleSessionId, applyQuizResponse, challengeId, contentId, difficulty, friendlyMode, friendlyPayload, isBattle, isChallenge, prefetchedBattleData]);
 
 		const current = questions[qIndex] || questions[0];
 		const currentTimeSec = current?.timeSec || 60;
@@ -207,17 +239,19 @@ export default function QuizzScreen({ navigation, route }) {
 		// Function to refresh user data when quiz ends
 		const refreshUserData = async () => {
 			try {
-				
 				if (isChallenge) {
 					// For challenge quizzes, only refresh userInfo and challenges (sequential)
 					await DataManager.refreshSection('userInfo');
 					await DataManager.refreshSection('challenges');
 				} else {
-					// For learn quizzes, refresh sections sequentially
+					// For learn and battle quizzes, refresh sections sequentially
 					await DataManager.refreshSection('userInfo');
 					await DataManager.refreshSection('disciplines');
 					await DataManager.refreshSection('userStars');
 					await DataManager.refreshSection('chests');
+					if (friendlyMode) {
+						await DataManager.refreshFriendlyBattles();
+					}
 				}
 			} catch (error) {
 				console.error('Failed to refresh user data:', error);
@@ -246,7 +280,9 @@ export default function QuizzScreen({ navigation, route }) {
 				quizType, 
 				title,
 				sessionResult: currentSessionResult, // Pass the API response data
-				battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
+				battleSessionId: currentSessionResult?.battleSessionId || activeBattleSessionId || null,
+				hidePoints: friendlyMode,
+				openedFromFriendly: friendlyMode
 			};
 			
 			
@@ -296,7 +332,9 @@ export default function QuizzScreen({ navigation, route }) {
 						quizType,
 						title,
 						sessionResult: currentSessionResult, // Pass the API response data
-						battleSessionId: currentSessionResult?.battleSessionId || null // Extract battleSessionId if available
+						battleSessionId: currentSessionResult?.battleSessionId || activeBattleSessionId || null,
+						hidePoints: friendlyMode,
+						openedFromFriendly: friendlyMode
 					};
 					
 					if (quizType === 'battle') {

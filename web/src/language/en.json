@@ -1,6 +1,7 @@
 {
   "common": {
     "close": "Close",
+    "ok": "OK",
     "coins": "coins",
     "player": "Player",
     "noTribe": "No Tribe",
@@ -138,6 +139,16 @@
       "completed": "Completed",
       "correct": "Correct",
       "totalTime": "Total time"
+    },
+    "friendly": {
+      "title": "Friendly Battles",
+      "empty": "No friendly battles",
+      "playCta": "PLAY",
+      "sections": {
+        "play": "Play",
+        "pending": "Pending",
+        "completed": "Completed"
+      }
     }
   },
   "settings": {
@@ -241,6 +252,17 @@
       "study": "Study Content",
       "sampleDescription": "Content description placeholder. Explanation, examples and key ideas go here.",
       "difficulty": "Difficulty"
+    },
+    "challenge": {
+      "action": "Challenge a teammate",
+      "modalTitle": "Choose a teammate",
+      "loading": "Loading teammates...",
+      "empty": "No teammates available",
+      "loadError": "We couldn't load your teammates. Try again in a moment.",
+      "genericError": "We couldn't start the friendly battle. Please try again.",
+      "pendingFriendlyMessage": "You have a pending friendly invite that must be played before you can start a new one.",
+      "openFriendlyHistory": "Open friendly battles",
+      "unknownName": "Unknown teammate"
     },
     "subjectsCount": "{$n} subjects",
     "selectSubjectPrompt": "Select a subject to learn"

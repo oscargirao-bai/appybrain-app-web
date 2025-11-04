@@ -678,10 +678,30 @@ class ApiManager {
                     challengeId: idParam
                 };
             } else if (quizType === 'battle') {
-                // For battle quizzes, use simple battle payload
-                payload = {
-                    quizType: 'battle'
-                };
+                if (idParam && typeof idParam === 'object') {
+                    payload = { ...idParam };
+
+                    if (payload.friendly !== undefined && !payload.quizType) {
+                        payload.quizType = payload.friendly ? 'friendly' : 'battle';
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(payload, 'friendly')) {
+                        delete payload.friendly;
+                    }
+
+                    if (!payload.quizType) {
+                        payload.quizType = 'battle';
+                    }
+                } else if (idParam) {
+                    payload = {
+                        quizType: 'battle',
+                        battleSessionId: idParam
+                    };
+                } else {
+                    payload = {
+                        quizType: 'battle'
+                    };
+                }
             } else {
                 // For learn quizzes, use contentId and difficulty
                 payload = {
@@ -915,6 +935,32 @@ class ApiManager {
             return response;
         } catch (error) {
             console.error('Failed to get battle list:', error);
+            throw error;
+        }
+    }
+    
+    async getFriendlyList() {
+        try {
+            const response = await this.makeAuthenticatedJSONRequest('api/app/friendly_list', {
+                method: 'POST'
+            });
+
+            return response;
+        } catch (error) {
+            console.error('Failed to get friendly battle list:', error);
+            throw error;
+        }
+    }
+
+    async getTeamUsers() {
+        try {
+            const response = await this.makeAuthenticatedJSONRequest('api/app/get_team_users', {
+                method: 'POST'
+            });
+
+            return response;
+        } catch (error) {
+            console.error('Failed to load team users:', error);
             throw error;
         }
     }

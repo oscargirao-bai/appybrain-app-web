@@ -17,6 +17,7 @@ export function BattleParticipantRow({
   delta,
   colors,
   pending,
+  hideTrophies = false,
 }) {
   const { avatarSource, bannerImageSource, frameSource } = bannerProps;
   const { username, tribe, coins, stars, trophies } = info;
@@ -67,12 +68,12 @@ export function BattleParticipantRow({
   };
 
   const trophyArea = (
-    <div style={styles.trophyArea}>
+    <div style={{ ...styles.trophyArea, ...(hideTrophies ? styles.hiddenTrophy : {}) }}>
       <div style={styles.trophyRow}>
         {sign && (
           <span style={{ ...styles.trophySign, color: trophyTone }}>{sign}</span>
         )}
-        <LucideIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 4 }} />
+        <LucideIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 4, visibility: hideTrophies ? 'hidden' : 'visible' }} />
         <span style={{ ...styles.trophyValue, color: trophyTone }}>
           {magnitude}
         </span>
@@ -286,6 +287,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  hiddenTrophy: {
+    visibility: 'hidden',
   },
   trophyRow: {
     display: 'flex',

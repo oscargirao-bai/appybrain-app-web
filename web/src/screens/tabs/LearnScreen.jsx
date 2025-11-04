@@ -17,9 +17,10 @@ import ChestRewardModal from '../../components/General/ChestRewardModal.jsx';
 import ChestBrowserModal from '../../components/General/ChestBrowserModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
-import LucideIcon from '../../components/General/LucideIcon.jsx';
+import FriendlyHistoryModal from '../../components/Battle/FriendlyHistoryModal.jsx';
+import transformBattleDataForResult from '../../utils/transformBattleDataForResult.js';
 
-export default function LearnScreen({ sourceId, timestamp, openNotifications, navigation }) {
+export default function LearnScreen({ sourceId, timestamp, openNotifications, openFriendlyHistory, navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const windowHeight = window.innerHeight;
@@ -33,6 +34,10 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 	const [userInfo, setUserInfo] = useState(null);
 	const [disciplines, setDisciplines] = useState([]);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+	const [friendlyHistoryOpen, setFriendlyHistoryOpen] = useState(false);
+	const [friendlyHistory, setFriendlyHistory] = useState({ toPlay: [], pending: [], completed: [] });
+	const [friendlyLoading, setFriendlyLoading] = useState(false);
+	const hasFriendlyToPlay = (friendlyHistory?.toPlay || []).length > 0;
 
 	useEffect(() => {
 		// Open Notifications modal if requested via navigation params
@@ -49,6 +54,7 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 			setDisciplines(disciplinesData);
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
+			setFriendlyHistory(DataManager.getFriendlyHistory());
 		};
 
 		// Initial load
@@ -73,6 +79,62 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 		setChestRewardOpen(true);
 		setReopenBrowserAfterReward(true);
 	};
+
+	const showFriendlyHistoryModal = async () => {
+		setFriendlyHistoryOpen(true);
+		setFriendlyLoading(true);
+		try {
+			await DataManager.refreshFriendlyBattles();
+			setFriendlyHistory(DataManager.getFriendlyHistory());
+		} catch (error) {
+			console.warn('Failed to refresh friendly battles:', error?.message || error);
+		} finally {
+			setFriendlyLoading(false);
+		}
+	};
+
+	const handlePlayFriendly = (friendlyItem) => {
+		if (!friendlyItem) return;
+		const battleSessionId = friendlyItem.battleSessionId;
+		const battleId = friendlyItem.battleId || friendlyItem.battleSessionId;
+		if (!battleSessionId && !battleId) return;
+		setFriendlyHistoryOpen(false);
+		navigation.navigate('Quizz', {
+			battleMode: true,
+			friendlyMode: true,
+			battleSessionId,
+			friendlyPayload: {
+				quizType: 'friendly',
+				battleId,
+				battleSessionId,
+			},
+		});
+	};
+
+	const handleOpenFriendlyResult = (friendlyItem) => {
+		const battleSessionId = friendlyItem?.battleSessionId;
+		if (!battleSessionId) return;
+		const friendlyBattle = DataManager.getFriendlyBattleById(battleSessionId);
+		const resultParams = transformBattleDataForResult(friendlyBattle);
+		if (!resultParams) {
+			console.warn('Friendly battle not found:', battleSessionId);
+			return;
+		}
+		setFriendlyHistoryOpen(false);
+		navigation.navigate('Result2', {
+			...resultParams,
+			hidePoints: true,
+			openedFromFriendly: true,
+		});
+	};
+
+	useEffect(() => {
+		if (openFriendlyHistory) {
+			setTimeout(() => {
+				showFriendlyHistoryModal();
+			}, 200);
+		}
+	}, [openFriendlyHistory]);
 
 	// Proportions (relative to full screen height)
 	const HEADER_PCT = 0.10; // header handled by Header component
@@ -139,11 +201,27 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 							<Stars value={userInfo?.stars ?? 0} size={48} responsive={true} />
 						</div>
 						<div style={styles.buttonsRow}>
-							<Button2
-								iconName="medal"
-								onClick={() => setRankingsOpen(true)}
-								style={styles.buttonSpacing}
-							/>
+							<div style={styles.iconButtonWrapper}>
+								<Button2
+									iconName="history"
+									onClick={showFriendlyHistoryModal}
+								/>
+								{hasFriendlyToPlay && (
+									<span
+										style={{
+											...styles.friendlyIndicator,
+											backgroundColor: colors.error,
+											borderColor: colors.background,
+										}}
+									/>
+								)}
+							</div>
+							<div style={styles.iconButtonWrapper}>
+								<Button2
+									iconName="medal"
+									onClick={() => setRankingsOpen(true)}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -193,6 +271,14 @@ export default function LearnScreen({ sourceId, timestamp, openNotifications, na
 				chestType={chestType}
 			/>
 			<ChestBrowserModal visible={chestBrowserOpen} onClose={() => setChestBrowserOpen(false)} onChestOpened={handleChestOpenedFromBrowser} dataSource="stars" />
+			<FriendlyHistoryModal
+				visible={friendlyHistoryOpen}
+				onClose={() => setFriendlyHistoryOpen(false)}
+				data={friendlyHistory}
+				onPlay={handlePlayFriendly}
+				onOpenBattle={handleOpenFriendlyResult}
+				loading={friendlyLoading}
+			/>
 		</div>
 		);
 	}
@@ -224,8 +310,20 @@ const styles = {
 		width: '100%',
 		marginTop: 4,
 	},
-	buttonSpacing: {
+	iconButtonWrapper: {
 		marginLeft: 12,
+		position: 'relative',
+		display: 'inline-flex',
+	},
+	friendlyIndicator: {
+		position: 'absolute',
+		top: 4,
+		right: 4,
+		width: 12,
+		height: 12,
+		borderRadius: '50%',
+		borderWidth: 2,
+		borderStyle: 'solid',
 	},
 	chestPressable: {
 		alignSelf: 'flex-start',

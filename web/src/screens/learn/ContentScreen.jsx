@@ -2,21 +2,31 @@ import React, { useMemo, useState, useEffect } from 'react';
 
 import Header from '../../components/General/Header.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import { useSearch } from '../../services/SearchContext.jsx';
 import DataManager from '../../services/DataManager.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import ContentList from '../../components/CategoryContent/ContentList.jsx';
 import SearchBox from '../../components/CategoryContent/SearchBox.jsx';
+import ChallengeFriendModal from '../../components/Learn/ChallengeFriendModal.jsx';
+import ConfirmModal from '../../components/General/ConfirmModal.jsx';
 
 // Ecrã simples de Conteúdo: mostra apenas o Header com o nome da categoria recebida via params
 // Params esperados: { categoryTitle: string }
 
 export default function ContentScreen({ navigation, route }) {
 	const colors = useThemeColors();
+	const { translate } = useTranslate();
 	const { categoryTitle, categoryId, categoryColor, categoryIconColor } = route.params || {};
 	const { searchText, setSearchText } = useSearch();
 	const [category, setCategory] = useState(null);
 	const [contents, setContents] = useState([]);
+	const [teamUsers, setTeamUsers] = useState([]);
+	const [challengeModalVisible, setChallengeModalVisible] = useState(false);
+	const [challengeLoading, setChallengeLoading] = useState(false);
+	const [selectedContent, setSelectedContent] = useState(null);
+	const [challengeError, setChallengeError] = useState('');
+	const [friendlyBlockerMessage, setFriendlyBlockerMessage] = useState('');
 
 	useEffect(() => {
 		//console.log('ContentScreen: categoryId =', categoryId);
@@ -113,6 +123,87 @@ export default function ContentScreen({ navigation, route }) {
 		}
 	};
 
+	const openFriendlyHistory = () => {
+		navigation.navigate('MainTabs', {
+			screen: 'Learn',
+			params: { openFriendlyHistory: true },
+		});
+	};
+
+	const handleChallengeRequest = async ({ item }) => {
+		if (!item) return;
+		setSelectedContent(item);
+		setChallengeError('');
+		const cachedUsers = DataManager.getTeamUsers();
+		setTeamUsers(cachedUsers || []);
+		setChallengeModalVisible(true);
+		setChallengeLoading(true);
+		try {
+			const users = await DataManager.refreshTeamUsers();
+			setTeamUsers(users || []);
+		} catch (error) {
+			setChallengeError(error?.message || translate('learn.challenge.loadError'));
+		} finally {
+			setChallengeLoading(false);
+		}
+	};
+
+	const handleChallengeModalClose = () => {
+		setChallengeModalVisible(false);
+		setChallengeLoading(false);
+		setChallengeError('');
+		setSelectedContent(null);
+	};
+
+	const handleOpponentSelect = async (user) => {
+		if (!user || !selectedContent) return;
+		setChallengeLoading(true);
+		setChallengeError('');
+		try {
+			const payload = {
+				quizType: 'friendly',
+				contentId: selectedContent.id,
+				player2Id: user.id,
+			};
+			const response = await ApiManager.getQuizQuestions('battle', payload, null);
+			if (!response?.success) {
+				const message = response?.message || translate('learn.challenge.pendingFriendlyMessage');
+				handleChallengeModalClose();
+				setFriendlyBlockerMessage(message);
+				return;
+			}
+
+			// Preload friendly battles list so modal is fresh after game ends
+			try {
+				await DataManager.refreshFriendlyBattles();
+			} catch (err) {
+				console.warn('Failed to refresh friendlies after starting challenge:', err?.message || err);
+			}
+
+			handleChallengeModalClose();
+			navigation.navigate('Quizz', {
+				battleMode: true,
+				friendlyMode: true,
+				friendlyPayload: payload,
+				prefetchedBattleData: response,
+				battleSessionId: response?.battleSessionId || null,
+			});
+		} catch (error) {
+			setChallengeError(error?.message || translate('learn.challenge.genericError'));
+		} finally {
+			setChallengeLoading(false);
+		}
+	};
+
+	const handleFriendlyBlockerConfirm = () => {
+		setFriendlyBlockerMessage('');
+		openFriendlyHistory();
+	};
+
+	const handleFriendlyBlockerCancel = () => {
+		setFriendlyBlockerMessage('');
+	};
+
 	return (
 		<div style={{ ...styles.safe, backgroundColor: colors.background }}>		
 			<Header title={categoryTitle || 'Conteúdo'} showBack onBack={() => navigation.goBack()} />
@@ -123,10 +214,27 @@ export default function ContentScreen({ navigation, route }) {
 				<ContentList 
 					data={filteredContents} 
 					onStudy={handleStudyPress}
+					onChallenge={handleChallengeRequest}
 					starsByDifficulty={starsByDifficulty}
 					navigation={navigation}
 				/>
 			</div>
+			<ChallengeFriendModal
+				visible={challengeModalVisible}
+				onClose={handleChallengeModalClose}
+				onSelect={handleOpponentSelect}
+				users={teamUsers}
+				loading={challengeLoading}
+				error={challengeError}
+			/>
+			<ConfirmModal
+				visible={!!friendlyBlockerMessage}
+				message={friendlyBlockerMessage || ''}
+				onConfirm={handleFriendlyBlockerConfirm}
+				onCancel={handleFriendlyBlockerCancel}
+				confirmLabel={translate('learn.challenge.openFriendlyHistory')}
+				cancelLabel={translate('common.ok')}
+			/>
 		</div>
 	);
 }

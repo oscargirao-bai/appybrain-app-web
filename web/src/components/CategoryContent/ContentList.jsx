@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import ConfirmModal from '../General/ConfirmModal.jsx';
 import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
@@ -143,6 +144,7 @@ function StarBadge({ stars, max, color }) {
 }
 
 function StudyButton({ onPress, colors, iconColor }) {
+	const { translate } = useTranslate();
 	const btnStyle = {
 		...styles.studyBtn,
 		backgroundColor: colors.accent,
@@ -156,15 +158,37 @@ function StudyButton({ onPress, colors, iconColor }) {
 			style={btnStyle}
 			onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
 			onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-			aria-label="Estudar conteúdo"
+			aria-label={translate('learn.content.study')}
 		>
 			<LucideIcon name="book-open" size={18} color={colors.onAccent} style={{ marginRight: 8 }} />
-			<span style={{ ...styles.studyText, color: colors.onAccent }}>Estudar Conteúdo</span>
+			<span style={{ ...styles.studyText, color: colors.onAccent }}>{translate('learn.content.study')}</span>
 		</button>
 	);
 }
 
-function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficulty, onPressStudy, onAskConfirm, starsByDifficulty }) {
+function ChallengeButton({ onPress }) {
+	const colors = useThemeColors();
+	const { translate } = useTranslate();
+	const style = {
+		...styles.challengeBtn,
+		backgroundColor: colors.surface,
+		borderColor: colors.text + '20',
+	};
+	return (
+		<button
+			onClick={onPress}
+			style={style}
+			onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+			onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+			aria-label={translate('learn.challenge.action')}
+		>
+			<LucideIcon name="swords" size={18} color={colors.primary} style={{ marginRight: 8 }} />
+			<span style={{ ...styles.challengeText, color: colors.primary }}>{translate('learn.challenge.action')}</span>
+		</button>
+	);
+}
+
+function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficulty, onPressStudy, onAskConfirm, onPressChallenge, starsByDifficulty }) {
 	const colors = useThemeColors();
 	const [showFullTitle, setShowFullTitle] = useState(false);
 	const wantsMath = containsMathMarkers(item?.description);
@@ -240,13 +264,18 @@ function AccordionItem({ item, expanded, onToggle, difficulty, onChangeDifficult
 						iconColor={iconColor}
 					/>
 					<StudyButton onPress={() => onPressStudy && onPressStudy()} colors={colors} iconColor={iconColor} />
+					{onPressChallenge ? (
+						<div style={styles.challengeWrap}>
+							<ChallengeButton onPress={onPressChallenge} />
+						</div>
+					) : null}
 				</div>
 			)}
 		</div>
 	);
 }
 
-export default function ContentList({ data, onPressStudy, onStudy, starsByDifficulty, navigation }) {
+export default function ContentList({ data, onPressStudy, onStudy, onChallenge, starsByDifficulty, navigation }) {
 	const [openId, setOpenId] = useState(null);
 	const [difficultyMap, setDifficultyMap] = useState({});
 	const [pendingQuiz, setPendingQuiz] = useState(null);
@@ -287,6 +316,7 @@ export default function ContentList({ data, onPressStudy, onStudy, starsByDiffic
 								if (handler) handler({ ...item, difficulty: diff });
 							}}
 							onAskConfirm={(it, d) => setPendingQuiz({ item: it, difficulty: d })}
+							onPressChallenge={onChallenge ? () => onChallenge({ item, difficulty: diff }) : undefined}
 							starsByDifficulty={itemStarsByDifficulty}
 						/>
 					);
@@ -368,6 +398,11 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'column',
 	},
+	challengeWrap: {
+		marginTop: 10,
+		display: 'flex',
+		justifyContent: 'center',
+	},
 	descText: {
 		fontSize: 14,
 		fontFamily: family.regular,
@@ -423,6 +458,27 @@ const styles = {
 		transition: 'opacity 0.2s',
 	},
 	studyText: {
+		fontSize: 16,
+		fontFamily: family.bold,
+		fontWeight: '700',
+	},
+	challengeBtn: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingTop: 12,
+		paddingBottom: 12,
+		paddingLeft: 14,
+		paddingRight: 14,
+		borderRadius: 14,
+		borderWidth: '1px',
+		borderStyle: 'solid',
+		cursor: 'pointer',
+		transition: 'opacity 0.2s',
+		width: '100%',
+	},
+	challengeText: {
 		fontSize: 16,
 		fontFamily: family.bold,
 		fontWeight: '700',

@@ -18,7 +18,10 @@ class DataManagerClass {
             news: [],
             challenges: [],
             cosmetics: [],
-            quotes: [] // Store motivational quotes from API
+            quotes: [], // Store motivational quotes from API
+            battles: [],
+            friendlyBattles: [],
+            teamUsers: []
         };
         this.userConfig = {
             randomPosition: 1,  // Default: shuffle answers
@@ -399,7 +402,9 @@ class DataManagerClass {
             shop: 'app/cosmetics_list',
             chests: 'app/gamification_user_chests',
             challenges: 'app/challenges_list',
-            battles: 'app/battle_list'
+            battles: 'app/battle_list',
+            friendlyBattles: 'app/friendly_list',
+            teamUsers: 'app/get_team_users'
         };
 
         if (!endpoints[section]) {
@@ -413,6 +418,10 @@ class DataManagerClass {
             if (section === 'battles') {
                 // Battles endpoint uses POST request
                 data = await this.apiManager.getBattleList();
+            } else if (section === 'friendlyBattles') {
+                data = await this.apiManager.getFriendlyList();
+            } else if (section === 'teamUsers') {
+                data = await this.apiManager.getTeamUsers();
             } else {
                 // Regular GET request
                 data = await this.apiManager.makeAuthenticatedJSONRequest(endpoints[section]);
@@ -439,6 +448,10 @@ class DataManagerClass {
                 // Store battles data from API response
                 this.data[section] = data?.battles || [];
                 //console.log('DataManager: Updated battles:', this.data.battles?.length || 0, 'battles');
+            } else if (section === 'friendlyBattles') {
+                this.data[section] = data?.battles || [];
+            } else if (section === 'teamUsers') {
+                this.data[section] = data?.users || [];
             } else {
                 this.data[section] = processedData[section];
             }
@@ -465,6 +478,8 @@ class DataManagerClass {
             chests: [],
             badges: [],
             battles: [],
+            friendlyBattles: [],
+            teamUsers: [],
             lastUpdated: null
         };
         this.loading = false;
@@ -1293,6 +1308,18 @@ class DataManagerClass {
         return this.data.battles?.find(battle => battle.battleSessionId === battleSessionId) || null;
     }
 
+    getFriendlyBattles() {
+        return this.data.friendlyBattles || [];
+    }
+
+    getFriendlyBattleById(battleSessionId) {
+        return this.data.friendlyBattles?.find(battle => battle.battleSessionId === battleSessionId) || null;
+    }
+
+    getTeamUsers() {
+        return this.data.teamUsers || [];
+    }
+
     // Get processed battle history for HistoryModal
     getBattleHistory() {
         const battles = this.getBattles();
@@ -1393,6 +1420,97 @@ class DataManagerClass {
             await this.refreshSection('battles');
         } catch (error) {
             console.error('Failed to refresh battles:', error);
+            throw error;
+        }
+    }
+
+    getFriendlyHistory() {
+        const friendlies = this.getFriendlyBattles();
+        const currentUser = this.getUser();
+
+        if (!friendlies || !currentUser) {
+            return { toPlay: [], pending: [], completed: [] };
+        }
+
+        const toPlay = [];
+        const pending = [];
+        const completed = [];
+
+        const computeStats = (results) => {
+            if (!results || results.length === 0) return null;
+            const correct = results.filter(r => r.correct === 1).length;
+            const total = results.length;
+            const timeSec = results.reduce((sum, r) => sum + (r.timeMs || 0), 0) / 1000;
+            return { correct, total, timeSec };
+        };
+
+        friendlies.forEach((battle) => {
+            const isPlayer1 = battle.player1Id === currentUser.id;
+            const isPlayer2 = battle.player2Id === currentUser.id;
+
+            if (!isPlayer1 && !isPlayer2) {
+                return;
+            }
+
+            const userResults = isPlayer1 ? battle.player1Results : battle.player2Results;
+            const opponentResults = isPlayer1 ? battle.player2Results : battle.player1Results;
+            const opponentName = isPlayer1 ? (battle.player2Nickname || 'Unknown') : (battle.player1Nickname || 'Unknown');
+
+            const itemBase = {
+                left: currentUser.nickname || 'Tu',
+                right: opponentName,
+                leftStats: computeStats(userResults),
+                rightStats: computeStats(opponentResults),
+                battleSessionId: battle.battleSessionId,
+                battleId: battle.battleId || battle.id || battle.battleSessionId,
+                startedAt: battle.startedAt,
+                endedAt: battle.endedAt,
+            };
+
+            const player2NeedsToPlay = isPlayer2 && (!Array.isArray(battle.player2Results) || battle.player2Results.length === 0);
+            const opponentPending = !player2NeedsToPlay && (!battle.endedAt);
+
+            if (battle.endedAt) {
+                let status = 'draw';
+                if (battle.winnerId) {
+                    status = battle.winnerId === currentUser.id ? 'win' : 'lose';
+                }
+                completed.push({ ...itemBase, status });
+            } else if (player2NeedsToPlay) {
+                toPlay.push({ ...itemBase, status: 'play' });
+            } else if (opponentPending) {
+                pending.push({ ...itemBase, status: 'pending' });
+            }
+        });
+
+        const sortByDate = (a, b) => {
+            const dateA = new Date(a.startedAt || 0);
+            const dateB = new Date(b.startedAt || 0);
+            return dateB - dateA;
+        };
+
+        return {
+            toPlay: toPlay.sort(sortByDate),
+            pending: pending.sort(sortByDate),
+            completed: completed.sort(sortByDate)
+        };
+    }
+
+    async refreshFriendlyBattles() {
+        try {
+            await this.refreshSection('friendlyBattles');
+        } catch (error) {
+            console.error('Failed to refresh friendly battles:', error);
+            throw error;
+        }
+    }
+
+    async refreshTeamUsers() {
+        try {
+            await this.refreshSection('teamUsers');
+            return this.getTeamUsers();
+        } catch (error) {
+            console.error('Failed to refresh team users:', error);
             throw error;
         }
     }

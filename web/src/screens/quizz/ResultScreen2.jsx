@@ -42,6 +42,8 @@ export default function ResultScreen2({ navigation, route }) {
 		battleSessionId = null,
 		openedFromHistory = false,
 		openedFromHistoryBattleId = null,
+		hidePoints = false,
+		openedFromFriendly = false,
 	} = route.params || {};
 
 	const [battleResult, setBattleResult] = useState(null);
@@ -178,14 +180,12 @@ export default function ResultScreen2({ navigation, route }) {
 		return ['rgba(107,114,128,0)', 'rgba(107,114,128,0.08)', 'rgba(107,114,128,0.16)'];
 	}, [outcome]);
 
-	const opponentDelta = {
-		value: activeBattleData?.opponentTrophiesDelta ?? 0,
-		isDraw: outcome === 'draw',
-	};
-	const playerDelta = {
-		value: battle.trophiesDelta ?? 0,
-		isDraw: outcome === 'draw',
-	};
+	const opponentDelta = hidePoints
+		? { value: 0, isDraw: true }
+		: { value: activeBattleData?.opponentTrophiesDelta ?? 0, isDraw: outcome === 'draw' };
+	const playerDelta = hidePoints
+		? { value: 0, isDraw: true }
+		: { value: battle.trophiesDelta ?? 0, isDraw: outcome === 'draw' };
 
 	const isCompact = typeof window !== 'undefined' ? window.innerHeight < 700 : false;
 
@@ -222,6 +222,7 @@ export default function ResultScreen2({ navigation, route }) {
 					delta={opponentDelta}
 					colors={colors}
 					pending={!isFinal}
+					hideTrophies={hidePoints}
 				/>
 
 				<div style={styles.vsWrap}>
@@ -243,6 +244,7 @@ export default function ResultScreen2({ navigation, route }) {
 					delta={playerDelta}
 					colors={colors}
 					pending={!isFinal}
+					hideTrophies={hidePoints}
 				/>
 			</div>
 
@@ -262,6 +264,8 @@ export default function ResultScreen2({ navigation, route }) {
 									// Fallback to main tabs default if no access
 									navigation.navigate('MainTabs', { initialTab: 0 });
 								}
+							} else if (openedFromFriendly) {
+								navigation.navigate('MainTabs', { initialTab: 0 });
 							} else {
 								if (hasFullAccess) {
 									navigation.navigate('MainTabs', { initialTab: 1 });
