@@ -35,6 +35,8 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
             availableFrom={item.availableFrom}
             imageUrl={item.imageUrl}
             userHasPlayed={item.userHasPlayed}
+            progress={item.progress}
+            sessionId={item.sessionId}
             onPress={onPressItem ? () => onPressItem(item) : undefined}
           />
         ))}

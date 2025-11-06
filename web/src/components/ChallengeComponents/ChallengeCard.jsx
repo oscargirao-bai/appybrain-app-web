@@ -12,7 +12,9 @@ export default function ChallengeCard({
   availableFrom,
   imageUrl, 
   onPress,
-  userHasPlayed = 0
+  userHasPlayed = 0,
+  progress = null,
+  sessionId = null
 }) {
   const colors = useThemeColors();
 
@@ -113,6 +115,13 @@ export default function ChallengeCard({
             </span>
           )}
         </div>
+        {progress && sessionId && isAvailable && (
+          <div style={{...styles.progressRow, borderTopColor: colors.text + '15'}}>
+            <span style={{...styles.progressText, color: colors.secondary}}>
+              Perguntas: {progress}
+            </span>
+          </div>
+        )}
       </div>
     </button>
   );
@@ -209,5 +218,16 @@ const styles = {
   timeLabel: {
     fontSize: 11,
     fontFamily: family.regular,
+  },
+  progressRow: {
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    marginTop: 8,
+    paddingTop: 8,
+  },
+  progressText: {
+    fontSize: 13,
+    fontFamily: family.bold,
+    fontWeight: '600',
   },
 };

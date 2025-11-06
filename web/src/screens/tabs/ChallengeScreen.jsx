@@ -115,9 +115,19 @@ export default function ChallengeScreen({ navigation }) {
 					console.log('ChallengeScreen: Starting challenge', selectedChallenge);
 					setConfirmOpen(false);
 					if (selectedChallenge) {
-						// Navigate directly to quiz with challengeId - no API call needed
-						console.log('ChallengeScreen: Navigating to Quizz with challengeId:', selectedChallenge.id);
-						navigation.navigate('Quizz', { challengeId: selectedChallenge.id });
+						// Check if this is a resume (has sessionId and progress)
+						const isResume = selectedChallenge.sessionId && selectedChallenge.progress;
+						if (isResume) {
+							console.log('ChallengeScreen: Resuming challenge with sessionId:', selectedChallenge.sessionId);
+							navigation.navigate('Quizz', { 
+								challengeId: selectedChallenge.id,
+								challengeSessionId: selectedChallenge.sessionId
+							});
+						} else {
+							// Navigate directly to quiz with challengeId - no API call needed
+							console.log('ChallengeScreen: Navigating to Quizz with challengeId:', selectedChallenge.id);
+							navigation.navigate('Quizz', { challengeId: selectedChallenge.id });
+						}
 					}
 					setSelectedChallenge(null);
 				}}

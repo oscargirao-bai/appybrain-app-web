@@ -13,19 +13,18 @@ import BattleHelp from '../../components/Battle/Help.jsx';
 
 // Recebe navigation/route via props do AppRouter
 
-export default function QuizzScreen({ navigation, route }) {
+	export default function QuizzScreen({ navigation, route }) {
 		const colors = useThemeColors();
 		const {
 			quiz,
 			challengeId,
+			challengeSessionId = null,
 			battleMode,
 			friendlyMode = false,
 			battleSessionId = null,
 			friendlyPayload = null,
 			prefetchedBattleData = null,
-		} = route.params || {};
-
-		// Determine quiz type and parameters based on navigation
+		} = route.params || {};		// Determine quiz type and parameters based on navigation
 		const isChallenge = !!challengeId;
 		const isBattle = !!battleMode;
 		const quizType = isChallenge ? 'challenge' : (isBattle ? 'battle' : 'learn');
@@ -175,7 +174,13 @@ export default function QuizzScreen({ navigation, route }) {
 
 					let response;
 					if (isChallenge) {
-						response = await apiManagerInstance.getQuizQuestions('challenge', challengeId, null);
+						// Check if this is a resume (has challengeSessionId)
+						if (challengeSessionId) {
+							console.log('QuizzScreen: Resuming challenge with sessionId:', challengeSessionId);
+							response = await apiManagerInstance.challengeResume(challengeSessionId);
+						} else {
+							response = await apiManagerInstance.getQuizQuestions('challenge', challengeId, null);
+						}
 					} else if (isBattle) {
 						let battlePayload;
 						if (friendlyMode) {
@@ -678,7 +683,8 @@ export default function QuizzScreen({ navigation, route }) {
 								setShowExitConfirm(false);
 								
 								// Handle quiz quit if we have sessionId and remaining questions
-								if (sessionId && questions.length > 0 && qIndex < questions.length) {
+								// BUT NOT for challenges - challenges don't call quit API
+								if (!isChallenge && sessionId && questions.length > 0 && qIndex < questions.length) {
 									try {
 										// Get remaining quiz IDs (questions not yet answered)
 										const remainingQuizIds = questions

@@ -937,6 +937,25 @@ class ApiManager {
         }
     }
 
+    // Resume challenge - continue from where user left off
+    async challengeResume(sessionId) {
+        try {
+            const payload = {
+                sessionId: sessionId
+            };
+
+            const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_resume', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            return response;
+        } catch (error) {
+            console.error('Failed to resume challenge:', error);
+            throw error;
+        }
+    }
+
     // Get battle list/history
     async getBattleList() {
         try {
