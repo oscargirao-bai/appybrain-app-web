@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useThemeColors } from '../../services/Theme.jsx';
+import { useTheme, useThemeColors } from '../../services/Theme.jsx';
 import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
 import { family } from '../../constants/font.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import MessageModal from '../General/MessageModal.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 
 export default function SolutionModal({
   visible,
@@ -13,12 +14,14 @@ export default function SolutionModal({
   onClose,
   onReport,
 }) {
+  const { resolvedTheme } = useTheme();
   const colors = useThemeColors();
+  const { translate: t } = useTranslate();
   // option labels shown to the user (these exact strings will be sent as the payload)
-  const OPTION_QUESTION = 'A pergunta tem erro.';
-  const OPTION_NO_CORRECT = 'Nenhuma das respostas era a correta.';
-  const OPTION_ANSWER = 'A resposta tem erro.';
-  const OPTION_EXPLANATION = 'A explicação tem erro.';
+  const OPTION_QUESTION = t('solution.options.question');
+  const OPTION_NO_CORRECT = t('solution.options.noCorrect');
+  const OPTION_ANSWER = t('solution.options.answer');
+  const OPTION_EXPLANATION = t('solution.options.explanation');
   const [reporting, setReporting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
@@ -141,14 +144,14 @@ export default function SolutionModal({
         <div style={{...styles.panel, backgroundColor: colors.card}}>
           <div style={{...styles.header, borderBottomColor: colors.text + '22'}}>
             <span style={{...styles.headerTitle, color: colors.text}}>
-              {showReportForm ? 'Reportar erro' : 'Explicação'}
+              {showReportForm ? t('solution.reportTitle') : t('solution.title')}
             </span>
           </div>
 
           {!showReportForm ? (
             <div style={styles.body}>
               <span style={{...styles.label, color: colors.text}}>
-                Resposta correta:
+                {t('solution.correctAnswer')}:
               </span>
               {renderOption()}
               {renderExplanation()}
@@ -156,7 +159,7 @@ export default function SolutionModal({
           ) : (
             <div style={{ ...styles.body, gap: 12 }}>
               <span style={{...styles.label, color: colors.text}}>
-                Qual foi o erro que detetaste na pergunta?
+                {t('solution.reportQuestion')}
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label style={styles.checkboxRow}>
@@ -179,8 +182,8 @@ export default function SolutionModal({
                 ) : null}
               </div>
 
-              <div style={{ marginTop: 8, color: '#a33', fontWeight: 700 }}>
-                ATENÇÃO: Se reportares um erro e o mesmo não existir serão retiradas 5 moedas.
+              <div style={{ marginTop: 8, color: colors.error, fontWeight: 700 }}>
+                {t('solution.reportWarning')}
               </div>
             </div>
           )}
@@ -192,31 +195,41 @@ export default function SolutionModal({
                   setShowReportForm(false);
                   setSelectedErrors([]);
                 } else {
-                  onClose && onClose();
+                  setShowReportForm(true);
                 }
               }}
               style={{
-                ...styles.reportBtn,
-                borderColor: colors.text + '33',
-                background: 'transparent'
+                ...styles.leftBtn,
+                borderColor: colors.border,
+                background: resolvedTheme === 'dark' ? colors.surface : colors.card
               }}
             >
-              <span style={{...styles.reportBtnText, color: colors.text}}>
-                Cancelar
+              <span style={{...styles.leftBtnText, color: colors.text}}>
+                {showReportForm ? t('solution.cancel') : t('solution.report')}
               </span>
             </button>
 
             <button
-              onClick={handleReport}
+              onClick={() => {
+                if (!showReportForm) {
+                  onClose && onClose();
+                } else {
+                  handleReport();
+                }
+              }}
               disabled={reporting || (showReportForm && selectedErrors.length === 0)}
               style={{
-                ...styles.continueBtn,
-                backgroundColor: (showReportForm && selectedErrors.length === 0) ? '#ccc' : colors.primary,
+                ...styles.rightBtn,
+                backgroundColor: (showReportForm && selectedErrors.length === 0)
+                  ? (resolvedTheme === 'dark' ? '#3a3f47' : '#cccccc')
+                  : colors.secondary,
                 cursor: (showReportForm && selectedErrors.length === 0) ? 'not-allowed' : 'pointer'
               }}
             >
-              <span style={styles.continueBtnText}>
-                {reporting ? 'A reportar...' : (showReportForm ? 'Reportar Erro' : 'Reportar erro')}
+              <span style={{...styles.rightBtnText, color: colors.onSecondary}}>
+                {reporting
+                  ? t('solution.reporting')
+                  : (showReportForm ? t('solution.report') : t('solution.continue'))}
               </span>
             </button>
           </div>
@@ -332,7 +345,7 @@ const styles = {
     paddingTop: 16,
     paddingBottom: 20,
   },
-  reportBtn: {
+  leftBtn: {
     flex: 1,
     paddingTop: 14,
     paddingBottom: 14,
@@ -342,12 +355,12 @@ const styles = {
     background: 'transparent',
     cursor: 'pointer',
   },
-  reportBtnText: {
+  leftBtnText: {
     fontSize: 14,
     fontFamily: family.bold,
     fontWeight: '700',
   },
-  continueBtn: {
+  rightBtn: {
     flex: 2,
     paddingTop: 14,
     paddingBottom: 14,
@@ -355,10 +368,9 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
   },
-  continueBtnText: {
+  rightBtnText: {
     fontSize: 16,
     fontFamily: family.bold,
     fontWeight: '800',
-    color: '#fff',
   },
 };

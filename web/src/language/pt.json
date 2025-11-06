@@ -465,5 +465,23 @@
     "accuracy": "Precisão",
     "continue": "Continuar",
     "stars": "Estrelas"
+  },
+  "solution": {
+    "title": "Explicação",
+    "correctAnswer": "Resposta correta",
+    "explanation": "Explicação",
+    "report": "Reportar",
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+    "reportTitle": "Reportar erro",
+    "reportQuestion": "Qual foi o erro que detetaste na pergunta?",
+    "reportWarning": "ATENÇÃO: Se reportares um erro e o mesmo não existir serão retiradas 5 moedas.",
+    "reporting": "A reportar...",
+    "options": {
+      "question": "A pergunta tem erro.",
+      "noCorrect": "Nenhuma das respostas era a correta.",
+      "answer": "A resposta tem erro.",
+      "explanation": "A explicação tem erro."
+    }
   }
 }
