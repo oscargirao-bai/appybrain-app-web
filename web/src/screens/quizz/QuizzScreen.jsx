@@ -671,17 +671,17 @@ import BattleHelp from '../../components/Battle/Help.jsx';
 											}
 										}}
 									/>
-						<ConfirmModal
-							visible={showExitConfirm}
-							message={
-								isChallenge
-									? 'Queres sair do quiz? O teu progresso nesta tentativa será perdido.'
-									: 'Queres sair do quiz? Não te esqueças que tens que terminar o quiz antes do prazo limite!'
-							}
-							cancelLabel="Continuar"
-							confirmLabel="Sair"
-							destructive
-							onCancel={() => setShowExitConfirm(false)}
+					<ConfirmModal
+						visible={showExitConfirm}
+						message={
+							isChallenge
+								? 'Queres sair do quiz? Não te esqueças que tens que terminar o quiz antes do prazo limite!'
+								: 'Queres sair do quiz? O teu progresso nesta tentativa será perdido.'
+						}
+						cancelLabel="Continuar"
+						confirmLabel="Sair"
+						destructive
+						onCancel={() => setShowExitConfirm(false)}
 							onConfirm={async () => {
 								if (timerRef.current) clearInterval(timerRef.current);
 								setShowExitConfirm(false);
