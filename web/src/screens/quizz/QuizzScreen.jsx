@@ -673,7 +673,11 @@ import BattleHelp from '../../components/Battle/Help.jsx';
 									/>
 						<ConfirmModal
 							visible={showExitConfirm}
-							message={'Queres sair do quiz? O teu progresso nesta tentativa será perdido.'}
+							message={
+								isChallenge
+									? 'Queres sair do quiz? O teu progresso nesta tentativa será perdido.'
+									: 'Queres sair do quiz? Não te esqueças que tens que terminar o quiz antes do prazo limite!'
+							}
 							cancelLabel="Continuar"
 							confirmLabel="Sair"
 							destructive
@@ -721,6 +725,16 @@ import BattleHelp from '../../components/Battle/Help.jsx';
 									} catch (error) {
 										console.error('Failed to quit quiz properly:', error);
 										// Continue with navigation even if quit API fails
+									}
+								}
+
+								// If challenge, refresh challenges list to update progress
+								if (isChallenge) {
+									try {
+										await DataManager.refreshSection('challenges');
+										await new Promise(resolve => setTimeout(resolve, 100));
+									} catch (refreshError) {
+										console.warn('Failed to refresh challenges after quit:', refreshError);
 									}
 								}
 								

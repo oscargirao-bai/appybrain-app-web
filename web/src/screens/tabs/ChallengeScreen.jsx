@@ -106,7 +106,11 @@ export default function ChallengeScreen({ navigation }) {
 			{/* Confirm start challenge */}
 			<ConfirmModal
 				visible={confirmOpen}
-				message={`Queres começar o desafio "${selectedChallenge?.title || ''}"?`}
+				message={
+					selectedChallenge?.sessionId && selectedChallenge?.progress
+						? `Queres continuar o desafio "${selectedChallenge?.title || ''}"?`
+						: `Queres começar o desafio "${selectedChallenge?.title || ''}"?`
+				}
 				onCancel={() => {
 					setConfirmOpen(false);
 					setSelectedChallenge(null);
