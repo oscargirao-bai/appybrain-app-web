@@ -6,6 +6,7 @@ import { family } from '../../constants/font.jsx';
 import SvgIcon from '../General/SvgIcon.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
 import MathJaxRenderer from '../General/MathJaxRenderer.jsx';
+import { colorsDark } from '../../constants/color.jsx';
 
 function containsMathMarkers(str) {
 	if (!str) return false;
@@ -170,10 +171,11 @@ function ChallengeButton({ onPress }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const label = translate('learn.challenge.action');
+	// Force dark-style button even in light mode
 	const style = {
 		...styles.challengeBtn,
-		backgroundColor: colors.surface,
-		borderColor: colors.text + '20',
+		backgroundColor: colorsDark.surface,
+		borderColor: colorsDark.text + '20',
 	};
 	return (
 		<button
@@ -183,7 +185,7 @@ function ChallengeButton({ onPress }) {
 			onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
 			aria-label={label}
 		>
-			<span style={{ ...styles.challengeText, color: colors.primary }}>{label}</span>
+			<span style={{ ...styles.challengeText, color: colorsDark.primary }}>{label}</span>
 		</button>
 	);
 }
