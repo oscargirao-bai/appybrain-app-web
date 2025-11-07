@@ -35,3 +35,7 @@ yarn-error.log*
 # Misc
 coverage/
 *.pid
+
+# Version control (auto-generated files)
+web/public/version.json
+web/src/version-app.js

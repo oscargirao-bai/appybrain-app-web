@@ -466,6 +466,14 @@
     "continue": "Continuar",
     "stars": "Estrelas"
   },
+  "version": {
+    "updateAvailableTitle": "Atualização disponível",
+    "updateModalMessage": "Uma nova versão está disponível. Pode recarregar agora ou continuar a trabalhar.",
+    "currentVersionLabel": "Versão atual:",
+    "newVersionLabel": "Nova versão:",
+    "reloadNow": "Recarregar agora",
+    "remindLater": "Lembrar mais tarde"
+  },
   "solution": {
     "title": "Explicação",
     "correctAnswer": "Resposta correta",

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ThemeProvider, useTheme, useThemeColors } from './services/Theme.jsx';
 import { TranslationProvider } from './services/Translate.jsx';
 import { SearchProvider } from './services/SearchContext.jsx';
+import { VersionProvider } from './services/VersionContext.jsx';
 import ApiManager from './services/ApiManager.jsx';
 import AppRouter from './AppRouter.jsx';
 import StoreRedirect from './components/General/StoreRedirect.jsx';
@@ -31,7 +32,9 @@ export default function App() {
           <ThemeProvider defaultTheme="dark">
             <TranslationProvider>
               <SearchProvider>
-                <StoreRedirect />
+                <VersionProvider>
+                  <StoreRedirect />
+                </VersionProvider>
               </SearchProvider>
             </TranslationProvider>
           </ThemeProvider>
@@ -52,11 +55,13 @@ export default function App() {
           <ThemeProvider defaultTheme="dark">
             <TranslationProvider>
               <SearchProvider>
-                {/* AppInner provides the white app background in light mode while the page/body
-                    keeps the subtle contrast color set by ThemeProvider */}
-                <AppInner>
-                  <AppRouter />
-                </AppInner>
+                <VersionProvider>
+                  {/* AppInner provides the white app background in light mode while the page/body
+                      keeps the subtle contrast color set by ThemeProvider */}
+                  <AppInner>
+                    <AppRouter />
+                  </AppInner>
+                </VersionProvider>
               </SearchProvider>
             </TranslationProvider>
           </ThemeProvider>

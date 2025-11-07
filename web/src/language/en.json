@@ -439,6 +439,14 @@
     "continue": "Continue",
     "stars": "Stars"
   },
+  "version": {
+    "updateAvailableTitle": "Update available",
+    "updateModalMessage": "A new version is available. You can reload now or continue working.",
+    "currentVersionLabel": "Current version:",
+    "newVersionLabel": "New version:",
+    "reloadNow": "Reload now",
+    "remindLater": "Remind me later"
+  },
   "solution": {
     "title": "Explanation",
     "correctAnswer": "Correct answer",
