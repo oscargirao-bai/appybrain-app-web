@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "gen-version": "node scripts/gen-version.cjs",
+    "bump:patch": "node scripts/bump-version.cjs patch",
+    "bump:minor": "node scripts/bump-version.cjs minor",
+    "bump:major": "node scripts/bump-version.cjs major",
     "predev": "npm run gen-version",
     "prebuild": "npm run gen-version",
     "dev": "vite",
