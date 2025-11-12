@@ -1,0 +1,269 @@
+Guia Completo: Implementação Light/Dark Mode (AppyBrain Web)
+===========================================================
+
+Este ficheiro reúne tudo o que precisas (copy/paste) para replicar o sistema de light/dark mode noutro projecto web React.
+Inclui: paletas, provider de tema, hooks, toggle, integração e exemplos.
+
+------------------------------------------------------------
+1. Paletas de Cores (src/constants/color.jsx)
+------------------------------------------------------------
+Cria o ficheiro: src/constants/color.jsx
+
+export const colorsDark = {
+  background: '#0E131A',
+  surface: '#17202A',
+  card: '#1E2A35',
+  border: '#2D3A46',
+  text: '#F5F7FA',
+  muted: '#8C98A8',
+  primary: '#F9E547',
+  secondary: '#59B3FF',
+  accent: '#C792EA',
+  error: '#FF5F56',
+  correct: '#33D087',
+  warning: '#FFB347',
+  info: '#4DB9FF',
+  onPrimary: '#1F1A00',
+  onSecondary: '#041018',
+  onAccent: '#1B0F23',
+  onError: '#FFFFFF',
+  onCorrect: '#062015',
+  shadow: '#000000',
+  focus: '#F9E547',
+  outline: '#59B3FF',
+  backdrop: '#0E131A',
+  gradientPrimary: ['#F9E547', '#FFCA28'],
+  gradientSecondary: ['#59B3FF', '#2F7FD9'],
+};
+
+export const colorsLight = {
+  background: '#FFFDF5',
+  surface: '#F5F7FA',
+  card: '#FFFFFF',
+  border: '#E2E8F0',
+  text: '#1A202C',
+  muted: '#5F6B7A',
+  primary: '#FFE14D',
+  secondary: '#339DFF',
+  accent: '#B052F7',
+  error: '#E53935',
+  correct: '#2EAC6D',
+  warning: '#FF9800',
+  info: '#1E88E5',
+  onPrimary: '#2B2400',
+  onSecondary: '#FFFFFF',
+  onAccent: '#FFFFFF',
+  onError: '#FFFFFF',
+  onCorrect: '#FFFFFF',
+  shadow: '#000000',
+  focus: '#339DFF',
+  outline: '#FFE14D',
+  backdrop: '#0E131A',
+  gradientPrimary: ['#FFE14D', '#FFCA28'],
+  gradientSecondary: ['#339DFF', '#1E88E5'],
+};
+
+export const getColorsForTheme = (theme = 'dark') => (theme === 'light' ? colorsLight : colorsDark);
+export const colors = colorsDark; // Legado
+export default colorsDark;
+
+------------------------------------------------------------
+2. Provider e Hooks de Tema (src/services/Theme.jsx)
+------------------------------------------------------------
+Cria o ficheiro: src/services/Theme.jsx
+
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { colorsDark, colorsLight, getColorsForTheme } from '../constants/color.jsx';
+
+// Storage web simples
+const AsyncStorage = {
+  async getItem(key) { return localStorage.getItem(key); },
+  async setItem(key, value) { localStorage.setItem(key, value); }
+};
+
+// Wrapper para sistema (prefers-color-scheme)
+const Appearance = {
+  getColorScheme: () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+  addChangeListener: (callback) => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e) => callback({ colorScheme: e.matches ? 'dark' : 'light' });
+    mq.addEventListener('change', handler);
+    return { remove: () => mq.removeEventListener('change', handler) };
+  }
+};
+
+const THEME_STORAGE_KEY = 'app.theme';
+const GENDER_SWAP_KEY = 'app.gender.swap'; // Opcional
+
+const ThemeContext = createContext({
+  theme: 'system',
+  setTheme: () => {},
+  resolvedTheme: 'dark',
+  colors: colorsDark,
+  swapGenderColors: false,
+  setSwapGenderColors: () => {},
+});
+
+export function ThemeProvider({ children, defaultTheme = 'system' }) {
+  const [theme, setThemeState] = useState(defaultTheme);
+  const [systemScheme, setSystemScheme] = useState(Appearance.getColorScheme());
+  const [swapGenderColors, setSwapGenderColors] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [storedTheme, storedSwap] = await Promise.all([
+          AsyncStorage.getItem(THEME_STORAGE_KEY),
+          AsyncStorage.getItem(GENDER_SWAP_KEY),
+        ]);
+        if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system') {
+          setThemeState(storedTheme);
+        }
+        if (storedSwap === '1') setSwapGenderColors(true);
+      } catch {}
+    })();
+  }, []);
+
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(({ colorScheme }) => setSystemScheme(colorScheme));
+    return () => sub.remove();
+  }, []);
+
+  const setTheme = useCallback(async (t) => {
+    setThemeState(t);
+    try { await AsyncStorage.setItem(THEME_STORAGE_KEY, t); } catch {}
+  }, []);
+
+  const setSwapGenderColorsPersist = useCallback(async (b) => {
+    setSwapGenderColors(b);
+    try { await AsyncStorage.setItem(GENDER_SWAP_KEY, b ? '1' : '0'); } catch {}
+  }, []);
+
+  const resolvedTheme = useMemo(() => (theme === 'system' ? systemScheme : theme), [theme, systemScheme]);
+
+  const colors = useMemo(() => {
+    const base = resolvedTheme === 'light' ? colorsLight : colorsDark;
+    return swapGenderColors ? { ...base, primary: base.secondary, secondary: base.primary } : base;
+  }, [resolvedTheme, swapGenderColors]);
+
+  useEffect(() => {
+    try {
+      const pageBg = resolvedTheme === 'dark' ? '#000000' : '#f6f5ea';
+      document.body.style.backgroundColor = pageBg;
+      document.documentElement.style.backgroundColor = pageBg;
+    } catch {}
+  }, [resolvedTheme]);
+
+  const value = useMemo(() => ({ theme, setTheme, resolvedTheme, colors, swapGenderColors, setSwapGenderColors: setSwapGenderColorsPersist }), [theme, setTheme, resolvedTheme, colors, swapGenderColors, setSwapGenderColorsPersist]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+export function useTheme() { return useContext(ThemeContext); }
+export function useThemeColors() { return useTheme().colors; }
+export const getThemeColors = (t) => getColorsForTheme(t);
+export default ThemeProvider;
+
+------------------------------------------------------------
+3. Toggle Light/Dark (ex: src/components/Settings/ButtonLightDark.jsx)
+------------------------------------------------------------
+import React, { useCallback } from 'react';
+import { Sun, Moon } from 'lucide-react';
+import { useTheme, useThemeColors } from '../../services/Theme.jsx';
+
+export default function ButtonLightDark({ style, onChange }) {
+  const { setTheme, resolvedTheme } = useTheme();
+  const colors = useThemeColors();
+  const active = resolvedTheme;
+
+  const handleSelect = useCallback((t) => {
+    setTheme(t);
+    onChange && onChange(t);
+  }, [setTheme, onChange]);
+
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'row', borderWidth: 1, borderStyle: 'solid', borderRadius: 28, overflow: 'hidden',
+      marginBottom: 20, borderColor: colors.text + '22', backgroundColor: colors.text + '06', width: '100%', ...style
+    }}>
+      <Segment label="Modo Claro" icon="sun" active={active==='light'} onClick={() => handleSelect('light')} colors={colors} position="left" resolvedTheme={resolvedTheme} />
+      <Segment label="Modo Escuro" icon="moon" active={active==='dark'} onClick={() => handleSelect('dark')} colors={colors} position="right" resolvedTheme={resolvedTheme} />
+    </div>
+  );
+}
+
+function Segment({ label, icon, active, onClick, colors, position, resolvedTheme }) {
+  const activeStyles = active ? { backgroundColor: colors.secondary, boxShadow: `0 2px 8px ${colors.secondary}55` } : {};
+  const positionStyles = position === 'left' ? { borderTopLeftRadius: 28, borderBottomLeftRadius: 28 } : { borderTopRightRadius: 28, borderBottomRightRadius: 28 };
+  const isLightSegment = icon === 'sun';
+  let textColor = active ? '#fff' : colors.text;
+  let forcedStyles = {};
+  if (resolvedTheme === 'dark' && isLightSegment) { textColor = '#000'; forcedStyles = { backgroundColor: '#ffffff' }; }
+  const IconEl = icon === 'sun' ? Sun : Moon;
+  return (
+    <button onClick={onClick} style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: '14px 12px', border: 'none', background: 'transparent', cursor: 'pointer', transition: 'all 0.2s ease', ...positionStyles, ...activeStyles, ...forcedStyles }}>
+      <IconEl size={18} color={textColor} style={{ marginRight: 8 }} />
+      <span style={{ fontSize: 14, fontWeight: 800, fontStyle: 'italic', letterSpacing: 0.4, color: textColor }}>{label}</span>
+    </button>
+  );
+}
+
+------------------------------------------------------------
+4. Envolver a App (ex: src/main.jsx ou src/App.jsx)
+------------------------------------------------------------
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import { ThemeProvider } from './services/Theme.jsx';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ThemeProvider defaultTheme="dark">
+    <App />
+  </ThemeProvider>
+);
+
+// Se quiseres "system": <ThemeProvider defaultTheme="system">.
+
+------------------------------------------------------------
+5. Exemplo de uso em componentes
+------------------------------------------------------------
+import React from 'react';
+import { useThemeColors } from '../services/Theme.jsx';
+import { colorsDark } from '../constants/color.jsx';
+
+export function DarkCtaButton({ children, onClick, style }) {
+  const colors = useThemeColors();
+  return (
+    <button onClick={onClick} style={{ backgroundColor: colorsDark.surface, color: colors.primary, border: `1px solid ${colorsDark.text}20`, borderRadius: 12, padding: '12px 16px', fontWeight: 800, cursor: 'pointer', ...style }}>{children}</button>
+  );
+}
+
+export function ThemedCard({ children, style }) {
+  const c = useThemeColors();
+  return (
+    <div style={{ backgroundColor: c.card, color: c.text, border: `1px solid ${c.border}`, borderRadius: 12, padding: 16, ...style }}>{children}</div>
+  );
+}
+
+------------------------------------------------------------
+6. Notas Importantes
+------------------------------------------------------------
+- Persistência: chave localStorage app.theme.
+- "system" respeita prefers-color-scheme e actualiza ao vivo.
+- Fundo do body/html muda para #000 (dark) ou #f6f5ea (light) mantendo contraste suave.
+- swapGenderColors (opcional) troca primary<->secondary.
+- Podes eliminar swapGenderColors se não for necessário.
+- Usa SEMPRE useThemeColors() para obter tokens; evita hex hard-coded.
+- Fácil de migrar para CSS variables: iterar sobre colors e atribuir a :root / .dark.
+
+------------------------------------------------------------
+7. Checklist de Integração
+------------------------------------------------------------
+[ ] Criar src/constants/color.jsx
+[ ] Criar src/services/Theme.jsx
+[ ] Envolver root em <ThemeProvider>
+[ ] Adicionar botão de toggle (ButtonLightDark.jsx)
+[ ] Usar useThemeColors() nos componentes
+[ ] Verificar storage e mudança de tema em tempo real.
+
+Fim do guia.
