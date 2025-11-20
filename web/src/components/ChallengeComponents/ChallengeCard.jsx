@@ -129,12 +129,6 @@ export default function ChallengeCard({
         )}
         {tournament && minimumPoints !== null && (
           <div style={{...styles.tournamentRow, borderTopColor: colors.text + '15'}}>
-            <div style={styles.tournamentContent}>
-              <LucideIcon name="award" size={16} color={colors.accent} />
-              <span style={{...styles.minimumPointsText, color: colors.accent}}>
-                {translate('challenge.minimumPoints', { points: minimumPoints })}
-              </span>
-            </div>
             {onRankingPress && (
               <button
                 onClick={(e) => {
@@ -143,15 +137,19 @@ export default function ChallengeCard({
                 }}
                 style={{
                   ...styles.rankingButton,
-                  backgroundColor: colors.background + 'F0',
-                  borderColor: colors.text + '22',
+                  backgroundColor: colors.accent,
                 }}
                 onMouseOver={(e) => (e.currentTarget.style.opacity = '0.85')}
                 onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <LucideIcon name="medal" size={20} color={colors.text} />
+                <LucideIcon name="medal" size={20} color="#FFFFFF" />
               </button>
             )}
+            <div style={styles.tournamentContent}>
+              <span style={{...styles.minimumPointsText, color: colors.accent}}>
+                {translate('challenge.minimumPoints', { points: minimumPoints })}
+              </span>
+            </div>
           </div>
         )}
       </div>
@@ -292,8 +290,7 @@ const styles = {
     width: 44,
     height: 44,
     borderRadius: 12,
-    borderWidth: '1px',
-    borderStyle: 'solid',
+    border: 'none',
     cursor: 'pointer',
     padding: 0,
     flexShrink: 0,
