@@ -75,6 +75,7 @@ export default function TribesHeader({
 
 	const handlePress = useCallback(
 		(tribe) => {
+			console.log('[TribesHeader][handlePress] User clicked tribe:', tribe?.name, 'id:', tribe?.id);
 			setActive(tribe.id);
 			onSelect?.(tribe);
 		},

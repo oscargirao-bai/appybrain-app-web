@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import LucideIcon from '../../components/General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
@@ -18,17 +18,10 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	const [userTribe, setUserTribe] = useState(null);
 	const [allTribes, setAllTribes] = useState([]);
 	const [isInTribe, setIsInTribe] = useState(false);
-	// Inicializar selectedTribe imediatamente para evitar flash da tribo do utilizador
-	const [selectedTribe, setSelectedTribe] = useState(() => {
-		const tribes = DataManager.getTribes();
-		if (selectedTribeId) {
-			const found = tribes.find(t => t.id === selectedTribeId);
-			if (found) return found;
-		}
-		const current = DataManager.getUserTribe();
-		if (current) return current;
-		return tribes[0] || null;
-	});
+	// ID selecionado manualmente pelo utilizador (cliques no header)
+	const [manualSelectedTribeId, setManualSelectedTribeId] = useState(null);
+	// ID bloqueado vindo de navegação a partir do ranking
+	const lockedSelectedIdRef = useRef(null);
 	const [tribeMembers, setTribeMembers] = useState([]);
 	const [loadingMembers, setLoadingMembers] = useState(false);
 	const [joiningTribe, setJoiningTribe] = useState(false);
@@ -39,6 +32,10 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	useEffect(() => {
 		console.log('=== TRIBE SCREEN INIT ===');
 		console.log('[TribeScreen] Received selectedTribeId:', selectedTribeId);
+		if (selectedTribeId && lockedSelectedIdRef.current == null) {
+			lockedSelectedIdRef.current = selectedTribeId;
+			console.log('[TribeScreen][Lock] lockedSelectedIdRef set to', selectedTribeId);
+		}
 		const currentTribe = DataManager.getUserTribe();
 		setUserTribe(currentTribe);
 		console.log('[TribeScreen] User current tribe:', currentTribe?.name, 'id:', currentTribe?.id);
@@ -49,48 +46,38 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 		const tribes = DataManager.getTribes();
 		setAllTribes(tribes);
 		console.log('[TribeScreen] All available tribes:', tribes.map(t => ({ id: t.id, name: t.name })));
-
-		let initialTribe = null;
-		
-		// Se foi passado um selectedTribeId, usar essa tribo
-		if (selectedTribeId) {
-			console.log('[TribeScreen] Looking for tribe with id:', selectedTribeId);
-			initialTribe = tribes.find(t => t.id === selectedTribeId);
-			if (initialTribe) {
-				console.log('[TribeScreen] ✓ Found tribe:', initialTribe.name, 'id:', initialTribe.id);
-			} else {
-				console.log('[TribeScreen] ✗ Tribe not found with id:', selectedTribeId);
-			}
-		}
-		
-		// Se não encontrou ou não foi passado, usar a lógica padrão
-		if (!initialTribe) {
-			console.log('[TribeScreen] Using default tribe logic');
-			if (inTribe && currentTribe) {
-				initialTribe = currentTribe;
-				console.log('[TribeScreen] Selected user tribe:', currentTribe.name);
-			} else if (tribes.length > 0) {
-				initialTribe = tribes[0];
-				console.log('[TribeScreen] Selected first tribe:', tribes[0].name);
-			}
-		}
-
-		if (initialTribe) {
-			console.log('[TribeScreen] Final selected tribe:', initialTribe.name, 'id:', initialTribe.id);
-			setSelectedTribe(initialTribe);
-			fetchTribeMembers(initialTribe.id);
-		}
 		console.log('=== TRIBE SCREEN INIT END ===');
 	}, [selectedTribeId]);
 
-	// Log em cada alteração de selectedTribe/userTribe para diagnosticar discrepâncias visuais
+	// Quando tribos ou estado de lock alteram, determinar tribo efetiva e carregar membros
 	useEffect(() => {
-		if (selectedTribe) {
-			console.log('[TribeScreen][RenderSync] selectedTribe:', selectedTribe.name, 'id:', selectedTribe.id, 'userTribe:', userTribe?.name, 'id:', userTribe?.id);
-		} else {
-			console.log('[TribeScreen][RenderSync] selectedTribe: null', 'userTribe:', userTribe?.name, 'id:', userTribe?.id);
+		if (!allTribes.length) return;
+		const lockedId = lockedSelectedIdRef.current;
+		let effectiveId = lockedId || manualSelectedTribeId;
+		if (!effectiveId) {
+			effectiveId = userTribe?.id || allTribes[0]?.id;
 		}
-	}, [selectedTribe, userTribe]);
+		const tribeObj = allTribes.find(t => t.id === effectiveId);
+		if (tribeObj) {
+			console.log('[TribeScreen][Effective] Using tribe:', tribeObj.name, 'id:', tribeObj.id, 'locked:', lockedId, 'manual:', manualSelectedTribeId);
+			fetchTribeMembers(tribeObj.id);
+		}
+	}, [allTribes, manualSelectedTribeId, userTribe]);
+
+	// Log estado derivado em cada render relevante
+	const derivedSelectedTribe = useMemo(() => {
+		const lockedId = lockedSelectedIdRef.current;
+		const searchId = lockedId || manualSelectedTribeId || userTribe?.id || allTribes[0]?.id;
+		return allTribes.find(t => t.id === searchId) || null;
+	}, [allTribes, manualSelectedTribeId, userTribe]);
+
+	useEffect(() => {
+		if (derivedSelectedTribe) {
+			console.log('[TribeScreen][RenderSync] selectedTribe:', derivedSelectedTribe.name, 'id:', derivedSelectedTribe.id, 'lockedId:', lockedSelectedIdRef.current, 'manualId:', manualSelectedTribeId, 'userTribe:', userTribe?.name, 'id:', userTribe?.id);
+		} else {
+			console.log('[TribeScreen][RenderSync] selectedTribe: null', 'lockedId:', lockedSelectedIdRef.current, 'manualId:', manualSelectedTribeId);
+		}
+	}, [derivedSelectedTribe, manualSelectedTribeId, userTribe]);
 
 	useEffect(() => {
 		const updateNotificationsData = () => {
@@ -114,7 +101,14 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	}, [tribeMembers]);
 
 	const handleSelect = (tribe) => {
-		setSelectedTribe(tribe);
+		if (!tribe) return;
+		console.log('[TribeScreen][handleSelect] User clicked tribe:', tribe.name, 'id:', tribe.id, 'lockedId:', lockedSelectedIdRef.current);
+		// Se existe lock inicial mas utilizador clicou noutra tribo, libertar lock e assumir manual
+		if (lockedSelectedIdRef.current && lockedSelectedIdRef.current !== tribe.id) {
+			console.log('[TribeScreen][handleSelect] Replacing lockedId with manual selection:', tribe.id);
+			lockedSelectedIdRef.current = null;
+		}
+		setManualSelectedTribeId(tribe.id);
 		fetchTribeMembers(tribe.id);
 	};
 
@@ -342,21 +336,21 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 				allTribes={allTribes}
 				userTribe={userTribe}
 				isInTribe={isInTribe}
-				selectedTribe={selectedTribe}
-				forcedActiveId={selectedTribe?.id}
+				selectedTribe={derivedSelectedTribe}
+				forcedActiveId={derivedSelectedTribe?.id}
 			/>
 			<TribeInfo
-				name={selectedTribe?.name}
-				description={selectedTribe?.description}
+				name={derivedSelectedTribe?.name}
+				description={derivedSelectedTribe?.description}
 				members={tribeMembers.length}
-				joined={Boolean(isInTribe && selectedTribe && userTribe && selectedTribe.id === userTribe.id)}
-				accentColor={selectedTribe?.color}
-				iconColor={selectedTribe?.iconColor}
-				icon={selectedTribe?.icon}
+				joined={Boolean(isInTribe && derivedSelectedTribe && userTribe && derivedSelectedTribe.id === userTribe.id)}
+				accentColor={derivedSelectedTribe?.color}
+				iconColor={derivedSelectedTribe?.iconColor}
+				icon={derivedSelectedTribe?.icon}
 				tribeIconName="users"
 				onJoin={handleJoinTribe}
 				onLeave={handleLeaveTribe}
-				disabledJoin={joiningTribe || (isInTribe && selectedTribe && userTribe && selectedTribe.id !== userTribe.id)}
+				disabledJoin={joiningTribe || (isInTribe && derivedSelectedTribe && userTribe && derivedSelectedTribe.id !== userTribe.id)}
 			/>
 			<MemberList members={tribeMembers} currentUserId={DataManager.getUser()?.id} />
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
