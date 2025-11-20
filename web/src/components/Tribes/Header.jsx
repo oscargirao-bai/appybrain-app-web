@@ -42,36 +42,27 @@ export default function TribesHeader({
 		return allTribes;
 	}, [allTribes, userTribe, isInTribe, selectedTribe]);
 
-	const [active, setActive] = useState(() => forcedActiveId || selectedTribe?.id || userTribe?.id || sortedTribes[0]?.id || null);
+	const [active, setActive] = useState(() => forcedActiveId || selectedTribe?.id || sortedTribes[0]?.id || null);
 
-	// Atualizar active quando selectedTribe mudar (navegação externa)
+	// Atualiza apenas o estado visual; NUNCA dispara onSelect automaticamente
 	useEffect(() => {
 		const targetId = forcedActiveId || selectedTribe?.id;
 		if (targetId && targetId !== active) {
-			console.log('[TribesHeader] Forced active update:', 'id:', targetId, 'prev:', active);
+			console.log('[TribesHeader] Sync visual active ->', targetId);
 			setActive(targetId);
-			const match = sortedTribes.find(t => t.id === targetId);
-			if (match && onSelect) onSelect(match);
 		}
-	}, [forcedActiveId, selectedTribe, active, sortedTribes, onSelect]);
+	}, [forcedActiveId, selectedTribe, active]);
 
 	useEffect(() => {
 		if (!sortedTribes.length) {
 			setActive(null);
 			return;
 		}
-		const stillExists = active ? sortedTribes.some((tribe) => tribe.id === active) : false;
-		if (!stillExists) {
-			const defaultId = (isInTribe && userTribe?.id) || sortedTribes[0]?.id;
-			setActive(defaultId ?? null);
-			if (defaultId) {
-				const defaultTribe = sortedTribes.find((tribe) => tribe.id === defaultId);
-				if (defaultTribe && onSelect) {
-					onSelect(defaultTribe);
-				}
-			}
+		// Se a tribo ativa saiu da lista, apenas ajustar para primeira disponível sem efeitos colaterais
+		if (active && !sortedTribes.some(t => t.id === active)) {
+			setActive(sortedTribes[0].id);
 		}
-	}, [sortedTribes, active, isInTribe, userTribe, onSelect]);
+	}, [sortedTribes, active]);
 
 	const handlePress = useCallback(
 		(tribe) => {
