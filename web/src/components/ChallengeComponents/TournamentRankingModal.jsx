@@ -170,7 +170,7 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 				{minimumPoints !== null && (
 					<div style={{ ...styles.minimumPointsBanner, backgroundColor: colors.surface, borderColor: colors.border }}>
 						<LucideIcon name="award" size={18} color={colors.accent} />
-						<span style={{ ...styles.minimumPointsText, color: colors.text }}>
+						<span style={{ ...styles.minimumPointsText, color: colors.accent }}>
 							{translate('tournament.minimumPoints', { points: minimumPoints })}
 						</span>
 					</div>

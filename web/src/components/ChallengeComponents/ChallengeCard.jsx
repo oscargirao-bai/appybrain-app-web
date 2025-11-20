@@ -131,7 +131,7 @@ export default function ChallengeCard({
           <div style={{...styles.tournamentRow, borderTopColor: colors.text + '15'}}>
             <div style={styles.tournamentContent}>
               <LucideIcon name="award" size={16} color={colors.accent} />
-              <span style={{...styles.minimumPointsText, color: colors.text}}>
+              <span style={{...styles.minimumPointsText, color: colors.accent}}>
                 {translate('challenge.minimumPoints', { points: minimumPoints })}
               </span>
             </div>
@@ -143,14 +143,13 @@ export default function ChallengeCard({
                 }}
                 style={{
                   ...styles.rankingButton,
-                  backgroundColor: colors.secondary,
+                  backgroundColor: colors.background + 'F0',
+                  borderColor: colors.text + '22',
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseOver={(e) => (e.currentTarget.style.opacity = '0.85')}
                 onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <span style={{...styles.rankingButtonText, color: '#FFFFFF'}}>
-                  {translate('tournament.ranking')}
-                </span>
+                <LucideIcon name="medal" size={20} color={colors.text} />
               </button>
             )}
           </div>
@@ -290,18 +289,13 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingTop: 6,
-    paddingBottom: 6,
-    borderRadius: 16,
-    border: 'none',
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    borderWidth: '1px',
+    borderStyle: 'solid',
     cursor: 'pointer',
+    padding: 0,
     flexShrink: 0,
-  },
-  rankingButtonText: {
-    fontSize: 12,
-    fontWeight: '700',
-    fontFamily: family.bold,
   },
 };
