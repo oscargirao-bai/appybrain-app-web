@@ -64,16 +64,21 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		const medalColor = item.position === 1 ? colors.accent : colors.primary;
 
 		// Para tribos: tribeImage (SVG), tribeName
-		// Para global/school: organizationUrl (URL), teamName
+		// Para global/school: organizationUrl (URL), organizationName (principal), teamName (subtítulo)
 		const imageSrc = isTribe ? null : item.organizationUrl;
 		const imageSvg = isTribe ? item.tribeImage : null;
-		const name = isTribe ? item.tribeName : item.teamName;
+		const name = isTribe ? item.tribeName : (item.organizationName || item.teamName);
+		const subtitle = isTribe ? null : item.teamName;
 
 		const handleAvatarClick = (e) => {
 			e.stopPropagation();
 			
 			if (isTribe && item.tribeId && navigation) {
-				console.log('[TournamentRanking] Navigating to tribe:', item.tribeId, 'Name:', item.tribeName);
+				console.log('[TournamentRanking] Navigating to tribe:', {
+					tribeId: item.tribeId,
+					tribeName: item.tribeName,
+					navigationParams: { screen: 'Tribes', params: { selectedTribeId: item.tribeId } }
+				});
 				onClose();
 				// Navegar para MainTabs com o screen de Tribes e params
 				navigation.navigate('MainTabs', { 
@@ -129,9 +134,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 						<span style={{ ...styles.name, color: colors.text }}>
 							{name}
 						</span>
-						{!isTribe && item.organizationName && (
+						{!isTribe && subtitle && (
 							<span style={{ ...styles.subtitle, color: colors.muted }}>
-								{item.organizationName}
+								{subtitle}
 							</span>
 						)}
 					</div>
