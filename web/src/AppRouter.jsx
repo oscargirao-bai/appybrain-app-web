@@ -107,7 +107,10 @@ function MainTabs({ route, navigation }) {
 		const screen = screens[screenIndex];
 		if (!screen) return {};
 
-		const screenName = screen.name;		if (route?.params?.screen === screenName && route?.params?.params) {
+		const screenName = screen.name;
+		// Se veio de uma navegação com screen e params específicos, usar esses params
+		if (route?.params?.screen === screenName && route?.params?.params) {
+			console.log('[MainTabs] Passing params to', screenName, ':', route.params.params);
 			return route.params.params;
 		}
 		

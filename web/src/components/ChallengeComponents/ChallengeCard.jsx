@@ -291,7 +291,7 @@ const styles = {
     width: 44,
     height: 44,
     borderRadius: 12,
-    borderWidth: '2px',
+    borderWidth: '1px',
     borderStyle: 'solid',
     cursor: 'pointer',
     padding: 0,

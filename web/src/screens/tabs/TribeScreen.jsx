@@ -27,6 +27,7 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	const [animateMembers, setAnimateMembers] = useState(false);
 
 	useEffect(() => {
+		console.log('[TribeScreen] Received selectedTribeId:', selectedTribeId);
 		const currentTribe = DataManager.getUserTribe();
 		setUserTribe(currentTribe);
 
@@ -41,6 +42,7 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 		// Se foi passado um selectedTribeId, usar essa tribo
 		if (selectedTribeId) {
 			initialTribe = tribes.find(t => t.id === selectedTribeId);
+			console.log('[TribeScreen] Found tribe for ID', selectedTribeId, ':', initialTribe?.name);
 		}
 		
 		// Se não encontrou ou não foi passado, usar a lógica padrão

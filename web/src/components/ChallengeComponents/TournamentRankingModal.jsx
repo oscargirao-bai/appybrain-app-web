@@ -69,6 +69,7 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		const handleAvatarClick = (e) => {
 			if (isTribe && item.tribeId && navigation) {
 				e.stopPropagation();
+				console.log('[TournamentRanking] Navigating to tribe:', item.tribeId, 'Name:', item.tribeName);
 				onClose();
 				// Navegar para MainTabs com o screen de Tribes e params
 				navigation.navigate('MainTabs', { 
