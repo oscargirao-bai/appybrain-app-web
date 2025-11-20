@@ -56,6 +56,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 	const renderRankingItem = (item, index) => {
 		const isMe = item.me === 1;
 		const isTribe = activeTab === 'tribe';
+		const topMedal = item.position <= 3;
+		const medalIcon = item.position === 1 ? 'trophy' : 'medal';
+		const medalColor = item.position === 1 ? colors.accent : colors.primary;
 
 		// Para tribos: tribeImage (SVG), tribeName
 		// Para global/school: organizationUrl (URL), teamName
@@ -68,25 +71,31 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 				key={index}
 				style={{
 					...styles.rankItem,
-					backgroundColor: isMe ? colors.secondary + '15' : colors.card,
-					borderColor: isMe ? colors.secondary : colors.border,
+					backgroundColor: isMe ? colors.accent + '22' : colors.text + '08',
+					borderColor: colors.text + '15',
 				}}
 			>
 				<div style={styles.rankLeft}>
-					<span style={{ ...styles.position, color: colors.text }}>
-						{item.position}
-					</span>
-					<div style={{ ...styles.avatar, backgroundColor: colors.surface, borderColor: colors.border }}>
+					<div style={styles.rankCol}>
+						{topMedal ? (
+							<LucideIcon name={medalIcon} size={22} color={medalColor} />
+						) : (
+							<span style={{ ...styles.position, color: colors.text + 'AA' }}>
+								{item.position}
+							</span>
+						)}
+					</div>
+					<div style={{ ...styles.avatar, backgroundColor: colors.surface, borderColor: colors.primary + '66' }}>
 						{imageSvg ? (
 							<div dangerouslySetInnerHTML={{ __html: imageSvg }} style={{ width: '100%', height: '100%' }} />
 						) : imageSrc ? (
 							<img src={imageSrc} alt={name} style={styles.avatarImage} />
 						) : (
-							<LucideIcon name="users" size={20} color={colors.muted} />
+							<LucideIcon name="users" size={24} color={colors.primary} />
 						)}
 					</div>
 					<div style={styles.nameColumn}>
-						<span style={{ ...styles.name, color: isMe ? colors.secondary : colors.text }}>
+						<span style={{ ...styles.name, color: colors.text }}>
 							{name}
 						</span>
 						{!isTribe && item.organizationName && (
@@ -97,11 +106,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 					</div>
 				</div>
 				<div style={styles.rankRight}>
-					<span style={{ ...styles.points, color: colors.accent }}>
+					<LucideIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
+					<span style={{ ...styles.points, color: colors.text }}>
 						{item.points}
-					</span>
-					<span style={{ ...styles.pointsLabel, color: colors.muted }}>
-						{translate('tournament.points')}
 					</span>
 				</div>
 			</div>
@@ -311,10 +318,11 @@ const styles = {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		padding: 12,
-		borderRadius: 12,
+		padding: '10px 12px',
+		borderRadius: 14,
 		borderWidth: 1,
 		borderStyle: 'solid',
+		gap: 12,
 	},
 	rankLeft: {
 		display: 'flex',
@@ -324,19 +332,23 @@ const styles = {
 		flex: 1,
 		minWidth: 0,
 	},
+	rankCol: {
+		width: 32,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexShrink: 0,
+	},
 	position: {
 		fontSize: 16,
 		fontWeight: '700',
 		fontFamily: family.bold,
-		width: 24,
-		textAlign: 'center',
-		flexShrink: 0,
 	},
 	avatar: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		borderWidth: 1,
+		width: 38,
+		height: 38,
+		borderRadius: 12,
+		borderWidth: '2px',
 		borderStyle: 'solid',
 		display: 'flex',
 		alignItems: 'center',
@@ -373,19 +385,15 @@ const styles = {
 	},
 	rankRight: {
 		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'flex-end',
-		gap: 2,
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 4,
 		flexShrink: 0,
 	},
 	points: {
 		fontSize: 16,
-		fontWeight: '800',
+		fontWeight: '700',
 		fontFamily: family.bold,
-	},
-	pointsLabel: {
-		fontSize: 10,
-		fontFamily: family.regular,
 	},
 	emptyContainer: {
 		display: 'flex',
