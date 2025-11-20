@@ -6,7 +6,7 @@ import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 import OrganizationModal from './OrganizationModal.jsx';
 
-export default function TournamentRankingModal({ visible, onClose, challengeId, minimumPoints = null, navigation }) {
+export default function TournamentRankingModal({ visible, onClose, challengeId, challengeName = null, navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const [activeTab, setActiveTab] = useState('global');
@@ -198,11 +198,10 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 					</button>
 				</div>
 
-				{minimumPoints !== null && (
-					<div style={{ ...styles.minimumPointsBanner, backgroundColor: colors.surface, borderColor: colors.border }}>
-						<LucideIcon name="medal" size={18} color={colors.accent} />
-						<span style={{ ...styles.minimumPointsText, color: colors.accent }}>
-							{translate('tournament.minimumPoints', { points: minimumPoints })}
+				{challengeName && (
+					<div style={styles.challengeNameBanner}>
+						<span style={{ ...styles.challengeNameText, color: colors.text }}>
+							{challengeName}
 						</span>
 					</div>
 				)}
@@ -296,24 +295,20 @@ const styles = {
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	minimumPointsBanner: {
+	challengeNameBanner: {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: 8,
-		padding: 12,
-		marginLeft: 20,
-		marginRight: 20,
+		paddingLeft: 20,
+		paddingRight: 20,
 		marginBottom: 16,
-		borderRadius: 8,
-		borderWidth: 1,
-		borderStyle: 'solid',
 	},
-	minimumPointsText: {
-		fontSize: 13,
-		fontWeight: '600',
-		fontFamily: family.medium,
+	challengeNameText: {
+		fontSize: 16,
+		fontWeight: '400',
+		fontFamily: family.regular,
+		textAlign: 'center',
 	},
 	tabs: {
 		display: 'flex',

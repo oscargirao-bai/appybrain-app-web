@@ -144,7 +144,7 @@ export default function ChallengeScreen({ navigation }) {
 					setSelectedTournament(null);
 				}}
 				challengeId={selectedTournament?.id}
-				minimumPoints={selectedTournament?.minimumPoints}
+				challengeName={selectedTournament?.title}
 				navigation={navigation}
 			/>
 			{/* ChestRewardModal removed */}
