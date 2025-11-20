@@ -545,7 +545,7 @@ class ApiManager {
             const payload = { tribeId: tribeId };
             const response = await this.makeAuthenticatedJSONRequest('api/organization/tribe_members', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -561,7 +561,7 @@ class ApiManager {
             const payload = { tribeId: tribeId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/tribes_join', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -617,7 +617,7 @@ class ApiManager {
             const payload = { notificationId: notificationId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/user_notification_read', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -632,7 +632,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/ranking', {
                 method: 'POST',
-                body: JSON.stringify({ type })
+                body: { type }
             });
 
             // Return the full response including ranking array and metadata
@@ -649,7 +649,7 @@ class ApiManager {
             const payload = { userId: userId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/gamification_user_badges', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -731,7 +731,7 @@ class ApiManager {
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_questions', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -754,7 +754,7 @@ class ApiManager {
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/answer_result', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -769,7 +769,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_buy', {
                 method: 'POST',
-                body: JSON.stringify({ cosmeticId })
+                body: { cosmeticId }
             });
 
             return response;
@@ -788,7 +788,7 @@ class ApiManager {
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/nickname_update', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -803,7 +803,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/learn_content_full', {
                 method: 'POST',
-                body: JSON.stringify({ id: contentId })
+                body: { id: contentId }
             });
 
             // Return the content data
@@ -832,7 +832,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenges_start', {
                 method: 'POST',
-                body: JSON.stringify({ challengeId })
+                body: { challengeId }
             });
 
             return response;
@@ -846,7 +846,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/information_news', {
                 method: 'POST',
-                body: JSON.stringify({ id: newsId })
+                body: { id: newsId }
             });
 
             // Return the news array from the response
@@ -867,7 +867,7 @@ class ApiManager {
             };
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_answer', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -883,7 +883,7 @@ class ApiManager {
             const payload = { challengeId: challengeId };
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_complete', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -898,7 +898,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/cosmetics_use', {
                 method: 'POST',
-                body: JSON.stringify({ cosmeticId })
+                body: { cosmeticId }
             });
 
             return response;
@@ -913,7 +913,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/open_chest', {
                 method: 'POST',
-                body: JSON.stringify({ chestId })
+                body: { chestId }
             });
 
             return response;
@@ -933,7 +933,7 @@ class ApiManager {
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/quiz_quit', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -952,7 +952,7 @@ class ApiManager {
 
             const response = await this.makeAuthenticatedJSONRequest('api/app/challenge_resume', {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             return response;
@@ -1007,7 +1007,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/app/battle_result', {
                 method: 'POST',
-                body: JSON.stringify({ battleSessionId })
+                body: { battleSessionId }
             });
 
             return response;

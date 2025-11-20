@@ -4,6 +4,7 @@ import { useTranslate } from '../../services/Translate.jsx';
 import ApiManager from '../../services/ApiManager.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
+import OrganizationModal from './OrganizationModal.jsx';
 
 export default function TournamentRankingModal({ visible, onClose, challengeId, minimumPoints = null, navigation }) {
 	const colors = useThemeColors();
@@ -12,6 +13,8 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 	const [loading, setLoading] = useState(false);
 	const [rankingData, setRankingData] = useState(null);
 	const [error, setError] = useState(null);
+	const [organizationModalVisible, setOrganizationModalVisible] = useState(false);
+	const [selectedOrganization, setSelectedOrganization] = useState(null);
 
 	useEffect(() => {
 		if (visible && challengeId) {
@@ -67,8 +70,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		const name = isTribe ? item.tribeName : item.teamName;
 
 		const handleAvatarClick = (e) => {
+			e.stopPropagation();
+			
 			if (isTribe && item.tribeId && navigation) {
-				e.stopPropagation();
 				console.log('[TournamentRanking] Navigating to tribe:', item.tribeId, 'Name:', item.tribeName);
 				onClose();
 				// Navegar para MainTabs com o screen de Tribes e params
@@ -76,6 +80,11 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 					screen: 'Tribes',
 					params: { selectedTribeId: item.tribeId }
 				});
+			} else if (!isTribe && imageSrc) {
+				// Clicar na organização (global/escola) abre modal
+				console.log('[TournamentRanking] Opening organization modal:', name);
+				setSelectedOrganization({ name, imageUrl: imageSrc });
+				setOrganizationModalVisible(true);
 			}
 		};
 
@@ -104,9 +113,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 							...styles.avatar,
 							backgroundColor: colors.surface,
 							borderColor: colors.primary + '66',
-							cursor: isTribe && item.tribeId && navigation ? 'pointer' : 'default',
+							cursor: (isTribe && item.tribeId && navigation) || (!isTribe && imageSrc) ? 'pointer' : 'default',
 						}}
-						disabled={!isTribe || !item.tribeId || !navigation}
+						disabled={!(isTribe && item.tribeId && navigation) && !(imageSrc && !isTribe)}
 					>
 						{imageSvg ? (
 							<div dangerouslySetInnerHTML={{ __html: imageSvg }} style={{ width: '100%', height: '100%' }} />
@@ -225,6 +234,17 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 					{renderContent()}
 				</div>
 			</div>
+			
+			{/* Organization Modal */}
+			<OrganizationModal
+				visible={organizationModalVisible}
+				onClose={() => {
+					setOrganizationModalVisible(false);
+					setSelectedOrganization(null);
+				}}
+				organizationName={selectedOrganization?.name}
+				organizationImageUrl={selectedOrganization?.imageUrl}
+			/>
 		</div>
 	);
 }
