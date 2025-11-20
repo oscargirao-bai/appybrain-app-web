@@ -18,7 +18,17 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	const [userTribe, setUserTribe] = useState(null);
 	const [allTribes, setAllTribes] = useState([]);
 	const [isInTribe, setIsInTribe] = useState(false);
-	const [selectedTribe, setSelectedTribe] = useState(null);
+	// Inicializar selectedTribe imediatamente para evitar flash da tribo do utilizador
+	const [selectedTribe, setSelectedTribe] = useState(() => {
+		const tribes = DataManager.getTribes();
+		if (selectedTribeId) {
+			const found = tribes.find(t => t.id === selectedTribeId);
+			if (found) return found;
+		}
+		const current = DataManager.getUserTribe();
+		if (current) return current;
+		return tribes[0] || null;
+	});
 	const [tribeMembers, setTribeMembers] = useState([]);
 	const [loadingMembers, setLoadingMembers] = useState(false);
 	const [joiningTribe, setJoiningTribe] = useState(false);

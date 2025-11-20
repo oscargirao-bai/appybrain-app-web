@@ -6,9 +6,9 @@ import { family } from '../../constants/font.jsx';
 
 // Card showing tribe high-level info
 export default function TribeInfo({
-	name = 'Desporto',
-	description = 'Tribo para os entusiastas do desporto.',
-	members = 110,
+	name = '',
+	description = '',
+	members = 0,
 	joined = false, // whether current user is already in the tribe
 	onJoin,         // called when user taps Entrar
 	onLeave,        // called when user taps Sair
