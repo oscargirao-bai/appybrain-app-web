@@ -70,7 +70,8 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 			if (isTribe && item.tribeId && navigation) {
 				e.stopPropagation();
 				onClose();
-				navigation.navigate('Main', { 
+				// Navegar para MainTabs com o screen de Tribes e params
+				navigation.navigate('MainTabs', { 
 					screen: 'Tribes',
 					params: { selectedTribeId: item.tribeId }
 				});
