@@ -64,11 +64,11 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		const medalColor = item.position === 1 ? colors.accent : colors.primary;
 
 		// Para tribos: tribeImage (SVG), tribeName
-		// Para global/school: organizationUrl (URL), organizationName (principal), teamName (subtítulo)
+		// Para global/school: organizationUrl (URL), teamName (principal), organizationName (subtítulo)
 		const imageSrc = isTribe ? null : item.organizationUrl;
 		const imageSvg = isTribe ? item.tribeImage : null;
-		const name = isTribe ? item.tribeName : (item.organizationName || item.teamName);
-		const subtitle = isTribe ? null : item.teamName;
+		const name = isTribe ? item.tribeName : (item.teamName || item.organizationName);
+		const subtitle = isTribe ? null : item.organizationName;
 
 		const handleAvatarClick = (e) => {
 			e.stopPropagation();
