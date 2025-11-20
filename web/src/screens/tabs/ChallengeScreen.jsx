@@ -145,6 +145,7 @@ export default function ChallengeScreen({ navigation }) {
 				}}
 				challengeId={selectedTournament?.id}
 				minimumPoints={selectedTournament?.minimumPoints}
+				navigation={navigation}
 			/>
 			{/* ChestRewardModal removed */}
 		</div>

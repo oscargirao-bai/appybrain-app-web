@@ -5,7 +5,7 @@ import ApiManager from '../../services/ApiManager.jsx';
 import LucideIcon from '../General/LucideIcon.jsx';
 import { family } from '../../constants/font.jsx';
 
-export default function TournamentRankingModal({ visible, onClose, challengeId, minimumPoints = null }) {
+export default function TournamentRankingModal({ visible, onClose, challengeId, minimumPoints = null, navigation }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const [activeTab, setActiveTab] = useState('global');
@@ -66,6 +66,14 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		const imageSvg = isTribe ? item.tribeImage : null;
 		const name = isTribe ? item.tribeName : item.teamName;
 
+		const handleAvatarClick = (e) => {
+			if (isTribe && item.tribeId && navigation) {
+				e.stopPropagation();
+				onClose();
+				navigation.navigate('Tribes', { selectedTribeId: item.tribeId });
+			}
+		};
+
 		return (
 			<div
 				key={index}
@@ -85,7 +93,16 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 							</span>
 						)}
 					</div>
-					<div style={{ ...styles.avatar, backgroundColor: colors.surface, borderColor: colors.primary + '66' }}>
+					<button
+						onClick={handleAvatarClick}
+						style={{
+							...styles.avatar,
+							backgroundColor: colors.surface,
+							borderColor: colors.primary + '66',
+							cursor: isTribe && item.tribeId && navigation ? 'pointer' : 'default',
+						}}
+						disabled={!isTribe || !item.tribeId || !navigation}
+					>
 						{imageSvg ? (
 							<div dangerouslySetInnerHTML={{ __html: imageSvg }} style={{ width: '100%', height: '100%' }} />
 						) : imageSrc ? (
@@ -93,7 +110,7 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 						) : (
 							<LucideIcon name="users" size={24} color={colors.primary} />
 						)}
-					</div>
+					</button>
 					<div style={styles.nameColumn}>
 						<span style={{ ...styles.name, color: colors.text }}>
 							{name}
@@ -355,6 +372,8 @@ const styles = {
 		justifyContent: 'center',
 		overflow: 'hidden',
 		flexShrink: 0,
+		padding: 0,
+		background: 'none',
 	},
 	avatarImage: {
 		width: '100%',
