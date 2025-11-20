@@ -52,9 +52,8 @@ export default function ChallengeCard({
   }, [expiresAt, availableUntil]);
 
   return (
-    <button
+    <div
       onClick={isAvailable ? onPress : undefined}
-      disabled={!isAvailable}
       style={{
         ...styles.card,
         backgroundColor: colors.text + (isAvailable ? '08' : '05'),
@@ -133,6 +132,7 @@ export default function ChallengeCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  console.log('[ChallengeCard] Ranking button clicked, expired:', isExpired);
                   onRankingPress();
                 }}
                 style={{
@@ -154,7 +154,7 @@ export default function ChallengeCard({
           </div>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 
