@@ -99,15 +99,12 @@ export default function SolutionModal({
     setReporting(true);
     try {
       // Construir mensagem: opções selecionadas + texto livre (se houver)
-      const errorParts = [];
-      if (selectedErrors.length > 0) {
-        errorParts.push(selectedErrors.join('; '));
-      }
+      const errorParts = [...selectedErrors];
       if (freeText.trim()) {
-        errorParts.push(`Comentário: ${freeText.trim()}`);
+        errorParts.push(freeText.trim());
       }
       
-      const payload = { quizId, error: errorParts.join(' | ') };
+      const payload = { quizId, error: errorParts.join('; ') };
       // send JSON body to api/app/error_report
       const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/error_report', {
         method: 'POST',
