@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import LucideIcon from '../General/LucideIcon.jsx';
 import { useThemeColors } from '../../services/Theme.jsx';
+import { useTranslate } from '../../services/Translate.jsx';
 import { family } from '../../constants/font.jsx';
 
 export default function ChallengeCard({ 
@@ -14,9 +15,13 @@ export default function ChallengeCard({
   onPress,
   userHasPlayed = 0,
   progress = null,
-  sessionId = null
+  sessionId = null,
+  tournament = false,
+  minimumPoints = null,
+  onRankingPress
 }) {
   const colors = useThemeColors();
+  const { translate } = useTranslate();
 
   const now = new Date();
   const startTime = availableFrom ? new Date(availableFrom) : null;
@@ -120,6 +125,32 @@ export default function ChallengeCard({
             <span style={{...styles.progressText, color: colors.secondary}}>
               Perguntas: {progress}
             </span>
+          </div>
+        )}
+        {tournament && minimumPoints !== null && (
+          <div style={{...styles.tournamentRow, borderTopColor: colors.text + '15'}}>
+            <div style={styles.tournamentContent}>
+              <LucideIcon name="award" size={16} color={colors.accent} />
+              <span style={{...styles.minimumPointsText, color: colors.text}}>
+                {translate('challenge.minimumPoints', { points: minimumPoints })}
+              </span>
+            </div>
+            {onRankingPress && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRankingPress();
+                }}
+                style={{
+                  ...styles.rankingButton,
+                  backgroundColor: colors.secondary,
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+              >
+                <LucideIcon name="medal" size={14} color="#FFFFFF" />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -229,5 +260,40 @@ const styles = {
     fontSize: 13,
     fontFamily: family.bold,
     fontWeight: '600',
+  },
+  tournamentRow: {
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    marginTop: 8,
+    paddingTop: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  tournamentContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flex: 1,
+  },
+  minimumPointsText: {
+    fontSize: 12,
+    fontFamily: family.regular,
+    fontWeight: '500',
+  },
+  rankingButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    flexShrink: 0,
   },
 };

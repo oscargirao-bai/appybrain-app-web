@@ -491,5 +491,9 @@
       "answer": "A resposta tem erro.",
       "explanation": "A explicação tem erro."
     }
+  },
+  "challenge": {
+    "minimumPoints": "Pontos mínimos de qualificação: {$points}",
+    "viewRanking": "Ver Ranking"
   }
 }

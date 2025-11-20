@@ -3,7 +3,7 @@ import { useThemeColors } from '../../services/Theme.jsx';
 import ChallengeCard from './ChallengeCard.jsx';
 
 // items: [{ id, title, description, coins, expiresAt }]
-export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressItem, showHeader = true, style }) {
+export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressItem, showHeader = true, style, onRankingPress }) {
   const colors = useThemeColors();
 
   const data = useMemo(() => items || [], [items]);
@@ -37,7 +37,10 @@ export default function ChallengeList({ title = 'DESAFIOS', items = [], onPressI
             userHasPlayed={item.userHasPlayed}
             progress={item.progress}
             sessionId={item.sessionId}
+            tournament={item.tournament}
+            minimumPoints={item.minimumPoints}
             onPress={onPressItem ? () => onPressItem(item) : undefined}
+            onRankingPress={onRankingPress ? () => onRankingPress(item) : undefined}
           />
         ))}
       </div>

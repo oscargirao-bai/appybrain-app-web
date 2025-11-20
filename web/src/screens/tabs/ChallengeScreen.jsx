@@ -80,17 +80,6 @@ export default function ChallengeScreen({ navigation }) {
 							coins={userInfo?.coins ?? 0}
 						/>
 					</div>
-					<div style={styles.chestLine}>
-						<div />
-						<div />
-						<div style={styles.buttonsRow}>
-							<Button2
-								iconName="medal"
-								onClick={() => setRankingsOpen(true)}
-								style={styles.buttonSpacing}
-							/>
-						</div>
-					</div>
 				</div>
 				<div style={styles.listArea}>
 					<ChallengeList
@@ -99,6 +88,10 @@ export default function ChallengeScreen({ navigation }) {
 						onPressItem={(item) => {
 							setSelectedChallenge(item);
 							setConfirmOpen(true);
+						}}
+						onRankingPress={(item) => {
+							console.log('Opening ranking for tournament challenge:', item);
+							setRankingsOpen(true);
 						}}
 					/>
 				</div>
@@ -151,17 +144,6 @@ const styles = {
 	headerSection: {
 		width: '100%',
 	},
-	buttonsRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		alignItems: 'center',
-		marginTop: 0,
-		marginBottom: 0,
-	},
-	buttonSpacing: {
-		marginLeft: 12,
-	},
 	bannerSection: {
 		width: '100%',
 		overflow: 'hidden',
@@ -176,18 +158,6 @@ const styles = {
 		width: '100%',
 		justifyContent: 'center',
 		marginTop: 0,
-	},
-	chestLine: {
-		width: '100%',
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingLeft: 10,
-		paddingRight: 10,
-		boxSizing: 'border-box',
-		marginTop: 6,
-		marginBottom: 6,
 	},
 	listArea: {
 		flex: 1,
