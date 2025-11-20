@@ -16,14 +16,30 @@ export default function TribesHeader({
 	const horizontalPadding = width >= 768 ? 28 : 16;
 
 	const sortedTribes = useMemo(() => {
-		if (!isInTribe || !userTribe) {
-			return allTribes;
+		if (!allTribes.length) return [];
+
+		// Se existe selectedTribe, colocar em primeiro lugar
+		if (selectedTribe && allTribes.some(t => t.id === selectedTribe.id)) {
+			const selected = allTribes.find(t => t.id === selectedTribe.id);
+			let remaining = allTribes.filter(t => t.id !== selectedTribe.id);
+			// Se utilizador pertence a outra tribo, colocar essa em segundo
+			if (isInTribe && userTribe && userTribe.id !== selectedTribe.id && remaining.some(t => t.id === userTribe.id)) {
+				const userT = remaining.find(t => t.id === userTribe.id);
+				remaining = remaining.filter(t => t.id !== userTribe.id);
+				return [selected, userT, ...remaining];
+			}
+			return [selected, ...remaining];
 		}
 
-		const userTribeData = allTribes.find((tribe) => tribe.id === userTribe.id);
-		const otherTribes = allTribes.filter((tribe) => tribe.id !== userTribe.id);
-		return userTribeData ? [userTribeData, ...otherTribes] : allTribes;
-	}, [allTribes, userTribe, isInTribe]);
+		// Caso não haja selectedTribe, manter lógica antiga de colocar tribo do utilizador primeiro
+		if (isInTribe && userTribe) {
+			const userTribeData = allTribes.find((tribe) => tribe.id === userTribe.id);
+			const otherTribes = allTribes.filter((tribe) => tribe.id !== userTribe.id);
+			return userTribeData ? [userTribeData, ...otherTribes] : allTribes;
+		}
+
+		return allTribes;
+	}, [allTribes, userTribe, isInTribe, selectedTribe]);
 
 	const [active, setActive] = useState(() => selectedTribe?.id || userTribe?.id || sortedTribes[0]?.id || null);
 
