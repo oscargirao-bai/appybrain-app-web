@@ -12,7 +12,7 @@ import NotificationBadge from '../../components/General/NotificationBadge.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import Button2 from '../../components/General/Button2.jsx';
 
-export default function TribeScreen({ navigation }) {
+export default function TribeScreen({ navigation, selectedTribeId }) {
 	const colors = useThemeColors();
 	const { translate } = useTranslate();
 	const [userTribe, setUserTribe] = useState(null);
@@ -37,17 +37,26 @@ export default function TribeScreen({ navigation }) {
 		setAllTribes(tribes);
 
 		let initialTribe = null;
-		if (inTribe && currentTribe) {
-			initialTribe = currentTribe;
-		} else if (tribes.length > 0) {
-			initialTribe = tribes[0];
+		
+		// Se foi passado um selectedTribeId, usar essa tribo
+		if (selectedTribeId) {
+			initialTribe = tribes.find(t => t.id === selectedTribeId);
+		}
+		
+		// Se não encontrou ou não foi passado, usar a lógica padrão
+		if (!initialTribe) {
+			if (inTribe && currentTribe) {
+				initialTribe = currentTribe;
+			} else if (tribes.length > 0) {
+				initialTribe = tribes[0];
+			}
 		}
 
 		if (initialTribe) {
 			setSelectedTribe(initialTribe);
 			fetchTribeMembers(initialTribe.id);
 		}
-	}, []);
+	}, [selectedTribeId]);
 
 	useEffect(() => {
 		const updateNotificationsData = () => {

@@ -70,7 +70,10 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 			if (isTribe && item.tribeId && navigation) {
 				e.stopPropagation();
 				onClose();
-				navigation.navigate('Tribes', { selectedTribeId: item.tribeId });
+				navigation.navigate('Main', { 
+					screen: 'Tribes',
+					params: { selectedTribeId: item.tribeId }
+				});
 			}
 		};
 
