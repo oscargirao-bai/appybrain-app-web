@@ -23,11 +23,9 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		setLoading(true);
 		setError(null);
 		try {
-			const apiManager = ApiManager.getInstance();
-			const response = await apiManager.fetch('app/challenge_ranking', {
+			const response = await ApiManager.makeAuthenticatedJSONRequest('app/challenge_ranking', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ type, challengeId })
+				body: { type, challengeId }
 			});
 
 			if (response.success) {
