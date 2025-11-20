@@ -463,8 +463,26 @@
       "noCorrect": "None of the answers was correct.",
       "answer": "The answer has an error.",
       "explanation": "The explanation has an error."
-    }  },
+    }
+  },
   "challenge": {
     "minimumPoints": "Minimum qualification points: {$points}",
-    "viewRanking": "View Ranking"  }
+    "viewRanking": "View Ranking"
+  },
+  "tournament": {
+    "rankingTitle": "Tournament Ranking",
+    "minimumPoints": "Minimum qualification points: {$points}",
+    "tabs": {
+      "global": "Global",
+      "school": "School",
+      "tribe": "Tribe"
+    },
+    "empty": {
+      "global": "No teams",
+      "school": "No teams",
+      "tribe": "No tribes"
+    },
+    "points": "Points",
+    "team": "Tribe"
+  }
 }

@@ -495,5 +495,21 @@
   "challenge": {
     "minimumPoints": "Pontos mínimos de qualificação: {$points}",
     "viewRanking": "Ver Ranking"
+  },
+  "tournament": {
+    "rankingTitle": "Ranking do Torneio",
+    "minimumPoints": "Pontos mínimos de qualificação: {$points}",
+    "tabs": {
+      "global": "Global",
+      "school": "Escola",
+      "tribe": "Tribo"
+    },
+    "empty": {
+      "global": "Sem turmas",
+      "school": "Sem turmas",
+      "tribe": "Sem tribos"
+    },
+    "points": "Pontos",
+    "team": "Tribo"
   }
 }

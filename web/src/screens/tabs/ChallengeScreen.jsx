@@ -8,6 +8,7 @@ import Info from '../../components/Learn/Info.jsx';
 import ChallengeList from '../../components/ChallengeComponents/ChallengeList.jsx';
 import NotificationsModal from '../../components/Learn/NotificationsModal.jsx';
 import RankingsModal from '../../components/Learn/RankingsModal.jsx';
+import TournamentRankingModal from '../../components/ChallengeComponents/TournamentRankingModal.jsx';
 import ConfirmModal from '../../components/General/ConfirmModal.jsx';
 import Header from '../../components/General/Header.jsx';
 import NotificationBadge from '../../components/General/NotificationBadge.jsx';
@@ -18,6 +19,8 @@ export default function ChallengeScreen({ navigation }) {
 	const { translate } = useTranslate();
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [rankingsOpen, setRankingsOpen] = useState(false);
+	const [tournamentRankingOpen, setTournamentRankingOpen] = useState(false);
+	const [selectedTournament, setSelectedTournament] = useState(null);
 	const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 	// const [chestRewardOpen, setChestRewardOpen] = useState(false); // removed
 	const [userInfo, setUserInfo] = useState(null);
@@ -91,7 +94,8 @@ export default function ChallengeScreen({ navigation }) {
 						}}
 						onRankingPress={(item) => {
 							console.log('Opening ranking for tournament challenge:', item);
-							setRankingsOpen(true);
+							setSelectedTournament(item);
+							setTournamentRankingOpen(true);
 						}}
 					/>
 				</div>
@@ -133,6 +137,15 @@ export default function ChallengeScreen({ navigation }) {
 			/>
 			<NotificationsModal visible={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 			<RankingsModal visible={rankingsOpen} onClose={() => setRankingsOpen(false)} />
+			<TournamentRankingModal 
+				visible={tournamentRankingOpen} 
+				onClose={() => {
+					setTournamentRankingOpen(false);
+					setSelectedTournament(null);
+				}}
+				challengeId={selectedTournament?.id}
+				minimumPoints={selectedTournament?.minimumPoints}
+			/>
 			{/* ChestRewardModal removed */}
 		</div>
 	);
