@@ -323,6 +323,7 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 				allTribes={allTribes}
 				userTribe={userTribe}
 				isInTribe={isInTribe}
+				selectedTribe={selectedTribe}
 			/>
 			<TribeInfo
 				name={selectedTribe?.name}

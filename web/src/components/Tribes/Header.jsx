@@ -9,6 +9,7 @@ export default function TribesHeader({
 	userTribe,
 	isInTribe = false,
 	onSelect,
+	selectedTribe,
 }) {
 	const colors = useThemeColors();
 	const width = typeof window !== 'undefined' ? window.innerWidth : 0;
@@ -24,7 +25,15 @@ export default function TribesHeader({
 		return userTribeData ? [userTribeData, ...otherTribes] : allTribes;
 	}, [allTribes, userTribe, isInTribe]);
 
-	const [active, setActive] = useState(() => userTribe?.id || sortedTribes[0]?.id || null);
+	const [active, setActive] = useState(() => selectedTribe?.id || userTribe?.id || sortedTribes[0]?.id || null);
+
+	// Atualizar active quando selectedTribe mudar (navegação externa)
+	useEffect(() => {
+		if (selectedTribe?.id && selectedTribe.id !== active) {
+			console.log('[TribesHeader] Updating active to selectedTribe:', selectedTribe.name, 'id:', selectedTribe.id);
+			setActive(selectedTribe.id);
+		}
+	}, [selectedTribe]);
 
 	useEffect(() => {
 		if (!sortedTribes.length) {
