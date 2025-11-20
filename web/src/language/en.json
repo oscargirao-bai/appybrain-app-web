@@ -454,15 +454,15 @@
     "report": "Report",
     "continue": "Continue",
     "cancel": "Cancel",
-    "reportTitle": "Report an error",
-    "reportQuestion": "What error did you find in the question?",
-    "reportWarning": "ATTENTION: If you report an error and it doesn't exist, 5 coins will be removed.",
+    "reportTitle": "Report problem",
+    "reportQuestion": "Where did you detect the error?",
     "reporting": "Reporting...",
+    "submit": "Report",
+    "freeTextPlaceholder": "Describe the problem (optional)...",
     "options": {
-      "question": "The question has an error.",
-      "noCorrect": "None of the answers was correct.",
-      "answer": "The answer has an error.",
-      "explanation": "The explanation has an error."
+      "question": "In the question",
+      "answer": "In the answer",
+      "explanation": "In the explanation"
     }
   },
   "challenge": {

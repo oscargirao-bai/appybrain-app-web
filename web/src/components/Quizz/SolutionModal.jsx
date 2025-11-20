@@ -26,6 +26,7 @@ export default function SolutionModal({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
   const [selectedErrors, setSelectedErrors] = useState([]);
+  const [freeText, setFreeText] = useState('');
 
   const renderOption = () => {
     if (!correctOption) return null;
@@ -91,18 +92,26 @@ export default function SolutionModal({
       return;
     }
 
-    // Submit selected errors
+    // Submit selected errors - deve ter pelo menos uma opção selecionada OU texto livre
     if (!quizId || reporting) return;
-      if (!selectedErrors || selectedErrors.length === 0) return;
+    if (selectedErrors.length === 0 && !freeText.trim()) return;
+    
     setReporting(true);
     try {
-      // send the exact visible texts joined by "; " so the backend receives
-      // the same strings the user saw in the modal
-      const payload = { quizId, error: selectedErrors.join('; ') };
+      // Construir mensagem: opções selecionadas + texto livre (se houver)
+      const errorParts = [];
+      if (selectedErrors.length > 0) {
+        errorParts.push(selectedErrors.join('; '));
+      }
+      if (freeText.trim()) {
+        errorParts.push(`Comentário: ${freeText.trim()}`);
+      }
+      
+      const payload = { quizId, error: errorParts.join(' | ') };
       // send JSON body to api/app/error_report
       const resp = await ApiManager.makeAuthenticatedJSONRequest('api/app/error_report', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: payload,
       });
       // consider success when resp.success === true or resp is truthy
       setShowSuccessModal(true);
@@ -114,6 +123,7 @@ export default function SolutionModal({
       setReporting(false);
       setShowReportForm(false);
       setSelectedErrors([]);
+      setFreeText('');
     }
   };
 
@@ -167,10 +177,6 @@ export default function SolutionModal({
                   <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_QUESTION}</span>
                 </label>
                 <label style={styles.checkboxRow}>
-                  <input type="checkbox" checked={selectedErrors.includes(OPTION_NO_CORRECT)} onChange={() => toggleOption(OPTION_NO_CORRECT)} />
-                  <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_NO_CORRECT}</span>
-                </label>
-                <label style={styles.checkboxRow}>
                   <input type="checkbox" checked={selectedErrors.includes(OPTION_ANSWER)} onChange={() => toggleOption(OPTION_ANSWER)} />
                   <span style={{ marginLeft: 8, color: colors.text }}>{OPTION_ANSWER}</span>
                 </label>
@@ -182,9 +188,24 @@ export default function SolutionModal({
                 ) : null}
               </div>
 
-              <div style={{ marginTop: 8, color: colors.error, fontWeight: 700 }}>
-                {t('solution.reportWarning')}
-              </div>
+              <textarea
+                value={freeText}
+                onChange={(e) => setFreeText(e.target.value)}
+                placeholder={t('solution.freeTextPlaceholder')}
+                rows={4}
+                style={{
+                  width: '100%',
+                  padding: 12,
+                  borderRadius: 8,
+                  border: `1px solid ${colors.border}`,
+                  backgroundColor: colors.surface,
+                  color: colors.text,
+                  fontFamily: family.regular,
+                  fontSize: 14,
+                  resize: 'vertical',
+                  marginTop: 8,
+                }}
+              />
             </div>
           )}
 
@@ -194,6 +215,7 @@ export default function SolutionModal({
                 if (showReportForm) {
                   setShowReportForm(false);
                   setSelectedErrors([]);
+                  setFreeText('');
                 } else {
                   setShowReportForm(true);
                 }
@@ -217,19 +239,19 @@ export default function SolutionModal({
                   handleReport();
                 }
               }}
-              disabled={reporting || (showReportForm && selectedErrors.length === 0)}
+              disabled={reporting || (showReportForm && selectedErrors.length === 0 && !freeText.trim())}
               style={{
                 ...styles.rightBtn,
-                backgroundColor: (showReportForm && selectedErrors.length === 0)
+                backgroundColor: (showReportForm && selectedErrors.length === 0 && !freeText.trim())
                   ? (resolvedTheme === 'dark' ? '#3a3f47' : '#cccccc')
                   : colors.secondary,
-                cursor: (showReportForm && selectedErrors.length === 0) ? 'not-allowed' : 'pointer'
+                cursor: (showReportForm && selectedErrors.length === 0 && !freeText.trim()) ? 'not-allowed' : 'pointer'
               }}
             >
               <span style={{...styles.rightBtnText, color: colors.onSecondary}}>
                 {reporting
                   ? t('solution.reporting')
-                  : (showReportForm ? t('solution.report') : t('solution.continue'))}
+                  : (showReportForm ? t('solution.submit') : t('solution.continue'))}
               </span>
             </button>
           </div>
@@ -372,5 +394,10 @@ const styles = {
     fontSize: 16,
     fontFamily: family.bold,
     fontWeight: '800',
+  },
+  checkboxRow: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
   },
 };
