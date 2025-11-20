@@ -23,10 +23,22 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		setLoading(true);
 		setError(null);
 		try {
+			// Map UI tab names to API parameter names
+			// UI: global|school|tribe -> API: global|team|tribe
+			const apiType = type === 'school' ? 'team' : type;
+			
+			console.log('TournamentRankingModal: Loading ranking', { 
+				type, 
+				apiType, 
+				challengeId 
+			});
+
 			const response = await ApiManager.makeAuthenticatedJSONRequest('app/challenge_ranking', {
 				method: 'POST',
-				body: { type, challengeId }
+				body: { type: apiType, challengeId }
 			});
+
+			console.log('TournamentRankingModal: API response', response);
 
 			if (response.success) {
 				setRankingData(response);
