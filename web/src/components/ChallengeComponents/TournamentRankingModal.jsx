@@ -258,6 +258,7 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
+		justifyContent: 'center',
 		gap: 8,
 		padding: 12,
 		marginLeft: 20,

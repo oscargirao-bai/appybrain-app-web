@@ -137,12 +137,13 @@ export default function ChallengeCard({
                 }}
                 style={{
                   ...styles.rankingButton,
-                  backgroundColor: colors.accent,
+                  backgroundColor: 'transparent',
+                  borderColor: colors.accent,
                 }}
                 onMouseOver={(e) => (e.currentTarget.style.opacity = '0.85')}
                 onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <LucideIcon name="medal" size={20} color="#FFFFFF" />
+                <LucideIcon name="medal" size={20} color={colors.accent} />
               </button>
             )}
             <div style={styles.tournamentContent}>
@@ -290,7 +291,8 @@ const styles = {
     width: 44,
     height: 44,
     borderRadius: 12,
-    border: 'none',
+    borderWidth: '2px',
+    borderStyle: 'solid',
     cursor: 'pointer',
     padding: 0,
     flexShrink: 0,
