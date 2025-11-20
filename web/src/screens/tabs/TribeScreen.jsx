@@ -83,6 +83,15 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 		console.log('=== TRIBE SCREEN INIT END ===');
 	}, [selectedTribeId]);
 
+	// Log em cada alteração de selectedTribe/userTribe para diagnosticar discrepâncias visuais
+	useEffect(() => {
+		if (selectedTribe) {
+			console.log('[TribeScreen][RenderSync] selectedTribe:', selectedTribe.name, 'id:', selectedTribe.id, 'userTribe:', userTribe?.name, 'id:', userTribe?.id);
+		} else {
+			console.log('[TribeScreen][RenderSync] selectedTribe: null', 'userTribe:', userTribe?.name, 'id:', userTribe?.id);
+		}
+	}, [selectedTribe, userTribe]);
+
 	useEffect(() => {
 		const updateNotificationsData = () => {
 			const unreadCount = DataManager.getUnreadNotificationsCount();
@@ -334,6 +343,7 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 				userTribe={userTribe}
 				isInTribe={isInTribe}
 				selectedTribe={selectedTribe}
+				forcedActiveId={selectedTribe?.id}
 			/>
 			<TribeInfo
 				name={selectedTribe?.name}

@@ -10,6 +10,7 @@ export default function TribesHeader({
 	isInTribe = false,
 	onSelect,
 	selectedTribe,
+	forcedActiveId, // força seleção visual externa
 }) {
 	const colors = useThemeColors();
 	const width = typeof window !== 'undefined' ? window.innerWidth : 0;
@@ -41,15 +42,18 @@ export default function TribesHeader({
 		return allTribes;
 	}, [allTribes, userTribe, isInTribe, selectedTribe]);
 
-	const [active, setActive] = useState(() => selectedTribe?.id || userTribe?.id || sortedTribes[0]?.id || null);
+	const [active, setActive] = useState(() => forcedActiveId || selectedTribe?.id || userTribe?.id || sortedTribes[0]?.id || null);
 
 	// Atualizar active quando selectedTribe mudar (navegação externa)
 	useEffect(() => {
-		if (selectedTribe?.id && selectedTribe.id !== active) {
-			console.log('[TribesHeader] Updating active to selectedTribe:', selectedTribe.name, 'id:', selectedTribe.id);
-			setActive(selectedTribe.id);
+		const targetId = forcedActiveId || selectedTribe?.id;
+		if (targetId && targetId !== active) {
+			console.log('[TribesHeader] Forced active update:', 'id:', targetId, 'prev:', active);
+			setActive(targetId);
+			const match = sortedTribes.find(t => t.id === targetId);
+			if (match && onSelect) onSelect(match);
 		}
-	}, [selectedTribe]);
+	}, [forcedActiveId, selectedTribe, active, sortedTribes, onSelect]);
 
 	useEffect(() => {
 		if (!sortedTribes.length) {
