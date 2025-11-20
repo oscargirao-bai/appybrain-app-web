@@ -342,15 +342,21 @@ class ApiManager {
                 if (normalizedPath.startsWith('api/')) normalizedPath = normalizedPath.slice(4);
                 const url = path.startsWith('http') ? path : `${this.baseUrl}${normalizedPath}`;
 
-                const response = await fetch(url, {
-                    method: 'POST', // Default to POST as specified
-                    ...options,
+                const fetchOptions = {
+                    method: options.method || 'POST', // Default to POST as specified
                     headers: {
                         'Authorization': `Bearer ${this.accessToken}`,
                         'Content-Type': 'application/json',
                         ...(options.headers || {})
                     }
-                });
+                };
+
+                // Add body if provided
+                if (options.body) {
+                    fetchOptions.body = JSON.stringify(options.body);
+                }
+
+                const response = await fetch(url, fetchOptions);
 
                 // Update tokens if rotation headers are present
                 await this.updateRotatedTokens(response.headers);
