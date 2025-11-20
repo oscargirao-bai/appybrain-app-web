@@ -471,6 +471,7 @@
   },
   "tournament": {
     "rankingTitle": "Tournament Ranking",
+    "ranking": "Ranking",
     "minimumPoints": "Minimum qualification points: {$points}",
     "tabs": {
       "global": "Global",

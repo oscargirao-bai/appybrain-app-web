@@ -106,7 +106,6 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 					</div>
 				</div>
 				<div style={styles.rankRight}>
-					<LucideIcon name="trophy" size={18} color={colors.primary} style={{ marginRight: 6 }} />
 					<span style={{ ...styles.points, color: colors.text }}>
 						{item.points}
 					</span>

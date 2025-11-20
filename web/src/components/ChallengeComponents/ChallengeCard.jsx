@@ -148,7 +148,9 @@ export default function ChallengeCard({
                 onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
                 onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <LucideIcon name="medal" size={14} color="#FFFFFF" />
+                <span style={{...styles.rankingButtonText, color: '#FFFFFF'}}>
+                  {translate('tournament.ranking')}
+                </span>
               </button>
             )}
           </div>
@@ -288,12 +290,18 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 32,
-    height: 32,
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 6,
+    paddingBottom: 6,
     borderRadius: 16,
     border: 'none',
     cursor: 'pointer',
-    padding: 0,
     flexShrink: 0,
+  },
+  rankingButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: family.bold,
   },
 };
