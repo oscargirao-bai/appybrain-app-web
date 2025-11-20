@@ -196,11 +196,8 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 			<div style={{ ...styles.modal, backgroundColor: colors.background, borderColor: colors.border }} onClick={(e) => e.stopPropagation()}>
 				<div style={styles.header}>
 					<span style={{ ...styles.title, color: colors.text }}>
-						{translate('tournament.rankingTitle')}
+						Torneio
 					</span>
-					<button onClick={onClose} style={styles.closeButton}>
-						<LucideIcon name="x" size={24} color={colors.text} />
-					</button>
 				</div>
 
 				{challengeName && (
@@ -282,7 +279,7 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between',
+		justifyContent: 'center',
 		padding: 20,
 		paddingBottom: 16,
 	},

@@ -27,37 +27,50 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 	const [animateMembers, setAnimateMembers] = useState(false);
 
 	useEffect(() => {
+		console.log('=== TRIBE SCREEN INIT ===');
 		console.log('[TribeScreen] Received selectedTribeId:', selectedTribeId);
 		const currentTribe = DataManager.getUserTribe();
 		setUserTribe(currentTribe);
+		console.log('[TribeScreen] User current tribe:', currentTribe?.name, 'id:', currentTribe?.id);
 
 		const inTribe = DataManager.isInTribe();
 		setIsInTribe(inTribe);
 
 		const tribes = DataManager.getTribes();
 		setAllTribes(tribes);
+		console.log('[TribeScreen] All available tribes:', tribes.map(t => ({ id: t.id, name: t.name })));
 
 		let initialTribe = null;
 		
 		// Se foi passado um selectedTribeId, usar essa tribo
 		if (selectedTribeId) {
+			console.log('[TribeScreen] Looking for tribe with id:', selectedTribeId);
 			initialTribe = tribes.find(t => t.id === selectedTribeId);
-			console.log('[TribeScreen] Found tribe for ID', selectedTribeId, ':', initialTribe?.name);
+			if (initialTribe) {
+				console.log('[TribeScreen] ✓ Found tribe:', initialTribe.name, 'id:', initialTribe.id);
+			} else {
+				console.log('[TribeScreen] ✗ Tribe not found with id:', selectedTribeId);
+			}
 		}
 		
 		// Se não encontrou ou não foi passado, usar a lógica padrão
 		if (!initialTribe) {
+			console.log('[TribeScreen] Using default tribe logic');
 			if (inTribe && currentTribe) {
 				initialTribe = currentTribe;
+				console.log('[TribeScreen] Selected user tribe:', currentTribe.name);
 			} else if (tribes.length > 0) {
 				initialTribe = tribes[0];
+				console.log('[TribeScreen] Selected first tribe:', tribes[0].name);
 			}
 		}
 
 		if (initialTribe) {
+			console.log('[TribeScreen] Final selected tribe:', initialTribe.name, 'id:', initialTribe.id);
 			setSelectedTribe(initialTribe);
 			fetchTribeMembers(initialTribe.id);
 		}
+		console.log('=== TRIBE SCREEN INIT END ===');
 	}, [selectedTribeId]);
 
 	useEffect(() => {

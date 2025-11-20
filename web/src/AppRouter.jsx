@@ -105,16 +105,27 @@ function MainTabs({ route, navigation }) {
 	// Get params for current screen
 	const getScreenParams = (screenIndex) => {
 		const screen = screens[screenIndex];
-		if (!screen) return {};
+		if (!screen) {
+			console.log('[MainTabs.getScreenParams] No screen at index', screenIndex);
+			return {};
+		}
 
 		const screenName = screen.name;
-		console.log('[MainTabs] getScreenParams called for', screenName, 'route.params:', route?.params);
+		console.log('=== GET SCREEN PARAMS ===');
+		console.log('[MainTabs.getScreenParams] screenName:', screenName);
+		console.log('[MainTabs.getScreenParams] route?.params:', JSON.stringify(route?.params, null, 2));
+		console.log('[MainTabs.getScreenParams] route?.params?.screen:', route?.params?.screen);
+		console.log('[MainTabs.getScreenParams] Comparing:', route?.params?.screen, '===', screenName, '?', route?.params?.screen === screenName);
+		
 		// Se veio de uma navegação com screen e params específicos, usar esses params
 		if (route?.params?.screen === screenName && route?.params?.params) {
-			console.log('[MainTabs] Passing params to', screenName, ':', route.params.params);
+			console.log('[MainTabs.getScreenParams] MATCH! Passing params to', screenName, ':', JSON.stringify(route.params.params, null, 2));
+			console.log('=== GET SCREEN PARAMS END ===');
 			return route.params.params;
 		}
 		
+		console.log('[MainTabs.getScreenParams] No match, returning empty object');
+		console.log('=== GET SCREEN PARAMS END ===');
 		return {};
 	};
 
@@ -189,11 +200,19 @@ export default function AppRouter() {
 	// Navigation object (mimics RN navigation)
 	const navigation = {
 		navigate: (screenName, params = {}) => {
-			console.log('[AppRouter] navigate called:', screenName, 'params:', params);
+			console.log('=== NAVIGATION START ===');
+			console.log('[AppRouter.navigate] screenName:', screenName);
+			console.log('[AppRouter.navigate] params:', JSON.stringify(params, null, 2));
 			// Push route with params into history and set current
-			setNavigationHistory(prev => [...prev, { name: screenName, params }]);
+			setNavigationHistory(prev => {
+				const newHistory = [...prev, { name: screenName, params }];
+				console.log('[AppRouter.navigate] navigationHistory updated, length:', newHistory.length);
+				return newHistory;
+			});
 			setCurrentScreen(screenName);
 			setScreenParams(params);
+			console.log('[AppRouter.navigate] screenParams set to:', JSON.stringify(params, null, 2));
+			console.log('=== NAVIGATION END ===');
 		},
 		replace: (screenName, params = {}) => {
 			// Replace top of history with the new route and set current
