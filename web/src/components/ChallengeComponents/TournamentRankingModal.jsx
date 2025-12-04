@@ -27,8 +27,8 @@ export default function TournamentRankingModal({ visible, onClose, challengeId, 
 		setError(null);
 		try {
 			// Map UI tab names to API parameter names
-			// UI: global|school|tribe -> API: global|team|tribe
-			const apiType = type === 'school' ? 'team' : type;
+			// UI: global|school|tribe -> API: global|organization|tribe
+			const apiType = type === 'school' ? 'organization' : type;
 			
 			console.log('TournamentRankingModal: Loading ranking', { 
 				type, 
