@@ -87,12 +87,12 @@ export default function TribeInfo({
 							{trophies <= 5 ? (
 								<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 									{Array.from({ length: trophies }).map((_, i) => (
-										<LucideIcon key={`t${i}`} name="trophy" size={14} color={colors.text} />
+											<LucideIcon key={`t${i}`} name="trophy" size={28} color={colors.text} />
 									))}
 								</div>
 							) : (
 								<div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-									<LucideIcon name="trophy" size={14} color={colors.text} />
+									<LucideIcon name="trophy" size={28} color={colors.text} />
 									<span style={{ fontSize: 12, fontFamily: family.bold, color: colors.text }}>{trophies}</span>
 								</div>
 							)}
