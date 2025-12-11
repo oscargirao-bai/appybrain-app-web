@@ -17,6 +17,7 @@ export default function TribeInfo({
 	icon,           // SVG icon string from API
 	accentColor,
 	iconColor,      // Icon color from API
+	trophies = 0,
 }) {
 	const colors = useThemeColors();
 	const accent = accentColor || colors.primary;
@@ -80,6 +81,22 @@ export default function TribeInfo({
 					}}>
 						{description}
 					</span>
+					{/* Trophy display */}
+					<div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+						<LucideIcon name="trophy" size={18} color={colors.text} />
+						{trophies <= 5 ? (
+							<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+								{Array.from({ length: Math.max(0, trophies) }).map((_, i) => (
+									<LucideIcon key={`t${i}`} name="trophy" size={14} color={accent} />
+								))}
+							</div>
+						) : (
+							<div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+								<LucideIcon name="trophy" size={14} color={accent} />
+								<span style={{ fontSize: 12, fontFamily: family.bold, color: colors.text }}>{trophies}</span>
+							</div>
+						)}
+					</div>
 				</div>
 				<div style={{
 					...styles.avatarCircleSmall,

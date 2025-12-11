@@ -347,6 +347,7 @@ export default function TribeScreen({ navigation, selectedTribeId }) {
 				accentColor={derivedSelectedTribe?.color}
 				iconColor={derivedSelectedTribe?.iconColor}
 				icon={derivedSelectedTribe?.icon}
+				trophies={derivedSelectedTribe?.trophies || 0}
 				tribeIconName="users"
 				onJoin={handleJoinTribe}
 				onLeave={handleLeaveTribe}
