@@ -81,22 +81,23 @@ export default function TribeInfo({
 					}}>
 						{description}
 					</span>
-					{/* Trophy display */}
-					<div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-						<LucideIcon name="trophy" size={18} color={colors.text} />
-						{trophies <= 5 ? (
-							<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-								{Array.from({ length: Math.max(0, trophies) }).map((_, i) => (
-									<LucideIcon key={`t${i}`} name="trophy" size={14} color={accent} />
-								))}
-							</div>
-						) : (
-							<div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-								<LucideIcon name="trophy" size={14} color={accent} />
-								<span style={{ fontSize: 12, fontFamily: family.bold, color: colors.text }}>{trophies}</span>
-							</div>
-						)}
-					</div>
+					{/* Trophy display: only show when trophies > 0; icons in black */}
+					{trophies > 0 && (
+						<div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+							{trophies <= 5 ? (
+								<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+									{Array.from({ length: trophies }).map((_, i) => (
+										<LucideIcon key={`t${i}`} name="trophy" size={14} color={colors.text} />
+									))}
+								</div>
+							) : (
+								<div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+									<LucideIcon name="trophy" size={14} color={colors.text} />
+									<span style={{ fontSize: 12, fontFamily: family.bold, color: colors.text }}>{trophies}</span>
+								</div>
+							)}
+						</div>
+					)}
 				</div>
 				<div style={{
 					...styles.avatarCircleSmall,
