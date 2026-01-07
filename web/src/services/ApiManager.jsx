@@ -283,11 +283,11 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedJSONRequest('api/auth/change_password', {
                 method: 'POST',
-                body: JSON.stringify({
+                body: {
                     currentPassword,
                     newPassword,
                     confirmPassword
-                })
+                }
             });
 
             // Return the response data
@@ -1022,7 +1022,7 @@ class ApiManager {
         try {
             const response = await this.makeAuthenticatedRequest('api/app/error_report', {
                 method: 'POST',
-                body: JSON.stringify({ quizId })
+                body: { quizId }
             });
             
             // Return success object without trying to parse
