@@ -55,12 +55,22 @@ export default function SolutionModal({
 
   const renderExplanation = () => {
     if (!explanation) return null;
-    const isHtml = /<[^>]+>|\\\\|\$/.test(String(explanation));
-    if (isHtml) {
+    const text = String(explanation);
+    const hasHtmlTag = /<[^>]+>/.test(text);
+    const hasMath = /\\\(|\\\[|\\[a-zA-Z]+|\$/.test(text);
+    if (hasHtmlTag || hasMath) {
+      const safeText = hasHtmlTag
+        ? text
+        : text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
       return (
         <div style={{...styles.explainerHtml, overflowY: 'auto'}}>
           <MathJaxRenderer 
-            content={`<div style="text-align:left">${explanation}</div>`} 
+            content={`<div style="text-align:left">${safeText}</div>`} 
             enabled={true} 
             compact={false} 
             baseFontSize={14} 
