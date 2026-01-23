@@ -42,19 +42,23 @@ const MathJaxRenderer = ({
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>');
-    const needsCollapse = /[a-zA-Z()[\]{}]/;
+    const commandPattern = /^(frac|sqrt|sum|int|begin|end|left|right|cdot|times|leq|geq|neq|approx|pm|mp|sin|cos|tan|log|ln|pi|theta|alpha|beta|gamma|delta|epsilon|lambda|mu|sigma|omega|phi|psi|rho|tau|vec|overline|underline|hat|bar|tilde|text|mathrm|mathbf|mathbb|mathcal)/;
     const collapseEscapes = (segment) => {
       let result = '';
       let index = 0;
       const length = segment.length;
       while (index < length) {
         const current = segment[index];
-        if (
-          current === '\\' &&
-          segment[index + 1] === '\\' &&
-          needsCollapse.test(segment[index + 2] || '')
-        ) {
-          result += '\\';
+        if (current === '\\' && segment[index + 1] === '\\') {
+          const rest = segment.slice(index + 2);
+          const match = rest.match(/^([a-zA-Z]+)/);
+          if (match && commandPattern.test(match[1])) {
+            result += '\\';
+            index += 2;
+            continue;
+          }
+          // Preserve line breaks like \\y=... inside environments (cases, align, etc.)
+          result += '\\\\';
           index += 2;
           continue;
         }
