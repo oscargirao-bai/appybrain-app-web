@@ -80,6 +80,12 @@ const MathJaxRenderer = ({
       processed = processed.replace(/\\\]/g, '\\)');
     }
 
+    // Log to verify we have math content
+    const hasMath = /(\$|\\\(|\\\[|\\begin\{)/.test(processed);
+    if (hasMath) {
+      console.log('MathJaxRenderer: Detected math notation in content');
+    }
+
     setProcessedContent(processed);
 
     if (typeof window === 'undefined') {
@@ -114,17 +120,23 @@ const MathJaxRenderer = ({
           try {
             const style = window.getComputedStyle(el);
             const visible = el.offsetWidth > 0 && el.offsetHeight > 0 && style.display !== 'none' && style.visibility !== 'hidden' && parseFloat(style.opacity || '1') > 0;
-            if (visible) return resolve(true);
+            if (visible) {
+              console.log('MathJaxRenderer: Element became visible, proceeding with typeset');
+              return resolve(true);
+            }
           } catch (e) {
             // ignore
           }
-          if (Date.now() - start > timeout) return resolve(false);
+          if (Date.now() - start > timeout) {
+            console.warn('MathJaxRenderer: Element did not become visible within timeout');
+            return resolve(false);
+          }
           setTimeout(check, 50);
         };
         check();
       });
 
-  const becameVisible = await waitForVisible(element, 600);
+  const becameVisible = await waitForVisible(element, 1200);
 
       try {
         // Clear previous typeset state first and wait for it to complete
@@ -148,6 +160,7 @@ const MathJaxRenderer = ({
       promise
         .then(() => {
           if (canceled) return;
+          console.log('MathJax typeset completed successfully');
           setIsTypesetting(false);
           if (onHeightChange && containerRef.current) {
             onHeightChange(containerRef.current.scrollHeight);
@@ -155,8 +168,17 @@ const MathJaxRenderer = ({
         })
         .catch((err) => {
           if (canceled) return;
-          try { console.error('MathJax processing error:', err); } catch (e) {}
+          console.error('MathJax processing error:', err);
           setIsTypesetting(false);
+          
+          // Retry once after a short delay
+          setTimeout(() => {
+            if (canceled || !window.MathJax || !element) return;
+            console.log('MathJax: Retrying typeset after error');
+            window.MathJax.typesetPromise([element])
+              .then(() => console.log('MathJax retry successful'))
+              .catch((retryErr) => console.error('MathJax retry failed:', retryErr));
+          }, 500);
         });
     };
 
