@@ -20,6 +20,9 @@
           processEnvironments: true,
           packages: { '[+]': ['ams'] }
         },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea']
+        },
         chtml: {
           fontCache: 'global'
         },
