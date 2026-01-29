@@ -209,6 +209,7 @@ export default function HtmlScreen({ navigation, route }) {
               />
             ) : (
               <MathJaxRenderer
+                key={contentHtml || 'empty-content'}
                 className="study-content"
                 content={contentHtml || '<p style="text-align:center">(sem conteúdo)</p>'}
                 enabled={true}
