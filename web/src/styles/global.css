@@ -58,3 +58,10 @@ button, input, textarea, select {
   -webkit-overflow-scrolling: touch;
   overflow: auto;
 }
+
+/* Study/HTML content: keep images within available width */
+.study-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
