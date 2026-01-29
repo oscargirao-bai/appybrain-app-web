@@ -97,14 +97,9 @@ const MathJaxRenderer = ({
     if (!element) {
       return;
     }
-    if (!window.MathJax) {
-      // If MathJax isn't loaded yet log and bail out
-      try { console.warn('MathJaxRenderer: window.MathJax not available at typeset time'); } catch (e) {}
-      return;
-    }
-
     let canceled = false;
     let rafId;
+    let mathJaxWaitTimer;
 
     setIsTypesetting(true);
 
@@ -182,12 +177,26 @@ const MathJaxRenderer = ({
         });
     };
 
-    rafId = requestAnimationFrame(runTypeset);
+    const waitForMathJax = () => {
+      if (canceled) return;
+      if (window.MathJax) {
+        rafId = requestAnimationFrame(runTypeset);
+        return;
+      }
+      // If MathJax isn't loaded yet, retry shortly
+      try { console.warn('MathJaxRenderer: window.MathJax not available yet, retrying...'); } catch (e) {}
+      mathJaxWaitTimer = setTimeout(waitForMathJax, 200);
+    };
+
+    waitForMathJax();
 
     return () => {
       canceled = true;
       if (typeof cancelAnimationFrame === 'function' && rafId) {
         cancelAnimationFrame(rafId);
+      }
+      if (mathJaxWaitTimer) {
+        clearTimeout(mathJaxWaitTimer);
       }
     };
   }, [content, enabled, inlineDisplay, onHeightChange]);
