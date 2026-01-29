@@ -28,32 +28,6 @@ export default function HtmlScreen({ navigation, route }) {
   const [newsData, setNewsData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!contentHtml || uri) return;
-    let canceled = false;
-    let attempts = 0;
-    let timerId;
-
-    const tryTypeset = () => {
-      if (canceled) return;
-      attempts += 1;
-      const element = document.querySelector('.study-content');
-      if (window.MathJax && element) {
-        window.MathJax.typesetPromise?.([element]).catch(() => {});
-      }
-      if (attempts < 3) {
-        timerId = setTimeout(tryTypeset, 250 * attempts);
-      }
-    };
-
-    timerId = setTimeout(tryTypeset, 80);
-
-    return () => {
-      canceled = true;
-      if (timerId) clearTimeout(timerId);
-    };
-  }, [contentHtml, uri]);
-
   // Load news content if newsId is provided
   useEffect(() => {
     if (newsId) {
@@ -79,6 +53,32 @@ export default function HtmlScreen({ navigation, route }) {
   const contentHtml = newsData?.content || html;
   // Determine if this is study content (should have white background)
   const isStudyContent = !newsId && !newsData;
+
+  useEffect(() => {
+    if (!contentHtml || uri) return;
+    let canceled = false;
+    let attempts = 0;
+    let timerId;
+
+    const tryTypeset = () => {
+      if (canceled) return;
+      attempts += 1;
+      const element = document.querySelector('.study-content');
+      if (window.MathJax && element) {
+        window.MathJax.typesetPromise?.([element]).catch(() => {});
+      }
+      if (attempts < 3) {
+        timerId = setTimeout(tryTypeset, 250 * attempts);
+      }
+    };
+
+    timerId = setTimeout(tryTypeset, 80);
+
+    return () => {
+      canceled = true;
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [contentHtml, uri]);
 
   // Determine header title based on content type
   const headerTitle = newsId ? translate('news.title') : translate('study.title');
