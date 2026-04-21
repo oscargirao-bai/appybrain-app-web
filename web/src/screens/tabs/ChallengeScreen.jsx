@@ -27,6 +27,7 @@ export default function ChallengeScreen({ navigation }) {
 	const [challenges, setChallenges] = useState([]);
 	const [confirmOpen, setConfirmOpen] = useState(false);
 	const [selectedChallenge, setSelectedChallenge] = useState(null);
+	const [loadingChallenges, setLoadingChallenges] = useState(true);
 	// const [disciplines, setDisciplines] = useState([]); // removed subjects
 
 	useEffect(() => {
@@ -34,19 +35,29 @@ export default function ChallengeScreen({ navigation }) {
 			const userData = DataManager.getUser();
 			setUserInfo(userData);
 
-			// Load challenges from DataManager
-			const challengesData = DataManager.getAvailableChallenges();
-			setChallenges(challengesData);
-
 			const unreadCount = DataManager.getUnreadNotificationsCount();
 			setUnreadNotificationsCount(unreadCount);
 		};
 
-		// Initial load
+		// Initial load of non-challenges data
 		updateData();
 
 		// Subscribe to DataManager changes
 		const unsubscribe = DataManager.subscribe(updateData);
+
+		// Load challenges from API on mount
+		setLoadingChallenges(true);
+		DataManager.refreshSection('challenges')
+			.then(() => {
+				const challengesData = DataManager.getAvailableChallenges();
+				setChallenges(challengesData);
+			})
+			.catch(error => {
+				console.error('ChallengeScreen: Failed to load challenges:', error);
+			})
+			.finally(() => {
+				setLoadingChallenges(false);
+			});
 
 		// Cleanup subscription
 		return unsubscribe;
@@ -148,6 +159,13 @@ export default function ChallengeScreen({ navigation }) {
 				navigation={navigation}
 			/>
 			{/* ChestRewardModal removed */}
+			{/* Loading overlay for challenges */}
+			{loadingChallenges && (
+				<div style={styles.loadingOverlay}>
+					<style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+					<div style={{ ...styles.spinner, borderTopColor: colors.primary, borderColor: colors.primary + '44' }} />
+				</div>
+			)}
 		</div>
 	);
 }
@@ -184,6 +202,27 @@ const styles = {
 		paddingLeft: 10,
 		paddingRight: 10,
 		boxSizing: 'border-box',
+	},
+	loadingOverlay: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'transparent',
+		zIndex: 9999,
+		pointerEvents: 'all',
+	},
+	spinner: {
+		width: 48,
+		height: 48,
+		borderRadius: '50%',
+		border: '4px solid transparent',
+		borderTopColor: '#ffffff',
+		animation: 'spin 0.8s linear infinite',
 	},
 };
 

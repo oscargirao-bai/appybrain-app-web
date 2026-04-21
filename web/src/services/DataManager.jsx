@@ -309,13 +309,6 @@ class DataManagerClass {
                 return [];
             });
 
-            // Load challenges separately
-            //console.log('DataManager: Loading challenges...');
-            const challengesApiData = await this.apiManager.getChallenges().catch(error => {
-                console.warn('DataManager: Failed to load challenges:', error);
-                return [];
-            });
-
             // Load quotes separately
             //console.log('DataManager: Loading quotes...');
             const quotesApiData = await this.apiManager.makeAuthenticatedJSONRequest('gamification/quotes').catch(error => {
@@ -326,10 +319,6 @@ class DataManagerClass {
             // Process and cache cosmetic images
             //console.log('DataManager: Processing and caching cosmetic images...');
             const processedCosmetics = await this._processAndCacheImages({ cosmetics: cosmeticsData });
-
-            // Process and cache challenge images
-            //console.log('DataManager: Processing and caching challenge images...');
-            const processedChallenges = await this._processAndCacheImages({ challenges: challengesApiData });
 
             // Store initial IDs for future diff detection
             this.previousNewsIds = new Set(newsData.map(item => item.id));
@@ -368,7 +357,7 @@ class DataManagerClass {
                 notifications: mergedNotifications,
                 cosmetics: processedCosmetics.cosmetics || cosmeticsData,
                 rankings: rankingsData,
-                challenges: processedChallenges.challenges || challengesApiData,
+                challenges: [],
                 quotes: quotesApiData?.items || [], // Store quotes from API
                 lastUpdated: processedData.loadedAt
             };
