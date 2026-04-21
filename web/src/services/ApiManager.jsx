@@ -507,12 +507,6 @@ class ApiManager {
                 return null;
             });
 
-            // Make request to challenges endpoint
-            const challenges = await this.makeAuthenticatedJSONRequest('api/app/challenges_list').catch(err => {
-                console.warn('Failed to load challenges:', err);
-                return null;
-            });
-
             // Return consolidated data object
             return {
                 userInfo,
@@ -523,7 +517,6 @@ class ApiManager {
                 notifications,
                 news,
                 rankings,
-                challenges,
                 loadedAt: new Date().toISOString()
             };
 
